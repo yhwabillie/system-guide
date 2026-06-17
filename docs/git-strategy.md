@@ -72,7 +72,7 @@ git checkout -b docs/accessibility-guide
 ```
 feat: 대비 체커에 아이콘 미리보기 추가
 fix: 다크모드 선택 배너 하드코딩 색상 CSS 변수로 교체
-refactor: 컬러 토큰 3-tier 구조화(--raw-* / --color-*)
+refactor: 컬러 토큰 3-tier 구조화(--raw-* / --ds-* / --color-*)
 docs: KWCAG 2.2 기반 웹접근성 가이드 작성
 ```
 

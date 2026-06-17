@@ -13,14 +13,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 색상은 `src/app/globals.css`에 정의된 토큰 체계로만 사용합니다. **인라인 hex/rgba 하드코딩 금지** (대비 계산용 데이터·체커보드 등 명백한 예외 제외).
 
 ```
-TIER 1  --raw-*            원본 팔레트·알파 램프. 불변·모드 무관. :root 단 한 번 정의.
-TIER 2a --color-{family}-{scale}   모드 인지 스케일. 라이트=identity, 다크=raw 반사(.dark).
-TIER 2b --color-{용도}     border / accent / overlay / shadow / level 등 용도 토큰.
-컴포넌트                    page.tsx 등에서 위 토큰을 var()로 소비.
+TIER 1  --raw-*     원본 팔레트·알파 램프. 불변·모드 무관. :root 단 한 번 정의.
+TIER 2  --ds-*      Design System 토큰. 모드 인지 스케일/용도 값. .dark에서 재매핑.
+TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 됨.
+컴포넌트             className 유틸리티 또는 var(--ds-*)로 소비.
 ```
 
 - 다크 모드 값은 `.dark`에서 **시맨틱 스케일만 재매핑**(raw 반사). raw는 절대 모드별로 재정의하지 않습니다.
-- 새 색이 필요하면: raw에 추가 → 시맨틱에 매핑 → 컴포넌트에서 사용.
+- 새 색이 필요하면: raw에 추가 → `--ds-*`에 매핑 → `@theme inline`의 `--color-*`로 노출 → 컴포넌트에서 사용.
 
 ## 접근성 (필수)
 

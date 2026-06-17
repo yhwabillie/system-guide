@@ -179,15 +179,20 @@ export default function Home() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
-    const cs = getComputedStyle(document.documentElement);
-    const map: Record<string, string> = {};
-    for (const fam of primitiveColors) {
-      for (const sw of fam.swatches) {
-        map[`${fam.name}-${sw.scale}`] =
-          cs.getPropertyValue(`--color-${fam.name}-${sw.scale}`).trim() || sw.hex;
+
+    const frameId = requestAnimationFrame(() => {
+      const cs = getComputedStyle(document.documentElement);
+      const map: Record<string, string> = {};
+      for (const fam of primitiveColors) {
+        for (const sw of fam.swatches) {
+          map[`${fam.name}-${sw.scale}`] =
+            cs.getPropertyValue(`--color-${fam.name}-${sw.scale}`).trim() || sw.hex;
+        }
       }
-    }
-    setResolved(map);
+      setResolved(map);
+    });
+
+    return () => cancelAnimationFrame(frameId);
   }, [isDark]);
 
   const hexOf = (name: string, scale: number, fallback: string) =>
