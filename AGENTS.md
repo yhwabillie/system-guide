@@ -27,7 +27,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 
 - 목표: **한국 웹접근성 마크(KWCAG 2.2) 1등급**. 체크리스트·패턴은 [`docs/accessibility.md`](docs/accessibility.md) 참조.
 - 모든 변경은 WAVE / W3C Validator 기준 **오류 0** 유지. 시맨틱 HTML 우선, 인터랙티브 요소는 네이티브 태그(`button`/`a`) 사용.
-- 포커스는 전역 `:focus-visible`(`--color-accent`)로 항상 표시. outline 제거 금지.
+- 포커스는 전역 `:focus-visible`(`--ds-accent`)로 항상 표시. outline 제거 금지.
 
 ## 타이포그래피 / 폰트
 
@@ -59,8 +59,13 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
   - CSS 변수 `--font-size-*` → `fontSizeCssVars()`가 생성해 `layout.tsx <style>`로 `:root` 주입
   - 둘 다 같은 px 정의 + `REM_BASE(16)`에서 파생 → 기준값 중복 없음.
 - **모든 px 크기는 rem으로**(반응형·접근성 3.1.3). 인라인은 `pxToRem()`, 토큰은 tokens.ts에서. globals.css에 `--font-size-*` 직접 정의 금지(거기 두지 않음).
-- weight·line-height·letter-spacing도 토큰: `--font-weight-*`, `--font-line`, `--font-tracking-*`.
+- weight 원본은 `--typography-weight-*`, Tailwind 유틸리티 노출은 `@theme`의 `--font-weight-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
+- line-height·letter-spacing도 토큰: `--font-line`, `--font-tracking-*`.
 - line-height는 **단일 토큰 `--font-line: 1.5`** (WCAG 1.4.12 충족, 전 역할 공통).
+- 타이포 유틸리티는 두 방식 모두 제공:
+  - 개별 조합: `text-display-lg` + `font-bold` + `leading-base` + `font-sans`
+  - 묶음 shorthand: `typo-display-lg` (`--typography-display-lg` → font-family/size/weight/line-height 적용, 유틸리티에서 letter-spacing까지 포함)
+- `typo-*`는 Typography 약어입니다. 새 묶음 유틸리티를 만들 때 `type-*` 접두는 사용하지 않습니다.
 
 ## Git / 문서
 

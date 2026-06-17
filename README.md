@@ -10,11 +10,38 @@
 --raw-*    /* 원본 팔레트·알파 램프. 불변·모드 무관 */
 --ds-*     /* Design System 토큰. 모드 인지 스케일/용도 값 */
 --color-*  /* Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름 */
+--typography-*  /* font shorthand 묶음 토큰 */
 ```
 
 흐름은 `--raw-green-500` → `--ds-green-500` → `--color-green-500` → `bg-green-500`처럼 이어집니다. `.dark`에서는 `--ds-*`만 재매핑하므로 Tailwind 유틸리티도 같은 클래스명으로 다크 모드 값을 사용합니다.
 
 큐레이션 가이드 화면에서만 쓰는 표시/검증용 토큰은 `guide-*` 접두로 구분합니다. 예: `--color-guide-level-*`, `--text-guide-*`.
+
+타이포그래피는 개별 유틸리티와 묶음 유틸리티를 모두 제공합니다.
+
+```tsx
+<p className="text-display-lg font-bold leading-base font-sans" />
+<p className="typo-display-lg" />
+```
+
+`typo-*` 유틸리티는 `--typography-*` 토큰을 사용해 `font-family`, `font-size`, `font-weight`, `line-height`를 적용하고, 유틸리티에서 `letter-spacing`까지 함께 적용합니다.
+
+| Token | Size | Weight | Utility |
+|------|------|--------|---------|
+| Display LG | 40px | 700 | `typo-display-lg` |
+| Display MD | 32px | 700 | `typo-display-md` |
+| Display SM | 28px | 700 | `typo-display-sm` |
+| Heading LG | 32px | 700 | `typo-heading-lg` |
+| Heading MD | 24px | 700 | `typo-heading-md` |
+| Heading SM | 20px | 700 | `typo-heading-sm` |
+| Body LG | 18px | 400 | `typo-body-lg` |
+| Body MD | 16px | 400 | `typo-body-md` |
+| Body SM | 14px | 400 | `typo-body-sm` |
+| Label XL | 18px | 600 | `typo-label-xl` |
+| Label LG | 16px | 600 | `typo-label-lg` |
+| Label MD | 14px | 600 | `typo-label-md` |
+| Label SM | 12px | 600 | `typo-label-sm` |
+| Caption | 12px | 400 | `typo-caption` |
 
 ## Getting Started
 

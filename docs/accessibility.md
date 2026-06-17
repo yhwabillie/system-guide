@@ -198,7 +198,7 @@
 ```css
 /* ✅ 포커스 스타일 — outline 제거 절대 금지, 커스텀으로 대체 (globals.css 적용됨) */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--ds-accent);
   outline-offset: 2px;
 }
 

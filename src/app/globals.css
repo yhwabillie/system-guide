@@ -5,6 +5,7 @@
    --raw-*   : 원본 팔레트·알파 램프. 불변·모드 무관.
    --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
    --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
+   --typography-* : font shorthand 묶음 토큰. family/size/weight/line-height 포함.
    guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
    예: --raw-green-500 → --ds-green-500 → --color-green-500
@@ -128,11 +129,12 @@
   /* Typography(--font-size-*) 는 src/lib/tokens.ts 단일 소스에서 생성되어
      layout.tsx <style> 로 :root 에 주입됩니다(px→rem 환산). 여기엔 두지 않음. */
 
-  /* Font weight 토큰 */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  /* Typography weight source 토큰.
+     Tailwind 유틸리티 노출용 --font-weight-* 는 @theme 에서만 정의한다. */
+  --typography-weight-regular: 400;
+  --typography-weight-medium: 500;
+  --typography-weight-semibold: 600;
+  --typography-weight-bold: 700;
 
   /* Line height — 단일 토큰. WCAG 1.4.12 충족 위해 1.5 */
   --font-line: 1.5;
@@ -145,6 +147,26 @@
   /* 폰트 폴백 체인 (next/font 자체 호스팅): Pretendard GOV → Noto Sans KR → 시스템 sans-serif
      --font-pretendard-gov / --font-noto 는 layout.tsx의 next/font/local 이 주입 */
   --font-family-base: var(--font-pretendard-gov), var(--font-noto), sans-serif;
+
+  /* Typography shorthand 토큰 — font-family / size / weight / line-height 를 한 번에 적용.
+     개별 제어가 필요하면 text-* / font-* / leading-* 유틸리티를 조합한다. */
+  --typography-display-lg: var(--typography-weight-bold) var(--font-size-display-lg) / var(--font-line) var(--font-family-base);
+  --typography-display-md: var(--typography-weight-bold) var(--font-size-display-md) / var(--font-line) var(--font-family-base);
+  --typography-display-sm: var(--typography-weight-bold) var(--font-size-display-sm) / var(--font-line) var(--font-family-base);
+  --typography-heading-lg: var(--typography-weight-bold) var(--font-size-heading-lg) / var(--font-line) var(--font-family-base);
+  --typography-heading-md: var(--typography-weight-bold) var(--font-size-heading-md) / var(--font-line) var(--font-family-base);
+  --typography-heading-sm: var(--typography-weight-bold) var(--font-size-heading-sm) / var(--font-line) var(--font-family-base);
+  --typography-body-lg: var(--typography-weight-regular) var(--font-size-body-lg) / var(--font-line) var(--font-family-base);
+  --typography-body-md: var(--typography-weight-regular) var(--font-size-body-md) / var(--font-line) var(--font-family-base);
+  --typography-body-sm: var(--typography-weight-regular) var(--font-size-body-sm) / var(--font-line) var(--font-family-base);
+  --typography-label-xl: var(--typography-weight-semibold) var(--font-size-label-xl) / var(--font-line) var(--font-family-base);
+  --typography-label-lg: var(--typography-weight-semibold) var(--font-size-label-lg) / var(--font-line) var(--font-family-base);
+  --typography-label-md: var(--typography-weight-semibold) var(--font-size-label-md) / var(--font-line) var(--font-family-base);
+  --typography-label-sm: var(--typography-weight-semibold) var(--font-size-label-sm) / var(--font-line) var(--font-family-base);
+  --typography-caption: var(--typography-weight-regular) var(--font-size-caption) / var(--font-line) var(--font-family-base);
+  --typography-guide-selected-lg: var(--typography-weight-semibold) var(--font-size-guide-selected-lg) / var(--font-line) var(--font-family-base);
+  --typography-guide-selected-md: var(--typography-weight-semibold) var(--font-size-guide-selected-md) / var(--font-line) var(--font-family-base);
+  --typography-guide-selected-sm: var(--typography-weight-semibold) var(--font-size-guide-selected-sm) / var(--font-line) var(--font-family-base);
 
   /* ============================================================
      TIER 2-b — SEMANTIC PURPOSE (용도 기반)
@@ -319,8 +341,98 @@
   --tracking-tight: var(--font-tracking-tight);
   --tracking-normal: var(--font-tracking-normal);
   --tracking-wide: var(--font-tracking-wide);
+  --font-weight-regular: var(--typography-weight-regular);
+  --font-weight-medium: var(--typography-weight-medium);
+  --font-weight-semibold: var(--typography-weight-semibold);
+  --font-weight-bold: var(--typography-weight-bold);
 
   --font-sans: var(--font-family-base);
+}
+
+/* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
+@utility typo-display-lg {
+  font: var(--typography-display-lg);
+  letter-spacing: var(--font-tracking-tight);
+}
+
+@utility typo-display-md {
+  font: var(--typography-display-md);
+  letter-spacing: var(--font-tracking-tight);
+}
+
+@utility typo-display-sm {
+  font: var(--typography-display-sm);
+  letter-spacing: var(--font-tracking-tight);
+}
+
+@utility typo-heading-lg {
+  font: var(--typography-heading-lg);
+  letter-spacing: var(--font-tracking-tight);
+}
+
+@utility typo-heading-md {
+  font: var(--typography-heading-md);
+  letter-spacing: var(--font-tracking-tight);
+}
+
+@utility typo-heading-sm {
+  font: var(--typography-heading-sm);
+  letter-spacing: var(--font-tracking-tight);
+}
+
+@utility typo-body-lg {
+  font: var(--typography-body-lg);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-body-md {
+  font: var(--typography-body-md);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-body-sm {
+  font: var(--typography-body-sm);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-label-xl {
+  font: var(--typography-label-xl);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-label-lg {
+  font: var(--typography-label-lg);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-label-md {
+  font: var(--typography-label-md);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-label-sm {
+  font: var(--typography-label-sm);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-caption {
+  font: var(--typography-caption);
+  letter-spacing: var(--font-tracking-wide);
+}
+
+@utility typo-guide-selected-lg {
+  font: var(--typography-guide-selected-lg);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-guide-selected-md {
+  font: var(--typography-guide-selected-md);
+  letter-spacing: var(--font-tracking-normal);
+}
+
+@utility typo-guide-selected-sm {
+  font: var(--typography-guide-selected-sm);
+  letter-spacing: var(--font-tracking-normal);
 }
 
 body {

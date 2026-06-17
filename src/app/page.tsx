@@ -94,22 +94,24 @@ const fontStack = [
   { order: 3, name: "sans-serif", family: "sans-serif", role: "최종", source: "시스템 기본", desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체." },
 ];
 
-// 역할별 타이포 토큰 — size / weight / line-height 모두 CSS 변수
+const typographySample = "다람쥐 헌 쳇바퀴에 타고파 · ABC xyz 123 (4.5:1) !?";
+
+// 역할별 타이포 토큰 — 개별 유틸리티(text/font/leading)와 묶음 유틸리티(typo) 모두 제공
 const typographyTokens = [
-  { label: "Display LG", var: "--font-size-display-lg", weight: "--font-weight-bold" },
-  { label: "Display MD", var: "--font-size-display-md", weight: "--font-weight-bold" },
-  { label: "Display SM", var: "--font-size-display-sm", weight: "--font-weight-bold" },
-  { label: "Heading LG", var: "--font-size-heading-lg", weight: "--font-weight-bold" },
-  { label: "Heading MD", var: "--font-size-heading-md", weight: "--font-weight-bold" },
-  { label: "Heading SM", var: "--font-size-heading-sm", weight: "--font-weight-bold" },
-  { label: "Body LG", var: "--font-size-body-lg", weight: "--font-weight-regular" },
-  { label: "Body MD", var: "--font-size-body-md", weight: "--font-weight-regular" },
-  { label: "Body SM", var: "--font-size-body-sm", weight: "--font-weight-regular" },
-  { label: "Label XL", var: "--font-size-label-xl", weight: "--font-weight-semibold" },
-  { label: "Label LG", var: "--font-size-label-lg", weight: "--font-weight-semibold" },
-  { label: "Label MD", var: "--font-size-label-md", weight: "--font-weight-semibold" },
-  { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold" },
-  { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular" },
+  { label: "Display LG", var: "--font-size-display-lg", weight: "--font-weight-bold", typoClass: "typo-display-lg" },
+  { label: "Display MD", var: "--font-size-display-md", weight: "--font-weight-bold", typoClass: "typo-display-md" },
+  { label: "Display SM", var: "--font-size-display-sm", weight: "--font-weight-bold", typoClass: "typo-display-sm" },
+  { label: "Heading LG", var: "--font-size-heading-lg", weight: "--font-weight-bold", typoClass: "typo-heading-lg" },
+  { label: "Heading MD", var: "--font-size-heading-md", weight: "--font-weight-bold", typoClass: "typo-heading-md" },
+  { label: "Heading SM", var: "--font-size-heading-sm", weight: "--font-weight-bold", typoClass: "typo-heading-sm" },
+  { label: "Body LG", var: "--font-size-body-lg", weight: "--font-weight-regular", typoClass: "typo-body-lg" },
+  { label: "Body MD", var: "--font-size-body-md", weight: "--font-weight-regular", typoClass: "typo-body-md" },
+  { label: "Body SM", var: "--font-size-body-sm", weight: "--font-weight-regular", typoClass: "typo-body-sm" },
+  { label: "Label XL", var: "--font-size-label-xl", weight: "--font-weight-semibold", typoClass: "typo-label-xl" },
+  { label: "Label LG", var: "--font-size-label-lg", weight: "--font-weight-semibold", typoClass: "typo-label-lg" },
+  { label: "Label MD", var: "--font-size-label-md", weight: "--font-weight-semibold", typoClass: "typo-label-md" },
+  { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold", typoClass: "typo-label-sm" },
+  { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular", typoClass: "typo-caption" },
 ];
 
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
@@ -872,7 +874,7 @@ export default function Home() {
                   <li key={order} className="grid gap-4 items-center py-3 px-4 rounded-lg border border-border" style={{ gridTemplateColumns: "28px 1fr auto" }}>
                     <span aria-hidden="true" className="w-6 h-6 rounded-full bg-accent text-on-accent flex items-center justify-center text-caption font-bold">{order}</span>
                     <div>
-                      <span role="img" aria-label={`${name} 글꼴 견본`} className="block font-semibold leading-base" style={{ fontFamily: family, fontSize: pxToRem(20) }}>{name} · 다람쥐 Aa 1234</span>
+                      <span role="img" aria-label={`${name} 글꼴 견본`} className="block font-semibold leading-base" style={{ fontFamily: family, fontSize: pxToRem(20) }}>{name} · {typographySample}</span>
                       <p className="mt-0.5 text-caption text-text-muted">{desc}</p>
                     </div>
                     <span className="text-caption text-text-muted text-right leading-base">
@@ -892,18 +894,18 @@ export default function Home() {
         <section aria-labelledby="section-typography">
           <h2 id="section-typography" className="text-heading-md font-bold mb-6">Typography</h2>
           <dl className="flex flex-col gap-4 m-0">
-            {typographyTokens.map(({ label, var: cssVar, weight }) => (
+            {typographyTokens.map(({ label, var: cssVar, weight, typoClass }) => (
               <div key={cssVar} className="flex items-baseline gap-4 border-b border-neutral-200 pb-3">
                 <dt className="w-[120px] shrink-0">
                   <span className="block text-label-sm font-semibold">{label}</span>
-                  {/* size / weight 토큰 메타 (line-height는 전역 --font-line: 1.5) */}
+                  {/* size / weight / shorthand 토큰 메타 (line-height는 전역 --font-line: 1.5) */}
                   <span className="block text-text-muted" style={{ fontSize: pxToRem(11) }}>
-                    {cssVar.replace("--font-size-", "")} · {weight.replace("--font-weight-", "w/")}
+                    {cssVar.replace("--font-size-", "")} · {weight.replace("--font-weight-", "w/")} · {typoClass}
                   </span>
                 </dt>
                 {/* 견본은 dd 안의 span role="img"로 표시 (토큰명은 dt가 전달) */}
-                <dd className="leading-base tracking-normal m-0" style={{ fontSize: `var(${cssVar})`, fontWeight: `var(${weight})` }}>
-                  <span role="img" aria-label="글꼴 견본">가나다 ABC 123</span>
+                <dd className={`${typoClass} m-0`}>
+                  <span role="img" aria-label={`${label} 글꼴 견본`}>{typographySample}</span>
                 </dd>
               </div>
             ))}
