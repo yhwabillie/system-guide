@@ -30,8 +30,12 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - 반복 크기는 `--size-icon-*`, `--size-control-*`로 정의하고, `--spacing-icon-*`, `--spacing-control-*` 노출을 통해 `size-icon-md`, `h-control-md` 같은 유틸리티로 사용합니다.
 - 아이콘 크기는 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다. 일반 UI 기본값은 `icon-md`이며, 인라인 보조 아이콘은 `xs/sm`, 섹션 강조 아이콘은 `lg/xl`을 사용합니다.
 - 콘텐츠 폭은 `--layout-container-*`를 원본으로 두고 `--container-*`로 노출합니다. `max-w-md` 같은 container 유틸리티를 사용합니다.
+- container 좌우 gutter는 `--layout-gutter-sm`(18px, md 미만), `--layout-gutter-md`(30px, md 이상)을 원본으로 두고 `--spacing-gutter-*` → `px-gutter-sm`, `md:px-gutter-md`로 노출합니다.
 - 그리드 프리셋은 `--layout-grid-*` 원본 → `@theme`의 `--grid-template-columns-*` → `grid-cols-sidebar` 등으로 노출합니다. gap은 spacing 토큰(`gap-4` 등)과 조합합니다.
 - breakpoint 원본은 `--layout-breakpoint-*`(:root), Tailwind 노출은 `@theme`의 `--breakpoint-*`에 **리터럴 rem**으로 정의합니다(`@media`에서 `var()` 참조 불가). 두 값은 동기화를 유지합니다.
+- 그라데이션은 `--ds-gradient-*` → `@theme` `--background-image-gradient-*` → `bg-gradient-accent` 등으로 노출합니다.
+- 반응형 container·grid·breakpoint 계산과 권장 class 조합은 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 일원화합니다. 권장 container 패턴은 `lg:max-w-xl`(1280px 상한, lg부터 적용) + gutter 유틸리티 조합입니다.
+- 실시간 viewport·container·margin·padding 검증은 [`/guide/responsive`](src/app/guide/responsive/page.tsx)에서 확인합니다(Layout 탭 Breakpoints 옆 링크).
 - 모든 크기 값은 rem 기반입니다. 새 px 값이 필요하면 토큰/헬퍼에서 rem으로 환산하고, 인라인 고정 px를 추가하지 않습니다.
 
 ## 접근성 (필수)

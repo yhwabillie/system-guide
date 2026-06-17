@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
+import { breakpointTokens, containerTokens } from "@/lib/layout-tokens";
 import { pxToRem } from "@/lib/tokens";
 
 const primitiveColors = [
@@ -161,13 +162,6 @@ const fixedSizeTokens = [
 const iconSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("icon"));
 const controlSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("control"));
 
-const containerTokens = [
-  { name: "container-sm", cssVar: "--layout-container-sm", px: "640px", rem: "40rem", utility: "max-w-sm" },
-  { name: "container-md", cssVar: "--layout-container-md", px: "768px", rem: "48rem", utility: "max-w-md" },
-  { name: "container-lg", cssVar: "--layout-container-lg", px: "1024px", rem: "64rem", utility: "max-w-lg" },
-  { name: "container-xl", cssVar: "--layout-container-xl", px: "1280px", rem: "80rem", utility: "max-w-xl" },
-];
-
 const gridColumnTokens = [
   { name: "grid-cols-1", cols: 1, utility: "grid-cols-1", desc: "단일 열 — 히어로·상세 본문" },
   { name: "grid-cols-2", cols: 2, utility: "grid-cols-2", desc: "2열 — 폼 라벨/필드, 비교 레이아웃" },
@@ -188,13 +182,6 @@ const gridPresetTokens = [
   { name: "grid-cols-sidebar-wide", utility: "grid-cols-sidebar-wide", px: "320px + 1fr", rem: "20rem + 1fr", desc: "넓은 사이드바 + 콘텐츠", preset: "sidebar-wide" as const },
   { name: "grid-cols-form", utility: "grid-cols-form", px: "2 × 1fr", rem: "repeat(2, 1fr)", desc: "2열 폼 레이아웃", preset: "form" as const },
   { name: "grid-cols-cards", utility: "grid-cols-cards", px: "auto-fit ≥256px", rem: "minmax(16rem, 1fr)", desc: "반응형 카드 그리드", preset: "cards" as const },
-];
-
-const breakpointTokens = [
-  { name: "sm", cssVar: "--layout-breakpoint-sm", px: "640px", rem: "40rem", utility: "sm:", desc: "모바일 가로·작은 태블릿" },
-  { name: "md", cssVar: "--layout-breakpoint-md", px: "768px", rem: "48rem", utility: "md:", desc: "태블릿" },
-  { name: "lg", cssVar: "--layout-breakpoint-lg", px: "1024px", rem: "64rem", utility: "lg:", desc: "데스크톱" },
-  { name: "xl", cssVar: "--layout-breakpoint-xl", px: "1280px", rem: "80rem", utility: "xl:", desc: "와이드 데스크톱" },
 ];
 
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
@@ -496,8 +483,8 @@ export default function Home() {
         <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"}>
 
         {/* ===== 그룹: Raw Color ===== */}
-        <h2 className="text-heading-lg font-bold mb-1">Raw Color</h2>
-        <p className="text-body-sm text-text-muted mb-10">
+        <h2 className="text-heading-lg font-bold mb-2">Raw Color</h2>
+        <p className="text-body-sm text-text-muted mb-12">
           가공 전 원본 팔레트(raw)와 대비 검증 도구입니다.
         </p>
 
@@ -965,8 +952,8 @@ export default function Home() {
         </section>
 
         {/* ===== 그룹: Semantic Color ===== */}
-        <h2 className="text-heading-lg font-bold mb-1 mt-10 pt-12 border-t border-border">Semantic Color</h2>
-        <p className="text-body-sm text-text-muted mb-10">
+        <h2 className="text-heading-lg font-bold mb-2 mt-16 pt-16 border-t border-border">Semantic Color</h2>
+        <p className="text-body-sm text-text-muted mb-12">
           raw를 용도·모드(라이트/다크)에 맞게 매핑한 의미 기반 토큰입니다.
         </p>
 
@@ -1048,8 +1035,8 @@ export default function Home() {
 
         {/* ── Tab Panel 2: Layout ── */}
         <div role="tabpanel" id="panel-layout" aria-labelledby="tab-layout" hidden={activeTab !== "layout"}>
-          <h2 className="text-heading-lg font-bold mb-1">Layout & Size</h2>
-          <p className="text-body-sm text-text-muted mb-10">
+          <h2 className="text-heading-lg font-bold mb-2">Layout & Size</h2>
+          <p className="text-body-sm text-text-muted mb-12">
             여백, 그리드, 모서리, 반복 크기, 콘텐츠 폭 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
           </p>
 
@@ -1260,7 +1247,19 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="text-label-xl font-semibold mb-1">Breakpoints</h4>
+                <div className="flex flex-wrap items-center gap-3 mb-1">
+                  <h4 className="text-label-xl font-semibold m-0">Breakpoints</h4>
+                  <a
+                    href="/guide/responsive"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 py-1 px-3 rounded-md border border-border text-label-sm font-semibold text-accent no-underline bg-background hover:bg-surface-subtle"
+                  >
+                    반응형 가이드
+                    <span aria-hidden="true">↗</span>
+                    <span className="sr-only">(새 창에서 열림)</span>
+                  </a>
+                </div>
                 <p className="text-caption text-text-muted mb-4">
                   반응형 그리드는 breakpoint 토큰과 prefix를 조합합니다. 예: 태블릿 이상 3열은 `md:` prefix + `grid-cols-3`.
                 </p>
@@ -1275,7 +1274,7 @@ export default function Home() {
                     <span className="text-caption text-text-muted">Size</span>
                     <span className="text-caption text-text-muted">Prefix</span>
                   </div>
-                  {breakpointTokens.map(({ name, px, rem, utility, desc }) => (
+                  {breakpointTokens.map(({ name, px, rem, prefix, desc }) => (
                     <div
                       role="listitem"
                       key={name}
@@ -1285,7 +1284,7 @@ export default function Home() {
                       <span className="text-label-sm font-semibold">{name}</span>
                       <span className="text-caption text-text-muted">{desc}</span>
                       <TokenValue px={px} rem={rem} />
-                      <span className="text-caption text-text-muted font-mono">{utility}</span>
+                      <span className="text-caption text-text-muted font-mono">{prefix}</span>
                     </div>
                   ))}
                 </div>
@@ -1326,8 +1325,8 @@ export default function Home() {
         <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"}>
 
         {/* ── Font Family ── */}
-        <section aria-labelledby="section-font" className="mb-16">
-          <h2 id="section-font" className="text-heading-md font-bold mb-6">Font Family</h2>
+        <section aria-labelledby="section-font" className="mb-0">
+          <h2 id="section-font" className="text-heading-lg font-bold mb-2">Font Family</h2>
 
           <div className="rounded-2xl border border-neutral-200 overflow-hidden">
             {/* 글꼴 견본 — 큰 텍스트 요소 자체에 role="img" (정보는 아래 dl에서 제공) */}
@@ -1435,8 +1434,8 @@ export default function Home() {
         </section>
 
         {/* ── Typography ── */}
-        <section aria-labelledby="section-typography">
-          <h2 id="section-typography" className="text-heading-md font-bold mb-6">Typography</h2>
+        <section aria-labelledby="section-typography" className="mt-16 pt-16 border-t border-border">
+          <h2 id="section-typography" className="text-heading-lg font-bold mb-8">Typography</h2>
           <dl className="flex flex-col gap-4 m-0">
             {typographyTokens.map(({ label, var: cssVar, weight, typoClass }) => (
               <div key={cssVar} className="flex items-baseline gap-4 border-b border-neutral-200 pb-3">

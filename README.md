@@ -1,6 +1,15 @@
 # system-guide
 
-디자인 토큰(컬러·타이포·오버레이)과 웹접근성 대비 체커를 제공하는 디자인 시스템 가이드입니다.
+디자인 토큰(컬러·타이포·레이아웃·오버레이)과 웹접근성 대비 체커를 제공하는 디자인 시스템 가이드입니다.
+
+## Guides
+
+| 경로 | 설명 |
+|------|------|
+| [`/`](src/app/page.tsx) | 메인 토큰 큐레이션 — Color / Layout / Typography 탭 |
+| [`/guide/responsive`](src/app/guide/responsive/page.tsx) | 반응형 layout 가이드 — viewport·breakpoint·container·grid 실시간 확인 |
+
+반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다.
 
 ## Design Tokens
 
@@ -11,19 +20,29 @@
 --ds-*     /* Design System 토큰. 모드 인지 스케일/용도 값 */
 --color-*  /* Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름 */
 --typography-*  /* font shorthand 묶음 토큰 */
---space-* / --shape-radius-* / --size-* / --layout-container-*  /* 레이아웃·크기 원본 토큰 */
+--space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-gutter-*  /* 레이아웃·크기 원본 토큰 */
+--ds-gradient-*  /* 그라데이션. @theme → bg-gradient-* */
 ```
 
 흐름은 `--raw-green-500` → `--ds-green-500` → `--color-green-500` → `bg-green-500`처럼 이어집니다. `.dark`에서는 `--ds-*`만 재매핑하므로 Tailwind 유틸리티도 같은 클래스명으로 다크 모드 값을 사용합니다.
 
 큐레이션 가이드 화면에서만 쓰는 표시/검증용 토큰은 `guide-*` 접두로 구분합니다. 예: `--color-guide-level-*`, `--text-guide-*`.
 
-레이아웃 토큰은 source token과 Tailwind 노출 token을 분리합니다. 여백은 `--space-*` → `--spacing-*`, radius는 `--shape-radius-*` → `--radius-*`, 콘텐츠 폭은 `--layout-container-*` → `--container-*` 흐름입니다. 반복 크기인 `--size-icon-*`, `--size-control-*`는 spacing namespace에 연결해 `size-icon-md`, `h-control-md`처럼 사용할 수 있습니다. 아이콘은 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다.
+레이아웃 토큰은 source token과 Tailwind 노출 token을 분리합니다. 여백은 `--space-*` → `--spacing-*`, radius는 `--shape-radius-*` → `--radius-*`, 콘텐츠 폭은 `--layout-container-*` → `--container-*`, gutter는 `--layout-gutter-*` → `--spacing-gutter-*` 흐름입니다. 그리드 프리셋은 `--layout-grid-*` → `grid-cols-sidebar` 등, breakpoint는 `--layout-breakpoint-*`(:root 문서용)와 `@theme` `--breakpoint-*`(리터럴 rem)를 동기화합니다. 반복 크기인 `--size-icon-*`, `--size-control-*`는 spacing namespace에 연결해 `size-icon-md`, `h-control-md`처럼 사용할 수 있습니다. 아이콘은 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다.
 
 ```tsx
 <div className="p-6 gap-4 rounded-xl max-w-lg" />
 <span className="size-icon-md" />
 <button className="h-control-md px-4" />
+<div className="grid grid-cols-sidebar gap-4" />
+<div className="bg-gradient-accent" />
+```
+
+권장 반응형 container 패턴(`layout-tokens.ts`):
+
+```tsx
+// w-full mx-auto px-gutter-sm md:px-gutter-md max-w-full sm:max-w-sm md:max-w-md lg:max-w-xl
+// gutter: 768px 미만 18px, 이상 30px · lg(1024px)부터 max-width 1280px
 ```
 
 타이포그래피는 개별 유틸리티와 묶음 유틸리티를 모두 제공합니다.
@@ -83,6 +102,7 @@ Project docs:
 - [`AGENTS.md`](AGENTS.md) - 프로젝트 작업 규약
 - [`docs/accessibility.md`](docs/accessibility.md) - KWCAG 2.2 접근성 체크리스트
 - [`docs/git-strategy.md`](docs/git-strategy.md) - 브랜치·커밋 규칙
+- [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts) - breakpoint·container·grid 반응형 헬퍼
 
 Next.js resources:
 

@@ -6,7 +6,8 @@
    --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
    --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
    --typography-* : font shorthand 묶음 토큰. family/size/weight/line-height 포함.
-   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* : 레이아웃·크기 기반 토큰.
+   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-gutter-* : 레이아웃·크기 기반 토큰.
+   --ds-gradient-* : 그라데이션 토큰. @theme --background-image-gradient-* 로 노출.
    guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
    예: --raw-green-500 → --ds-green-500 → --color-green-500
@@ -140,6 +141,10 @@
   --layout-grid-sidebar-wide: 20rem minmax(0, 1fr);
   --layout-grid-form: repeat(2, minmax(0, 1fr));
   --layout-grid-cards: repeat(auto-fit, minmax(16rem, 1fr));
+
+  /* container 좌우 padding — md(768px) 미만 18px, 이상 30px */
+  --layout-gutter-sm: 1.125rem;
+  --layout-gutter-md: 1.875rem;
 
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
@@ -404,6 +409,8 @@
   --spacing-control-sm: var(--size-control-sm);
   --spacing-control-md: var(--size-control-md);
   --spacing-control-lg: var(--size-control-lg);
+  --spacing-gutter-sm: var(--layout-gutter-sm);
+  --spacing-gutter-md: var(--layout-gutter-md);
 
   --radius-none: var(--shape-radius-none);
   --radius-sm: var(--shape-radius-sm);
