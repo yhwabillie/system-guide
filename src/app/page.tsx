@@ -113,10 +113,10 @@ const typographyTokens = [
 ];
 
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
-  AAA:        { bg: "var(--ds-level-aaa-bg)",  color: "var(--ds-level-aaa-fg)",  label: "AAA" },
-  AA:         { bg: "var(--ds-level-aa-bg)",   color: "var(--ds-level-aa-fg)",   label: "AA" },
-  "AA Large": { bg: "var(--ds-level-warn-bg)", color: "var(--ds-level-warn-fg)", label: "AA Large" },
-  Fail:       { bg: "var(--ds-level-fail-bg)", color: "var(--ds-level-fail-fg)", label: "Fail" },
+  AAA:        { bg: "var(--ds-guide-level-aaa-bg)",  color: "var(--ds-guide-level-aaa-fg)",  label: "AAA" },
+  AA:         { bg: "var(--ds-guide-level-aa-bg)",   color: "var(--ds-guide-level-aa-fg)",   label: "AA" },
+  "AA Large": { bg: "var(--ds-guide-level-warn-bg)", color: "var(--ds-guide-level-warn-fg)", label: "AA Large" },
+  Fail:       { bg: "var(--ds-guide-level-fail-bg)", color: "var(--ds-guide-level-fail-fg)", label: "Fail" },
 };
 
 function LevelBadge({ level }: { level: ContrastLevel }) {

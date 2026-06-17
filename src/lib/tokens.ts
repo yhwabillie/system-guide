@@ -34,9 +34,9 @@ export const fontSizePx = {
   "label-md": 14,
   "label-sm": 12,
   "caption": 12,
-  "selected-lg": 18,
-  "selected-md": 16,
-  "selected-sm": 14,
+  "guide-selected-lg": 18,
+  "guide-selected-md": 16,
+  "guide-selected-sm": 14,
 } as const;
 
 /**

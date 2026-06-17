@@ -5,6 +5,7 @@
    --raw-*   : 원본 팔레트·알파 램프. 불변·모드 무관.
    --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
    --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
+   guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
    예: --raw-green-500 → --ds-green-500 → --color-green-500
        → bg-green-500 / text-green-500 / border-green-500
@@ -178,16 +179,16 @@
   --ds-accent-danger: var(--ds-red-500);
   --ds-on-accent: var(--raw-white);
 
-  /* 대비 등급 상태색 — 자체 완결형 칩(내부 대비 검증 완료)이라
-     raw 직접 참조로 모드 무관 고정 */
-  --ds-level-aaa-bg: var(--raw-green-500);
-  --ds-level-aaa-fg: var(--raw-white);
-  --ds-level-aa-bg: var(--raw-green-400);
-  --ds-level-aa-fg: var(--raw-green-900);
-  --ds-level-warn-bg: var(--raw-sand-400);
-  --ds-level-warn-fg: var(--raw-brown-900);
-  --ds-level-fail-bg: var(--raw-red-500);
-  --ds-level-fail-fg: var(--raw-white);
+  /* Guide-only: 대비 체커 등급 상태색.
+     실제 제품 UI 토큰과 구분되도록 guide 접두를 유지한다. */
+  --ds-guide-level-aaa-bg: var(--raw-green-500);
+  --ds-guide-level-aaa-fg: var(--raw-white);
+  --ds-guide-level-aa-bg: var(--raw-green-400);
+  --ds-guide-level-aa-fg: var(--raw-green-900);
+  --ds-guide-level-warn-bg: var(--raw-sand-400);
+  --ds-guide-level-warn-fg: var(--raw-brown-900);
+  --ds-guide-level-fail-bg: var(--raw-red-500);
+  --ds-guide-level-fail-fg: var(--raw-white);
 }
 
 /* ============================================================
@@ -286,14 +287,15 @@
   --color-overlay-subtle: var(--ds-overlay-subtle);
   --color-overlay: var(--ds-overlay);
   --color-overlay-strong: var(--ds-overlay-strong);
-  --color-level-aaa-bg: var(--ds-level-aaa-bg);
-  --color-level-aaa-fg: var(--ds-level-aaa-fg);
-  --color-level-aa-bg: var(--ds-level-aa-bg);
-  --color-level-aa-fg: var(--ds-level-aa-fg);
-  --color-level-warn-bg: var(--ds-level-warn-bg);
-  --color-level-warn-fg: var(--ds-level-warn-fg);
-  --color-level-fail-bg: var(--ds-level-fail-bg);
-  --color-level-fail-fg: var(--ds-level-fail-fg);
+  /* Guide-only tokens — 큐레이션 가이드 화면에서만 쓰는 표시/검증용 유틸리티 */
+  --color-guide-level-aaa-bg: var(--ds-guide-level-aaa-bg);
+  --color-guide-level-aaa-fg: var(--ds-guide-level-aaa-fg);
+  --color-guide-level-aa-bg: var(--ds-guide-level-aa-bg);
+  --color-guide-level-aa-fg: var(--ds-guide-level-aa-fg);
+  --color-guide-level-warn-bg: var(--ds-guide-level-warn-bg);
+  --color-guide-level-warn-fg: var(--ds-guide-level-warn-fg);
+  --color-guide-level-fail-bg: var(--ds-guide-level-fail-bg);
+  --color-guide-level-fail-fg: var(--ds-guide-level-fail-fg);
 
   --text-display-lg: var(--font-size-display-lg);
   --text-display-md: var(--font-size-display-md);
@@ -309,9 +311,9 @@
   --text-label-md: var(--font-size-label-md);
   --text-label-sm: var(--font-size-label-sm);
   --text-caption: var(--font-size-caption);
-  --text-selected-lg: var(--font-size-selected-lg);
-  --text-selected-md: var(--font-size-selected-md);
-  --text-selected-sm: var(--font-size-selected-sm);
+  --text-guide-selected-lg: var(--font-size-guide-selected-lg);
+  --text-guide-selected-md: var(--font-size-guide-selected-md);
+  --text-guide-selected-sm: var(--font-size-guide-selected-sm);
 
   --leading-base: var(--font-line);
   --tracking-tight: var(--font-tracking-tight);
