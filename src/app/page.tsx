@@ -66,9 +66,9 @@ const surfaceAnchors = [
 
 // 시맨틱 오버레이 — 모드 인지 반투명(라이트=검정α / 다크=흰색α)
 const overlayTokens = [
-  { label: "overlay-subtle", cssVar: "--color-overlay-subtle" },
-  { label: "overlay", cssVar: "--color-overlay" },
-  { label: "overlay-strong", cssVar: "--color-overlay-strong" },
+  { label: "overlay-subtle", cssVar: "--color-overlay-subtle", light: "rgba(0, 0, 0, 0.05)", dark: "rgba(255, 255, 255, 0.05)" },
+  { label: "overlay", cssVar: "--color-overlay", light: "rgba(0, 0, 0, 0.10)", dark: "rgba(255, 255, 255, 0.10)" },
+  { label: "overlay-strong", cssVar: "--color-overlay-strong", light: "rgba(0, 0, 0, 0.20)", dark: "rgba(255, 255, 255, 0.20)" },
 ];
 
 // 투명도 확인용 체크무늬(모드 무관 고정) — 위에 알파 색을 올려 투명도를 가시화
@@ -167,8 +167,6 @@ export default function Home() {
   });
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
   const [resolved, setResolved] = useState<Record<string, string>>({});
-  // 오버레이 토큰의 현재 모드 실효값(rgba) — 값 표시용
-  const [overlayResolved, setOverlayResolved] = useState<Record<string, string>>({});
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
@@ -181,12 +179,6 @@ export default function Home() {
       }
     }
     setResolved(map);
-
-    const oMap: Record<string, string> = {};
-    for (const t of overlayTokens) {
-      oMap[t.cssVar] = cs.getPropertyValue(t.cssVar).trim();
-    }
-    setOverlayResolved(oMap);
   }, [isDark]);
 
   const hexOf = (name: string, scale: number, fallback: string) =>
@@ -773,7 +765,7 @@ export default function Home() {
               <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>Transparency</span>
               <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>Value ({isDark ? "Dark" : "Light"})</span>
             </div>
-            {overlayTokens.map(({ label, cssVar }) => (
+            {overlayTokens.map(({ label, cssVar, light, dark }) => (
               <div role="listitem" key={label} style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center" }}>
                 <span style={{ fontSize: "var(--font-size-label-sm)", fontWeight: 600 }}>{label}</span>
                 {/* 체크무늬 위에 알파 색을 올려 투명도를 가시화. 다크모드(흰색α)는 어두운 체커 */}
@@ -784,7 +776,7 @@ export default function Home() {
                 >
                   <div style={{ width: "100%", height: "100%", background: `var(${cssVar})` }} />
                 </div>
-                <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)", fontFamily: "monospace" }}>{overlayResolved[cssVar] || cssVar}</span>
+                <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)", fontFamily: "monospace" }}>{isDark ? dark : light}</span>
               </div>
             ))}
           </div>
