@@ -490,10 +490,10 @@ export default function Home() {
           </div>
 
           {/* 결과 */}
-          <div style={{ borderRadius: "16px", overflow: "hidden", border: "1px solid var(--ds-neutral-200)" }}>
+          <div className="rounded-2xl overflow-hidden border border-neutral-200">
             {/* 미리보기 — 텍스트 견본은 role="img"로, 인터랙티브 데모는 일반 마크업으로 분리 */}
-            <div style={{ background: bgColor.hex, padding: "40px", display: "flex", flexDirection: "column", gap: "20px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div className="p-10 flex flex-col gap-5" style={{ background: bgColor.hex }}>
+              <div className="flex flex-col gap-2">
                 {/* 큰 텍스트 견본은 요소 자체에 role="img" — WAVE는 부모가 아닌 텍스트 요소를 직접 평가함 */}
                 <span role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 큰 텍스트 견본`} style={{ display: "block", color: textColor.hex, fontSize: pxToRem(32), fontWeight: "var(--font-weight-bold)", lineHeight: "var(--font-line)" }}>
                   큰 텍스트 — Large Text (Bold 18px+)
@@ -509,14 +509,14 @@ export default function Home() {
               <div aria-hidden="true" style={{ borderTop: `1px solid ${textColor.hex}`, opacity: 0.15 }} />
 
               {/* 아이콘 미리보기 */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div className="flex flex-col gap-3">
                 <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-semibold)", margin: 0, opacity: 0.6, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                   Icon Preview (SC 1.4.11 — AA 3:1)
                 </p>
-                <div style={{ display: "flex", alignItems: "center", gap: "32px", flexWrap: "wrap" }}>
+                <div className="flex items-center gap-8 flex-wrap">
                   {/* 아이콘 단독 */}
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-                    <div role="group" aria-label="아이콘 단독 예시" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <div className="flex flex-col items-center gap-2">
+                    <div role="group" aria-label="아이콘 단독 예시" className="flex gap-3 items-center">
                       <svg aria-label="홈" role="img" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
                       </svg>
@@ -537,11 +537,11 @@ export default function Home() {
                   </div>
 
                   {/* 아이콘 + 텍스트 (면제 케이스) */}
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
+                  <div className="flex flex-col items-start gap-2">
                     <nav aria-label="아이콘과 텍스트 조합 예시">
-                      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <ul className="list-none m-0 p-0 flex flex-col gap-2">
                         <li>
-                          <a href="#" onClick={(e) => e.preventDefault()} style={{ display: "flex", alignItems: "center", gap: "8px", color: textColor.hex, textDecoration: "none" }}>
+                          <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-2 no-underline" style={{ color: textColor.hex }}>
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
                             </svg>
@@ -549,7 +549,7 @@ export default function Home() {
                           </a>
                         </li>
                         <li>
-                          <a href="#" onClick={(e) => e.preventDefault()} style={{ display: "flex", alignItems: "center", gap: "8px", color: textColor.hex, textDecoration: "none" }}>
+                          <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-2 no-underline" style={{ color: textColor.hex }}>
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
@@ -562,8 +562,8 @@ export default function Home() {
                   </div>
 
                   {/* 버튼 UI 컴포넌트 */}
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  <div className="flex flex-col items-start gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       <button
                         type="button"
                         style={{
@@ -747,25 +747,26 @@ export default function Home() {
           <p className="text-body-sm text-text-muted mb-6">
             오버레이용 반투명 시맨틱 토큰. 라이트=검정α / 다크=흰색α로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
           </p>
-          <div role="list" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div role="list" className="flex flex-col gap-2">
             {/* 헤더 */}
-            <div aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center", paddingBottom: "4px" }}>
+            <div aria-hidden="true" className="grid gap-4 items-center pb-1" style={{ gridTemplateColumns: "160px 1fr 200px" }}>
               <span className="text-caption text-text-muted">Token</span>
               <span className="text-caption text-text-muted">Transparency</span>
               <span className="text-caption text-text-muted">Value ({isDark ? "Dark" : "Light"})</span>
             </div>
             {overlayTokens.map(({ label, cssVar, light, dark }) => (
-              <div role="listitem" key={label} style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center" }}>
+              <div role="listitem" key={label} className="grid gap-4 items-center" style={{ gridTemplateColumns: "160px 1fr 200px" }}>
                 <span className="text-label-sm font-semibold">{label}</span>
                 {/* 체크무늬 위에 알파 색을 올려 투명도를 가시화. 다크모드(흰색α)는 어두운 체커 */}
                 <div
                   role="img"
                   aria-label={`${label} — 체크무늬 위 반투명 견본`}
-                  style={{ height: "40px", borderRadius: "6px", overflow: "hidden", border: "1px solid var(--ds-border)", ...(isDark ? checkerDark : checkerLight) }}
+                  className="h-10 rounded-md overflow-hidden border border-border"
+                  style={isDark ? checkerDark : checkerLight}
                 >
-                  <div style={{ width: "100%", height: "100%", background: `var(${cssVar})` }} />
+                  <div className="w-full h-full" style={{ background: `var(${cssVar})` }} />
                 </div>
-                <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)", fontFamily: "monospace" }}>{isDark ? dark : light}</span>
+                <span className="text-caption text-text-muted font-mono">{isDark ? dark : light}</span>
               </div>
             ))}
           </div>
@@ -780,20 +781,20 @@ export default function Home() {
         <section aria-labelledby="section-font" className="mb-16">
           <h2 id="section-font" className="text-heading-md font-bold mb-6">Font Family</h2>
 
-          <div style={{ borderRadius: "16px", border: "1px solid var(--ds-neutral-200)", overflow: "hidden" }}>
+          <div className="rounded-2xl border border-neutral-200 overflow-hidden">
             {/* 글꼴 견본 — 큰 텍스트 요소 자체에 role="img" (정보는 아래 dl에서 제공) */}
-            <div style={{ padding: "48px 40px", background: "var(--ds-neutral-50)", borderBottom: "1px solid var(--ds-neutral-200)", display: "flex", flexDirection: "column", gap: "4px" }}>
-              <span role="img" aria-label="Pretendard GOV 글꼴 견본" style={{ display: "block", fontSize: pxToRem(48), fontWeight: "var(--font-weight-bold)", lineHeight: "var(--font-line)", fontFamily: "var(--font-family-base)" }}>Pretendard GOV</span>
-              <span role="img" aria-label="한글 견본" style={{ display: "block", fontSize: pxToRem(24), fontWeight: "var(--font-weight-regular)", lineHeight: "var(--font-line)", fontFamily: "var(--font-family-base)" }}>
+            <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
+              <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-family-base)" }}>Pretendard GOV</span>
+              <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-family-base)" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" style={{ display: "block", fontSize: pxToRem(18), fontWeight: "var(--font-weight-regular)", lineHeight: "var(--font-line)", fontFamily: "var(--font-family-base)", color: "var(--ds-neutral-500)" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-neutral-500" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-family-base)" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
 
-            <div style={{ padding: "32px 40px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }}>
-              <dl style={{ display: "flex", flexDirection: "column", gap: "16px", margin: 0 }}>
+            <div className="py-8 px-10 grid grid-cols-2 gap-8">
+              <dl className="flex flex-col gap-4 m-0">
                 {[
                   { label: "폰트명", value: "Pretendard GOV" },
                   { label: "제작자", value: "Kil Hyung-jin (orioncactus)" },
@@ -803,53 +804,53 @@ export default function Home() {
                   { label: "CSS 변수", value: "--font-family-base" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase" }}>{label}</dt>
-                    <dd style={{ fontSize: "var(--font-size-body-sm)", marginTop: "2px", marginLeft: 0 }}>{value}</dd>
+                    <dt className="text-caption text-neutral-400 font-semibold tracking-wide uppercase">{label}</dt>
+                    <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
                   </div>
                 ))}
               </dl>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div className="flex flex-col gap-4">
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 2px" }}>공식 GitHub</p>
-                  <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-green-500)", wordBreak: "break-all" }}>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-0.5">공식 GitHub</p>
+                  <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
                     github.com/orioncactus/pretendard
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
                 </div>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 2px" }}>원본 다운로드</p>
-                  <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-green-500)", wordBreak: "break-all" }}>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-0.5">원본 다운로드</p>
+                  <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
                     github.com/orioncactus/pretendard/releases/tag/v1.3.9
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
-                  <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>Assets → pretendard-gov.zip 다운로드</p>
+                  <p className="mt-1 text-caption text-neutral-400">Assets → pretendard-gov.zip 다운로드</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 4px" }}>이 프로젝트 적용 방식</p>
-                  <p style={{ margin: "0 0 8px", fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
-                  <pre style={{ margin: 0, padding: "12px 16px", borderRadius: "8px", background: "var(--ds-neutral-100)", fontSize: pxToRem(12), wordBreak: "break-all", color: "var(--ds-neutral-700)", border: "1px solid var(--ds-neutral-200)", whiteSpace: "pre-wrap" }}>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="mb-2 text-caption text-neutral-400">자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
+                  <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
                     <code>{`localFont({ src: "./fonts/PretendardGOVVariable.woff2", weight: "100 900", variable: "--font-pretendard-gov" })`}</code>
                   </pre>
                 </div>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 4px" }}>GOV 버전 특징</p>
-                  <ul style={{ margin: 0, paddingLeft: "16px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-1">GOV 버전 특징</p>
+                  <ul className="m-0 pl-4 flex flex-col gap-1">
                     {["공공기관·정부 웹사이트 최적화", "한국 웹 접근성 지침(KWCAG) 대응", "완성형 한글 11,172자 전체 지원", "다양한 weight 지원 (100–900)"].map((item) => (
-                      <li key={item} style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-600)" }}>{item}</li>
+                      <li key={item} className="text-caption text-neutral-600">{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
             </div>
 
-            <div style={{ padding: "24px 40px", borderTop: "1px solid var(--ds-neutral-200)", display: "flex", flexDirection: "column", gap: "12px" }}>
-              <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: 0 }}>Weight</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "16px" }}>
+            <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-3">
+              <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase m-0">Weight</p>
+              <div className="grid grid-cols-5 gap-4">
                 {[{ weight: 100, label: "Thin" }, { weight: 300, label: "Light" }, { weight: 400, label: "Regular" }, { weight: 600, label: "SemiBold" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
-                  <div key={weight} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <div key={weight} className="flex flex-col gap-0.5">
                     {/* 견본 글자는 그래픽으로 표시 — 정보는 아래 레이블이 전달 */}
-                    <span role="img" aria-label={`${weight} ${label} 견본`} style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-family-base)", lineHeight: "var(--font-line)" }}>가나다 Aa</span>
+                    <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-family-base)" }}>가나다 Aa</span>
                     <span className="text-caption text-neutral-400">{weight} · {label}</span>
                   </div>
                 ))}
@@ -857,28 +858,28 @@ export default function Home() {
             </div>
 
             {/* Font Stack — 폴백 체인 큐레이션 */}
-            <div style={{ padding: "24px 40px", borderTop: "1px solid var(--ds-neutral-200)", display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-4">
               <div>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: 0 }}>Font Stack (폴백 체인)</p>
-                <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>
+                <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase m-0">Font Stack (폴백 체인)</p>
+                <p className="mt-1 text-caption text-text-muted">
                   Pretendard·Noto는 자체 호스팅(런타임 외부 요청 0). Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
                 </p>
               </div>
-              <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+              <ol className="list-none m-0 p-0 flex flex-col gap-2">
                 {fontStack.map(({ order, name, family, role, source, desc }) => (
-                  <li key={order} style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", gap: "16px", alignItems: "center", padding: "12px 16px", borderRadius: "8px", border: "1px solid var(--ds-border)" }}>
-                    <span aria-hidden="true" style={{ width: "24px", height: "24px", borderRadius: "999px", background: "var(--ds-accent)", color: "var(--ds-on-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--font-size-caption)", fontWeight: "var(--font-weight-bold)" }}>{order}</span>
+                  <li key={order} className="grid gap-4 items-center py-3 px-4 rounded-lg border border-border" style={{ gridTemplateColumns: "28px 1fr auto" }}>
+                    <span aria-hidden="true" className="w-6 h-6 rounded-full bg-accent text-on-accent flex items-center justify-center text-caption font-bold">{order}</span>
                     <div>
-                      <span role="img" aria-label={`${name} 글꼴 견본`} style={{ display: "block", fontFamily: family, fontSize: pxToRem(20), fontWeight: "var(--font-weight-semibold)", lineHeight: "var(--font-line)" }}>{name} · 다람쥐 Aa 1234</span>
-                      <p style={{ margin: "2px 0 0", fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>{desc}</p>
+                      <span role="img" aria-label={`${name} 글꼴 견본`} className="block font-semibold leading-base" style={{ fontFamily: family, fontSize: pxToRem(20) }}>{name} · 다람쥐 Aa 1234</span>
+                      <p className="mt-0.5 text-caption text-text-muted">{desc}</p>
                     </div>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)", textAlign: "right", lineHeight: "var(--font-line)" }}>
+                    <span className="text-caption text-text-muted text-right leading-base">
                       {role}<br />{source}
                     </span>
                   </li>
                 ))}
               </ol>
-              <pre style={{ margin: 0, padding: "12px 16px", borderRadius: "8px", background: "var(--ds-neutral-100)", fontSize: pxToRem(12), wordBreak: "break-all", color: "var(--ds-neutral-700)", border: "1px solid var(--ds-neutral-200)", whiteSpace: "pre-wrap" }}>
+              <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
                 <code>{`font-family: "Pretendard GOV", "Noto Sans KR", sans-serif;`}</code>
               </pre>
             </div>
