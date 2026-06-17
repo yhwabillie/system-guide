@@ -60,8 +60,11 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
   - 둘 다 같은 px 정의 + `REM_BASE(16)`에서 파생 → 기준값 중복 없음.
 - **모든 px 크기는 rem으로**(반응형·접근성 3.1.3). 인라인은 `pxToRem()`, 토큰은 tokens.ts에서. globals.css에 `--font-size-*` 직접 정의 금지(거기 두지 않음).
 - weight 원본은 `--typography-weight-*`, Tailwind 유틸리티 노출은 `@theme`의 `--font-weight-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
-- line-height·letter-spacing도 토큰: `--font-line`, `--font-tracking-*`.
+- line-height·letter-spacing도 토큰: `--font-line`, `--font-tracking`.
 - line-height는 **단일 토큰 `--font-line: 1.5`** (WCAG 1.4.12 충족, 전 역할 공통).
+- letter-spacing은 계층을 나누지 않고 **단일 기본값 `--font-tracking: 0`**만 사용합니다.
+- 숫자 정렬이 필요한 대비율·통계·표에는 `numeric-tabular` 유틸리티(`--font-numeric-tabular`)를 사용합니다.
+- 가짜 굵기 합성을 막기 위해 전역 `font-synthesis-weight: none`을 유지합니다.
 - 타이포 유틸리티는 두 방식 모두 제공:
   - 개별 조합: `text-display-lg` + `font-bold` + `leading-base` + `font-sans`
   - 묶음 shorthand: `typo-display-lg` (`--typography-display-lg` → font-family/size/weight/line-height 적용, 유틸리티에서 letter-spacing까지 포함)

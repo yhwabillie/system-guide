@@ -127,7 +127,7 @@ function LevelBadge({ level }: { level: ContrastLevel }) {
     <span style={{
       background: s.bg, color: s.color,
       padding: "2px 10px", borderRadius: "999px",
-      fontSize: pxToRem(11), fontWeight: "var(--font-weight-bold)", letterSpacing: "var(--font-tracking-wide)",
+      fontSize: pxToRem(11), fontWeight: "var(--font-weight-bold)", letterSpacing: "var(--font-tracking)",
     }}>
       {s.label}
     </span>
@@ -514,7 +514,7 @@ export default function Home() {
 
               {/* 아이콘 미리보기 */}
               <div className="flex flex-col gap-3">
-                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-semibold)", margin: 0, opacity: 0.6, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-semibold)", margin: 0, opacity: 0.6, letterSpacing: "var(--font-tracking)", textTransform: "uppercase" }}>
                   Icon Preview (SC 1.4.11 — AA 3:1)
                 </p>
                 <div className="flex items-center gap-8 flex-wrap">
@@ -616,7 +616,7 @@ export default function Home() {
                 <p className="text-caption text-neutral-400 mb-1">대비율</p>
                 <output className="block">
                   {/* 숫자는 role="img" 그래픽으로 명시 — 제목 오인(Possible heading) 방지 */}
-                  <span role="img" aria-label={`대비율 ${ratio} 대 1`} className="block font-bold leading-none" style={{ fontSize: pxToRem(40) }}>
+                  <span role="img" aria-label={`대비율 ${ratio} 대 1`} className="block font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
                     {ratio}<span aria-hidden="true" className="font-normal" style={{ fontSize: pxToRem(16) }}>:1</span>
                   </span>
                 </output>
@@ -628,12 +628,12 @@ export default function Home() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400">4.5:1</span>
+                    <span className="text-caption text-neutral-400 numeric-tabular">4.5:1</span>
                     <span role="img" aria-label={ratio >= 4.5 ? "통과" : "실패"}>{ratio >= 4.5 ? "✅" : "❌"}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AAA</span>
-                    <span className="text-caption text-neutral-400">7:1</span>
+                    <span className="text-caption text-neutral-400 numeric-tabular">7:1</span>
                     <span role="img" aria-label={ratio >= 7 ? "통과" : "실패"}>{ratio >= 7 ? "✅" : "❌"}</span>
                   </div>
                 </div>
@@ -646,12 +646,12 @@ export default function Home() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400">3:1</span>
+                    <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
                     <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AAA</span>
-                    <span className="text-caption text-neutral-400">4.5:1</span>
+                    <span className="text-caption text-neutral-400 numeric-tabular">4.5:1</span>
                     <span role="img" aria-label={ratio >= 4.5 ? "통과" : "실패"}>{ratio >= 4.5 ? "✅" : "❌"}</span>
                   </div>
                 </div>
@@ -662,7 +662,7 @@ export default function Home() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400">3:1</span>
+                    <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
                     <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -678,7 +678,7 @@ export default function Home() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400">3:1</span>
+                    <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
                     <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -719,7 +719,7 @@ export default function Home() {
                         style={{ background: s.bg }}
                       >
                         <span aria-hidden="true" className="font-bold" style={{ fontSize: pxToRem(11), color: s.color }}>{lv}</span>
-                        <span aria-hidden="true" style={{ fontSize: pxToRem(11), color: s.color }}>{r}</span>
+                        <span aria-hidden="true" className="numeric-tabular" style={{ fontSize: pxToRem(11), color: s.color }}>{r}</span>
                       </div>
                     );
                   })}
@@ -808,7 +808,7 @@ export default function Home() {
                   { label: "CSS 변수", value: "--font-family-base" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt className="text-caption text-neutral-400 font-semibold tracking-wide uppercase">{label}</dt>
+                    <dt className="text-caption text-neutral-400 font-semibold tracking-normal uppercase">{label}</dt>
                     <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
                   </div>
                 ))}
@@ -816,14 +816,14 @@ export default function Home() {
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-0.5">공식 GitHub</p>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-0.5">공식 GitHub</p>
                   <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
                     github.com/orioncactus/pretendard
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
                 </div>
                 <div>
-                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-0.5">원본 다운로드</p>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-0.5">원본 다운로드</p>
                   <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
                     github.com/orioncactus/pretendard/releases/tag/v1.3.9
                     <span className="sr-only">(새 창에서 열림)</span>
@@ -831,14 +831,14 @@ export default function Home() {
                   <p className="mt-1 text-caption text-neutral-400">Assets → pretendard-gov.zip 다운로드</p>
                 </div>
                 <div>
-                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
                   <p className="mb-2 text-caption text-neutral-400">자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
                   <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
                     <code>{`localFont({ src: "./fonts/PretendardGOVVariable.woff2", weight: "100 900", variable: "--font-pretendard-gov" })`}</code>
                   </pre>
                 </div>
                 <div>
-                  <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase mb-1">GOV 버전 특징</p>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-1">GOV 버전 특징</p>
                   <ul className="m-0 pl-4 flex flex-col gap-1">
                     {["공공기관·정부 웹사이트 최적화", "한국 웹 접근성 지침(KWCAG) 대응", "완성형 한글 11,172자 전체 지원", "다양한 weight 지원 (100–900)"].map((item) => (
                       <li key={item} className="text-caption text-neutral-600">{item}</li>
@@ -849,7 +849,7 @@ export default function Home() {
             </div>
 
             <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-3">
-              <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase m-0">Weight</p>
+              <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase m-0">Weight</p>
               <div className="grid grid-cols-5 gap-4">
                 {[{ weight: 100, label: "Thin" }, { weight: 300, label: "Light" }, { weight: 400, label: "Regular" }, { weight: 600, label: "SemiBold" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
@@ -864,7 +864,7 @@ export default function Home() {
             {/* Font Stack — 폴백 체인 큐레이션 */}
             <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-4">
               <div>
-                <p className="text-caption text-neutral-400 font-semibold tracking-wide uppercase m-0">Font Stack (폴백 체인)</p>
+                <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase m-0">Font Stack (폴백 체인)</p>
                 <p className="mt-1 text-caption text-text-muted">
                   Pretendard·Noto는 자체 호스팅(런타임 외부 요청 0). Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
                 </p>

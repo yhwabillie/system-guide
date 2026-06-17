@@ -139,10 +139,11 @@
   /* Line height — 단일 토큰. WCAG 1.4.12 충족 위해 1.5 */
   --font-line: 1.5;
 
-  /* Letter spacing 토큰 */
-  --font-tracking-tight: -0.01em;  /* 큰 제목 */
-  --font-tracking-normal: 0;
-  --font-tracking-wide: 0.05em;    /* 캡션·라벨 강조 */
+  /* Letter spacing — 프로젝트 기본값 하나만 사용 */
+  --font-tracking: 0;
+
+  /* 숫자 정렬용 토큰 — 대비율/통계/표에서 자리 폭을 맞출 때 사용 */
+  --font-numeric-tabular: tabular-nums;
 
   /* 폰트 폴백 체인 (next/font 자체 호스팅): Pretendard GOV → Noto Sans KR → 시스템 sans-serif
      --font-pretendard-gov / --font-noto 는 layout.tsx의 next/font/local 이 주입 */
@@ -338,9 +339,7 @@
   --text-guide-selected-sm: var(--font-size-guide-selected-sm);
 
   --leading-base: var(--font-line);
-  --tracking-tight: var(--font-tracking-tight);
-  --tracking-normal: var(--font-tracking-normal);
-  --tracking-wide: var(--font-tracking-wide);
+  --tracking-normal: var(--font-tracking);
   --font-weight-regular: var(--typography-weight-regular);
   --font-weight-medium: var(--typography-weight-medium);
   --font-weight-semibold: var(--typography-weight-semibold);
@@ -352,93 +351,98 @@
 /* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
 @utility typo-display-lg {
   font: var(--typography-display-lg);
-  letter-spacing: var(--font-tracking-tight);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-display-md {
   font: var(--typography-display-md);
-  letter-spacing: var(--font-tracking-tight);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-display-sm {
   font: var(--typography-display-sm);
-  letter-spacing: var(--font-tracking-tight);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-heading-lg {
   font: var(--typography-heading-lg);
-  letter-spacing: var(--font-tracking-tight);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-heading-md {
   font: var(--typography-heading-md);
-  letter-spacing: var(--font-tracking-tight);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-heading-sm {
   font: var(--typography-heading-sm);
-  letter-spacing: var(--font-tracking-tight);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-body-lg {
   font: var(--typography-body-lg);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-body-md {
   font: var(--typography-body-md);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-body-sm {
   font: var(--typography-body-sm);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-label-xl {
   font: var(--typography-label-xl);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-label-lg {
   font: var(--typography-label-lg);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-label-md {
   font: var(--typography-label-md);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-label-sm {
   font: var(--typography-label-sm);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-caption {
   font: var(--typography-caption);
-  letter-spacing: var(--font-tracking-wide);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-guide-selected-lg {
   font: var(--typography-guide-selected-lg);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-guide-selected-md {
   font: var(--typography-guide-selected-md);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
 }
 
 @utility typo-guide-selected-sm {
   font: var(--typography-guide-selected-sm);
-  letter-spacing: var(--font-tracking-normal);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility numeric-tabular {
+  font-variant-numeric: var(--font-numeric-tabular);
 }
 
 body {
   background: var(--ds-background);
   color: var(--ds-foreground);
   font-family: var(--font-family-base);
+  font-synthesis-weight: none;
 }
 
 img {

@@ -26,6 +26,14 @@
 
 `typo-*` 유틸리티는 `--typography-*` 토큰을 사용해 `font-family`, `font-size`, `font-weight`, `line-height`를 적용하고, 유틸리티에서 `letter-spacing`까지 함께 적용합니다.
 
+`letter-spacing`은 계층을 나누지 않고 기본값 하나(`--font-tracking: 0`)만 사용합니다. 숫자 자리 폭 정렬이 필요한 대비율·통계·표에는 `numeric-tabular` 유틸리티를 사용합니다.
+
+```tsx
+<span className="numeric-tabular">4.5:1</span>
+```
+
+전역 `font-synthesis-weight: none`으로 브라우저의 가짜 굵기 합성을 막고, 실제 폰트 weight만 사용합니다.
+
 | Token | Size | Weight | Utility |
 |------|------|--------|---------|
 | Display LG | 40px | 700 | `typo-display-lg` |
