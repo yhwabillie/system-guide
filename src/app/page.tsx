@@ -128,7 +128,7 @@ function LevelBadge({ level }: { level: ContrastLevel }) {
     <span style={{
       background: s.bg, color: s.color,
       padding: "2px 10px", borderRadius: "999px",
-      fontSize: pxToRem(11), fontWeight: 700, letterSpacing: "0.05em",
+      fontSize: pxToRem(11), fontWeight: "var(--font-weight-bold)", letterSpacing: "var(--font-tracking-wide)",
     }}>
       {s.label}
     </span>
@@ -495,13 +495,13 @@ export default function Home() {
             <div style={{ background: bgColor.hex, padding: "40px", display: "flex", flexDirection: "column", gap: "20px" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {/* 큰 텍스트 견본은 요소 자체에 role="img" — WAVE는 부모가 아닌 텍스트 요소를 직접 평가함 */}
-                <span role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 큰 텍스트 견본`} style={{ display: "block", color: textColor.hex, fontSize: pxToRem(32), fontWeight: 700, lineHeight: 1.2 }}>
+                <span role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 큰 텍스트 견본`} style={{ display: "block", color: textColor.hex, fontSize: pxToRem(32), fontWeight: "var(--font-weight-bold)", lineHeight: "var(--font-line)" }}>
                   큰 텍스트 — Large Text (Bold 18px+)
                 </span>
-                <p style={{ color: textColor.hex, fontSize: pxToRem(16), fontWeight: 400, margin: 0, lineHeight: 1.6 }}>
+                <p style={{ color: textColor.hex, fontSize: pxToRem(16), fontWeight: "var(--font-weight-regular)", margin: 0, lineHeight: "var(--font-line)" }}>
                   일반 텍스트 — Normal Text (16px). 가나다라마바사 ABC 123. 웹 접근성 대비 확인 미리보기입니다.
                 </p>
-                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: 400, margin: 0, lineHeight: 1.6 }}>
+                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-regular)", margin: 0, lineHeight: "var(--font-line)" }}>
                   작은 텍스트 — Caption (12px). 이 크기에서는 대비율이 더 중요합니다.
                 </p>
               </div>
@@ -510,7 +510,7 @@ export default function Home() {
 
               {/* 아이콘 미리보기 */}
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: 600, margin: 0, opacity: 0.6, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-semibold)", margin: 0, opacity: 0.6, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                   Icon Preview (SC 1.4.11 — AA 3:1)
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: "32px", flexWrap: "wrap" }}>
@@ -545,7 +545,7 @@ export default function Home() {
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
                             </svg>
-                            <span style={{ fontSize: pxToRem(14), fontWeight: 500 }}>홈</span>
+                            <span style={{ fontSize: pxToRem(14), fontWeight: "var(--font-weight-medium)" }}>홈</span>
                           </a>
                         </li>
                         <li>
@@ -553,7 +553,7 @@ export default function Home() {
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
-                            <span style={{ fontSize: pxToRem(14), fontWeight: 500 }}>검색</span>
+                            <span style={{ fontSize: pxToRem(14), fontWeight: "var(--font-weight-medium)" }}>검색</span>
                           </a>
                         </li>
                       </ul>
@@ -571,7 +571,7 @@ export default function Home() {
                           padding: "8px 16px", borderRadius: "8px",
                           border: `2px solid ${textColor.hex}`,
                           background: "transparent", color: textColor.hex,
-                          fontSize: pxToRem(14), fontWeight: 500, cursor: "pointer",
+                          fontSize: pxToRem(14), fontWeight: "var(--font-weight-medium)", cursor: "pointer",
                         }}
                       >
                         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -783,11 +783,11 @@ export default function Home() {
           <div style={{ borderRadius: "16px", border: "1px solid var(--ds-neutral-200)", overflow: "hidden" }}>
             {/* 글꼴 견본 — 큰 텍스트 요소 자체에 role="img" (정보는 아래 dl에서 제공) */}
             <div style={{ padding: "48px 40px", background: "var(--ds-neutral-50)", borderBottom: "1px solid var(--ds-neutral-200)", display: "flex", flexDirection: "column", gap: "4px" }}>
-              <span role="img" aria-label="Pretendard GOV 글꼴 견본" style={{ display: "block", fontSize: pxToRem(48), fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-family-base)" }}>Pretendard GOV</span>
-              <span role="img" aria-label="한글 견본" style={{ display: "block", fontSize: pxToRem(24), fontWeight: 400, lineHeight: 1.6, fontFamily: "var(--font-family-base)" }}>
+              <span role="img" aria-label="Pretendard GOV 글꼴 견본" style={{ display: "block", fontSize: pxToRem(48), fontWeight: "var(--font-weight-bold)", lineHeight: "var(--font-line)", fontFamily: "var(--font-family-base)" }}>Pretendard GOV</span>
+              <span role="img" aria-label="한글 견본" style={{ display: "block", fontSize: pxToRem(24), fontWeight: "var(--font-weight-regular)", lineHeight: "var(--font-line)", fontFamily: "var(--font-family-base)" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" style={{ display: "block", fontSize: pxToRem(18), fontWeight: 400, lineHeight: 1.6, fontFamily: "var(--font-family-base)", color: "var(--ds-neutral-500)" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" style={{ display: "block", fontSize: pxToRem(18), fontWeight: "var(--font-weight-regular)", lineHeight: "var(--font-line)", fontFamily: "var(--font-family-base)", color: "var(--ds-neutral-500)" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
@@ -803,7 +803,7 @@ export default function Home() {
                   { label: "CSS 변수", value: "--font-family-base" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>{label}</dt>
+                    <dt style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase" }}>{label}</dt>
                     <dd style={{ fontSize: "var(--font-size-body-sm)", marginTop: "2px", marginLeft: 0 }}>{value}</dd>
                   </div>
                 ))}
@@ -811,14 +811,14 @@ export default function Home() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: "0 0 2px" }}>공식 GitHub</p>
+                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 2px" }}>공식 GitHub</p>
                   <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-green-500)", wordBreak: "break-all" }}>
                     github.com/orioncactus/pretendard
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
                 </div>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: "0 0 2px" }}>원본 다운로드</p>
+                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 2px" }}>원본 다운로드</p>
                   <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-green-500)", wordBreak: "break-all" }}>
                     github.com/orioncactus/pretendard/releases/tag/v1.3.9
                     <span className="sr-only">(새 창에서 열림)</span>
@@ -826,14 +826,14 @@ export default function Home() {
                   <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>Assets → pretendard-gov.zip 다운로드</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: "0 0 4px" }}>이 프로젝트 적용 방식</p>
+                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 4px" }}>이 프로젝트 적용 방식</p>
                   <p style={{ margin: "0 0 8px", fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
                   <pre style={{ margin: 0, padding: "12px 16px", borderRadius: "8px", background: "var(--ds-neutral-100)", fontSize: pxToRem(12), wordBreak: "break-all", color: "var(--ds-neutral-700)", border: "1px solid var(--ds-neutral-200)", whiteSpace: "pre-wrap" }}>
                     <code>{`localFont({ src: "./fonts/PretendardGOVVariable.woff2", weight: "100 900", variable: "--font-pretendard-gov" })`}</code>
                   </pre>
                 </div>
                 <div>
-                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: "0 0 4px" }}>GOV 버전 특징</p>
+                  <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: "0 0 4px" }}>GOV 버전 특징</p>
                   <ul style={{ margin: 0, paddingLeft: "16px", display: "flex", flexDirection: "column", gap: "4px" }}>
                     {["공공기관·정부 웹사이트 최적화", "한국 웹 접근성 지침(KWCAG) 대응", "완성형 한글 11,172자 전체 지원", "다양한 weight 지원 (100–900)"].map((item) => (
                       <li key={item} style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-600)" }}>{item}</li>
@@ -844,12 +844,12 @@ export default function Home() {
             </div>
 
             <div style={{ padding: "24px 40px", borderTop: "1px solid var(--ds-neutral-200)", display: "flex", flexDirection: "column", gap: "12px" }}>
-              <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: 0 }}>Weight</p>
+              <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: 0 }}>Weight</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "16px" }}>
                 {[{ weight: 100, label: "Thin" }, { weight: 300, label: "Light" }, { weight: 400, label: "Regular" }, { weight: 600, label: "SemiBold" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
                   <div key={weight} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                     {/* 견본 글자는 그래픽으로 표시 — 정보는 아래 레이블이 전달 */}
-                    <span role="img" aria-label={`${weight} ${label} 견본`} style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-family-base)", lineHeight: 1.3 }}>가나다 Aa</span>
+                    <span role="img" aria-label={`${weight} ${label} 견본`} style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-family-base)", lineHeight: "var(--font-line)" }}>가나다 Aa</span>
                     <span className="text-caption text-neutral-400">{weight} · {label}</span>
                   </div>
                 ))}
@@ -859,7 +859,7 @@ export default function Home() {
             {/* Font Stack — 폴백 체인 큐레이션 */}
             <div style={{ padding: "24px 40px", borderTop: "1px solid var(--ds-neutral-200)", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: 0 }}>Font Stack (폴백 체인)</p>
+                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", fontWeight: "var(--font-weight-semibold)", letterSpacing: "var(--font-tracking-wide)", textTransform: "uppercase", margin: 0 }}>Font Stack (폴백 체인)</p>
                 <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>
                   Pretendard·Noto는 자체 호스팅(런타임 외부 요청 0). Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
                 </p>
@@ -867,12 +867,12 @@ export default function Home() {
               <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
                 {fontStack.map(({ order, name, family, role, source, desc }) => (
                   <li key={order} style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", gap: "16px", alignItems: "center", padding: "12px 16px", borderRadius: "8px", border: "1px solid var(--ds-border)" }}>
-                    <span aria-hidden="true" style={{ width: "24px", height: "24px", borderRadius: "999px", background: "var(--ds-accent)", color: "var(--ds-on-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--font-size-caption)", fontWeight: 700 }}>{order}</span>
+                    <span aria-hidden="true" style={{ width: "24px", height: "24px", borderRadius: "999px", background: "var(--ds-accent)", color: "var(--ds-on-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--font-size-caption)", fontWeight: "var(--font-weight-bold)" }}>{order}</span>
                     <div>
-                      <span role="img" aria-label={`${name} 글꼴 견본`} style={{ display: "block", fontFamily: family, fontSize: pxToRem(20), fontWeight: 600, lineHeight: 1.3 }}>{name} · 다람쥐 Aa 1234</span>
+                      <span role="img" aria-label={`${name} 글꼴 견본`} style={{ display: "block", fontFamily: family, fontSize: pxToRem(20), fontWeight: "var(--font-weight-semibold)", lineHeight: "var(--font-line)" }}>{name} · 다람쥐 Aa 1234</span>
                       <p style={{ margin: "2px 0 0", fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>{desc}</p>
                     </div>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)", textAlign: "right", lineHeight: 1.4 }}>
+                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)", textAlign: "right", lineHeight: "var(--font-line)" }}>
                       {role}<br />{source}
                     </span>
                   </li>
