@@ -72,6 +72,14 @@ const overlayTokens = [
   { label: "overlay-strong", cssVar: "--color-overlay-strong", light: "rgba(0, 0, 0, 0.20)", dark: "rgba(255, 255, 255, 0.20)" },
 ];
 
+const gradientTokens = [
+  { label: "gradient-accent", utility: "bg-gradient-accent", desc: "브랜드 강조 — green 400 → 600 (135°)" },
+  { label: "gradient-accent-subtle", utility: "bg-gradient-accent-subtle", desc: "은은한 강조 배경 — green 50 → 100 (↓)" },
+  { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", desc: "표면 하단 페이드 — background → transparent (↓)" },
+  { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", desc: "표면 상단 페이드 — background → transparent (↑)" },
+  { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
+];
+
 // 투명도 확인용 체크무늬(모드 무관 고정) — 위에 알파 색을 올려 투명도를 가시화
 const makeChecker = (base: string, square: string): React.CSSProperties => ({
   backgroundColor: base,
@@ -160,6 +168,35 @@ const containerTokens = [
   { name: "container-xl", cssVar: "--layout-container-xl", px: "1280px", rem: "80rem", utility: "max-w-xl" },
 ];
 
+const gridColumnTokens = [
+  { name: "grid-cols-1", cols: 1, utility: "grid-cols-1", desc: "단일 열 — 히어로·상세 본문" },
+  { name: "grid-cols-2", cols: 2, utility: "grid-cols-2", desc: "2열 — 폼 라벨/필드, 비교 레이아웃" },
+  { name: "grid-cols-3", cols: 3, utility: "grid-cols-3", desc: "3열 — 카드·통계 3분할" },
+  { name: "grid-cols-4", cols: 4, utility: "grid-cols-4", desc: "4열 — 대시보드 위젯" },
+  { name: "grid-cols-6", cols: 6, utility: "grid-cols-6", desc: "6열 — 밀도 높은 데이터 그리드" },
+  { name: "grid-cols-12", cols: 12, utility: "grid-cols-12", desc: "12열 — span 기반 페이지 레이아웃" },
+];
+
+const gridGapTokens = [
+  { name: "gap-4", cssVar: "--space-4", px: "16px", rem: "1rem", utility: "gap-4", desc: "기본 간격 — 컴팩트 카드·폼" },
+  { name: "gap-6", cssVar: "--space-6", px: "24px", rem: "1.5rem", utility: "gap-6", desc: "표준 간격 — 섹션 내부 그리드" },
+  { name: "gap-8", cssVar: "--space-8", px: "32px", rem: "2rem", utility: "gap-8", desc: "넓은 간격 — 랜딩·갤러리" },
+];
+
+const gridPresetTokens = [
+  { name: "grid-cols-sidebar", utility: "grid-cols-sidebar", px: "256px + 1fr", rem: "16rem + 1fr", desc: "사이드바 + 콘텐츠", preset: "sidebar" as const },
+  { name: "grid-cols-sidebar-wide", utility: "grid-cols-sidebar-wide", px: "320px + 1fr", rem: "20rem + 1fr", desc: "넓은 사이드바 + 콘텐츠", preset: "sidebar-wide" as const },
+  { name: "grid-cols-form", utility: "grid-cols-form", px: "2 × 1fr", rem: "repeat(2, 1fr)", desc: "2열 폼 레이아웃", preset: "form" as const },
+  { name: "grid-cols-cards", utility: "grid-cols-cards", px: "auto-fit ≥256px", rem: "minmax(16rem, 1fr)", desc: "반응형 카드 그리드", preset: "cards" as const },
+];
+
+const breakpointTokens = [
+  { name: "sm", cssVar: "--layout-breakpoint-sm", px: "640px", rem: "40rem", utility: "sm:", desc: "모바일 가로·작은 태블릿" },
+  { name: "md", cssVar: "--layout-breakpoint-md", px: "768px", rem: "48rem", utility: "md:", desc: "태블릿" },
+  { name: "lg", cssVar: "--layout-breakpoint-lg", px: "1024px", rem: "64rem", utility: "lg:", desc: "데스크톱" },
+  { name: "xl", cssVar: "--layout-breakpoint-xl", px: "1280px", rem: "80rem", utility: "xl:", desc: "와이드 데스크톱" },
+];
+
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
   AAA:        { bg: "var(--ds-guide-level-aaa-bg)",  color: "var(--ds-guide-level-aaa-fg)",  label: "AAA" },
   AA:         { bg: "var(--ds-guide-level-aa-bg)",   color: "var(--ds-guide-level-aa-fg)",   label: "AA" },
@@ -209,6 +246,101 @@ function MeasureBar({
         <span aria-hidden="true" className="absolute left-0 top-1/2 h-5 -translate-y-1/2 border-l border-accent" />
         <span aria-hidden="true" className="absolute right-0 top-1/2 h-5 -translate-y-1/2 border-r border-accent" />
       </span>
+    </div>
+  );
+}
+
+function GridCell({ muted = false, tall = false }: { muted?: boolean; tall?: boolean }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={muted ? "bg-accent/25 border border-accent" : "bg-accent"}
+      style={{ height: tall ? pxToRem(48) : pxToRem(32), borderRadius: pxToRem(2) }}
+    />
+  );
+}
+
+function GridColumnPreview({ cols, utility, label }: { cols: number; utility: string; label: string }) {
+  const cellHeight = cols >= 6 ? pxToRem(24) : pxToRem(32);
+  return (
+    <div
+      role="img"
+      aria-label={label}
+      className={`grid gap-2 p-3 bg-surface-subtle border border-border ${utility}`}
+    >
+      {Array.from({ length: cols }, (_, i) => (
+        <div key={i} className="bg-accent" style={{ height: cellHeight, borderRadius: pxToRem(2) }} aria-hidden="true" />
+      ))}
+    </div>
+  );
+}
+
+function GridGapPreview({ utility, label }: { utility: string; label: string }) {
+  return (
+    <div className="border border-border overflow-hidden" style={{ borderRadius: pxToRem(2) }}>
+      {/* padding 영역 — gap 토큰과 구분되도록 옅은색 + 점선 */}
+      <div className="p-3 bg-accent/10 border border-dashed border-accent/35">
+        <div
+          role="img"
+          aria-label={label}
+          className={`grid grid-cols-4 ${utility} bg-accent`}
+        >
+          {Array.from({ length: 4 }, (_, i) => (
+            <div
+              key={i}
+              aria-hidden="true"
+              className="bg-background border border-border"
+              style={{ height: pxToRem(32), borderRadius: pxToRem(2) }}
+            />
+          ))}
+        </div>
+      </div>
+      <p className="m-0 py-1.5 px-3 text-caption text-text-muted bg-surface-subtle border-t border-border flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
+          진한 초록 = gap
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden="true"
+            className="inline-block w-2 h-2 border border-dashed border-accent/35 bg-accent/10"
+            style={{ borderRadius: pxToRem(2) }}
+          />
+          점선/옅은 = padding
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-border" style={{ borderRadius: pxToRem(2) }} />
+          밝은 블록 = grid item
+        </span>
+      </p>
+    </div>
+  );
+}
+
+function GridPresetPreview({ preset, label }: { preset: "sidebar" | "sidebar-wide" | "form" | "cards"; label: string }) {
+  if (preset === "sidebar" || preset === "sidebar-wide") {
+    const utility = preset === "sidebar" ? "grid-cols-sidebar" : "grid-cols-sidebar-wide";
+    return (
+      <div role="img" aria-label={label} className={`grid gap-2 p-3 bg-surface-subtle border border-border ${utility}`}>
+        <GridCell muted />
+        <GridCell />
+      </div>
+    );
+  }
+  if (preset === "form") {
+    return (
+      <div role="img" aria-label={label} className="grid grid-cols-form gap-2 p-3 bg-surface-subtle border border-border">
+        {Array.from({ length: 4 }, (_, i) => (
+          <GridCell key={i} />
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div role="img" aria-label={label} className="grid grid-cols-cards gap-4 p-3 bg-surface-subtle border border-border">
+      {Array.from({ length: 4 }, (_, i) => (
+        <GridCell key={i} tall />
+      ))}
     </div>
   );
 }
@@ -869,13 +1001,56 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Gradient (시맨틱 그라데이션) ── */}
+        <section aria-labelledby="section-gradient" className="mb-16">
+          <h3 id="section-gradient" className="text-heading-md font-bold mb-2">Gradient</h3>
+          <p className="text-body-sm text-text-muted mb-6">
+            용도 기반 그라데이션 토큰입니다. `--ds-gradient-*` 원본이 `--background-image-gradient-*`로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
+          </p>
+          <div role="list" className="flex flex-col gap-2">
+            <div aria-hidden="true" className="grid gap-4 items-center pb-1" style={{ gridTemplateColumns: "180px 1fr 1fr" }}>
+              <span className="text-caption text-text-muted">Token</span>
+              <span className="text-caption text-text-muted">Preview</span>
+              <span className="text-caption text-text-muted">Utility / Description</span>
+            </div>
+            {gradientTokens.map(({ label, utility, desc }) => {
+              const isFade = label.includes("fade");
+              const underlayStyle = label.includes("overlay") ? checkerLight : { background: "var(--ds-green-100)" };
+              return (
+              <div role="listitem" key={label} className="grid gap-4 items-center" style={{ gridTemplateColumns: "180px 1fr 1fr" }}>
+                <span className="text-label-sm font-semibold">{label}</span>
+                {isFade ? (
+                  <div className="h-10 rounded-md border border-border overflow-hidden" style={underlayStyle}>
+                    <div
+                      role="img"
+                      aria-label={`${label} — ${desc}`}
+                      className={`h-full ${utility}`}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    role="img"
+                    aria-label={`${label} — ${desc}`}
+                    className={`h-10 rounded-md border border-border overflow-hidden ${utility}`}
+                  />
+                )}
+                <div>
+                  <p className="m-0 text-caption text-text-muted font-mono">{utility}</p>
+                  <p className="mt-0.5 mb-0 text-caption text-text-muted">{desc}</p>
+                </div>
+              </div>
+              );
+            })}
+          </div>
+        </section>
+
         </div>{/* /panel-color */}
 
         {/* ── Tab Panel 2: Layout ── */}
         <div role="tabpanel" id="panel-layout" aria-labelledby="tab-layout" hidden={activeTab !== "layout"}>
           <h2 className="text-heading-lg font-bold mb-1">Layout & Size</h2>
           <p className="text-body-sm text-text-muted mb-10">
-            여백, 모서리, 반복 크기, 콘텐츠 폭 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
+            여백, 그리드, 모서리, 반복 크기, 콘텐츠 폭 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
           </p>
 
           <section aria-labelledby="section-spacing" className="mb-16">
@@ -1008,6 +1183,109 @@ export default function Home() {
                           />
                         </div>
                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="section-grid" className="mb-16">
+            <h3 id="section-grid" className="text-heading-md font-bold mb-2">Grid</h3>
+            <p className="text-body-sm text-text-muted mb-6">
+              열 수·간격·레이아웃 프리셋을 `--layout-grid-*`와 Tailwind `grid-*` 유틸리티로 관리합니다. gap은 spacing 토큰(`gap-4` 등)과 함께 사용합니다.
+            </p>
+
+            <div className="flex flex-col gap-10">
+              <div>
+                <h4 className="text-label-xl font-semibold mb-1">Columns</h4>
+                <p className="text-caption text-text-muted mb-4">
+                  Tailwind 기본 `grid-cols-*` 열 분할. 12열 그리드는 `col-span-*`와 조합해 페이지 레이아웃을 구성합니다.
+                </p>
+                <div role="list" className="grid grid-cols-2 gap-4">
+                  {gridColumnTokens.map(({ name, cols, utility, desc }) => (
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                      <p className="m-0 text-label-sm font-semibold">{name}</p>
+                      <p className="mt-0.5 mb-3 text-caption text-text-muted">{desc}</p>
+                      <GridColumnPreview cols={cols} utility={utility} label={`${name} ${cols}열 그리드 견본`} />
+                      <p className="mt-2 mb-0 text-caption text-text-muted font-mono">{utility}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-label-xl font-semibold mb-1">Gap</h4>
+                <p className="text-caption text-text-muted mb-4">
+                  그리드 간격(gap)은 item 사이 margin 역할입니다. 진한 초록은 gap, 점선/옅은 영역은 미리보기용 padding입니다.
+                </p>
+                <div role="list" className="flex flex-col gap-4">
+                  {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                      <div className="flex items-baseline justify-between gap-4 mb-3">
+                        <span className="text-label-sm font-semibold">{name}</span>
+                        <span className="text-caption text-text-muted font-mono">
+                          <span className="font-semibold text-foreground">{px}</span>
+                          <span> · {rem} · {utility}</span>
+                        </span>
+                      </div>
+                      <GridGapPreview
+                        utility={utility}
+                        label={`${name} ${px}, ${rem} — 초록 gap 영역과 grid item 견본`}
+                      />
+                      <p className="mt-2 mb-0 text-caption text-text-muted">{desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-label-xl font-semibold mb-1">Layout Presets</h4>
+                <p className="text-caption text-text-muted mb-4">
+                  반복 레이아웃은 `--layout-grid-*` 원본 → `--grid-template-columns-*` 노출 → `grid-cols-*` 유틸리티로 사용합니다.
+                </p>
+                <div role="list" className="grid grid-cols-2 gap-4">
+                  {gridPresetTokens.map(({ name, utility, px, rem, desc, preset }) => (
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                      <p className="m-0 text-label-sm font-semibold">{name}</p>
+                      <p className="mt-0.5 mb-3 text-caption text-text-muted font-mono">
+                        <span className="font-semibold text-foreground">{px}</span>
+                        <span> · {rem}</span>
+                      </p>
+                      <GridPresetPreview preset={preset} label={`${name} — ${desc}`} />
+                      <p className="mt-2 mb-0 text-caption text-text-muted">{utility} · {desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-label-xl font-semibold mb-1">Breakpoints</h4>
+                <p className="text-caption text-text-muted mb-4">
+                  반응형 그리드는 breakpoint 토큰과 prefix를 조합합니다. 예: 태블릿 이상 3열은 `md:` prefix + `grid-cols-3`.
+                </p>
+                <div role="list" className="flex flex-col gap-2">
+                  <div
+                    aria-hidden="true"
+                    className="grid gap-4 items-center pb-1"
+                    style={{ gridTemplateColumns: `${pxToRem(80)} 1fr ${pxToRem(120)} ${pxToRem(100)}` }}
+                  >
+                    <span className="text-caption text-text-muted">Token</span>
+                    <span className="text-caption text-text-muted">Description</span>
+                    <span className="text-caption text-text-muted">Size</span>
+                    <span className="text-caption text-text-muted">Prefix</span>
+                  </div>
+                  {breakpointTokens.map(({ name, px, rem, utility, desc }) => (
+                    <div
+                      role="listitem"
+                      key={name}
+                      className="grid gap-4 items-center py-2 border-b border-border"
+                      style={{ gridTemplateColumns: `${pxToRem(80)} 1fr ${pxToRem(120)} ${pxToRem(100)}` }}
+                    >
+                      <span className="text-label-sm font-semibold">{name}</span>
+                      <span className="text-caption text-text-muted">{desc}</span>
+                      <TokenValue px={px} rem={rem} />
+                      <span className="text-caption text-text-muted font-mono">{utility}</span>
                     </div>
                   ))}
                 </div>

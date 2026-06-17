@@ -6,7 +6,7 @@
    --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
    --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
    --typography-* : font shorthand 묶음 토큰. family/size/weight/line-height 포함.
-   --space-* / --shape-radius-* / --size-* / --layout-container-* : 레이아웃·크기 기반 토큰.
+   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* : 레이아웃·크기 기반 토큰.
    guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
    예: --raw-green-500 → --ds-green-500 → --color-green-500
@@ -131,6 +131,16 @@
   --layout-container-lg: 64rem;
   --layout-container-xl: 80rem;
 
+  --layout-breakpoint-sm: 40rem;
+  --layout-breakpoint-md: 48rem;
+  --layout-breakpoint-lg: 64rem;
+  --layout-breakpoint-xl: 80rem;
+
+  --layout-grid-sidebar: 16rem minmax(0, 1fr);
+  --layout-grid-sidebar-wide: 20rem minmax(0, 1fr);
+  --layout-grid-form: repeat(2, minmax(0, 1fr));
+  --layout-grid-cards: repeat(auto-fit, minmax(16rem, 1fr));
+
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
      라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
@@ -236,6 +246,13 @@
   --ds-overlay-subtle: var(--raw-black-a5);
   --ds-overlay: var(--raw-black-a10);
   --ds-overlay-strong: var(--raw-black-a20);
+
+  /* 그라데이션 — 시맨틱 스케일·용도 토큰을 참조해 모드 자동 대응 */
+  --ds-gradient-accent: linear-gradient(135deg, var(--ds-green-400), var(--ds-green-600));
+  --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-green-50), var(--ds-green-100));
+  --ds-gradient-surface-fade-down: linear-gradient(180deg, var(--ds-background), transparent);
+  --ds-gradient-surface-fade-up: linear-gradient(0deg, var(--ds-background), transparent);
+  --ds-gradient-overlay-fade-up: linear-gradient(0deg, var(--ds-overlay-strong), transparent);
 
   /* 강조(선택) — base(500) 스케일은 라이트/다크 모두 가시성이 좋음 */
   --ds-accent: var(--ds-green-500);
@@ -350,6 +367,13 @@
   --color-overlay-subtle: var(--ds-overlay-subtle);
   --color-overlay: var(--ds-overlay);
   --color-overlay-strong: var(--ds-overlay-strong);
+
+  --background-image-gradient-accent: var(--ds-gradient-accent);
+  --background-image-gradient-accent-subtle: var(--ds-gradient-accent-subtle);
+  --background-image-gradient-surface-fade-down: var(--ds-gradient-surface-fade-down);
+  --background-image-gradient-surface-fade-up: var(--ds-gradient-surface-fade-up);
+  --background-image-gradient-overlay-fade-up: var(--ds-gradient-overlay-fade-up);
+
   /* Guide-only tokens — 큐레이션 가이드 화면에서만 쓰는 표시/검증용 유틸리티 */
   --color-guide-level-aaa-bg: var(--ds-guide-level-aaa-bg);
   --color-guide-level-aaa-fg: var(--ds-guide-level-aaa-fg);
@@ -393,6 +417,18 @@
   --container-md: var(--layout-container-md);
   --container-lg: var(--layout-container-lg);
   --container-xl: var(--layout-container-xl);
+
+  /* breakpoint는 @media 조건에 var() 참조가 불가하므로 @theme 에 리터럴 rem 으로 노출.
+     :root 의 --layout-breakpoint-* 와 값을 동기화한다. */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+
+  --grid-template-columns-sidebar: var(--layout-grid-sidebar);
+  --grid-template-columns-sidebar-wide: var(--layout-grid-sidebar-wide);
+  --grid-template-columns-form: var(--layout-grid-form);
+  --grid-template-columns-cards: var(--layout-grid-cards);
 
   --text-display-lg: var(--font-size-display-lg);
   --text-display-md: var(--font-size-display-md);
