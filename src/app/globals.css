@@ -555,6 +555,53 @@
   font-variant-numeric: var(--font-numeric-tabular);
 }
 
+/* Layout shorthand — 반응형 container(gutter·max-width) + content grid.
+   자식 요소가 grid item이 됩니다. col-span-* 로 열 병합.
+   gutter는 padding-inline(토큰)으로 적용 — p-0·px-* 등과 함께 쓰면 덮어씌워집니다. */
+@utility layout-page {
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
+  max-width: 100%;
+  padding-inline: var(--layout-gutter-sm);
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  @variant sm {
+    max-width: var(--container-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @variant md {
+    max-width: var(--container-md);
+    padding-inline: var(--layout-gutter-md);
+    gap: var(--space-6);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @variant lg {
+    max-width: var(--container-xl);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @variant xl {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* 부모 p-6 md:p-10 padding 상쇄 — layout-page 등을 viewport 폭과 맞출 때 사용 */
+@utility layout-bleed {
+  margin-inline: calc(var(--space-6) * -1);
+  width: calc(100% + var(--space-6) * 2);
+  overflow: hidden;
+
+  @variant md {
+    margin-inline: calc(var(--space-10) * -1);
+    width: calc(100% + var(--space-10) * 2);
+  }
+}
+
 body {
   background: var(--ds-background);
   color: var(--ds-foreground);

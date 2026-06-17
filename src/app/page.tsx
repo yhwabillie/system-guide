@@ -1296,6 +1296,7 @@ export default function Home() {
             <h3 id="section-container" className="text-heading-md font-bold mb-2">Container</h3>
             <p className="text-body-sm text-text-muted mb-6">
               콘텐츠 최대 폭 토큰입니다. 원본은 `--layout-container-*`, Tailwind 노출은 `--container-*`로 분리합니다.
+              페이지 전체 레이아웃(container + 반응형 grid)은 <code className="font-mono text-caption">layout-page</code> 한 클래스로 적용합니다.
             </p>
             <div role="list" className="flex flex-col gap-4">
               {containerTokens.map(({ name, cssVar, px, rem, utility }) => (

@@ -1,4 +1,11 @@
+import { pxToRem } from "./tokens";
+
 export type BreakpointName = "base" | "sm" | "md" | "lg" | "xl";
+
+/** 가이드 미리보기 grid 트랙 — px 계산값을 rem으로 출력(프로젝트 REM_BASE 기준). */
+export function gridTrackColumnsRem(...tracksPx: number[]): string {
+  return tracksPx.map((px) => pxToRem(px)).join(" ");
+}
 
 export const breakpointDefinitions = [
   { name: "base" as const, minPx: 0, px: "< 640px", rem: "< 40rem", prefix: "(none)", desc: "모바일 세로·좁은 화면" },
@@ -30,8 +37,36 @@ export const responsiveGutterClass = "px-gutter-sm md:px-gutter-md";
 export const responsiveContainerClass =
   `w-full mx-auto ${responsiveGutterClass} max-w-full sm:max-w-sm md:max-w-md lg:max-w-xl`;
 
+/** 프로젝트 페이지 콘텐츠 영역 — container + 반응형 grid(1→2→4→8→12열). globals.css @utility layout-page */
+export const layoutPageClass = "layout-page";
+
+/** 부모가 p-6 md:p-10 일 때 자식을 viewport 가로폭으로 확장(가이드·검증용). globals.css @utility layout-bleed */
+export const layoutBleedClass = "layout-bleed";
+
+/** layout-page 자식 col-span — 열 수(1→2→4→8→12)와 동기화된 전체 폭 */
+export const layoutPageColSpanFull =
+  "col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-8 xl:col-span-12";
+
+/** xl 8/12 본문 · lg 5/8 · md 이하 행 전폭 */
+export const layoutPageColSpanMain =
+  "col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-5 xl:col-span-8";
+
+/** xl 4/12 보조 · lg 3/8 · md 이하 행 전폭 */
+export const layoutPageColSpanAside =
+  "col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-3 xl:col-span-4";
+
+export const gridGapSmPx = 16;
+export const gridGapMdPx = 24;
+
+/** breakpoint별 그리드 열 수 — 1→2→4→8→12 배율(모바일·태블릿·데스크톱 표준). */
+export const gridColsBase = 1;
+export const gridColsSm = 2;
+export const gridColsMd = 4;
+export const gridColsLg = 8;
+export const gridColsXl = 12;
+
 export const responsiveGridClass =
-  "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4";
+  "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:grid-cols-12 gap-4 md:gap-6";
 
 export const responsiveSidebarClass =
   "grid grid-cols-1 lg:grid-cols-sidebar gap-4";
@@ -52,15 +87,28 @@ export function getActiveBreakpoint(width: number): BreakpointName {
 export function getResponsiveGridCols(breakpoint: BreakpointName): number {
   switch (breakpoint) {
     case "xl":
+      return gridColsXl;
     case "lg":
-      return 4;
+      return gridColsLg;
     case "md":
-      return 3;
+      return gridColsMd;
     case "sm":
-      return 2;
+      return gridColsSm;
     default:
-      return 1;
+      return gridColsBase;
   }
+}
+
+/** 그리드 item 간 gap(px). md 이상 24px(gap-6), 미만 16px(gap-4). */
+export function getResponsiveGridGapPx(breakpoint: BreakpointName): number {
+  return breakpoint === "base" || breakpoint === "sm" ? gridGapSmPx : gridGapMdPx;
+}
+
+/** content 폭 안에서 균등 분할된 단일 col 너비(px). */
+export function getGridColWidthPx(contentPx: number, cols: number, gapPx: number): number {
+  if (cols <= 0) return 0;
+  const totalGap = gapPx * Math.max(0, cols - 1);
+  return Math.max(0, Math.round((contentPx - totalGap) / cols));
 }
 
 export function getActiveContainerToken(breakpoint: BreakpointName) {
@@ -114,6 +162,17 @@ export function getContainerLayoutMetrics(viewportWidth: number, breakpoint: Bre
     contentPx,
     maxPx,
   };
+}
+
+export function getBreakpointViewportWidth(): number {
+  if (typeof window === "undefined") return 0;
+  return window.innerWidth;
+}
+
+/** 픽셀 트랙·margin 계산용 — 스크롤바 제외 clientWidth. */
+export function getLayoutViewportWidth(): number {
+  if (typeof document === "undefined") return 0;
+  return document.documentElement.clientWidth;
 }
 
 export function getBreakpointIndex(name: BreakpointName): number {

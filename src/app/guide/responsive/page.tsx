@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { pxToRem } from "@/lib/tokens";
 import {
@@ -8,185 +8,238 @@ import {
   containerTokens,
   getActiveBreakpoint,
   getActiveContainerToken,
+  getBreakpointViewportWidth,
   getContainerLayoutMetrics,
+  getGridColWidthPx,
+  getLayoutViewportWidth,
   getResponsiveGridCols,
-  responsiveCardsClass,
-  responsiveContainerClass,
+  getResponsiveGridGapPx,
+  gridTrackColumnsRem,
+  layoutPageClass,
+  layoutPageColSpanAside,
+  layoutPageColSpanFull,
+  layoutPageColSpanMain,
   responsiveGutterClass,
-  responsiveGridClass,
-  responsiveSidebarClass,
 } from "@/lib/layout-tokens";
 
-function DemoCell({ label }: { label: string }) {
+function LayoutPageCell({
+  label,
+  compact,
+  className,
+}: {
+  label: string;
+  compact?: boolean;
+  className?: string;
+}) {
   return (
     <div
-      className="bg-background border border-border flex items-center justify-center text-caption font-semibold text-text-muted"
-      style={{ height: pxToRem(56), borderRadius: pxToRem(2) }}
+      className={`bg-accent text-on-accent flex min-w-0 items-center justify-center font-semibold ${className ?? ""}`}
+      style={{ minHeight: pxToRem(48) }}
     >
-      {label}
+      <span
+        className={compact ? "numeric-tabular" : "text-caption numeric-tabular"}
+        style={compact ? { fontSize: pxToRem(10), lineHeight: 1 } : undefined}
+      >
+        {label}
+      </span>
     </div>
   );
 }
 
-function SidebarCell({ muted, label }: { muted?: boolean; label: string }) {
+function MarginCell({ side, px }: { side: "left" | "right"; px: number }) {
   return (
     <div
-      className={muted ? "bg-accent/25 border border-accent" : "bg-accent border border-accent"}
-      style={{ minHeight: pxToRem(120), borderRadius: pxToRem(2) }}
+      aria-hidden="true"
+      className={`min-w-0 bg-red-100 flex items-center justify-center ${
+        side === "left" ? "border-r border-dashed border-red-300" : "border-l border-dashed border-red-300"
+      }`}
     >
-      <span className="block p-3 text-caption font-semibold text-foreground">{label}</span>
+      <span className="text-caption text-red-700 numeric-tabular px-1 text-center">
+        margin
+        <span className="block font-mono">{px}px</span>
+      </span>
     </div>
   );
 }
 
-function getLayoutViewportWidth() {
-  return document.documentElement.clientWidth;
+function GutterCell({ px }: { px: number }) {
+  return (
+    <div aria-hidden="true" className="bg-accent/10 flex items-center justify-center min-w-0">
+      {px >= 18 && (
+        <span className="text-caption text-text-muted numeric-tabular text-center leading-tight">
+          {px}px
+        </span>
+      )}
+    </div>
+  );
 }
 
-function ContainerPreview({
-  viewportWidth,
+function LayoutGuidePreview({
+  layoutWidth,
   containerPx,
   marginLeftPx,
   marginRightPx,
   gutterPx,
   contentPx,
+  gridCols,
+  gridGapPx,
+  gridColWidthPx,
   utility,
-  labelPx,
+  children,
 }: {
-  viewportWidth: number;
+  layoutWidth: number;
   containerPx: number;
   marginLeftPx: number;
   marginRightPx: number;
   gutterPx: number;
   contentPx: number;
+  gridCols: number;
+  gridGapPx: number;
+  gridColWidthPx: number;
   utility: string;
-  labelPx: string;
+  children: ReactNode;
 }) {
   const hasMargin = marginLeftPx > 0 || marginRightPx > 0;
   const outerColumns = hasMargin
-    ? `${marginLeftPx}px ${containerPx}px ${marginRightPx}px`
-    : `${containerPx}px`;
+    ? gridTrackColumnsRem(marginLeftPx, containerPx, marginRightPx)
+    : gridTrackColumnsRem(containerPx);
+  const innerColumns = gridTrackColumnsRem(gutterPx, contentPx, gutterPx);
 
   return (
     <div className="border-y border-border overflow-hidden">
       <div
         role="img"
-        aria-label={`viewport ${viewportWidth}px — margin ${marginLeftPx}px / ${marginRightPx}px — container ${containerPx}px — padding ${gutterPx}px — content ${contentPx}px (${utility})`}
-        className="grid items-stretch bg-surface-subtle"
-        style={{ gridTemplateColumns: outerColumns, minHeight: pxToRem(80) }}
+        aria-label={`layout ${layoutWidth}px — margin ${marginLeftPx}px / ${marginRightPx}px — container ${containerPx}px — padding ${gutterPx}px — content ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`}
+        className="grid w-full max-w-full items-stretch overflow-hidden bg-surface-subtle"
+        style={{ gridTemplateColumns: outerColumns }}
       >
-        {hasMargin && (
-          <div
-            aria-hidden="true"
-            className="bg-red-100 border-r border-dashed border-red-300 flex items-center justify-center"
-          >
-            <span className="text-caption text-red-700 numeric-tabular px-1 text-center">
-              margin
-              <span className="block font-mono">{marginLeftPx}px</span>
-            </span>
-          </div>
-        )}
+        {hasMargin && <MarginCell side="left" px={marginLeftPx} />}
         <div
-          className="grid items-stretch"
-          style={{ gridTemplateColumns: `${gutterPx}px ${contentPx}px ${gutterPx}px` }}
+          className="grid min-w-0 items-stretch overflow-hidden"
+          style={{ gridTemplateColumns: innerColumns }}
         >
+          <GutterCell px={gutterPx} />
           <div
-            aria-hidden="true"
-            className="bg-accent/10 flex items-center justify-center min-w-0"
-          >
-            {gutterPx >= 18 && (
-              <span className="text-caption text-text-muted numeric-tabular text-center leading-tight">
-                {gutterPx}px
-              </span>
-            )}
-          </div>
-          <div
-            className="bg-accent text-on-accent flex min-w-0 items-center justify-center text-center px-2 py-5 text-label-md font-semibold"
+            className="flex min-w-0 flex-col overflow-hidden border border-accent/30 bg-background"
             style={{ borderRadius: pxToRem(2) }}
           >
-            content · {contentPx}px
-            <span className="block text-caption font-normal opacity-90">
-              {utility} · {labelPx}
-            </span>
+            <p className="m-0 shrink-0 py-1.5 px-2 text-caption font-semibold text-accent bg-accent/10 border-b border-accent/20 text-center numeric-tabular">
+              content · {contentPx}px · {gridCols}열 · gap {gridGapPx}px · col {gridColWidthPx}px
+            </p>
+            <div
+              className={`${layoutPageClass} min-w-0 w-full max-w-none mx-0 flex-1 overflow-hidden`}
+              style={{ paddingInline: 0 }}
+            >
+              {children}
+            </div>
           </div>
-          <div
-            aria-hidden="true"
-            className="bg-accent/10 flex items-center justify-center min-w-0"
-          >
-            {gutterPx >= 18 && (
-              <span className="text-caption text-text-muted numeric-tabular text-center leading-tight">
-                {gutterPx}px
-              </span>
-            )}
-          </div>
+          <GutterCell px={gutterPx} />
         </div>
-        {hasMargin && (
-          <div
-            aria-hidden="true"
-            className="bg-red-100 border-l border-dashed border-red-300 flex items-center justify-center"
-          >
-            <span className="text-caption text-red-700 numeric-tabular px-1 text-center">
-              margin
-              <span className="block font-mono">{marginRightPx}px</span>
-            </span>
-          </div>
-        )}
+        {hasMargin && <MarginCell side="right" px={marginRightPx} />}
       </div>
-      <p className="m-0 py-1.5 px-3 text-caption text-text-muted bg-surface-subtle border-t border-border flex flex-wrap items-center gap-x-3 gap-y-1">
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-2 h-2 bg-surface-subtle border border-border" style={{ borderRadius: pxToRem(2) }} />
-          viewport {viewportWidth}px
-        </span>
-        {hasMargin && (
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              aria-hidden="true"
-              className="inline-block w-2 h-2 border border-dashed border-red-300 bg-red-100"
-              style={{ borderRadius: pxToRem(2) }}
-            />
-            {marginLeftPx === marginRightPx
-              ? `margin ${marginLeftPx}px × 2`
-              : `margin ${marginLeftPx}px + ${marginRightPx}px`}
-          </span>
-        )}
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-2 h-2 border border-accent bg-accent/25" style={{ borderRadius: pxToRem(2) }} />
-          container {containerPx}px
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent/10" style={{ borderRadius: pxToRem(2) }} />
-          padding {gutterPx}px × 2
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
-          content {contentPx}px
-        </span>
-      </p>
+      <LayoutMetricsLegend
+        layoutWidth={layoutWidth}
+        marginLeftPx={marginLeftPx}
+        marginRightPx={marginRightPx}
+        containerPx={containerPx}
+        gutterPx={gutterPx}
+        contentPx={contentPx}
+        gridCols={gridCols}
+        gridGapPx={gridGapPx}
+        gridColWidthPx={gridColWidthPx}
+      />
     </div>
   );
 }
 
+function LayoutMetricsLegend({
+  layoutWidth,
+  marginLeftPx,
+  marginRightPx,
+  containerPx,
+  gutterPx,
+  contentPx,
+  gridCols,
+  gridGapPx,
+  gridColWidthPx,
+}: {
+  layoutWidth: number;
+  marginLeftPx: number;
+  marginRightPx: number;
+  containerPx: number;
+  gutterPx: number;
+  contentPx: number;
+  gridCols: number;
+  gridGapPx: number;
+  gridColWidthPx: number;
+}) {
+  const hasMargin = marginLeftPx > 0 || marginRightPx > 0;
+
+  return (
+    <p className="m-0 py-1.5 px-3 text-caption text-text-muted bg-surface-subtle border-t border-border flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-surface-subtle border border-border" style={{ borderRadius: pxToRem(2) }} />
+        layout {layoutWidth}px
+      </span>
+      {hasMargin && (
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden="true"
+            className="inline-block w-2 h-2 border border-dashed border-red-300 bg-red-100"
+            style={{ borderRadius: pxToRem(2) }}
+          />
+          {marginLeftPx === marginRightPx
+            ? `margin ${marginLeftPx}px × 2`
+            : `margin ${marginLeftPx}px + ${marginRightPx}px`}
+        </span>
+      )}
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 border border-accent bg-accent/25" style={{ borderRadius: pxToRem(2) }} />
+        container {containerPx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent/10" style={{ borderRadius: pxToRem(2) }} />
+        padding {gutterPx}px × 2
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        content {contentPx}px · {gridCols}열 · gap {gridGapPx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
+        col {gridColWidthPx}px (fill)
+      </span>
+    </p>
+  );
+}
+
 export default function ResponsiveGuidePage() {
-  const [viewportWidth, setViewportWidth] = useState(0);
+  const [layoutWidth, setLayoutWidth] = useState(0);
+  const [breakpointWidth, setBreakpointWidth] = useState(0);
 
   useEffect(() => {
-    const update = () => setViewportWidth(getLayoutViewportWidth());
+    const update = () => {
+      setLayoutWidth(getLayoutViewportWidth());
+      setBreakpointWidth(getBreakpointViewportWidth());
+    };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const activeBreakpoint = getActiveBreakpoint(viewportWidth || 375);
+  const activeBreakpoint = getActiveBreakpoint(breakpointWidth || 375);
   const activeContainer = getActiveContainerToken(activeBreakpoint);
   const { containerPx, marginLeftPx, marginRightPx, gutterPx, contentPx } = getContainerLayoutMetrics(
-    viewportWidth || 375,
+    layoutWidth || 375,
     activeBreakpoint,
   );
   const gridCols = getResponsiveGridCols(activeBreakpoint);
-  const sidebarActive = activeBreakpoint === "lg" || activeBreakpoint === "xl";
+  const gridGapPx = getResponsiveGridGapPx(activeBreakpoint);
+  const gridColWidthPx = getGridColWidthPx(contentPx, gridCols, gridGapPx);
 
   return (
-    <main className="min-h-screen p-6 md:p-10 font-sans bg-background text-foreground">
+    <main className="min-h-screen font-sans bg-background text-foreground">
+      <div className="p-6 md:p-10">
       <header className="mb-10">
         <p className="m-0 mb-2">
           <Link href="/" className="text-body-sm text-accent no-underline hover:underline">
@@ -204,8 +257,12 @@ export default function ResponsiveGuidePage() {
         <h2 id="live-status" className="text-heading-md font-bold m-0 mb-4">현재 viewport</h2>
         <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <dt className="text-caption text-text-muted font-semibold">Viewport width</dt>
-            <dd className="m-0 mt-1 text-label-lg font-bold numeric-tabular">{viewportWidth || "—"}px</dd>
+            <dt className="text-caption text-text-muted font-semibold">Layout width</dt>
+            <dd className="m-0 mt-1 text-label-lg font-bold numeric-tabular">{layoutWidth || "—"}px</dd>
+          </div>
+          <div>
+            <dt className="text-caption text-text-muted font-semibold">Breakpoint width</dt>
+            <dd className="m-0 mt-1 text-label-md font-semibold numeric-tabular">{breakpointWidth || "—"}px</dd>
           </div>
           <div>
             <dt className="text-caption text-text-muted font-semibold">Active breakpoint</dt>
@@ -219,11 +276,19 @@ export default function ResponsiveGuidePage() {
             <dt className="text-caption text-text-muted font-semibold">Grid columns (demo)</dt>
             <dd className="m-0 mt-1 text-label-lg font-bold numeric-tabular">{gridCols}열</dd>
           </div>
+          <div>
+            <dt className="text-caption text-text-muted font-semibold">Grid gap</dt>
+            <dd className="m-0 mt-1 text-label-lg font-bold numeric-tabular">{gridGapPx}px</dd>
+          </div>
         </dl>
         <dl className="grid gap-4 m-0 mt-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <dt className="text-caption text-text-muted font-semibold">Container width</dt>
             <dd className="m-0 mt-1 text-label-lg font-bold numeric-tabular">{containerPx}px</dd>
+          </div>
+          <div>
+            <dt className="text-caption text-text-muted font-semibold">Col width</dt>
+            <dd className="m-0 mt-1 text-label-lg font-bold numeric-tabular">{gridColWidthPx}px</dd>
           </div>
           <div>
             <dt className="text-caption text-text-muted font-semibold">Outer margin</dt>
@@ -269,76 +334,80 @@ export default function ResponsiveGuidePage() {
         </div>
       </section>
 
-      {/* Container demo — viewport 전폭 트랙 (페이지 padding 영향 제거) */}
-      <section aria-labelledby="container-demo" className="mb-12">
-        <h2 id="container-demo" className="text-heading-md font-bold mb-2">Container</h2>
-        <p className="text-body-sm text-text-muted mb-4">
-          패턴: <code className="font-mono text-caption">{responsiveContainerClass}</code>
-        </p>
-        {/* main padding(p-6 md:p-10)만큼만 breakout — 100vw 사용 시 스크롤바로 가로 스크롤 발생 */}
-        <div className="-mx-6 w-[calc(100%+3rem)] md:-mx-10 md:w-[calc(100%+5rem)]">
-          <ContainerPreview
-            viewportWidth={viewportWidth || 375}
+      </div>{/* /guide prose padding */}
+
+      {/* viewport 전폭 — main padding 없이 layout-page·미리보기 검증 */}
+      <section aria-labelledby="layout-page-demo" className="mb-12">
+        <div className="px-6 md:px-10">
+          <h2 id="layout-page-demo" className="text-heading-md font-bold mb-4">layout-page — 반응형 페이지 레이아웃</h2>
+          <p className="text-body-sm text-text-muted mb-4">
+            가이드 미리보기(아래)는 <code className="font-mono text-caption">{layoutPageClass}</code>에 viewport margin(붉은 영역)을 겹쳐 표시합니다. 범례는 계산된 수치를 보조합니다.
+          </p>
+        </div>
+
+        {layoutWidth > 0 && (
+          <LayoutGuidePreview
+            layoutWidth={layoutWidth}
             containerPx={containerPx}
             marginLeftPx={marginLeftPx}
             marginRightPx={marginRightPx}
             gutterPx={gutterPx}
             contentPx={contentPx}
+            gridCols={gridCols}
+            gridGapPx={gridGapPx}
+            gridColWidthPx={gridColWidthPx}
             utility={activeContainer.utility}
-            labelPx={activeContainer.px}
-          />
-        </div>
-        <p className="mt-3 mb-0 text-caption text-text-muted">
-          브라우저 viewport 전폭 기준입니다. lg(1024px)부터 container max-width는 1280px(`max-w-xl`)이며, 1440px viewport까지 동일 상한을 유지합니다. 좌우 padding은 768px 미만 18px, 이상 30px입니다. `mx-auto` margin(붉은 점선), padding(옅은 초록), content(진한 블록)를 구분해 보세요.
-        </p>
-      </section>
+          >
+            {Array.from({ length: gridCols }, (_, i) => (
+              <LayoutPageCell
+                key={i}
+                label={gridCols > 6 ? String(i + 1) : `col ${i + 1}`}
+                compact={gridCols > 6}
+              />
+            ))}
+          </LayoutGuidePreview>
+        )}
 
-      {/* Grid demo */}
-      <section aria-labelledby="grid-demo" className="mb-12">
-        <h2 id="grid-demo" className="text-heading-md font-bold mb-2">Responsive Grid</h2>
-        <p className="text-body-sm text-text-muted mb-4">
-          패턴: <code className="font-mono text-caption">{responsiveGridClass}</code>
-        </p>
-        <div className={`${responsiveGridClass} p-4 rounded-xl border border-border bg-surface-subtle`}>
-          {Array.from({ length: 4 }, (_, i) => (
-            <DemoCell key={i} label={`col ${i + 1}`} />
+        <div className="px-6 md:px-10">
+          <div className="mt-8">
+            <h3 className="text-label-xl font-semibold mb-2">프로젝트 적용 예시</h3>
+            <p className="text-body-sm text-text-muted mb-3">
+              <code className="font-mono text-caption">{layoutPageClass}</code>만 부모에 적용합니다. 아래 셀 스타일은 가이드 표시용이며, 실제 콘텐츠 마크업·스타일은 프로젝트에서 자유롭게 구성합니다.
+            </p>
+          </div>
+        </div>
+
+        <div className={layoutPageClass}>
+          {Array.from({ length: gridCols }, (_, i) => (
+            <LayoutPageCell
+              key={i}
+              label={gridCols > 6 ? String(i + 1) : `col ${i + 1}`}
+              compact={gridCols > 6}
+            />
           ))}
         </div>
-        <p className="mt-3 mb-0 text-caption text-text-muted">
-          base 1열 → sm 2열 → md 3열 → lg/xl 4열. 현재 {gridCols}열이 적용됩니다.
-        </p>
-      </section>
 
-      {/* Sidebar preset */}
-      <section aria-labelledby="sidebar-demo" className="mb-12">
-        <h2 id="sidebar-demo" className="text-heading-md font-bold mb-2">Sidebar Grid Preset</h2>
-        <p className="text-body-sm text-text-muted mb-4">
-          패턴: <code className="font-mono text-caption">{responsiveSidebarClass}</code>
-        </p>
-        <div className={`${responsiveSidebarClass} p-4 rounded-xl border border-border bg-surface-subtle`}>
-          <SidebarCell muted label="sidebar (16rem)" />
-          <SidebarCell label="content (1fr)" />
+        <div className="px-6 md:px-10 mt-10">
+          <h3 id="col-span-demo" className="text-label-xl font-semibold mb-2">col-span 영역 구성</h3>
+          <p className="text-body-sm text-text-muted mb-3">
+            <code className="font-mono text-caption">layout-page</code> 열 수는 breakpoint마다 1→2→4→8→12로 변합니다.
+            <code className="font-mono text-caption"> col-span-*</code>도 같은 비율로 맞춰야 합니다. 전체 폭·8+4 분할은 아래 권장 조합을 사용하세요.
+          </p>
+          <ul className="m-0 mb-4 pl-5 flex flex-col gap-1 text-caption text-text-muted font-mono">
+            <li>전체 폭: {layoutPageColSpanFull}</li>
+            <li>본문 8/12: {layoutPageColSpanMain}</li>
+            <li>보조 4/12: {layoutPageColSpanAside}</li>
+          </ul>
         </div>
-        <p className="mt-3 mb-0 text-caption text-text-muted">
-          {sidebarActive
-            ? "lg 이상 — 2열 sidebar 레이아웃이 적용됩니다."
-            : "lg 미만 — 1열 스택. lg(1024px)부터 grid-cols-sidebar가 적용됩니다."}
-        </p>
-      </section>
 
-      {/* Cards preset */}
-      <section aria-labelledby="cards-demo" className="mb-12">
-        <h2 id="cards-demo" className="text-heading-md font-bold mb-2">Cards Grid Preset</h2>
-        <p className="text-body-sm text-text-muted mb-4">
-          패턴: <code className="font-mono text-caption">{responsiveCardsClass}</code> — minmax(16rem, 1fr) auto-fit
-        </p>
-        <div className={`${responsiveCardsClass} p-4 rounded-xl border border-border bg-surface-subtle`}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <DemoCell key={i} label={`card ${i + 1}`} />
-          ))}
+        <div className={layoutPageClass}>
+          <LayoutPageCell label="header · full" className={layoutPageColSpanFull} />
+          <LayoutPageCell label="main · 8/12" className={layoutPageColSpanMain} />
+          <LayoutPageCell label="aside · 4/12" className={layoutPageColSpanAside} />
         </div>
       </section>
 
+      <div className="p-6 md:p-10">
       {/* Reference table */}
       <section aria-labelledby="breakpoint-table">
         <h2 id="breakpoint-table" className="text-heading-md font-bold mb-4">Breakpoint reference</h2>
@@ -390,6 +459,7 @@ export default function ResponsiveGuidePage() {
           </ul>
         </div>
       </section>
+      </div>{/* /guide prose padding */}
     </main>
   );
 }

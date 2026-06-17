@@ -9,7 +9,31 @@
 | [`/`](src/app/page.tsx) | 메인 토큰 큐레이션 — Color / Layout / Typography 탭 |
 | [`/guide/responsive`](src/app/guide/responsive/page.tsx) | 반응형 layout 가이드 — viewport·breakpoint·container·grid 실시간 확인 |
 
-반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다.
+반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다. 페이지 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css)의 `@utility layout-page`, `layout-bleed`입니다.
+
+### layout-page
+
+container(`max-w-*` + `mx-auto`) + 좌우 gutter(`px-gutter-sm` / `md:px-gutter-md`) + 반응형 grid(1→2→4→8→12열, `gap-4` / `md:gap-6`)를 한 클래스로 적용합니다. 자식은 grid item이며 `col-span-*`로 영역을 나눕니다.
+
+| Breakpoint | Grid 열 | Gutter | Container 상한 |
+|------------|---------|--------|----------------|
+| base | 1 | 18px | 100% |
+| sm (640px+) | 2 | 18px | 640px |
+| md (768px+) | 4 | 30px | 768px |
+| lg (1024px+) | 8 | 30px | 1280px |
+| xl (1280px+) | 12 | 30px | 1280px |
+
+`col-span-*`는 breakpoint마다 열 수가 달라지므로 prefix를 맞춥니다. 권장 조합은 `layout-tokens.ts`의 `layoutPageColSpanFull` / `Main` / `Aside`를 사용하세요.
+
+`layout-page`에 `p-0`·`px-*`를 함께 쓰면 gutter padding이 덮어씌워집니다. 패딩 있는 부모 안에서 viewport 폭 검증이 필요하면 `layout-bleed`로 breakout합니다(부모 `p-6 md:p-10` 기준).
+
+```tsx
+<main className="layout-page">
+  <header className={layoutPageColSpanFull}>...</header>
+  <article className={layoutPageColSpanMain}>...</article>
+  <aside className={layoutPageColSpanAside}>...</aside>
+</main>
+```
 
 ## Design Tokens
 
@@ -36,13 +60,6 @@
 <button className="h-control-md px-4" />
 <div className="grid grid-cols-sidebar gap-4" />
 <div className="bg-gradient-accent" />
-```
-
-권장 반응형 container 패턴(`layout-tokens.ts`):
-
-```tsx
-// w-full mx-auto px-gutter-sm md:px-gutter-md max-w-full sm:max-w-sm md:max-w-md lg:max-w-xl
-// gutter: 768px 미만 18px, 이상 30px · lg(1024px)부터 max-width 1280px
 ```
 
 타이포그래피는 개별 유틸리티와 묶음 유틸리티를 모두 제공합니다.
