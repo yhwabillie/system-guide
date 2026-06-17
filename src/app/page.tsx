@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
 
 const primitiveColors = [
@@ -64,6 +64,28 @@ const surfaceAnchors = [
   { label: "Black", hex: "#0a0a0a", cssVar: "var(--raw-black)" },
 ];
 
+// 시맨틱 오버레이 — 모드 인지 반투명(라이트=검정α / 다크=흰색α)
+const overlayTokens = [
+  { label: "overlay-subtle", cssVar: "--color-overlay-subtle" },
+  { label: "overlay", cssVar: "--color-overlay" },
+  { label: "overlay-strong", cssVar: "--color-overlay-strong" },
+];
+
+// 투명도 확인용 체크무늬(모드 무관 고정) — 위에 알파 색을 올려 투명도를 가시화
+const makeChecker = (base: string, square: string): React.CSSProperties => ({
+  backgroundColor: base,
+  backgroundImage:
+    `linear-gradient(45deg, ${square} 25%, transparent 25%),` +
+    `linear-gradient(-45deg, ${square} 25%, transparent 25%),` +
+    `linear-gradient(45deg, transparent 75%, ${square} 75%),` +
+    `linear-gradient(-45deg, transparent 75%, ${square} 75%)`,
+  backgroundSize: "14px 14px",
+  backgroundPosition: "0 0, 0 7px, 7px -7px, -7px 0",
+});
+// 검정 알파는 밝은 체커, 흰색 알파는 어두운 체커 위에서 차이가 잘 보임
+const checkerLight = makeChecker("var(--raw-white)", "var(--raw-neutral-200)");
+const checkerDark = makeChecker("var(--raw-black)", "var(--raw-neutral-700)");
+
 const typographyTokens = [
   { label: "Display LG", var: "--font-size-display-lg", weight: "700" },
   { label: "Display MD", var: "--font-size-display-md", weight: "700" },
@@ -111,8 +133,42 @@ export default function Home() {
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#171717", label: "Neutral 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
+  const [activeTab, setActiveTab] = useState<"color" | "type">("color");
+  const colorTabRef = useRef<HTMLButtonElement>(null);
+  const typeTabRef = useRef<HTMLButtonElement>(null);
+
+  // 탭 좌우/Home/End 키 이동 (WAI-ARIA tabs 패턴)
+  function handleTabKeyDown(e: React.KeyboardEvent) {
+    const order: ("color" | "type")[] = ["color", "type"];
+    const refs = { color: colorTabRef, type: typeTabRef };
+    let next: "color" | "type" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeTab) + 1) % 2];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeTab) + 1) % 2];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[1];
+    if (next) {
+      e.preventDefault();
+      setActiveTab(next);
+      refs[next].current?.focus();
+    }
+  }
+
+  const tabStyle = (active: boolean): React.CSSProperties => ({
+    padding: "10px 20px",
+    border: "none",
+    borderBottom: active ? "2px solid var(--color-accent)" : "2px solid transparent",
+    background: "none",
+    color: active ? "var(--foreground)" : "var(--color-text-muted)",
+    fontFamily: "var(--font-family-base)",
+    fontSize: "var(--font-size-label-lg)",
+    fontWeight: active ? 700 : 500,
+    cursor: "pointer",
+    marginBottom: "-1px",
+  });
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
   const [resolved, setResolved] = useState<Record<string, string>>({});
+  // 오버레이 토큰의 현재 모드 실효값(rgba) — 값 표시용
+  const [overlayResolved, setOverlayResolved] = useState<Record<string, string>>({});
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
@@ -125,6 +181,12 @@ export default function Home() {
       }
     }
     setResolved(map);
+
+    const oMap: Record<string, string> = {};
+    for (const t of overlayTokens) {
+      oMap[t.cssVar] = cs.getPropertyValue(t.cssVar).trim();
+    }
+    setOverlayResolved(oMap);
   }, [isDark]);
 
   const hexOf = (name: string, scale: number, fallback: string) =>
@@ -162,29 +224,51 @@ export default function Home() {
         style={{ fontFamily: "var(--font-family-base)", background: "var(--background)", color: "var(--foreground)" }}
       >
         {/* Header */}
-        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+        <header style={{ marginBottom: "8px" }}>
           <h1 style={{ fontSize: "var(--font-size-display-lg)", fontWeight: 700 }}>Design Token Preview</h1>
-          <button
-            type="button"
-            onClick={() => setIsDark(!isDark)}
-            aria-pressed={isDark}
-            aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-            style={{
-              padding: "8px 20px", borderRadius: "999px",
-              border: "1px solid var(--color-neutral-300)",
-              background: isDark ? "var(--color-neutral-800)" : "var(--color-neutral-100)",
-              color: "var(--foreground)",
-              fontSize: "var(--font-size-label-md)", fontWeight: 600, cursor: "pointer",
-            }}
-          >
-            <span aria-hidden="true">{isDark ? "🌙" : "☀️"}</span>
-            <span style={{ marginLeft: "6px" }}>{isDark ? "Dark" : "Light"}</span>
-          </button>
         </header>
 
-        <p style={{ fontSize: "var(--font-size-body-md)", color: "var(--color-neutral-400)", marginBottom: "48px" }}>
+        <p style={{ fontSize: "var(--font-size-body-md)", color: "var(--color-neutral-400)", marginBottom: "24px" }}>
           Figma variables → CSS custom properties 적용 확인
         </p>
+
+        {/* ── Tabs ── */}
+        <div
+          role="tablist"
+          aria-label="디자인 토큰 카테고리"
+          onKeyDown={handleTabKeyDown}
+          style={{ display: "flex", gap: "8px", borderBottom: "1px solid var(--color-border)", marginBottom: "40px" }}
+        >
+          <button
+            ref={colorTabRef}
+            type="button"
+            role="tab"
+            id="tab-color"
+            aria-selected={activeTab === "color"}
+            aria-controls="panel-color"
+            tabIndex={activeTab === "color" ? 0 : -1}
+            onClick={() => setActiveTab("color")}
+            style={tabStyle(activeTab === "color")}
+          >
+            Color
+          </button>
+          <button
+            ref={typeTabRef}
+            type="button"
+            role="tab"
+            id="tab-type"
+            aria-selected={activeTab === "type"}
+            aria-controls="panel-type"
+            tabIndex={activeTab === "type" ? 0 : -1}
+            onClick={() => setActiveTab("type")}
+            style={tabStyle(activeTab === "type")}
+          >
+            Typography
+          </button>
+        </div>
+
+        {/* ── Tab Panel 1: Color ── */}
+        <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"}>
 
         {/* ── Color Palette ── */}
         <section aria-labelledby="section-color" style={{ marginBottom: "64px" }}>
@@ -676,6 +760,41 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Overlay (반투명, 모드 인지) ── */}
+        <section aria-labelledby="section-alpha" style={{ marginBottom: "64px" }}>
+          <h2 id="section-alpha" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Overlay</h2>
+          <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--color-text-muted)", marginBottom: "24px" }}>
+            오버레이용 반투명 시맨틱 토큰. 라이트=검정α / 다크=흰색α로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
+          </p>
+          <div role="list" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {/* 헤더 */}
+            <div aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center", paddingBottom: "4px" }}>
+              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>Token</span>
+              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>Transparency</span>
+              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>Value ({isDark ? "Dark" : "Light"})</span>
+            </div>
+            {overlayTokens.map(({ label, cssVar }) => (
+              <div role="listitem" key={label} style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center" }}>
+                <span style={{ fontSize: "var(--font-size-label-sm)", fontWeight: 600 }}>{label}</span>
+                {/* 체크무늬 위에 알파 색을 올려 투명도를 가시화. 다크모드(흰색α)는 어두운 체커 */}
+                <div
+                  role="img"
+                  aria-label={`${label} — 체크무늬 위 반투명 견본`}
+                  style={{ height: "40px", borderRadius: "6px", overflow: "hidden", border: "1px solid var(--color-border)", ...(isDark ? checkerDark : checkerLight) }}
+                >
+                  <div style={{ width: "100%", height: "100%", background: `var(${cssVar})` }} />
+                </div>
+                <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)", fontFamily: "monospace" }}>{overlayResolved[cssVar] || cssVar}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        </div>{/* /panel-color */}
+
+        {/* ── Tab Panel 2: Typography ── */}
+        <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"}>
+
         {/* ── Font Family ── */}
         <section aria-labelledby="section-font" style={{ marginBottom: "64px" }}>
           <h2 id="section-font" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "24px" }}>Font Family</h2>
@@ -773,6 +892,28 @@ export default function Home() {
             ))}
           </dl>
         </section>
+
+        </div>{/* /panel-type */}
+
+        {/* 모드 토글 — DOM 마지막에 두어 콘텐츠 뒤에 포커스. fixed라 시각 위치는 우하단 고정 */}
+        <button
+          type="button"
+          onClick={() => setIsDark(!isDark)}
+          aria-pressed={isDark}
+          aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+          style={{
+            position: "fixed", bottom: "24px", right: "24px", zIndex: 50,
+            padding: "10px 20px", borderRadius: "999px",
+            border: "1px solid var(--color-border)",
+            background: isDark ? "var(--color-neutral-800)" : "var(--color-neutral-100)",
+            color: "var(--foreground)",
+            fontSize: "var(--font-size-label-md)", fontWeight: 600, cursor: "pointer",
+            boxShadow: "0 4px 16px var(--color-shadow)",
+          }}
+        >
+          <span aria-hidden="true">{isDark ? "🌙" : "☀️"}</span>
+          <span style={{ marginLeft: "6px" }}>{isDark ? "Dark" : "Light"}</span>
+        </button>
       </main>
     </>
   );

@@ -70,6 +70,15 @@
   --raw-white: #ffffff;
   --raw-black: #0a0a0a;
 
+  /* Alpha ramps — 투명도 원본(solid 스케일과 분리).
+     오버레이/스크림/그림자처럼 배경 위에 얹는 반투명 값의 단일 소스. */
+  --raw-black-a5:  rgba(0, 0, 0, 0.05);
+  --raw-black-a10: rgba(0, 0, 0, 0.10);
+  --raw-black-a20: rgba(0, 0, 0, 0.20);
+  --raw-white-a5:  rgba(255, 255, 255, 0.05);
+  --raw-white-a10: rgba(255, 255, 255, 0.10);
+  --raw-white-a20: rgba(255, 255, 255, 0.20);
+
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
      라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
@@ -144,9 +153,18 @@
   /* 선·표면·보조 텍스트 — 모드 인지 스케일 참조(자동 대응) */
   --color-border: var(--color-neutral-200);
   --color-border-strong: var(--color-neutral-300);
-  --color-border-overlay: rgba(128, 128, 128, 0.2);
+  /* 어느 배경에도 보이는 반투명 선/오버레이 — 라이트=검정α, 다크=흰색α(.dark) */
+  --color-border-overlay: var(--raw-black-a10);
   --color-surface-subtle: var(--color-neutral-50);
   --color-text-muted: var(--color-neutral-400);
+
+  /* 그림자 — 모드 무관(검정α) */
+  --color-shadow: var(--raw-black-a20);
+
+  /* 오버레이(반투명) — 라이트=검정α, 다크=흰색α(.dark) */
+  --color-overlay-subtle: var(--raw-black-a5);
+  --color-overlay: var(--raw-black-a10);
+  --color-overlay-strong: var(--raw-black-a20);
 
   /* 강조(선택) — base(500) 스케일은 라이트/다크 모두 가시성이 좋음 */
   --color-accent: var(--color-green-500);
@@ -175,6 +193,12 @@
 .dark {
   --background: var(--raw-black);
   /* --foreground 는 --color-neutral-900 이 반사되어 #fafafa 자동 적용 */
+
+  /* 다크 배경엔 흰색 반투명 오버레이가 더 자연스러움 */
+  --color-border-overlay: var(--raw-white-a10);
+  --color-overlay-subtle: var(--raw-white-a5);
+  --color-overlay: var(--raw-white-a10);
+  --color-overlay-strong: var(--raw-white-a20);
 
   --color-red-50: var(--raw-red-900);   --color-red-100: var(--raw-red-800);
   --color-red-200: var(--raw-red-700);  --color-red-300: var(--raw-red-600);
@@ -222,6 +246,12 @@ body {
 
 img {
   width: auto;
+}
+
+/* 키보드 포커스 인디케이터 — 항상 표시(저시력/키보드 사용자) */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .sr-only {
