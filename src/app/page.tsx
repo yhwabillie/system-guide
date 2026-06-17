@@ -267,26 +267,24 @@ export default function Home() {
         <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"}>
 
         {/* ===== 그룹: Raw Color ===== */}
-        <h2 style={{ fontSize: "var(--font-size-heading-lg)", fontWeight: 700, marginBottom: "4px" }}>Raw Color</h2>
-        <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-text-muted)", marginBottom: "40px" }}>
+        <h2 className="text-heading-lg font-bold mb-1">Raw Color</h2>
+        <p className="text-body-sm text-text-muted mb-10">
           가공 전 원본 팔레트(raw)와 대비 검증 도구입니다.
         </p>
 
         {/* ── Color Palette ── */}
         <section aria-labelledby="section-color" className="mb-16">
-          <h3 id="section-color" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Color Palette</h3>
+          <h3 id="section-color" className="text-heading-md font-bold mb-2">Color Palette</h3>
 
           {/* 선택 모드 안내 */}
           {selecting && (
             <div
               role="status"
               aria-live="polite"
+              className="mb-3 py-2.5 px-4 rounded-lg text-label-md font-semibold flex items-center justify-between"
               style={{
-                marginBottom: "12px", padding: "10px 16px", borderRadius: "8px",
                 background: selecting === "bg" ? "var(--ds-red-100)" : "var(--ds-green-100)",
                 color: selecting === "bg" ? "var(--ds-red-600)" : "var(--ds-green-600)",
-                fontSize: "var(--font-size-label-md)", fontWeight: 600,
-                display: "flex", alignItems: "center", justifyContent: "space-between",
               }}
             >
               <span>
@@ -296,25 +294,25 @@ export default function Home() {
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                style={{ background: "none", border: "none", cursor: "pointer", fontWeight: 700, fontSize: pxToRem(16), lineHeight: 1, padding: "0 4px" }}
+                className="bg-transparent border-0 cursor-pointer font-bold text-body-md leading-none px-1"
               >
                 ✕
               </button>
             </div>
           )}
 
-          <div role="group" aria-label="색상 팔레트" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div role="group" aria-label="색상 팔레트" className="flex flex-col gap-2">
             {/* 스케일 헤더 */}
-            <div aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "80px repeat(10, 1fr)", gap: "4px", marginBottom: "4px" }}>
-              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>Family</span>
+            <div aria-hidden="true" className="grid gap-1 mb-1" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+              <span className="text-caption text-neutral-400">Family</span>
               {scales.map((s) => (
-                <span key={s} style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", textAlign: "center" }}>{s}</span>
+                <span key={s} className="text-caption text-neutral-400 text-center">{s}</span>
               ))}
             </div>
 
             {primitiveColors.map(({ family, name, swatches }) => (
-              <div key={family} style={{ display: "grid", gridTemplateColumns: "80px repeat(10, 1fr)", gap: "4px", alignItems: "center" }}>
-                <span style={{ fontSize: "var(--font-size-label-sm)", fontWeight: 600 }}>{family}</span>
+              <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+                <span className="text-label-sm font-semibold">{family}</span>
                 {swatches.map(({ scale, hex }) => {
                   const label = `${family} ${scale}`;
                   const cssVar = `var(--ds-${name}-${scale})`;
@@ -325,6 +323,20 @@ export default function Home() {
                   const labelText = isInteractive
                     ? `${label} (${currentHex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`
                     : `${label} — ${currentHex}`;
+                  const swatchBorder = isBg
+                    ? "3px solid var(--ds-accent)"
+                    : isText
+                    ? "3px solid var(--ds-accent-danger)"
+                    : "1px solid var(--ds-border-overlay)";
+                  const marker = (txt: string) => (
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-0.5 left-[3px] font-bold"
+                      style={{ fontSize: pxToRem(11), color: contrastRatio(currentHex, "#000") > 4.5 ? "#000" : "#fff" }}
+                    >
+                      {txt}
+                    </span>
+                  );
                   return isInteractive ? (
                     <button
                       key={scale}
@@ -332,42 +344,22 @@ export default function Home() {
                       onClick={() => handleSwatchClick(currentHex, label)}
                       aria-label={labelText}
                       aria-pressed={isBg || isText}
-                      style={{
-                        height: "40px", borderRadius: "6px",
-                        backgroundColor: cssVar,
-                        border: isBg
-                          ? "3px solid var(--ds-accent)"
-                          : isText
-                          ? "3px solid var(--ds-accent-danger)"
-                          : "1px solid var(--ds-border-overlay)",
-                        cursor: "pointer",
-                        opacity: !isBg && !isText ? 0.75 : 1,
-                        transition: "opacity 0.1s",
-                        position: "relative",
-                        padding: 0,
-                      }}
+                      className="h-10 rounded-md relative cursor-pointer p-0 transition-opacity duration-100"
+                      style={{ backgroundColor: cssVar, border: swatchBorder, opacity: !isBg && !isText ? 0.75 : 1 }}
                     >
-                      {isBg && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: contrastRatio(currentHex, "#000") > 4.5 ? "#000" : "#fff" }}>BG</span>}
-                      {isText && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: contrastRatio(currentHex, "#000") > 4.5 ? "#000" : "#fff" }}>TXT</span>}
+                      {isBg && marker("BG")}
+                      {isText && marker("TXT")}
                     </button>
                   ) : (
                     <div
                       key={scale}
                       aria-label={`${label} — ${currentHex}`}
                       role="img"
-                      style={{
-                        height: "40px", borderRadius: "6px",
-                        backgroundColor: cssVar,
-                        border: isBg
-                          ? "3px solid var(--ds-accent)"
-                          : isText
-                          ? "3px solid var(--ds-accent-danger)"
-                          : "1px solid var(--ds-border-overlay)",
-                        position: "relative",
-                      }}
+                      className="h-10 rounded-md relative"
+                      style={{ backgroundColor: cssVar, border: swatchBorder }}
                     >
-                      {isBg && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: contrastRatio(currentHex, "#000") > 4.5 ? "#000" : "#fff" }}>BG</span>}
-                      {isText && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: contrastRatio(currentHex, "#000") > 4.5 ? "#000" : "#fff" }}>TXT</span>}
+                      {isBg && marker("BG")}
+                      {isText && marker("TXT")}
                     </div>
                   );
                 })}
@@ -375,7 +367,7 @@ export default function Home() {
             ))}
 
             {/* 스케일 팔레트와 구분 — 앵커는 스케일(50~900)과 무관 */}
-            <div aria-hidden="true" style={{ borderTop: "1px dashed var(--ds-border)", marginTop: "8px", paddingTop: "8px" }} />
+            <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-border" />
 
             {/* Surface 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
             {surfaceAnchors.map(({ label, hex, cssVar }) => {
@@ -388,25 +380,17 @@ export default function Home() {
                 : isText
                 ? "3px solid var(--ds-accent-danger)"
                 : "1px solid var(--ds-border-overlay)";
+              const marker = (txt: string) => (
+                <span aria-hidden="true" className="absolute top-0.5 left-[3px] font-bold" style={{ fontSize: pxToRem(11), color: markerColor }}>{txt}</span>
+              );
               return (
-                <div key={label} style={{ display: "grid", gridTemplateColumns: "80px repeat(10, 1fr)", gap: "4px", alignItems: "center" }}>
-                  <span style={{ fontSize: "var(--font-size-label-sm)", fontWeight: 600 }}>{label}</span>
-                  {/* 스케일 무관 표시용 dim 영역(칩 우측 컬럼 전체) */}
+                <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+                  <span className="text-label-sm font-semibold">{label}</span>
+                  {/* 스케일 무관 표시용 dim 영역(칩 우측 컬럼 전체) — 배경만 dim, 텍스트는 가독 대비 유지 */}
                   <span
                     aria-hidden="true"
-                    style={{
-                      gridColumn: "3 / -1",
-                      gridRow: 1,
-                      alignSelf: "stretch",
-                      borderRadius: "6px",
-                      /* dim은 배경에만 — 텍스트는 가독 대비 유지 */
-                      background: "var(--ds-border-overlay)",
-                      display: "flex",
-                      alignItems: "center",
-                      paddingLeft: "10px",
-                      fontSize: "var(--font-size-caption)",
-                      color: "var(--ds-neutral-600)",
-                    }}
+                    className="row-start-1 self-stretch rounded-md flex items-center pl-2.5 text-caption text-neutral-600 bg-border-overlay"
+                    style={{ gridColumn: "3 / -1" }}
                   >
                     스케일 해당 없음 (단일 값)
                   </span>
@@ -416,19 +400,21 @@ export default function Home() {
                       onClick={() => handleSwatchClick(hex, label)}
                       aria-label={`${label} (${hex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`}
                       aria-pressed={isBg || isText}
-                      style={{ gridColumn: 2, height: "40px", borderRadius: "6px", backgroundColor: cssVar, border: swatchBorder, cursor: "pointer", opacity: !isBg && !isText ? 0.75 : 1, transition: "opacity 0.1s", position: "relative", padding: 0 }}
+                      className="col-start-2 h-10 rounded-md relative cursor-pointer p-0 transition-opacity duration-100"
+                      style={{ backgroundColor: cssVar, border: swatchBorder, opacity: !isBg && !isText ? 0.75 : 1 }}
                     >
-                      {isBg && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: markerColor }}>BG</span>}
-                      {isText && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: markerColor }}>TXT</span>}
+                      {isBg && marker("BG")}
+                      {isText && marker("TXT")}
                     </button>
                   ) : (
                     <div
                       role="img"
                       aria-label={`${label} — ${hex}`}
-                      style={{ gridColumn: 2, height: "40px", borderRadius: "6px", backgroundColor: cssVar, border: swatchBorder, position: "relative" }}
+                      className="col-start-2 h-10 rounded-md relative"
+                      style={{ backgroundColor: cssVar, border: swatchBorder }}
                     >
-                      {isBg && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: markerColor }}>BG</span>}
-                      {isText && <span aria-hidden="true" style={{ position: "absolute", top: "2px", left: "3px", fontSize: pxToRem(11), fontWeight: 700, color: markerColor }}>TXT</span>}
+                      {isBg && marker("BG")}
+                      {isText && marker("TXT")}
                     </div>
                   )}
                 </div>
@@ -439,14 +425,14 @@ export default function Home() {
 
         {/* ── Contrast Checker ── */}
         <section aria-labelledby="section-contrast" className="mb-16">
-          <h3 id="section-contrast" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "24px" }}>
+          <h3 id="section-contrast" className="text-heading-md font-bold mb-6">
             Contrast Checker
           </h3>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "24px" }}>
+          <div className="grid grid-cols-2 gap-4 mb-6">
             {/* BG 선택 */}
             <div>
-              <p id="label-bg" style={{ fontSize: "var(--font-size-label-sm)", color: "var(--ds-neutral-500)", marginBottom: "6px", margin: "0 0 6px" }}>
+              <p id="label-bg" className="text-label-sm text-neutral-500 mb-1.5">
                 Background
               </p>
               <button
@@ -455,22 +441,19 @@ export default function Home() {
                 aria-labelledby="label-bg"
                 aria-expanded={selecting === "bg"}
                 aria-describedby="bg-color-value"
-                style={{
-                  width: "100%", display: "flex", alignItems: "center", gap: "12px",
-                  padding: "12px 16px", borderRadius: "10px", cursor: "pointer",
-                  border: selecting === "bg" ? "2px solid var(--ds-accent)" : "2px solid var(--ds-neutral-200)",
-                  background: "var(--ds-background)",
-                }}
+                className="w-full flex items-center gap-3 py-3 px-4 rounded-[10px] cursor-pointer bg-background"
+                style={{ border: selecting === "bg" ? "2px solid var(--ds-accent)" : "2px solid var(--ds-neutral-200)" }}
               >
                 <span
                   aria-hidden="true"
-                  style={{ display: "block", width: "32px", height: "32px", borderRadius: "6px", background: bgColor.hex, border: "1px solid var(--ds-border-overlay)", flexShrink: 0 }}
+                  className="block w-8 h-8 rounded-md shrink-0 border border-border-overlay"
+                  style={{ background: bgColor.hex }}
                 />
-                <span style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                  <span style={{ fontSize: "var(--font-size-label-md)", fontWeight: 600 }}>{bgColor.label}</span>
-                  <span id="bg-color-value" style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>{bgColor.hex}</span>
+                <span className="flex flex-col text-left">
+                  <span className="text-label-md font-semibold">{bgColor.label}</span>
+                  <span id="bg-color-value" className="text-caption text-neutral-400">{bgColor.hex}</span>
                 </span>
-                <span aria-hidden="true" style={{ marginLeft: "auto", fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>
+                <span aria-hidden="true" className="ml-auto text-caption text-neutral-400">
                   {selecting === "bg" ? "클릭 취소" : "팔레트에서 선택 →"}
                 </span>
               </button>
@@ -478,7 +461,7 @@ export default function Home() {
 
             {/* Text 선택 */}
             <div>
-              <p id="label-text" style={{ fontSize: "var(--font-size-label-sm)", color: "var(--ds-neutral-500)", margin: "0 0 6px" }}>
+              <p id="label-text" className="text-label-sm text-neutral-500 mb-1.5">
                 Text
               </p>
               <button
@@ -487,22 +470,19 @@ export default function Home() {
                 aria-labelledby="label-text"
                 aria-expanded={selecting === "text"}
                 aria-describedby="text-color-value"
-                style={{
-                  width: "100%", display: "flex", alignItems: "center", gap: "12px",
-                  padding: "12px 16px", borderRadius: "10px", cursor: "pointer",
-                  border: selecting === "text" ? "2px solid var(--ds-accent-danger)" : "2px solid var(--ds-neutral-200)",
-                  background: "var(--ds-background)",
-                }}
+                className="w-full flex items-center gap-3 py-3 px-4 rounded-[10px] cursor-pointer bg-background"
+                style={{ border: selecting === "text" ? "2px solid var(--ds-accent-danger)" : "2px solid var(--ds-neutral-200)" }}
               >
                 <span
                   aria-hidden="true"
-                  style={{ display: "block", width: "32px", height: "32px", borderRadius: "6px", background: textColor.hex, border: "1px solid var(--ds-border-overlay)", flexShrink: 0 }}
+                  className="block w-8 h-8 rounded-md shrink-0 border border-border-overlay"
+                  style={{ background: textColor.hex }}
                 />
-                <span style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                  <span style={{ fontSize: "var(--font-size-label-md)", fontWeight: 600 }}>{textColor.label}</span>
-                  <span id="text-color-value" style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>{textColor.hex}</span>
+                <span className="flex flex-col text-left">
+                  <span className="text-label-md font-semibold">{textColor.label}</span>
+                  <span id="text-color-value" className="text-caption text-neutral-400">{textColor.hex}</span>
                 </span>
-                <span aria-hidden="true" style={{ marginLeft: "auto", fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>
+                <span aria-hidden="true" className="ml-auto text-caption text-neutral-400">
                   {selecting === "text" ? "클릭 취소" : "팔레트에서 선택 →"}
                 </span>
               </button>
@@ -625,85 +605,82 @@ export default function Home() {
               aria-label={`대비율 결과: ${ratio}:1 — ${level}`}
               aria-live="polite"
               aria-atomic="true"
-              style={{
-                background: "var(--ds-background)", padding: "24px",
-                display: "grid", gridTemplateColumns: "auto 1fr 1fr 1fr 1fr", gap: "0",
-                alignItems: "start", borderTop: "1px solid var(--ds-neutral-200)",
-              }}
+              className="bg-background p-6 grid items-start border-t border-neutral-200"
+              style={{ gridTemplateColumns: "auto 1fr 1fr 1fr 1fr" }}
             >
-              <div style={{ paddingRight: "32px", borderRight: "1px solid var(--ds-neutral-200)" }}>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", margin: "0 0 4px" }}>대비율</p>
-                <output style={{ display: "block" }}>
+              <div className="pr-8 border-r border-neutral-200">
+                <p className="text-caption text-neutral-400 mb-1">대비율</p>
+                <output className="block">
                   {/* 숫자는 role="img" 그래픽으로 명시 — 제목 오인(Possible heading) 방지 */}
-                  <span role="img" aria-label={`대비율 ${ratio} 대 1`} style={{ display: "block", fontSize: pxToRem(40), fontWeight: 700, lineHeight: 1 }}>
-                    {ratio}<span aria-hidden="true" style={{ fontSize: pxToRem(16), fontWeight: 400 }}>:1</span>
+                  <span role="img" aria-label={`대비율 ${ratio} 대 1`} className="block font-bold leading-none" style={{ fontSize: pxToRem(40) }}>
+                    {ratio}<span aria-hidden="true" className="font-normal" style={{ fontSize: pxToRem(16) }}>:1</span>
                   </span>
                 </output>
                 <LevelBadge level={level} />
               </div>
 
-              <div style={{ paddingLeft: "24px", borderRight: "1px solid var(--ds-neutral-200)", paddingRight: "24px" }}>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", margin: "0 0 8px", fontWeight: 600 }}>일반 텍스트</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>4.5:1</span>
+              <div className="pl-6 pr-6 border-r border-neutral-200">
+                <p className="text-caption text-neutral-400 mb-2 font-semibold">일반 텍스트</p>
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AA</span>
+                    <span className="text-caption text-neutral-400">4.5:1</span>
                     <span role="img" aria-label={ratio >= 4.5 ? "통과" : "실패"}>{ratio >= 4.5 ? "✅" : "❌"}</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AAA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>7:1</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AAA</span>
+                    <span className="text-caption text-neutral-400">7:1</span>
                     <span role="img" aria-label={ratio >= 7 ? "통과" : "실패"}>{ratio >= 7 ? "✅" : "❌"}</span>
                   </div>
                 </div>
               </div>
 
-              <div style={{ paddingLeft: "24px", borderRight: "1px solid var(--ds-neutral-200)", paddingRight: "24px" }}>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", margin: "0 0 8px", fontWeight: 600 }}>
-                  큰 텍스트 <span style={{ fontWeight: 400 }}>(18px+ / bold 14px+)</span>
+              <div className="pl-6 pr-6 border-r border-neutral-200">
+                <p className="text-caption text-neutral-400 mb-2 font-semibold">
+                  큰 텍스트 <span className="font-normal">(18px+ / bold 14px+)</span>
                 </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>3:1</span>
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AA</span>
+                    <span className="text-caption text-neutral-400">3:1</span>
                     <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AAA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>4.5:1</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AAA</span>
+                    <span className="text-caption text-neutral-400">4.5:1</span>
                     <span role="img" aria-label={ratio >= 4.5 ? "통과" : "실패"}>{ratio >= 4.5 ? "✅" : "❌"}</span>
                   </div>
                 </div>
               </div>
 
-              <div style={{ paddingLeft: "24px", borderRight: "1px solid var(--ds-neutral-200)", paddingRight: "24px" }}>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", margin: "0 0 8px", fontWeight: 600 }}>아이콘 / 그래픽</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>3:1</span>
+              <div className="pl-6 pr-6 border-r border-neutral-200">
+                <p className="text-caption text-neutral-400 mb-2 font-semibold">아이콘 / 그래픽</p>
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AA</span>
+                    <span className="text-caption text-neutral-400">3:1</span>
                     <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AAA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>—</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)" }}>기준 없음</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AAA</span>
+                    <span className="text-caption text-neutral-400">—</span>
+                    <span className="text-caption text-neutral-500">기준 없음</span>
                   </div>
                 </div>
               </div>
 
-              <div style={{ paddingLeft: "24px" }}>
-                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", margin: "0 0 8px", fontWeight: 600 }}>UI 컴포넌트</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>3:1</span>
+              <div className="pl-6">
+                <p className="text-caption text-neutral-400 mb-2 font-semibold">UI 컴포넌트</p>
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AA</span>
+                    <span className="text-caption text-neutral-400">3:1</span>
                     <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)", width: "32px" }}>AAA</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>—</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)" }}>기준 없음</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-caption text-neutral-500 w-8">AAA</span>
+                    <span className="text-caption text-neutral-400">—</span>
+                    <span className="text-caption text-neutral-500">기준 없음</span>
                   </div>
                 </div>
               </div>
@@ -711,20 +688,20 @@ export default function Home() {
           </div>
 
           {/* 전체 팔레트 대비 매트릭스 */}
-          <div style={{ marginTop: "32px" }}>
-            <h4 style={{ fontSize: "var(--font-size-heading-sm)", fontWeight: 700, marginBottom: "16px" }}>
+          <div className="mt-8">
+            <h4 className="text-heading-sm font-bold mb-4">
               현재 배경색 기준 — 전체 팔레트 대비율
             </h4>
-            <div role="group" aria-label="전체 팔레트 대비율 매트릭스" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-              <div aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "80px repeat(10, 1fr)", gap: "4px" }}>
-                <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }} />
+            <div role="group" aria-label="전체 팔레트 대비율 매트릭스" className="flex flex-col gap-1.5">
+              <div aria-hidden="true" className="grid gap-1" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+                <span className="text-caption text-neutral-400" />
                 {scales.map((s) => (
-                  <span key={s} style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)", textAlign: "center" }}>{s}</span>
+                  <span key={s} className="text-caption text-neutral-400 text-center">{s}</span>
                 ))}
               </div>
               {primitiveColors.map(({ family, name, swatches }) => (
-                <div key={family} style={{ display: "grid", gridTemplateColumns: "80px repeat(10, 1fr)", gap: "4px", alignItems: "center" }}>
-                  <span style={{ fontSize: "var(--font-size-label-sm)", fontWeight: 600 }}>{family}</span>
+                <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+                  <span className="text-label-sm font-semibold">{family}</span>
                   {swatches.map(({ scale, hex }) => {
                     const r = contrastRatio(bgColor.hex, hexOf(name, scale, hex));
                     const lv = getContrastLevel(r);
@@ -734,14 +711,10 @@ export default function Home() {
                         key={scale}
                         role="img"
                         aria-label={`${family} ${scale}: 대비율 ${r}:1 — ${lv}`}
-                        style={{
-                          height: "40px", borderRadius: "6px",
-                          background: s.bg,
-                          display: "flex", flexDirection: "column",
-                          alignItems: "center", justifyContent: "center", gap: "1px",
-                        }}
+                        className="h-10 rounded-md flex flex-col items-center justify-center gap-px"
+                        style={{ background: s.bg }}
                       >
-                        <span aria-hidden="true" style={{ fontSize: pxToRem(11), fontWeight: 700, color: s.color }}>{lv}</span>
+                        <span aria-hidden="true" className="font-bold" style={{ fontSize: pxToRem(11), color: s.color }}>{lv}</span>
                         <span aria-hidden="true" style={{ fontSize: pxToRem(11), color: s.color }}>{r}</span>
                       </div>
                     );
@@ -749,11 +722,11 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div role="list" aria-label="대비율 등급 범례" style={{ display: "flex", gap: "12px", marginTop: "12px", flexWrap: "wrap" }}>
+            <div role="list" aria-label="대비율 등급 범례" className="flex gap-3 mt-3 flex-wrap">
               {(Object.entries(levelStyle) as [ContrastLevel, typeof levelStyle[ContrastLevel]][]).map(([lv, s]) => (
-                <div key={lv} role="listitem" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <div aria-hidden="true" style={{ width: "12px", height: "12px", borderRadius: "3px", background: s.bg }} />
-                  <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-500)" }}>
+                <div key={lv} role="listitem" className="flex items-center gap-1.5">
+                  <div aria-hidden="true" className="w-3 h-3 rounded-[3px]" style={{ background: s.bg }} />
+                  <span className="text-caption text-neutral-500">
                     {lv === "AAA" ? "AAA 7:1+" : lv === "AA" ? "AA 4.5:1+" : lv === "AA Large" ? "AA Large 3:1+" : "Fail"}
                   </span>
                 </div>
@@ -763,27 +736,27 @@ export default function Home() {
         </section>
 
         {/* ===== 그룹: Semantic Color ===== */}
-        <h2 style={{ fontSize: "var(--font-size-heading-lg)", fontWeight: 700, marginBottom: "4px", marginTop: "40px", paddingTop: "48px", borderTop: "1px solid var(--ds-border)" }}>Semantic Color</h2>
-        <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-text-muted)", marginBottom: "40px" }}>
+        <h2 className="text-heading-lg font-bold mb-1 mt-10 pt-12 border-t border-border">Semantic Color</h2>
+        <p className="text-body-sm text-text-muted mb-10">
           raw를 용도·모드(라이트/다크)에 맞게 매핑한 의미 기반 토큰입니다.
         </p>
 
         {/* ── Overlay (반투명, 모드 인지) ── */}
         <section aria-labelledby="section-alpha" className="mb-16">
-          <h3 id="section-alpha" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Overlay</h3>
-          <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--ds-text-muted)", marginBottom: "24px" }}>
+          <h3 id="section-alpha" className="text-heading-md font-bold mb-2">Overlay</h3>
+          <p className="text-body-sm text-text-muted mb-6">
             오버레이용 반투명 시맨틱 토큰. 라이트=검정α / 다크=흰색α로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
           </p>
           <div role="list" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {/* 헤더 */}
             <div aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center", paddingBottom: "4px" }}>
-              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>Token</span>
-              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>Transparency</span>
-              <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-text-muted)" }}>Value ({isDark ? "Dark" : "Light"})</span>
+              <span className="text-caption text-text-muted">Token</span>
+              <span className="text-caption text-text-muted">Transparency</span>
+              <span className="text-caption text-text-muted">Value ({isDark ? "Dark" : "Light"})</span>
             </div>
             {overlayTokens.map(({ label, cssVar, light, dark }) => (
               <div role="listitem" key={label} style={{ display: "grid", gridTemplateColumns: "160px 1fr 200px", gap: "16px", alignItems: "center" }}>
-                <span style={{ fontSize: "var(--font-size-label-sm)", fontWeight: 600 }}>{label}</span>
+                <span className="text-label-sm font-semibold">{label}</span>
                 {/* 체크무늬 위에 알파 색을 올려 투명도를 가시화. 다크모드(흰색α)는 어두운 체커 */}
                 <div
                   role="img"
@@ -805,7 +778,7 @@ export default function Home() {
 
         {/* ── Font Family ── */}
         <section aria-labelledby="section-font" className="mb-16">
-          <h2 id="section-font" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "24px" }}>Font Family</h2>
+          <h2 id="section-font" className="text-heading-md font-bold mb-6">Font Family</h2>
 
           <div style={{ borderRadius: "16px", border: "1px solid var(--ds-neutral-200)", overflow: "hidden" }}>
             {/* 글꼴 견본 — 큰 텍스트 요소 자체에 role="img" (정보는 아래 dl에서 제공) */}
@@ -877,7 +850,7 @@ export default function Home() {
                   <div key={weight} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                     {/* 견본 글자는 그래픽으로 표시 — 정보는 아래 레이블이 전달 */}
                     <span role="img" aria-label={`${weight} ${label} 견본`} style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-family-base)", lineHeight: 1.3 }}>가나다 Aa</span>
-                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--ds-neutral-400)" }}>{weight} · {label}</span>
+                    <span className="text-caption text-neutral-400">{weight} · {label}</span>
                   </div>
                 ))}
               </div>
@@ -914,19 +887,19 @@ export default function Home() {
 
         {/* ── Typography ── */}
         <section aria-labelledby="section-typography">
-          <h2 id="section-typography" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "24px" }}>Typography</h2>
-          <dl style={{ display: "flex", flexDirection: "column", gap: "16px", margin: 0 }}>
+          <h2 id="section-typography" className="text-heading-md font-bold mb-6">Typography</h2>
+          <dl className="flex flex-col gap-4 m-0">
             {typographyTokens.map(({ label, var: cssVar, weight }) => (
-              <div key={cssVar} style={{ display: "flex", alignItems: "baseline", gap: "16px", borderBottom: "1px solid var(--ds-neutral-200)", paddingBottom: "12px" }}>
-                <dt style={{ width: "120px", flexShrink: 0 }}>
-                  <span style={{ display: "block", fontSize: "var(--font-size-label-sm)", fontWeight: "var(--font-weight-semibold)" }}>{label}</span>
+              <div key={cssVar} className="flex items-baseline gap-4 border-b border-neutral-200 pb-3">
+                <dt className="w-[120px] shrink-0">
+                  <span className="block text-label-sm font-semibold">{label}</span>
                   {/* size / weight 토큰 메타 (line-height는 전역 --font-line: 1.5) */}
-                  <span style={{ display: "block", fontSize: pxToRem(11), color: "var(--ds-text-muted)" }}>
+                  <span className="block text-text-muted" style={{ fontSize: pxToRem(11) }}>
                     {cssVar.replace("--font-size-", "")} · {weight.replace("--font-weight-", "w/")}
                   </span>
                 </dt>
                 {/* 견본은 dd 안의 span role="img"로 표시 (토큰명은 dt가 전달) */}
-                <dd style={{ fontSize: `var(${cssVar})`, fontWeight: `var(${weight})`, lineHeight: "var(--font-line)", letterSpacing: "var(--font-tracking-normal)", margin: 0 }}>
+                <dd className="leading-base tracking-normal m-0" style={{ fontSize: `var(${cssVar})`, fontWeight: `var(${weight})` }}>
                   <span role="img" aria-label="글꼴 견본">가나다 ABC 123</span>
                 </dd>
               </div>
@@ -942,18 +915,11 @@ export default function Home() {
           onClick={() => setIsDark(!isDark)}
           aria-pressed={isDark}
           aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-          style={{
-            position: "fixed", bottom: "24px", right: "24px", zIndex: 50,
-            padding: "10px 20px", borderRadius: "999px",
-            border: "1px solid var(--ds-border)",
-            background: isDark ? "var(--ds-neutral-800)" : "var(--ds-neutral-100)",
-            color: "var(--ds-foreground)",
-            fontSize: "var(--font-size-label-md)", fontWeight: 600, cursor: "pointer",
-            boxShadow: "0 4px 16px var(--ds-shadow)",
-          }}
+          className="fixed bottom-6 right-6 z-50 py-2.5 px-5 rounded-full border border-border cursor-pointer text-label-md font-semibold text-foreground shadow-[0_4px_16px_var(--ds-shadow)]"
+          style={{ background: isDark ? "var(--ds-neutral-800)" : "var(--ds-neutral-100)" }}
         >
           <span aria-hidden="true">{isDark ? "🌙" : "☀️"}</span>
-          <span style={{ marginLeft: "6px" }}>{isDark ? "Dark" : "Light"}</span>
+          <span className="ml-1.5">{isDark ? "Dark" : "Light"}</span>
         </button>
       </main>
     </>
