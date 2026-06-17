@@ -18,6 +18,21 @@ main
 | `fix/*` | 버그 수정 | → develop |
 | `docs/*` | 문서 작업 | → develop |
 
+> **현행 운용(솔로 개발):** 현재는 `develop`에 직접 커밋합니다.
+> 협업이 시작되거나 기능 단위가 커지면 아래 `feature/*` 분기 흐름으로 전환합니다.
+> 어느 쪽이든 `main` 직접 커밋은 금지하고, 배포는 `develop → main` 병합으로만 합니다.
+
+---
+
+## 커밋 author 설정
+
+커밋 작성자가 OS 기본값(`user@hostname.local`)으로 잡히지 않도록 레포에 명시합니다.
+
+```bash
+git config user.name "yhwabillie"
+git config user.email "seewhat1210@gmail.com"
+```
+
 ---
 
 ## 브랜치 생성 규칙
@@ -57,7 +72,7 @@ git checkout -b docs/accessibility-guide
 ```
 feat: 대비 체커에 아이콘 미리보기 추가
 fix: 다크모드 선택 배너 하드코딩 색상 CSS 변수로 교체
-design: Figma primitive 컬러 토큰 --primitive-* 접두사로 변경
+refactor: 컬러 토큰 3-tier 구조화(--raw-* / --color-*)
 docs: KWCAG 2.2 기반 웹접근성 가이드 작성
 ```
 
