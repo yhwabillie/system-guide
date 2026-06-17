@@ -88,29 +88,30 @@ const checkerDark = makeChecker("var(--raw-black)", "var(--raw-neutral-700)");
 
 // 폰트 폴백 체인 — 각 단계는 해당 폰트로 렌더되어 시각 비교 가능
 const fontStack = [
-  { order: 1, name: "Pretendard GOV", family: '"Pretendard GOV", sans-serif', role: "기본", source: "jsDelivr CDN", desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용." },
-  { order: 2, name: "Noto Sans KR", family: '"Noto Sans KR", sans-serif', role: "폴백", source: "Google Fonts", desc: "Pretendard CDN 장애 시 사용. 폭넓은 한글·다국어 지원." },
+  { order: 1, name: "Pretendard GOV", family: "var(--font-pretendard-gov), sans-serif", role: "기본", source: "자체 호스팅 (next/font/local)", desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용." },
+  { order: 2, name: "Noto Sans KR", family: "var(--font-noto), sans-serif", role: "폴백", source: "자체 호스팅 (next/font/local)", desc: "Pretendard 미로드 시 사용. preload:false 로 평상시엔 다운로드 안 함." },
   { order: 3, name: "sans-serif", family: "sans-serif", role: "최종", source: "시스템 기본", desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체." },
 ];
 
+// 역할별 타이포 토큰 — size / weight / line-height 모두 CSS 변수
 const typographyTokens = [
-  { label: "Display LG", var: "--font-size-display-lg", weight: "700" },
-  { label: "Display MD", var: "--font-size-display-md", weight: "700" },
-  { label: "Display SM", var: "--font-size-display-sm", weight: "700" },
-  { label: "Heading LG", var: "--font-size-heading-lg", weight: "700" },
-  { label: "Heading MD", var: "--font-size-heading-md", weight: "700" },
-  { label: "Heading SM", var: "--font-size-heading-sm", weight: "700" },
-  { label: "Body LG", var: "--font-size-body-lg", weight: "400" },
-  { label: "Body MD", var: "--font-size-body-md", weight: "400" },
-  { label: "Body SM", var: "--font-size-body-sm", weight: "400" },
-  { label: "Label XL", var: "--font-size-label-xl", weight: "600" },
-  { label: "Label LG", var: "--font-size-label-lg", weight: "600" },
-  { label: "Label MD", var: "--font-size-label-md", weight: "600" },
-  { label: "Label SM", var: "--font-size-label-sm", weight: "600" },
-  { label: "Caption", var: "--font-size-caption", weight: "400" },
-  { label: "Price LG", var: "--font-size-price-lg", weight: "700" },
-  { label: "Price MD", var: "--font-size-price-md", weight: "700" },
-  { label: "Price SM", var: "--font-size-price-sm", weight: "700" },
+  { label: "Display LG", var: "--font-size-display-lg", weight: "--font-weight-bold" },
+  { label: "Display MD", var: "--font-size-display-md", weight: "--font-weight-bold" },
+  { label: "Display SM", var: "--font-size-display-sm", weight: "--font-weight-bold" },
+  { label: "Heading LG", var: "--font-size-heading-lg", weight: "--font-weight-bold" },
+  { label: "Heading MD", var: "--font-size-heading-md", weight: "--font-weight-bold" },
+  { label: "Heading SM", var: "--font-size-heading-sm", weight: "--font-weight-bold" },
+  { label: "Body LG", var: "--font-size-body-lg", weight: "--font-weight-regular" },
+  { label: "Body MD", var: "--font-size-body-md", weight: "--font-weight-regular" },
+  { label: "Body SM", var: "--font-size-body-sm", weight: "--font-weight-regular" },
+  { label: "Label XL", var: "--font-size-label-xl", weight: "--font-weight-semibold" },
+  { label: "Label LG", var: "--font-size-label-lg", weight: "--font-weight-semibold" },
+  { label: "Label MD", var: "--font-size-label-md", weight: "--font-weight-semibold" },
+  { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold" },
+  { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular" },
+  { label: "Price LG", var: "--font-size-price-lg", weight: "--font-weight-bold" },
+  { label: "Price MD", var: "--font-size-price-md", weight: "--font-weight-bold" },
+  { label: "Price SM", var: "--font-size-price-sm", weight: "--font-weight-bold" },
 ];
 
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
@@ -857,9 +858,9 @@ export default function Home() {
                 </div>
                 <div>
                   <p style={{ fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: "0 0 4px" }}>이 프로젝트 적용 방식</p>
-                  <p style={{ margin: "0 0 8px", fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)" }}>CDN (jsDelivr) — layout.tsx {"<head>"} 삽입</p>
+                  <p style={{ margin: "0 0 8px", fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)" }}>자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
                   <pre style={{ margin: 0, padding: "12px 16px", borderRadius: "8px", background: "var(--color-neutral-100)", fontSize: "12px", wordBreak: "break-all", color: "var(--color-neutral-700)", border: "1px solid var(--color-neutral-200)", whiteSpace: "pre-wrap" }}>
-                    <code>{`https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css`}</code>
+                    <code>{`localFont({ src: "./fonts/PretendardGOVVariable.woff2", weight: "100 900", variable: "--font-pretendard-gov" })`}</code>
                   </pre>
                 </div>
                 <div>
@@ -891,7 +892,7 @@ export default function Home() {
               <div>
                 <p style={{ fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: 0 }}>Font Stack (폴백 체인)</p>
                 <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>
-                  Pretendard GOV CDN에 문제가 있으면 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
+                  Pretendard·Noto는 자체 호스팅(런타임 외부 요청 0). Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
                 </p>
               </div>
               <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -921,9 +922,15 @@ export default function Home() {
           <dl style={{ display: "flex", flexDirection: "column", gap: "16px", margin: 0 }}>
             {typographyTokens.map(({ label, var: cssVar, weight }) => (
               <div key={cssVar} style={{ display: "flex", alignItems: "baseline", gap: "16px", borderBottom: "1px solid var(--color-neutral-200)", paddingBottom: "12px" }}>
-                <dt style={{ width: "120px", fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)", flexShrink: 0 }}>{label}</dt>
+                <dt style={{ width: "120px", flexShrink: 0 }}>
+                  <span style={{ display: "block", fontSize: "var(--font-size-label-sm)", fontWeight: "var(--font-weight-semibold)" }}>{label}</span>
+                  {/* size / weight 토큰 메타 (line-height는 전역 --font-line: 1.5) */}
+                  <span style={{ display: "block", fontSize: "11px", color: "var(--color-text-muted)" }}>
+                    {cssVar.replace("--font-size-", "")} · {weight.replace("--font-weight-", "w/")}
+                  </span>
+                </dt>
                 {/* 견본은 dd 안의 span role="img"로 표시 (토큰명은 dt가 전달) */}
-                <dd style={{ fontSize: `var(${cssVar})`, fontWeight: weight, lineHeight: 1.2, margin: 0 }}>
+                <dd style={{ fontSize: `var(${cssVar})`, fontWeight: `var(${weight})`, lineHeight: "var(--font-line)", letterSpacing: "var(--font-tracking-normal)", margin: 0 }}>
                   <span role="img" aria-label="글꼴 견본">가나다 ABC 123</span>
                 </dd>
               </div>
