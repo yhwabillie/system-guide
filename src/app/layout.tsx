@@ -14,9 +14,18 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased">
       <head>
+        {/* 기본 폰트: Pretendard GOV (jsDelivr CDN) */}
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css"
+        />
+        {/* 폴백 폰트: Noto Sans KR (Google Fonts — 독립 제공처).
+            Pretendard CDN 장애 시에만 글리프가 실제로 다운로드됨(지연 로드) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
         />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>

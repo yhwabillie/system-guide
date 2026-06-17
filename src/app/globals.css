@@ -136,7 +136,8 @@
   --font-size-selected-md: 16px;
   --font-size-selected-sm: 14px;
 
-  --font-family-base: "Pretendard GOV", sans-serif;
+  /* 폰트 폴백 체인: Pretendard GOV → Noto Sans KR → 시스템 sans-serif */
+  --font-family-base: "Pretendard GOV", "Noto Sans KR", sans-serif;
 
   /* ============================================================
      TIER 2-b — SEMANTIC PURPOSE (용도 기반)

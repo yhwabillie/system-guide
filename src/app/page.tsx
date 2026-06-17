@@ -86,6 +86,13 @@ const makeChecker = (base: string, square: string): React.CSSProperties => ({
 const checkerLight = makeChecker("var(--raw-white)", "var(--raw-neutral-200)");
 const checkerDark = makeChecker("var(--raw-black)", "var(--raw-neutral-700)");
 
+// 폰트 폴백 체인 — 각 단계는 해당 폰트로 렌더되어 시각 비교 가능
+const fontStack = [
+  { order: 1, name: "Pretendard GOV", family: '"Pretendard GOV", sans-serif', role: "기본", source: "jsDelivr CDN", desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용." },
+  { order: 2, name: "Noto Sans KR", family: '"Noto Sans KR", sans-serif', role: "폴백", source: "Google Fonts", desc: "Pretendard CDN 장애 시 사용. 폭넓은 한글·다국어 지원." },
+  { order: 3, name: "sans-serif", family: "sans-serif", role: "최종", source: "시스템 기본", desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체." },
+];
+
 const typographyTokens = [
   { label: "Display LG", var: "--font-size-display-lg", weight: "700" },
   { label: "Display MD", var: "--font-size-display-md", weight: "700" },
@@ -877,6 +884,33 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Font Stack — 폴백 체인 큐레이션 */}
+            <div style={{ padding: "24px 40px", borderTop: "1px solid var(--color-neutral-200)", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div>
+                <p style={{ fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", margin: 0 }}>Font Stack (폴백 체인)</p>
+                <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>
+                  Pretendard GOV CDN에 문제가 있으면 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
+                </p>
+              </div>
+              <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+                {fontStack.map(({ order, name, family, role, source, desc }) => (
+                  <li key={order} style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", gap: "16px", alignItems: "center", padding: "12px 16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+                    <span aria-hidden="true" style={{ width: "24px", height: "24px", borderRadius: "999px", background: "var(--color-accent)", color: "var(--color-on-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--font-size-caption)", fontWeight: 700 }}>{order}</span>
+                    <div>
+                      <span role="img" aria-label={`${name} 글꼴 견본`} style={{ display: "block", fontFamily: family, fontSize: "20px", fontWeight: 600, lineHeight: 1.3 }}>{name} · 다람쥐 Aa 1234</span>
+                      <p style={{ margin: "2px 0 0", fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)" }}>{desc}</p>
+                    </div>
+                    <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-text-muted)", textAlign: "right", lineHeight: 1.4 }}>
+                      {role}<br />{source}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <pre style={{ margin: 0, padding: "12px 16px", borderRadius: "8px", background: "var(--color-neutral-100)", fontSize: "12px", wordBreak: "break-all", color: "var(--color-neutral-700)", border: "1px solid var(--color-neutral-200)", whiteSpace: "pre-wrap" }}>
+                <code>{`font-family: "Pretendard GOV", "Noto Sans KR", sans-serif;`}</code>
+              </pre>
             </div>
           </div>
         </section>
