@@ -55,6 +55,17 @@ export const layoutPageColSpanMain =
 export const layoutPageColSpanAside =
   "col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-3 xl:col-span-4";
 
+/** 사이드메뉴 프리셋 shell — lg+ menu(16rem) + content(1fr). globals.css @utility layout-sidenav */
+export const layoutSidenavClass = "layout-sidenav";
+
+/** 넓은 menu(20rem) 변형 */
+export const layoutSidenavWideClass = "layout-sidenav-wide";
+
+export const layoutSidenavMenuClass = "layout-sidenav-menu";
+
+/** menu 옆 콘텐츠 — layout-page와 동일 container·grid·gutter */
+export const layoutSidenavContentClass = "layout-sidenav-content";
+
 export const gridGapSmPx = 16;
 export const gridGapMdPx = 24;
 
@@ -161,6 +172,48 @@ export function getContainerLayoutMetrics(viewportWidth: number, breakpoint: Bre
     gutterPx,
     contentPx,
     maxPx,
+  };
+}
+
+/** layout-sidenav menu 너비(px). globals --layout-grid-sidebar 16rem @ REM_BASE 16 */
+export const sidenavMenuPx = 16 * 16;
+
+export function isSidenavSidebarLayout(breakpoint: BreakpointName): boolean {
+  return breakpoint === "lg" || breakpoint === "xl";
+}
+
+/** layout-sidenav 콘텐츠 열 기준 container·margin·gutter·grid 메트릭 */
+export function getSidenavLayoutMetrics(viewportWidth: number, breakpoint: BreakpointName) {
+  const isSidebarLayout = isSidenavSidebarLayout(breakpoint);
+  const menuPx = isSidebarLayout ? sidenavMenuPx : viewportWidth;
+  const contentColumnPx = isSidebarLayout
+    ? Math.max(0, viewportWidth - sidenavMenuPx)
+    : viewportWidth;
+
+  const {
+    containerPx,
+    marginLeftPx,
+    marginRightPx,
+    gutterPx,
+    contentPx,
+  } = getContainerLayoutMetrics(contentColumnPx, breakpoint);
+
+  const gridCols = getResponsiveGridCols(breakpoint);
+  const gridGapPx = getResponsiveGridGapPx(breakpoint);
+  const gridColWidthPx = getGridColWidthPx(contentPx, gridCols, gridGapPx);
+
+  return {
+    isSidebarLayout,
+    menuPx,
+    contentColumnPx,
+    containerPx,
+    marginLeftPx,
+    marginRightPx,
+    gutterPx,
+    contentPx,
+    gridCols,
+    gridGapPx,
+    gridColWidthPx,
   };
 }
 

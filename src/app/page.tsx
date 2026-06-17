@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
-import { breakpointTokens, containerTokens } from "@/lib/layout-tokens";
+import { breakpointTokens, containerTokens, layoutSidenavClass, layoutSidenavContentClass, layoutSidenavMenuClass } from "@/lib/layout-tokens";
 import { pxToRem } from "@/lib/tokens";
 
 const primitiveColors = [
@@ -178,7 +178,8 @@ const gridGapTokens = [
 ];
 
 const gridPresetTokens = [
-  { name: "grid-cols-sidebar", utility: "grid-cols-sidebar", px: "256px + 1fr", rem: "16rem + 1fr", desc: "사이드바 + 콘텐츠", preset: "sidebar" as const },
+  { name: "layout-sidenav", utility: "layout-sidenav", px: "stack / 16rem + 1fr", rem: "lg: menu + content", desc: "사이드메뉴 + layout-sidenav-content 콘텐츠", preset: "layout-sidenav" as const },
+  { name: "grid-cols-sidebar", utility: "grid-cols-sidebar", px: "256px + 1fr", rem: "16rem + 1fr", desc: "사이드바 + 콘텐츠(단순 grid)", preset: "sidebar" as const },
   { name: "grid-cols-sidebar-wide", utility: "grid-cols-sidebar-wide", px: "320px + 1fr", rem: "20rem + 1fr", desc: "넓은 사이드바 + 콘텐츠", preset: "sidebar-wide" as const },
   { name: "grid-cols-form", utility: "grid-cols-form", px: "2 × 1fr", rem: "repeat(2, 1fr)", desc: "2열 폼 레이아웃", preset: "form" as const },
   { name: "grid-cols-cards", utility: "grid-cols-cards", px: "auto-fit ≥256px", rem: "minmax(16rem, 1fr)", desc: "반응형 카드 그리드", preset: "cards" as const },
@@ -304,7 +305,21 @@ function GridGapPreview({ utility, label }: { utility: string; label: string }) 
   );
 }
 
-function GridPresetPreview({ preset, label }: { preset: "sidebar" | "sidebar-wide" | "form" | "cards"; label: string }) {
+function GridPresetPreview({ preset, label }: { preset: "layout-sidenav" | "sidebar" | "sidebar-wide" | "form" | "cards"; label: string }) {
+  if (preset === "layout-sidenav") {
+    return (
+      <div role="img" aria-label={label} className={`${layoutSidenavClass} p-3 bg-surface-subtle border border-border`}>
+        <div className={`${layoutSidenavMenuClass} bg-accent/25 border border-accent min-h-14 flex items-center px-2`}>
+          <span className="text-caption font-semibold text-foreground">menu</span>
+        </div>
+        <div className={`${layoutSidenavContentClass} min-h-14`}>
+          <div className="bg-accent h-full min-h-14 flex items-center justify-center text-caption font-semibold text-on-accent">
+            layout-sidenav-content
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (preset === "sidebar" || preset === "sidebar-wide") {
     const utility = preset === "sidebar" ? "grid-cols-sidebar" : "grid-cols-sidebar-wide";
     return (

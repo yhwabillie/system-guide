@@ -14,7 +14,11 @@ import {
   getLayoutViewportWidth,
   getResponsiveGridCols,
   getResponsiveGridGapPx,
+  getSidenavLayoutMetrics,
   gridTrackColumnsRem,
+  layoutSidenavClass,
+  layoutSidenavContentClass,
+  layoutSidenavMenuClass,
   layoutPageClass,
   layoutPageColSpanAside,
   layoutPageColSpanFull,
@@ -74,6 +78,93 @@ function GutterCell({ px }: { px: number }) {
   );
 }
 
+function MenuCell({ px, stacked }: { px: number; stacked?: boolean }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`min-w-0 bg-accent/25 flex items-center justify-center border-accent ${
+        stacked ? "border-b" : "border-r"
+      }`}
+      style={{ minHeight: pxToRem(48) }}
+    >
+      <span className="text-caption text-foreground numeric-tabular px-2 text-center">
+        {stacked ? (
+          <>
+            menu · stack
+            <span className="block font-mono">{px}px</span>
+          </>
+        ) : (
+          <>
+            menu
+            <span className="block font-mono">{px}px</span>
+          </>
+        )}
+      </span>
+    </div>
+  );
+}
+
+function ContentAreaGuidePreview({
+  containerPx,
+  marginLeftPx,
+  marginRightPx,
+  gutterPx,
+  contentPx,
+  gridCols,
+  gridGapPx,
+  gridColWidthPx,
+  contentClass,
+  children,
+}: {
+  containerPx: number;
+  marginLeftPx: number;
+  marginRightPx: number;
+  gutterPx: number;
+  contentPx: number;
+  gridCols: number;
+  gridGapPx: number;
+  gridColWidthPx: number;
+  contentClass: string;
+  children: ReactNode;
+}) {
+  const hasMargin = marginLeftPx > 0 || marginRightPx > 0;
+  const outerColumns = hasMargin
+    ? gridTrackColumnsRem(marginLeftPx, containerPx, marginRightPx)
+    : gridTrackColumnsRem(containerPx);
+  const innerColumns = gridTrackColumnsRem(gutterPx, contentPx, gutterPx);
+
+  return (
+    <div
+      className="grid w-full max-w-full min-w-0 items-stretch overflow-hidden"
+      style={{ gridTemplateColumns: outerColumns }}
+    >
+      {hasMargin && <MarginCell side="left" px={marginLeftPx} />}
+      <div
+        className="grid min-w-0 items-stretch overflow-hidden"
+        style={{ gridTemplateColumns: innerColumns }}
+      >
+        <GutterCell px={gutterPx} />
+        <div
+          className="flex min-w-0 flex-col overflow-hidden border border-accent/30 bg-background"
+          style={{ borderRadius: pxToRem(2) }}
+        >
+          <p className="m-0 shrink-0 py-1.5 px-2 text-caption font-semibold text-accent bg-accent/10 border-b border-accent/20 text-center numeric-tabular">
+            content · {contentPx}px · {gridCols}열 · gap {gridGapPx}px · col {gridColWidthPx}px
+          </p>
+          <div
+            className={`${contentClass} min-w-0 w-full max-w-none mx-0 flex-1 overflow-hidden`}
+            style={{ paddingInline: 0 }}
+          >
+            {children}
+          </div>
+        </div>
+        <GutterCell px={gutterPx} />
+      </div>
+      {hasMargin && <MarginCell side="right" px={marginRightPx} />}
+    </div>
+  );
+}
+
 function LayoutGuidePreview({
   layoutWidth,
   containerPx,
@@ -85,6 +176,7 @@ function LayoutGuidePreview({
   gridGapPx,
   gridColWidthPx,
   utility,
+  contentClass = layoutPageClass,
   children,
 }: {
   layoutWidth: number;
@@ -97,45 +189,29 @@ function LayoutGuidePreview({
   gridGapPx: number;
   gridColWidthPx: number;
   utility: string;
+  contentClass?: string;
   children: ReactNode;
 }) {
-  const hasMargin = marginLeftPx > 0 || marginRightPx > 0;
-  const outerColumns = hasMargin
-    ? gridTrackColumnsRem(marginLeftPx, containerPx, marginRightPx)
-    : gridTrackColumnsRem(containerPx);
-  const innerColumns = gridTrackColumnsRem(gutterPx, contentPx, gutterPx);
-
   return (
     <div className="border-y border-border overflow-hidden">
       <div
         role="img"
         aria-label={`layout ${layoutWidth}px — margin ${marginLeftPx}px / ${marginRightPx}px — container ${containerPx}px — padding ${gutterPx}px — content ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`}
-        className="grid w-full max-w-full items-stretch overflow-hidden bg-surface-subtle"
-        style={{ gridTemplateColumns: outerColumns }}
+        className="bg-surface-subtle"
       >
-        {hasMargin && <MarginCell side="left" px={marginLeftPx} />}
-        <div
-          className="grid min-w-0 items-stretch overflow-hidden"
-          style={{ gridTemplateColumns: innerColumns }}
+        <ContentAreaGuidePreview
+          containerPx={containerPx}
+          marginLeftPx={marginLeftPx}
+          marginRightPx={marginRightPx}
+          gutterPx={gutterPx}
+          contentPx={contentPx}
+          gridCols={gridCols}
+          gridGapPx={gridGapPx}
+          gridColWidthPx={gridColWidthPx}
+          contentClass={contentClass}
         >
-          <GutterCell px={gutterPx} />
-          <div
-            className="flex min-w-0 flex-col overflow-hidden border border-accent/30 bg-background"
-            style={{ borderRadius: pxToRem(2) }}
-          >
-            <p className="m-0 shrink-0 py-1.5 px-2 text-caption font-semibold text-accent bg-accent/10 border-b border-accent/20 text-center numeric-tabular">
-              content · {contentPx}px · {gridCols}열 · gap {gridGapPx}px · col {gridColWidthPx}px
-            </p>
-            <div
-              className={`${layoutPageClass} min-w-0 w-full max-w-none mx-0 flex-1 overflow-hidden`}
-              style={{ paddingInline: 0 }}
-            >
-              {children}
-            </div>
-          </div>
-          <GutterCell px={gutterPx} />
-        </div>
-        {hasMargin && <MarginCell side="right" px={marginRightPx} />}
+          {children}
+        </ContentAreaGuidePreview>
       </div>
       <LayoutMetricsLegend
         layoutWidth={layoutWidth}
@@ -149,6 +225,191 @@ function LayoutGuidePreview({
         gridColWidthPx={gridColWidthPx}
       />
     </div>
+  );
+}
+
+function LayoutSidenavGuidePreview({
+  layoutWidth,
+  isSidebarLayout,
+  menuPx,
+  contentColumnPx,
+  containerPx,
+  marginLeftPx,
+  marginRightPx,
+  gutterPx,
+  contentPx,
+  gridCols,
+  gridGapPx,
+  gridColWidthPx,
+  utility,
+  children,
+}: {
+  layoutWidth: number;
+  isSidebarLayout: boolean;
+  menuPx: number;
+  contentColumnPx: number;
+  containerPx: number;
+  marginLeftPx: number;
+  marginRightPx: number;
+  gutterPx: number;
+  contentPx: number;
+  gridCols: number;
+  gridGapPx: number;
+  gridColWidthPx: number;
+  utility: string;
+  children: ReactNode;
+}) {
+  const ariaLabel = isSidebarLayout
+    ? `layout-sidenav ${layoutWidth}px — menu ${menuPx}px — content column ${contentColumnPx}px — margin ${marginLeftPx}px / ${marginRightPx}px — container ${containerPx}px — padding ${gutterPx}px — content ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`
+    : `layout-sidenav ${layoutWidth}px — stacked — margin ${marginLeftPx}px / ${marginRightPx}px — container ${containerPx}px — padding ${gutterPx}px — content ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`;
+
+  return (
+    <div className="border-y border-border overflow-hidden">
+      <div role="img" aria-label={ariaLabel} className="bg-surface-subtle">
+        {isSidebarLayout ? (
+          <div
+            className="grid w-full max-w-full items-stretch overflow-hidden"
+            style={{ gridTemplateColumns: gridTrackColumnsRem(menuPx, contentColumnPx) }}
+          >
+            <MenuCell px={menuPx} />
+            <ContentAreaGuidePreview
+              containerPx={containerPx}
+              marginLeftPx={marginLeftPx}
+              marginRightPx={marginRightPx}
+              gutterPx={gutterPx}
+              contentPx={contentPx}
+              gridCols={gridCols}
+              gridGapPx={gridGapPx}
+              gridColWidthPx={gridColWidthPx}
+              contentClass={layoutSidenavContentClass}
+            >
+              {children}
+            </ContentAreaGuidePreview>
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            <MenuCell px={menuPx} stacked />
+            <ContentAreaGuidePreview
+              containerPx={containerPx}
+              marginLeftPx={marginLeftPx}
+              marginRightPx={marginRightPx}
+              gutterPx={gutterPx}
+              contentPx={contentPx}
+              gridCols={gridCols}
+              gridGapPx={gridGapPx}
+              gridColWidthPx={gridColWidthPx}
+              contentClass={layoutSidenavContentClass}
+            >
+              {children}
+            </ContentAreaGuidePreview>
+          </div>
+        )}
+      </div>
+      <SidenavLayoutMetricsLegend
+        layoutWidth={layoutWidth}
+        isSidebarLayout={isSidebarLayout}
+        menuPx={menuPx}
+        contentColumnPx={contentColumnPx}
+        marginLeftPx={marginLeftPx}
+        marginRightPx={marginRightPx}
+        containerPx={containerPx}
+        gutterPx={gutterPx}
+        contentPx={contentPx}
+        gridCols={gridCols}
+        gridGapPx={gridGapPx}
+        gridColWidthPx={gridColWidthPx}
+      />
+    </div>
+  );
+}
+
+function SidenavLayoutMetricsLegend({
+  layoutWidth,
+  isSidebarLayout,
+  menuPx,
+  contentColumnPx,
+  marginLeftPx,
+  marginRightPx,
+  containerPx,
+  gutterPx,
+  contentPx,
+  gridCols,
+  gridGapPx,
+  gridColWidthPx,
+}: {
+  layoutWidth: number;
+  isSidebarLayout: boolean;
+  menuPx: number;
+  contentColumnPx: number;
+  marginLeftPx: number;
+  marginRightPx: number;
+  containerPx: number;
+  gutterPx: number;
+  contentPx: number;
+  gridCols: number;
+  gridGapPx: number;
+  gridColWidthPx: number;
+}) {
+  const hasMargin = marginLeftPx > 0 || marginRightPx > 0;
+
+  return (
+    <p className="m-0 py-1.5 px-3 text-caption text-text-muted bg-surface-subtle border-t border-border flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-surface-subtle border border-border" style={{ borderRadius: pxToRem(2) }} />
+        layout {layoutWidth}px
+      </span>
+      {isSidebarLayout ? (
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden="true"
+            className="inline-block w-2 h-2 border border-accent bg-accent/25"
+            style={{ borderRadius: pxToRem(2) }}
+          />
+          menu {menuPx}px
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden="true"
+            className="inline-block w-2 h-2 border border-accent bg-accent/25"
+            style={{ borderRadius: pxToRem(2) }}
+          />
+          menu · stack
+        </span>
+      )}
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 border border-accent/50 bg-accent/15" style={{ borderRadius: pxToRem(2) }} />
+        content column {contentColumnPx}px
+      </span>
+      {hasMargin && (
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden="true"
+            className="inline-block w-2 h-2 border border-dashed border-red-300 bg-red-100"
+            style={{ borderRadius: pxToRem(2) }}
+          />
+          {marginLeftPx === marginRightPx
+            ? `margin ${marginLeftPx}px × 2`
+            : `margin ${marginLeftPx}px + ${marginRightPx}px`}
+        </span>
+      )}
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 border border-accent bg-accent/25" style={{ borderRadius: pxToRem(2) }} />
+        container {containerPx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent/10" style={{ borderRadius: pxToRem(2) }} />
+        padding {gutterPx}px × 2
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        content {contentPx}px · {gridCols}열 · gap {gridGapPx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
+        col {gridColWidthPx}px (fill)
+      </span>
+    </p>
   );
 }
 
@@ -236,11 +497,12 @@ export default function ResponsiveGuidePage() {
   const gridCols = getResponsiveGridCols(activeBreakpoint);
   const gridGapPx = getResponsiveGridGapPx(activeBreakpoint);
   const gridColWidthPx = getGridColWidthPx(contentPx, gridCols, gridGapPx);
+  const sidenavMetrics = getSidenavLayoutMetrics(layoutWidth || 375, activeBreakpoint);
 
   return (
     <main className="min-h-screen font-sans bg-background text-foreground">
       <div className="p-6 md:p-10">
-      <header className="mb-10">
+      <header className="mb-16">
         <p className="m-0 mb-2">
           <Link href="/" className="text-body-sm text-accent no-underline hover:underline">
             ← Design Token Preview
@@ -253,7 +515,7 @@ export default function ResponsiveGuidePage() {
       </header>
 
       {/* Live status */}
-      <section aria-labelledby="live-status" className="mb-12 p-5 rounded-xl border border-border bg-surface-subtle">
+      <section aria-labelledby="live-status" className="mb-20 p-5 rounded-xl border border-border bg-surface-subtle">
         <h2 id="live-status" className="text-heading-md font-bold m-0 mb-4">현재 viewport</h2>
         <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -337,7 +599,7 @@ export default function ResponsiveGuidePage() {
       </div>{/* /guide prose padding */}
 
       {/* viewport 전폭 — main padding 없이 layout-page·미리보기 검증 */}
-      <section aria-labelledby="layout-page-demo" className="mb-12">
+      <section aria-labelledby="layout-page-demo" className="mb-20">
         <div className="px-6 md:px-10">
           <h2 id="layout-page-demo" className="text-heading-md font-bold mb-4">layout-page — 반응형 페이지 레이아웃</h2>
           <p className="text-body-sm text-text-muted mb-4">
@@ -404,6 +666,96 @@ export default function ResponsiveGuidePage() {
           <LayoutPageCell label="header · full" className={layoutPageColSpanFull} />
           <LayoutPageCell label="main · 8/12" className={layoutPageColSpanMain} />
           <LayoutPageCell label="aside · 4/12" className={layoutPageColSpanAside} />
+        </div>
+      </section>
+
+      {/* viewport 전폭 — layout-sidenav 실제 화면 검증 */}
+      <section aria-labelledby="layout-sidenav-demo" className="mb-20">
+        <div className="px-6 md:px-10">
+          <h2 id="layout-sidenav-demo" className="text-heading-md font-bold mb-4">layout-sidenav — 사이드메뉴 + layout-page 콘텐츠</h2>
+          <p className="text-body-sm text-text-muted mb-4">
+            가이드 미리보기(아래)는 <code className="font-mono text-caption">{layoutSidenavClass}</code>·<code className="font-mono text-caption">{layoutSidenavContentClass}</code>에 menu·margin(붉은 영역)·padding을 겹쳐 표시합니다. lg(1024px) 이상은 16rem menu + 콘텐츠 열, 미만은 1열 스택입니다.
+          </p>
+        </div>
+
+        {layoutWidth > 0 && (
+          <LayoutSidenavGuidePreview
+            layoutWidth={layoutWidth}
+            isSidebarLayout={sidenavMetrics.isSidebarLayout}
+            menuPx={sidenavMetrics.menuPx}
+            contentColumnPx={sidenavMetrics.contentColumnPx}
+            containerPx={sidenavMetrics.containerPx}
+            marginLeftPx={sidenavMetrics.marginLeftPx}
+            marginRightPx={sidenavMetrics.marginRightPx}
+            gutterPx={sidenavMetrics.gutterPx}
+            contentPx={sidenavMetrics.contentPx}
+            gridCols={sidenavMetrics.gridCols}
+            gridGapPx={sidenavMetrics.gridGapPx}
+            gridColWidthPx={sidenavMetrics.gridColWidthPx}
+            utility={activeContainer.utility}
+          >
+            {Array.from({ length: sidenavMetrics.gridCols }, (_, i) => (
+              <LayoutPageCell
+                key={i}
+                label={sidenavMetrics.gridCols > 6 ? String(i + 1) : `col ${i + 1}`}
+                compact={sidenavMetrics.gridCols > 6}
+              />
+            ))}
+          </LayoutSidenavGuidePreview>
+        )}
+
+        <div className="px-6 md:px-10">
+          <div className="mt-8">
+            <h3 className="text-label-xl font-semibold mb-2">프로젝트 적용 예시</h3>
+            <p className="text-body-sm text-text-muted mb-3">
+              <code className="font-mono text-caption">{layoutSidenavClass}</code> + <code className="font-mono text-caption">{layoutSidenavMenuClass}</code> + <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 조합입니다. 아래 셀 스타일은 가이드 표시용이며, 실제 콘텐츠 마크업·스타일은 프로젝트에서 자유롭게 구성합니다.
+            </p>
+          </div>
+        </div>
+
+        <div className={layoutSidenavClass}>
+          <aside
+            className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
+            style={{ minHeight: pxToRem(48) }}
+          >
+            <span className="text-caption font-semibold text-foreground numeric-tabular">menu · 16rem</span>
+          </aside>
+          <main className={layoutSidenavContentClass}>
+            {Array.from({ length: sidenavMetrics.gridCols }, (_, i) => (
+              <LayoutPageCell
+                key={i}
+                label={sidenavMetrics.gridCols > 6 ? String(i + 1) : `col ${i + 1}`}
+                compact={sidenavMetrics.gridCols > 6}
+              />
+            ))}
+          </main>
+        </div>
+
+        <div className="px-6 md:px-10 mt-10">
+          <h3 id="sidenav-col-span-demo" className="text-label-xl font-semibold mb-2">col-span 영역 구성</h3>
+          <p className="text-body-sm text-text-muted mb-3">
+            <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 열 수는 breakpoint마다 1→2→4→8→12로 변합니다.
+            <code className="font-mono text-caption"> col-span-*</code>도 같은 비율로 맞춰야 합니다.
+          </p>
+          <ul className="m-0 mb-4 pl-5 flex flex-col gap-1 text-caption text-text-muted font-mono">
+            <li>전체 폭: {layoutPageColSpanFull}</li>
+            <li>본문 8/12: {layoutPageColSpanMain}</li>
+            <li>보조 4/12: {layoutPageColSpanAside}</li>
+          </ul>
+        </div>
+
+        <div className={layoutSidenavClass}>
+          <aside
+            className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
+            style={{ minHeight: pxToRem(48) }}
+          >
+            <span className="text-caption font-semibold text-foreground numeric-tabular">menu · 16rem</span>
+          </aside>
+          <main className={layoutSidenavContentClass}>
+            <LayoutPageCell label="content · full" className={layoutPageColSpanFull} />
+            <LayoutPageCell label="main · 8/12" className={layoutPageColSpanMain} />
+            <LayoutPageCell label="aside · 4/12" className={layoutPageColSpanAside} />
+          </main>
         </div>
       </section>
 

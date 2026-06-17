@@ -7,9 +7,9 @@
 | 경로 | 설명 |
 |------|------|
 | [`/`](src/app/page.tsx) | 메인 토큰 큐레이션 — Color / Layout / Typography 탭 |
-| [`/guide/responsive`](src/app/guide/responsive/page.tsx) | 반응형 layout 가이드 — viewport·breakpoint·container·grid 실시간 확인 |
+| [`/guide/responsive`](src/app/guide/responsive/page.tsx) | 반응형 layout 가이드 — `layout-page`·`layout-sidenav` margin·gutter·container·grid 실시간 확인 |
 
-반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다. 페이지 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css)의 `@utility layout-page`, `layout-bleed`입니다.
+반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다. 페이지 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css)의 `@utility layout-page`, `layout-sidenav`·`layout-sidenav-menu`·`layout-sidenav-content`, `layout-bleed`입니다.
 
 ### layout-page
 
@@ -33,6 +33,27 @@ container(`max-w-*` + `mx-auto`) + 좌우 gutter(`px-gutter-sm` / `md:px-gutter-
   <article className={layoutPageColSpanMain}>...</article>
   <aside className={layoutPageColSpanAside}>...</aside>
 </main>
+```
+
+### layout-sidenav (사이드메뉴 + 콘텐츠)
+
+lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 없음). 콘텐츠 열에 `layout-sidenav-content`를 적용합니다 — `layout-page`와 동일한 container 상한·gutter·grid입니다. 넓은 menu는 `layout-sidenav-wide`(20rem). lg 미만은 menu·콘텐츠 1열 스택입니다.
+
+| Breakpoint | Shell | 콘텐츠 열 (`layout-sidenav-content`) |
+|------------|-------|--------------------------------------|
+| base ~ md | 1열 스택 | `layout-page`와 동일 |
+| lg (1024px+) | 16rem menu + 1fr | `layout-page`와 동일 (콘텐츠 열 기준) |
+| xl (1280px+) | 16rem menu + 1fr | 12열 grid · container 1280px 상한 |
+
+`col-span-*`는 `layoutPageColSpanFull` / `Main` / `Aside`를 그대로 사용합니다.
+
+```tsx
+<div className="layout-sidenav">
+  <nav className="layout-sidenav-menu">...</nav>
+  <main className="layout-sidenav-content">
+    <article className={layoutPageColSpanMain}>...</article>
+  </main>
+</div>
 ```
 
 ## Design Tokens

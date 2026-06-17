@@ -590,6 +590,68 @@
   }
 }
 
+/* 사이드메뉴 프리셋 — lg부터 16rem menu + 1fr content. shell gap 없음.
+   콘텐츠 좌우 gutter는 layout-sidenav-content padding-inline만 사용 */
+@utility layout-sidenav {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0;
+
+  @variant lg {
+    grid-template-columns: var(--grid-template-columns-sidebar);
+  }
+}
+
+@utility layout-sidenav-wide {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0;
+
+  @variant lg {
+    grid-template-columns: var(--grid-template-columns-sidebar-wide);
+  }
+}
+
+@utility layout-sidenav-menu {
+  min-width: 0;
+}
+
+/* layout-page와 동일 container·grid·gutter — sidebar 옆 1fr 열 안에서 max-width 상한·중앙 정렬 */
+@utility layout-sidenav-content {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+  max-width: 100%;
+  padding-inline: var(--layout-gutter-sm);
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  @variant sm {
+    max-width: var(--container-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @variant md {
+    max-width: var(--container-md);
+    padding-inline: var(--layout-gutter-md);
+    gap: var(--space-6);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @variant lg {
+    max-width: var(--container-xl);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @variant xl {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
 /* 부모 p-6 md:p-10 padding 상쇄 — layout-page 등을 viewport 폭과 맞출 때 사용 */
 @utility layout-bleed {
   margin-inline: calc(var(--space-6) * -1);
