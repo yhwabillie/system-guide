@@ -1,68 +1,109 @@
 @import "tailwindcss";
 
-/* =====================
-   Primitive Color Palette
-   ===================== */
+/* ============================================================
+   TIER 1 — RAW (원본 팔레트)
+   불변·모드 무관. raw 값은 여기서만 단 한 번 정의한다.
+   (스케일 명명은 라이트 기준 = 캐논값)
+   ============================================================ */
 :root {
   /* Red */
-  --primitive-red-50: #fff1f4;
-  --primitive-red-100: #ffd9e1;
-  --primitive-red-200: #ffb3c3;
-  --primitive-red-300: #f57a94;
-  --primitive-red-400: #c93b5c;
-  --primitive-red-500: #7f0019;
-  --primitive-red-600: #690015;
-  --primitive-red-700: #550011;
-  --primitive-red-800: #3d000c;
-  --primitive-red-900: #250007;
+  --raw-red-50: #fff1f4;
+  --raw-red-100: #ffd9e1;
+  --raw-red-200: #ffb3c3;
+  --raw-red-300: #f57a94;
+  --raw-red-400: #c93b5c;
+  --raw-red-500: #7f0019;
+  --raw-red-600: #690015;
+  --raw-red-700: #550011;
+  --raw-red-800: #3d000c;
+  --raw-red-900: #250007;
 
   /* Brown */
-  --primitive-brown-50: #f8f3f1;
-  --primitive-brown-100: #eadcd5;
-  --primitive-brown-200: #d6bfb3;
-  --primitive-brown-300: #bc9c89;
-  --primitive-brown-400: #9d7760;
-  --primitive-brown-500: #7a5640;
-  --primitive-brown-600: #634532;
-  --primitive-brown-700: #4f3627;
-  --primitive-brown-800: #39261a;
-  --primitive-brown-900: #24170f;
+  --raw-brown-50: #f8f3f1;
+  --raw-brown-100: #eadcd5;
+  --raw-brown-200: #d6bfb3;
+  --raw-brown-300: #bc9c89;
+  --raw-brown-400: #9d7760;
+  --raw-brown-500: #7a5640;
+  --raw-brown-600: #634532;
+  --raw-brown-700: #4f3627;
+  --raw-brown-800: #39261a;
+  --raw-brown-900: #24170f;
 
   /* Sand */
-  --primitive-sand-50: #fcf8f2;
-  --primitive-sand-100: #f6eddf;
-  --primitive-sand-200: #eedfc7;
-  --primitive-sand-300: #e3cfab;
-  --primitive-sand-400: #d4bb8a;
-  --primitive-sand-500: #c1a073;
-  --primitive-sand-600: #a7865b;
-  --primitive-sand-700: #896c47;
-  --primitive-sand-800: #6a5438;
-  --primitive-sand-900: #4d3d2b;
+  --raw-sand-50: #fcf8f2;
+  --raw-sand-100: #f6eddf;
+  --raw-sand-200: #eedfc7;
+  --raw-sand-300: #e3cfab;
+  --raw-sand-400: #d4bb8a;
+  --raw-sand-500: #c1a073;
+  --raw-sand-600: #a7865b;
+  --raw-sand-700: #896c47;
+  --raw-sand-800: #6a5438;
+  --raw-sand-900: #4d3d2b;
 
   /* Green */
-  --primitive-green-50: #eef8f4;
-  --primitive-green-100: #d6efe6;
-  --primitive-green-200: #aee0cc;
-  --primitive-green-300: #7bc9ab;
-  --primitive-green-400: #3fa87f;
-  --primitive-green-500: #0f5b41;
-  --primitive-green-600: #0b4f38;
-  --primitive-green-700: #08422f;
-  --primitive-green-800: #063426;
-  --primitive-green-900: #03251b;
+  --raw-green-50: #eef8f4;
+  --raw-green-100: #d6efe6;
+  --raw-green-200: #aee0cc;
+  --raw-green-300: #7bc9ab;
+  --raw-green-400: #3fa87f;
+  --raw-green-500: #0f5b41;
+  --raw-green-600: #0b4f38;
+  --raw-green-700: #08422f;
+  --raw-green-800: #063426;
+  --raw-green-900: #03251b;
 
   /* Neutral */
-  --primitive-neutral-50: #fafafa;
-  --primitive-neutral-100: #f5f5f5;
-  --primitive-neutral-200: #e5e5e5;
-  --primitive-neutral-300: #d4d4d4;
-  --primitive-neutral-400: #737373;
-  --primitive-neutral-500: #737373;
-  --primitive-neutral-600: #525252;
-  --primitive-neutral-700: #404040;
-  --primitive-neutral-800: #262626;
-  --primitive-neutral-900: #171717;
+  --raw-neutral-50: #fafafa;
+  --raw-neutral-100: #f5f5f5;
+  --raw-neutral-200: #e5e5e5;
+  --raw-neutral-300: #d4d4d4;
+  --raw-neutral-400: #737373;
+  --raw-neutral-500: #737373;
+  --raw-neutral-600: #525252;
+  --raw-neutral-700: #404040;
+  --raw-neutral-800: #262626;
+  --raw-neutral-900: #171717;
+
+  /* Surface anchors — 중립 램프 밖 순백/심흑(페이지 표면용) */
+  --raw-white: #ffffff;
+  --raw-black: #0a0a0a;
+
+  /* ============================================================
+     TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
+     라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
+     컴포넌트/팔레트 뷰어는 이 --color-{family}-{scale} 을 소비한다.
+     ============================================================ */
+  --color-red-50: var(--raw-red-50);    --color-red-100: var(--raw-red-100);
+  --color-red-200: var(--raw-red-200);  --color-red-300: var(--raw-red-300);
+  --color-red-400: var(--raw-red-400);  --color-red-500: var(--raw-red-500);
+  --color-red-600: var(--raw-red-600);  --color-red-700: var(--raw-red-700);
+  --color-red-800: var(--raw-red-800);  --color-red-900: var(--raw-red-900);
+
+  --color-brown-50: var(--raw-brown-50);    --color-brown-100: var(--raw-brown-100);
+  --color-brown-200: var(--raw-brown-200);  --color-brown-300: var(--raw-brown-300);
+  --color-brown-400: var(--raw-brown-400);  --color-brown-500: var(--raw-brown-500);
+  --color-brown-600: var(--raw-brown-600);  --color-brown-700: var(--raw-brown-700);
+  --color-brown-800: var(--raw-brown-800);  --color-brown-900: var(--raw-brown-900);
+
+  --color-sand-50: var(--raw-sand-50);    --color-sand-100: var(--raw-sand-100);
+  --color-sand-200: var(--raw-sand-200);  --color-sand-300: var(--raw-sand-300);
+  --color-sand-400: var(--raw-sand-400);  --color-sand-500: var(--raw-sand-500);
+  --color-sand-600: var(--raw-sand-600);  --color-sand-700: var(--raw-sand-700);
+  --color-sand-800: var(--raw-sand-800);  --color-sand-900: var(--raw-sand-900);
+
+  --color-green-50: var(--raw-green-50);    --color-green-100: var(--raw-green-100);
+  --color-green-200: var(--raw-green-200);  --color-green-300: var(--raw-green-300);
+  --color-green-400: var(--raw-green-400);  --color-green-500: var(--raw-green-500);
+  --color-green-600: var(--raw-green-600);  --color-green-700: var(--raw-green-700);
+  --color-green-800: var(--raw-green-800);  --color-green-900: var(--raw-green-900);
+
+  --color-neutral-50: var(--raw-neutral-50);    --color-neutral-100: var(--raw-neutral-100);
+  --color-neutral-200: var(--raw-neutral-200);  --color-neutral-300: var(--raw-neutral-300);
+  --color-neutral-400: var(--raw-neutral-400);  --color-neutral-500: var(--raw-neutral-500);
+  --color-neutral-600: var(--raw-neutral-600);  --color-neutral-700: var(--raw-neutral-700);
+  --color-neutral-800: var(--raw-neutral-800);  --color-neutral-900: var(--raw-neutral-900);
 
   /* Typography */
   --font-size-display-lg: 40px;
@@ -88,77 +129,82 @@
 
   --font-family-base: "Pretendard GOV", sans-serif;
 
-  /* Semantic (Light Mode) */
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ============================================================
+     TIER 2-b — SEMANTIC PURPOSE (용도 기반)
+     모드 인지 스케일(--color-*)을 참조하면 라이트/다크 자동 대응.
+     모드 무관이어야 하는 값은 raw(--raw-*)를 직접 참조.
+     ============================================================ */
+
+  /* 표면(페이지)
+     - background: 램프 밖 앵커라 모드별 명시(:root/.dark)
+     - foreground: 모드 인지 스케일 참조 → 라이트 #171717, 다크 #fafafa 자동 */
+  --background: var(--raw-white);
+  --foreground: var(--color-neutral-900);
+
+  /* 선·표면·보조 텍스트 — 모드 인지 스케일 참조(자동 대응) */
+  --color-border: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-300);
+  --color-border-overlay: rgba(128, 128, 128, 0.2);
+  --color-surface-subtle: var(--color-neutral-50);
+  --color-text-muted: var(--color-neutral-400);
+
+  /* 강조(선택) — base(500) 스케일은 라이트/다크 모두 가시성이 좋음 */
+  --color-accent: var(--color-green-500);
+  --color-accent-danger: var(--color-red-500);
+  --color-on-accent: var(--raw-white);
+
+  /* 대비 등급 상태색 — 자체 완결형 칩(내부 대비 검증 완료)이라
+     raw 직접 참조로 모드 무관 고정 */
+  --color-level-aaa-bg: var(--raw-green-500);
+  --color-level-aaa-fg: var(--raw-white);
+  --color-level-aa-bg: var(--raw-green-400);
+  --color-level-aa-fg: var(--raw-green-900);
+  --color-level-warn-bg: var(--raw-sand-400);
+  --color-level-warn-fg: var(--raw-brown-900);
+  --color-level-fail-bg: var(--raw-red-500);
+  --color-level-fail-fg: var(--raw-white);
 }
 
-/* =====================
-   Dark Mode Overrides
-   ===================== */
+/* ============================================================
+   DARK MODE — 시맨틱 스케일만 재매핑
+   다크 팔레트 = raw 의 반사(50↔900, 100↔800, 200↔700, 300↔600, 400↔500).
+   raw 는 건드리지 않고, --color-{family}-{scale} 만 반사로 가리킨다.
+   → 다크용 hex 중복이 전혀 없고, 인버전 규칙이 한눈에 보인다.
+   용도 토큰(--color-border/accent 등)은 이 스케일을 참조하므로 자동 대응.
+   ============================================================ */
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: var(--raw-black);
+  /* --foreground 는 --color-neutral-900 이 반사되어 #fafafa 자동 적용 */
 
-    /* Red (dark) */
-    --primitive-red-50: #250007;
-    --primitive-red-100: #3d000c;
-    --primitive-red-200: #550011;
-    --primitive-red-300: #690015;
-    --primitive-red-400: #7f0019;
-    --primitive-red-500: #c93b5c;
-    --primitive-red-600: #f57a94;
-    --primitive-red-700: #ffb3c3;
-    --primitive-red-800: #ffd9e1;
-    --primitive-red-900: #fff1f4;
+  --color-red-50: var(--raw-red-900);   --color-red-100: var(--raw-red-800);
+  --color-red-200: var(--raw-red-700);  --color-red-300: var(--raw-red-600);
+  --color-red-400: var(--raw-red-500);  --color-red-500: var(--raw-red-400);
+  --color-red-600: var(--raw-red-300);  --color-red-700: var(--raw-red-200);
+  --color-red-800: var(--raw-red-100);  --color-red-900: var(--raw-red-50);
 
-    /* Brown (dark) */
-    --primitive-brown-50: #24170f;
-    --primitive-brown-100: #39261a;
-    --primitive-brown-200: #4f3627;
-    --primitive-brown-300: #634532;
-    --primitive-brown-400: #7a5640;
-    --primitive-brown-500: #9d7760;
-    --primitive-brown-600: #bc9c89;
-    --primitive-brown-700: #d6bfb3;
-    --primitive-brown-800: #eadcd5;
-    --primitive-brown-900: #f8f3f1;
+  --color-brown-50: var(--raw-brown-900);   --color-brown-100: var(--raw-brown-800);
+  --color-brown-200: var(--raw-brown-700);  --color-brown-300: var(--raw-brown-600);
+  --color-brown-400: var(--raw-brown-500);  --color-brown-500: var(--raw-brown-400);
+  --color-brown-600: var(--raw-brown-300);  --color-brown-700: var(--raw-brown-200);
+  --color-brown-800: var(--raw-brown-100);  --color-brown-900: var(--raw-brown-50);
 
-    /* Sand (dark) */
-    --primitive-sand-50: #4d3d2b;
-    --primitive-sand-100: #6a5438;
-    --primitive-sand-200: #896c47;
-    --primitive-sand-300: #a7865b;
-    --primitive-sand-400: #c1a073;
-    --primitive-sand-500: #d4bb8a;
-    --primitive-sand-600: #e3cfab;
-    --primitive-sand-700: #eedfc7;
-    --primitive-sand-800: #f6eddf;
-    --primitive-sand-900: #fcf8f2;
+  --color-sand-50: var(--raw-sand-900);   --color-sand-100: var(--raw-sand-800);
+  --color-sand-200: var(--raw-sand-700);  --color-sand-300: var(--raw-sand-600);
+  --color-sand-400: var(--raw-sand-500);  --color-sand-500: var(--raw-sand-400);
+  --color-sand-600: var(--raw-sand-300);  --color-sand-700: var(--raw-sand-200);
+  --color-sand-800: var(--raw-sand-100);  --color-sand-900: var(--raw-sand-50);
 
-    /* Green (dark) */
-    --primitive-green-50: #03251b;
-    --primitive-green-100: #063426;
-    --primitive-green-200: #08422f;
-    --primitive-green-300: #0b4f38;
-    --primitive-green-400: #0f5b41;
-    --primitive-green-500: #3fa87f;
-    --primitive-green-600: #7bc9ab;
-    --primitive-green-700: #aee0cc;
-    --primitive-green-800: #d6efe6;
-    --primitive-green-900: #eef8f4;
+  --color-green-50: var(--raw-green-900);   --color-green-100: var(--raw-green-800);
+  --color-green-200: var(--raw-green-700);  --color-green-300: var(--raw-green-600);
+  --color-green-400: var(--raw-green-500);  --color-green-500: var(--raw-green-400);
+  --color-green-600: var(--raw-green-300);  --color-green-700: var(--raw-green-200);
+  --color-green-800: var(--raw-green-100);  --color-green-900: var(--raw-green-50);
 
-    /* Neutral (dark) */
-    --primitive-neutral-50: #171717;
-    --primitive-neutral-100: #262626;
-    --primitive-neutral-200: #404040;
-    --primitive-neutral-300: #525252;
-    --primitive-neutral-400: #737373;
-    --primitive-neutral-500: #737373;
-    --primitive-neutral-600: #d4d4d4;
-    --primitive-neutral-700: #e5e5e5;
-    --primitive-neutral-800: #f5f5f5;
-    --primitive-neutral-900: #fafafa;
+  --color-neutral-50: var(--raw-neutral-900);   --color-neutral-100: var(--raw-neutral-800);
+  --color-neutral-200: var(--raw-neutral-700);  --color-neutral-300: var(--raw-neutral-600);
+  --color-neutral-400: var(--raw-neutral-500);  --color-neutral-500: var(--raw-neutral-400);
+  --color-neutral-600: var(--raw-neutral-300);  --color-neutral-700: var(--raw-neutral-200);
+  --color-neutral-800: var(--raw-neutral-100);  --color-neutral-900: var(--raw-neutral-50);
 }
 
 @theme inline {
