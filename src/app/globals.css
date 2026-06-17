@@ -82,59 +82,40 @@
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
      라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
-     컴포넌트/팔레트 뷰어는 이 --color-{family}-{scale} 을 소비한다.
+     컴포넌트/팔레트 뷰어는 이 --ds-{family}-{scale} 을 소비한다.
      ============================================================ */
-  --color-red-50: var(--raw-red-50);    --color-red-100: var(--raw-red-100);
-  --color-red-200: var(--raw-red-200);  --color-red-300: var(--raw-red-300);
-  --color-red-400: var(--raw-red-400);  --color-red-500: var(--raw-red-500);
-  --color-red-600: var(--raw-red-600);  --color-red-700: var(--raw-red-700);
-  --color-red-800: var(--raw-red-800);  --color-red-900: var(--raw-red-900);
+  --ds-red-50: var(--raw-red-50);    --ds-red-100: var(--raw-red-100);
+  --ds-red-200: var(--raw-red-200);  --ds-red-300: var(--raw-red-300);
+  --ds-red-400: var(--raw-red-400);  --ds-red-500: var(--raw-red-500);
+  --ds-red-600: var(--raw-red-600);  --ds-red-700: var(--raw-red-700);
+  --ds-red-800: var(--raw-red-800);  --ds-red-900: var(--raw-red-900);
 
-  --color-brown-50: var(--raw-brown-50);    --color-brown-100: var(--raw-brown-100);
-  --color-brown-200: var(--raw-brown-200);  --color-brown-300: var(--raw-brown-300);
-  --color-brown-400: var(--raw-brown-400);  --color-brown-500: var(--raw-brown-500);
-  --color-brown-600: var(--raw-brown-600);  --color-brown-700: var(--raw-brown-700);
-  --color-brown-800: var(--raw-brown-800);  --color-brown-900: var(--raw-brown-900);
+  --ds-brown-50: var(--raw-brown-50);    --ds-brown-100: var(--raw-brown-100);
+  --ds-brown-200: var(--raw-brown-200);  --ds-brown-300: var(--raw-brown-300);
+  --ds-brown-400: var(--raw-brown-400);  --ds-brown-500: var(--raw-brown-500);
+  --ds-brown-600: var(--raw-brown-600);  --ds-brown-700: var(--raw-brown-700);
+  --ds-brown-800: var(--raw-brown-800);  --ds-brown-900: var(--raw-brown-900);
 
-  --color-sand-50: var(--raw-sand-50);    --color-sand-100: var(--raw-sand-100);
-  --color-sand-200: var(--raw-sand-200);  --color-sand-300: var(--raw-sand-300);
-  --color-sand-400: var(--raw-sand-400);  --color-sand-500: var(--raw-sand-500);
-  --color-sand-600: var(--raw-sand-600);  --color-sand-700: var(--raw-sand-700);
-  --color-sand-800: var(--raw-sand-800);  --color-sand-900: var(--raw-sand-900);
+  --ds-sand-50: var(--raw-sand-50);    --ds-sand-100: var(--raw-sand-100);
+  --ds-sand-200: var(--raw-sand-200);  --ds-sand-300: var(--raw-sand-300);
+  --ds-sand-400: var(--raw-sand-400);  --ds-sand-500: var(--raw-sand-500);
+  --ds-sand-600: var(--raw-sand-600);  --ds-sand-700: var(--raw-sand-700);
+  --ds-sand-800: var(--raw-sand-800);  --ds-sand-900: var(--raw-sand-900);
 
-  --color-green-50: var(--raw-green-50);    --color-green-100: var(--raw-green-100);
-  --color-green-200: var(--raw-green-200);  --color-green-300: var(--raw-green-300);
-  --color-green-400: var(--raw-green-400);  --color-green-500: var(--raw-green-500);
-  --color-green-600: var(--raw-green-600);  --color-green-700: var(--raw-green-700);
-  --color-green-800: var(--raw-green-800);  --color-green-900: var(--raw-green-900);
+  --ds-green-50: var(--raw-green-50);    --ds-green-100: var(--raw-green-100);
+  --ds-green-200: var(--raw-green-200);  --ds-green-300: var(--raw-green-300);
+  --ds-green-400: var(--raw-green-400);  --ds-green-500: var(--raw-green-500);
+  --ds-green-600: var(--raw-green-600);  --ds-green-700: var(--raw-green-700);
+  --ds-green-800: var(--raw-green-800);  --ds-green-900: var(--raw-green-900);
 
-  --color-neutral-50: var(--raw-neutral-50);    --color-neutral-100: var(--raw-neutral-100);
-  --color-neutral-200: var(--raw-neutral-200);  --color-neutral-300: var(--raw-neutral-300);
-  --color-neutral-400: var(--raw-neutral-400);  --color-neutral-500: var(--raw-neutral-500);
-  --color-neutral-600: var(--raw-neutral-600);  --color-neutral-700: var(--raw-neutral-700);
-  --color-neutral-800: var(--raw-neutral-800);  --color-neutral-900: var(--raw-neutral-900);
+  --ds-neutral-50: var(--raw-neutral-50);    --ds-neutral-100: var(--raw-neutral-100);
+  --ds-neutral-200: var(--raw-neutral-200);  --ds-neutral-300: var(--raw-neutral-300);
+  --ds-neutral-400: var(--raw-neutral-400);  --ds-neutral-500: var(--raw-neutral-500);
+  --ds-neutral-600: var(--raw-neutral-600);  --ds-neutral-700: var(--raw-neutral-700);
+  --ds-neutral-800: var(--raw-neutral-800);  --ds-neutral-900: var(--raw-neutral-900);
 
-  /* Typography */
-  --font-size-display-lg: 40px;
-  --font-size-display-md: 32px;
-  --font-size-display-sm: 28px;
-  --font-size-heading-lg: 32px;
-  --font-size-heading-md: 24px;
-  --font-size-heading-sm: 20px;
-  --font-size-price-lg: 24px;
-  --font-size-price-md: 20px;
-  --font-size-price-sm: 16px;
-  --font-size-body-lg: 18px;
-  --font-size-body-md: 16px;
-  --font-size-body-sm: 14px;
-  --font-size-label-xl: 18px;
-  --font-size-label-lg: 16px;
-  --font-size-label-md: 14px;
-  --font-size-label-sm: 12px;
-  --font-size-caption: 12px;
-  --font-size-selected-lg: 18px;
-  --font-size-selected-md: 16px;
-  --font-size-selected-sm: 14px;
+  /* Typography(--font-size-*) 는 src/lib/tokens.ts 단일 소스에서 생성되어
+     layout.tsx <style> 로 :root 에 주입됩니다(px→rem 환산). 여기엔 두지 않음. */
 
   /* Font weight 토큰 */
   --font-weight-regular: 400;
@@ -156,107 +137,184 @@
 
   /* ============================================================
      TIER 2-b — SEMANTIC PURPOSE (용도 기반)
-     모드 인지 스케일(--color-*)을 참조하면 라이트/다크 자동 대응.
+     모드 인지 스케일(--ds-*)을 참조하면 라이트/다크 자동 대응.
      모드 무관이어야 하는 값은 raw(--raw-*)를 직접 참조.
      ============================================================ */
 
   /* 표면(페이지)
      - background: 램프 밖 앵커라 모드별 명시(:root/.dark)
      - foreground: 모드 인지 스케일 참조 → 라이트 #171717, 다크 #fafafa 자동 */
-  --background: var(--raw-white);
-  --foreground: var(--color-neutral-900);
+  --ds-background: var(--raw-white);
+  --ds-foreground: var(--ds-neutral-900);
 
   /* 선·표면·보조 텍스트 — 모드 인지 스케일 참조(자동 대응) */
-  --color-border: var(--color-neutral-200);
-  --color-border-strong: var(--color-neutral-300);
+  --ds-border: var(--ds-neutral-200);
+  --ds-border-strong: var(--ds-neutral-300);
   /* 어느 배경에도 보이는 반투명 선/오버레이 — 라이트=검정α, 다크=흰색α(.dark) */
-  --color-border-overlay: var(--raw-black-a10);
-  --color-surface-subtle: var(--color-neutral-50);
-  --color-text-muted: var(--color-neutral-400);
+  --ds-border-overlay: var(--raw-black-a10);
+  --ds-surface-subtle: var(--ds-neutral-50);
+  --ds-text-muted: var(--ds-neutral-400);
 
   /* 그림자 — 모드 무관(검정α) */
-  --color-shadow: var(--raw-black-a20);
+  --ds-shadow: var(--raw-black-a20);
 
   /* 오버레이(반투명) — 라이트=검정α, 다크=흰색α(.dark) */
-  --color-overlay-subtle: var(--raw-black-a5);
-  --color-overlay: var(--raw-black-a10);
-  --color-overlay-strong: var(--raw-black-a20);
+  --ds-overlay-subtle: var(--raw-black-a5);
+  --ds-overlay: var(--raw-black-a10);
+  --ds-overlay-strong: var(--raw-black-a20);
 
   /* 강조(선택) — base(500) 스케일은 라이트/다크 모두 가시성이 좋음 */
-  --color-accent: var(--color-green-500);
-  --color-accent-danger: var(--color-red-500);
-  --color-on-accent: var(--raw-white);
+  --ds-accent: var(--ds-green-500);
+  --ds-accent-danger: var(--ds-red-500);
+  --ds-on-accent: var(--raw-white);
 
   /* 대비 등급 상태색 — 자체 완결형 칩(내부 대비 검증 완료)이라
      raw 직접 참조로 모드 무관 고정 */
-  --color-level-aaa-bg: var(--raw-green-500);
-  --color-level-aaa-fg: var(--raw-white);
-  --color-level-aa-bg: var(--raw-green-400);
-  --color-level-aa-fg: var(--raw-green-900);
-  --color-level-warn-bg: var(--raw-sand-400);
-  --color-level-warn-fg: var(--raw-brown-900);
-  --color-level-fail-bg: var(--raw-red-500);
-  --color-level-fail-fg: var(--raw-white);
+  --ds-level-aaa-bg: var(--raw-green-500);
+  --ds-level-aaa-fg: var(--raw-white);
+  --ds-level-aa-bg: var(--raw-green-400);
+  --ds-level-aa-fg: var(--raw-green-900);
+  --ds-level-warn-bg: var(--raw-sand-400);
+  --ds-level-warn-fg: var(--raw-brown-900);
+  --ds-level-fail-bg: var(--raw-red-500);
+  --ds-level-fail-fg: var(--raw-white);
 }
 
 /* ============================================================
    DARK MODE — 시맨틱 스케일만 재매핑
    다크 팔레트 = raw 의 반사(50↔900, 100↔800, 200↔700, 300↔600, 400↔500).
-   raw 는 건드리지 않고, --color-{family}-{scale} 만 반사로 가리킨다.
+   raw 는 건드리지 않고, --ds-{family}-{scale} 만 반사로 가리킨다.
    → 다크용 hex 중복이 전혀 없고, 인버전 규칙이 한눈에 보인다.
-   용도 토큰(--color-border/accent 등)은 이 스케일을 참조하므로 자동 대응.
+   용도 토큰(--ds-border/accent 등)은 이 스케일을 참조하므로 자동 대응.
    ============================================================ */
 .dark {
-  --background: var(--raw-black);
-  /* --foreground 는 --color-neutral-900 이 반사되어 #fafafa 자동 적용 */
+  --ds-background: var(--raw-black);
+  /* --ds-foreground 는 --ds-neutral-900 이 반사되어 #fafafa 자동 적용 */
 
   /* 다크 배경엔 흰색 반투명 오버레이가 더 자연스러움 */
-  --color-border-overlay: var(--raw-white-a10);
-  --color-overlay-subtle: var(--raw-white-a5);
-  --color-overlay: var(--raw-white-a10);
-  --color-overlay-strong: var(--raw-white-a20);
+  --ds-border-overlay: var(--raw-white-a10);
+  --ds-overlay-subtle: var(--raw-white-a5);
+  --ds-overlay: var(--raw-white-a10);
+  --ds-overlay-strong: var(--raw-white-a20);
 
-  --color-red-50: var(--raw-red-900);   --color-red-100: var(--raw-red-800);
-  --color-red-200: var(--raw-red-700);  --color-red-300: var(--raw-red-600);
-  --color-red-400: var(--raw-red-500);  --color-red-500: var(--raw-red-400);
-  --color-red-600: var(--raw-red-300);  --color-red-700: var(--raw-red-200);
-  --color-red-800: var(--raw-red-100);  --color-red-900: var(--raw-red-50);
+  --ds-red-50: var(--raw-red-900);   --ds-red-100: var(--raw-red-800);
+  --ds-red-200: var(--raw-red-700);  --ds-red-300: var(--raw-red-600);
+  --ds-red-400: var(--raw-red-500);  --ds-red-500: var(--raw-red-400);
+  --ds-red-600: var(--raw-red-300);  --ds-red-700: var(--raw-red-200);
+  --ds-red-800: var(--raw-red-100);  --ds-red-900: var(--raw-red-50);
 
-  --color-brown-50: var(--raw-brown-900);   --color-brown-100: var(--raw-brown-800);
-  --color-brown-200: var(--raw-brown-700);  --color-brown-300: var(--raw-brown-600);
-  --color-brown-400: var(--raw-brown-500);  --color-brown-500: var(--raw-brown-400);
-  --color-brown-600: var(--raw-brown-300);  --color-brown-700: var(--raw-brown-200);
-  --color-brown-800: var(--raw-brown-100);  --color-brown-900: var(--raw-brown-50);
+  --ds-brown-50: var(--raw-brown-900);   --ds-brown-100: var(--raw-brown-800);
+  --ds-brown-200: var(--raw-brown-700);  --ds-brown-300: var(--raw-brown-600);
+  --ds-brown-400: var(--raw-brown-500);  --ds-brown-500: var(--raw-brown-400);
+  --ds-brown-600: var(--raw-brown-300);  --ds-brown-700: var(--raw-brown-200);
+  --ds-brown-800: var(--raw-brown-100);  --ds-brown-900: var(--raw-brown-50);
 
-  --color-sand-50: var(--raw-sand-900);   --color-sand-100: var(--raw-sand-800);
-  --color-sand-200: var(--raw-sand-700);  --color-sand-300: var(--raw-sand-600);
-  --color-sand-400: var(--raw-sand-500);  --color-sand-500: var(--raw-sand-400);
-  --color-sand-600: var(--raw-sand-300);  --color-sand-700: var(--raw-sand-200);
-  --color-sand-800: var(--raw-sand-100);  --color-sand-900: var(--raw-sand-50);
+  --ds-sand-50: var(--raw-sand-900);   --ds-sand-100: var(--raw-sand-800);
+  --ds-sand-200: var(--raw-sand-700);  --ds-sand-300: var(--raw-sand-600);
+  --ds-sand-400: var(--raw-sand-500);  --ds-sand-500: var(--raw-sand-400);
+  --ds-sand-600: var(--raw-sand-300);  --ds-sand-700: var(--raw-sand-200);
+  --ds-sand-800: var(--raw-sand-100);  --ds-sand-900: var(--raw-sand-50);
 
-  --color-green-50: var(--raw-green-900);   --color-green-100: var(--raw-green-800);
-  --color-green-200: var(--raw-green-700);  --color-green-300: var(--raw-green-600);
-  --color-green-400: var(--raw-green-500);  --color-green-500: var(--raw-green-400);
-  --color-green-600: var(--raw-green-300);  --color-green-700: var(--raw-green-200);
-  --color-green-800: var(--raw-green-100);  --color-green-900: var(--raw-green-50);
+  --ds-green-50: var(--raw-green-900);   --ds-green-100: var(--raw-green-800);
+  --ds-green-200: var(--raw-green-700);  --ds-green-300: var(--raw-green-600);
+  --ds-green-400: var(--raw-green-500);  --ds-green-500: var(--raw-green-400);
+  --ds-green-600: var(--raw-green-300);  --ds-green-700: var(--raw-green-200);
+  --ds-green-800: var(--raw-green-100);  --ds-green-900: var(--raw-green-50);
 
-  --color-neutral-50: var(--raw-neutral-900);   --color-neutral-100: var(--raw-neutral-800);
-  --color-neutral-200: var(--raw-neutral-700);  --color-neutral-300: var(--raw-neutral-600);
-  --color-neutral-400: var(--raw-neutral-500);  --color-neutral-500: var(--raw-neutral-400);
-  --color-neutral-600: var(--raw-neutral-300);  --color-neutral-700: var(--raw-neutral-200);
-  --color-neutral-800: var(--raw-neutral-100);  --color-neutral-900: var(--raw-neutral-50);
+  --ds-neutral-50: var(--raw-neutral-900);   --ds-neutral-100: var(--raw-neutral-800);
+  --ds-neutral-200: var(--raw-neutral-700);  --ds-neutral-300: var(--raw-neutral-600);
+  --ds-neutral-400: var(--raw-neutral-500);  --ds-neutral-500: var(--raw-neutral-400);
+  --ds-neutral-600: var(--raw-neutral-300);  --ds-neutral-700: var(--raw-neutral-200);
+  --ds-neutral-800: var(--raw-neutral-100);  --ds-neutral-900: var(--raw-neutral-50);
 }
 
+/* ============================================================
+   @theme — 디자인 토큰을 Tailwind 유틸리티로 노출(브리지)
+   런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
+   생성 유틸 예: bg-neutral-200 / text-green-500 / text-body-md / leading-base ...
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--ds-background);
+  --color-foreground: var(--ds-foreground);
+
+  --color-red-50: var(--ds-red-50);     --color-red-100: var(--ds-red-100);
+  --color-red-200: var(--ds-red-200);   --color-red-300: var(--ds-red-300);
+  --color-red-400: var(--ds-red-400);   --color-red-500: var(--ds-red-500);
+  --color-red-600: var(--ds-red-600);   --color-red-700: var(--ds-red-700);
+  --color-red-800: var(--ds-red-800);   --color-red-900: var(--ds-red-900);
+  --color-brown-50: var(--ds-brown-50);     --color-brown-100: var(--ds-brown-100);
+  --color-brown-200: var(--ds-brown-200);   --color-brown-300: var(--ds-brown-300);
+  --color-brown-400: var(--ds-brown-400);   --color-brown-500: var(--ds-brown-500);
+  --color-brown-600: var(--ds-brown-600);   --color-brown-700: var(--ds-brown-700);
+  --color-brown-800: var(--ds-brown-800);   --color-brown-900: var(--ds-brown-900);
+  --color-sand-50: var(--ds-sand-50);     --color-sand-100: var(--ds-sand-100);
+  --color-sand-200: var(--ds-sand-200);   --color-sand-300: var(--ds-sand-300);
+  --color-sand-400: var(--ds-sand-400);   --color-sand-500: var(--ds-sand-500);
+  --color-sand-600: var(--ds-sand-600);   --color-sand-700: var(--ds-sand-700);
+  --color-sand-800: var(--ds-sand-800);   --color-sand-900: var(--ds-sand-900);
+  --color-green-50: var(--ds-green-50);     --color-green-100: var(--ds-green-100);
+  --color-green-200: var(--ds-green-200);   --color-green-300: var(--ds-green-300);
+  --color-green-400: var(--ds-green-400);   --color-green-500: var(--ds-green-500);
+  --color-green-600: var(--ds-green-600);   --color-green-700: var(--ds-green-700);
+  --color-green-800: var(--ds-green-800);   --color-green-900: var(--ds-green-900);
+  --color-neutral-50: var(--ds-neutral-50);     --color-neutral-100: var(--ds-neutral-100);
+  --color-neutral-200: var(--ds-neutral-200);   --color-neutral-300: var(--ds-neutral-300);
+  --color-neutral-400: var(--ds-neutral-400);   --color-neutral-500: var(--ds-neutral-500);
+  --color-neutral-600: var(--ds-neutral-600);   --color-neutral-700: var(--ds-neutral-700);
+  --color-neutral-800: var(--ds-neutral-800);   --color-neutral-900: var(--ds-neutral-900);
+
+  --color-border: var(--ds-border);
+  --color-border-strong: var(--ds-border-strong);
+  --color-border-overlay: var(--ds-border-overlay);
+  --color-surface-subtle: var(--ds-surface-subtle);
+  --color-text-muted: var(--ds-text-muted);
+  --color-accent: var(--ds-accent);
+  --color-accent-danger: var(--ds-accent-danger);
+  --color-on-accent: var(--ds-on-accent);
+  --color-overlay-subtle: var(--ds-overlay-subtle);
+  --color-overlay: var(--ds-overlay);
+  --color-overlay-strong: var(--ds-overlay-strong);
+  --color-level-aaa-bg: var(--ds-level-aaa-bg);
+  --color-level-aaa-fg: var(--ds-level-aaa-fg);
+  --color-level-aa-bg: var(--ds-level-aa-bg);
+  --color-level-aa-fg: var(--ds-level-aa-fg);
+  --color-level-warn-bg: var(--ds-level-warn-bg);
+  --color-level-warn-fg: var(--ds-level-warn-fg);
+  --color-level-fail-bg: var(--ds-level-fail-bg);
+  --color-level-fail-fg: var(--ds-level-fail-fg);
+
+  --text-display-lg: var(--font-size-display-lg);
+  --text-display-md: var(--font-size-display-md);
+  --text-display-sm: var(--font-size-display-sm);
+  --text-heading-lg: var(--font-size-heading-lg);
+  --text-heading-md: var(--font-size-heading-md);
+  --text-heading-sm: var(--font-size-heading-sm);
+  --text-price-lg: var(--font-size-price-lg);
+  --text-price-md: var(--font-size-price-md);
+  --text-price-sm: var(--font-size-price-sm);
+  --text-body-lg: var(--font-size-body-lg);
+  --text-body-md: var(--font-size-body-md);
+  --text-body-sm: var(--font-size-body-sm);
+  --text-label-xl: var(--font-size-label-xl);
+  --text-label-lg: var(--font-size-label-lg);
+  --text-label-md: var(--font-size-label-md);
+  --text-label-sm: var(--font-size-label-sm);
+  --text-caption: var(--font-size-caption);
+  --text-selected-lg: var(--font-size-selected-lg);
+  --text-selected-md: var(--font-size-selected-md);
+  --text-selected-sm: var(--font-size-selected-sm);
+
+  --leading-base: var(--font-line);
+  --tracking-tight: var(--font-tracking-tight);
+  --tracking-normal: var(--font-tracking-normal);
+  --tracking-wide: var(--font-tracking-wide);
+
+  --font-sans: var(--font-family-base);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--ds-background);
+  color: var(--ds-foreground);
   font-family: var(--font-family-base);
 }
 
@@ -266,7 +324,7 @@ img {
 
 /* 키보드 포커스 인디케이터 — 항상 표시(저시력/키보드 사용자) */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--ds-accent);
   outline-offset: 2px;
 }
 

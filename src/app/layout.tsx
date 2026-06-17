@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { fontSizeCssVars } from "@/lib/tokens";
 import "./globals.css";
 
 // 기본 폰트 — Pretendard GOV (자체 호스팅, variable woff2)
@@ -37,6 +38,10 @@ export default function RootLayout({
       lang="ko"
       className={`${pretendardGov.variable} ${notoSansKR.variable} h-full antialiased`}
     >
+      <head>
+        {/* 타이포 스케일 단일 소스(tokens.ts)에서 생성한 --font-size-* 주입 */}
+        <style dangerouslySetInnerHTML={{ __html: `:root{${fontSizeCssVars()}}` }} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
