@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/* =====================
+   Primitive Color Palette
+   ===================== */
+:root {
+  /* Red */
+  --primitive-red-50: #fff1f4;
+  --primitive-red-100: #ffd9e1;
+  --primitive-red-200: #ffb3c3;
+  --primitive-red-300: #f57a94;
+  --primitive-red-400: #c93b5c;
+  --primitive-red-500: #7f0019;
+  --primitive-red-600: #690015;
+  --primitive-red-700: #550011;
+  --primitive-red-800: #3d000c;
+  --primitive-red-900: #250007;
+
+  /* Brown */
+  --primitive-brown-50: #f8f3f1;
+  --primitive-brown-100: #eadcd5;
+  --primitive-brown-200: #d6bfb3;
+  --primitive-brown-300: #bc9c89;
+  --primitive-brown-400: #9d7760;
+  --primitive-brown-500: #7a5640;
+  --primitive-brown-600: #634532;
+  --primitive-brown-700: #4f3627;
+  --primitive-brown-800: #39261a;
+  --primitive-brown-900: #24170f;
+
+  /* Sand */
+  --primitive-sand-50: #fcf8f2;
+  --primitive-sand-100: #f6eddf;
+  --primitive-sand-200: #eedfc7;
+  --primitive-sand-300: #e3cfab;
+  --primitive-sand-400: #d4bb8a;
+  --primitive-sand-500: #c1a073;
+  --primitive-sand-600: #a7865b;
+  --primitive-sand-700: #896c47;
+  --primitive-sand-800: #6a5438;
+  --primitive-sand-900: #4d3d2b;
+
+  /* Green */
+  --primitive-green-50: #eef8f4;
+  --primitive-green-100: #d6efe6;
+  --primitive-green-200: #aee0cc;
+  --primitive-green-300: #7bc9ab;
+  --primitive-green-400: #3fa87f;
+  --primitive-green-500: #0f5b41;
+  --primitive-green-600: #0b4f38;
+  --primitive-green-700: #08422f;
+  --primitive-green-800: #063426;
+  --primitive-green-900: #03251b;
+
+  /* Neutral */
+  --primitive-neutral-50: #fafafa;
+  --primitive-neutral-100: #f5f5f5;
+  --primitive-neutral-200: #e5e5e5;
+  --primitive-neutral-300: #d4d4d4;
+  --primitive-neutral-400: #737373;
+  --primitive-neutral-500: #737373;
+  --primitive-neutral-600: #525252;
+  --primitive-neutral-700: #404040;
+  --primitive-neutral-800: #262626;
+  --primitive-neutral-900: #171717;
+
+  /* Typography */
+  --font-size-display-lg: 40px;
+  --font-size-display-md: 32px;
+  --font-size-display-sm: 28px;
+  --font-size-heading-lg: 32px;
+  --font-size-heading-md: 24px;
+  --font-size-heading-sm: 20px;
+  --font-size-price-lg: 24px;
+  --font-size-price-md: 20px;
+  --font-size-price-sm: 16px;
+  --font-size-body-lg: 18px;
+  --font-size-body-md: 16px;
+  --font-size-body-sm: 14px;
+  --font-size-label-xl: 18px;
+  --font-size-label-lg: 16px;
+  --font-size-label-md: 14px;
+  --font-size-label-sm: 12px;
+  --font-size-caption: 12px;
+  --font-size-selected-lg: 18px;
+  --font-size-selected-md: 16px;
+  --font-size-selected-sm: 14px;
+
+  --font-family-base: "Pretendard GOV", sans-serif;
+
+  /* Semantic (Light Mode) */
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* =====================
+   Dark Mode Overrides
+   ===================== */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+    /* Red (dark) */
+    --primitive-red-50: #250007;
+    --primitive-red-100: #3d000c;
+    --primitive-red-200: #550011;
+    --primitive-red-300: #690015;
+    --primitive-red-400: #7f0019;
+    --primitive-red-500: #c93b5c;
+    --primitive-red-600: #f57a94;
+    --primitive-red-700: #ffb3c3;
+    --primitive-red-800: #ffd9e1;
+    --primitive-red-900: #fff1f4;
+
+    /* Brown (dark) */
+    --primitive-brown-50: #24170f;
+    --primitive-brown-100: #39261a;
+    --primitive-brown-200: #4f3627;
+    --primitive-brown-300: #634532;
+    --primitive-brown-400: #7a5640;
+    --primitive-brown-500: #9d7760;
+    --primitive-brown-600: #bc9c89;
+    --primitive-brown-700: #d6bfb3;
+    --primitive-brown-800: #eadcd5;
+    --primitive-brown-900: #f8f3f1;
+
+    /* Sand (dark) */
+    --primitive-sand-50: #4d3d2b;
+    --primitive-sand-100: #6a5438;
+    --primitive-sand-200: #896c47;
+    --primitive-sand-300: #a7865b;
+    --primitive-sand-400: #c1a073;
+    --primitive-sand-500: #d4bb8a;
+    --primitive-sand-600: #e3cfab;
+    --primitive-sand-700: #eedfc7;
+    --primitive-sand-800: #f6eddf;
+    --primitive-sand-900: #fcf8f2;
+
+    /* Green (dark) */
+    --primitive-green-50: #03251b;
+    --primitive-green-100: #063426;
+    --primitive-green-200: #08422f;
+    --primitive-green-300: #0b4f38;
+    --primitive-green-400: #0f5b41;
+    --primitive-green-500: #3fa87f;
+    --primitive-green-600: #7bc9ab;
+    --primitive-green-700: #aee0cc;
+    --primitive-green-800: #d6efe6;
+    --primitive-green-900: #eef8f4;
+
+    /* Neutral (dark) */
+    --primitive-neutral-50: #171717;
+    --primitive-neutral-100: #262626;
+    --primitive-neutral-200: #404040;
+    --primitive-neutral-300: #525252;
+    --primitive-neutral-400: #737373;
+    --primitive-neutral-500: #737373;
+    --primitive-neutral-600: #d4d4d4;
+    --primitive-neutral-700: #e5e5e5;
+    --primitive-neutral-800: #f5f5f5;
+    --primitive-neutral-900: #fafafa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family-base);
+}
+
+img {
+  width: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
