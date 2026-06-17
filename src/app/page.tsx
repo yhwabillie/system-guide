@@ -110,9 +110,6 @@ const typographyTokens = [
   { label: "Label MD", var: "--font-size-label-md", weight: "--font-weight-semibold" },
   { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold" },
   { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular" },
-  { label: "Price LG", var: "--font-size-price-lg", weight: "--font-weight-bold" },
-  { label: "Price MD", var: "--font-size-price-md", weight: "--font-weight-bold" },
-  { label: "Price SM", var: "--font-size-price-sm", weight: "--font-weight-bold" },
 ];
 
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
