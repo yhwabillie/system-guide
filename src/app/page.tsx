@@ -114,6 +114,52 @@ const typographyTokens = [
   { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular", typoClass: "typo-caption" },
 ];
 
+const spacingTokens = [
+  { name: "space-0", cssVar: "--space-0", px: "0", rem: "0", utility: "p-0 / gap-0" },
+  { name: "space-1", cssVar: "--space-1", px: "4px", rem: "0.25rem", utility: "p-1 / gap-1" },
+  { name: "space-2", cssVar: "--space-2", px: "8px", rem: "0.5rem", utility: "p-2 / gap-2" },
+  { name: "space-3", cssVar: "--space-3", px: "12px", rem: "0.75rem", utility: "p-3 / gap-3" },
+  { name: "space-4", cssVar: "--space-4", px: "16px", rem: "1rem", utility: "p-4 / gap-4" },
+  { name: "space-5", cssVar: "--space-5", px: "20px", rem: "1.25rem", utility: "p-5 / gap-5" },
+  { name: "space-6", cssVar: "--space-6", px: "24px", rem: "1.5rem", utility: "p-6 / gap-6" },
+  { name: "space-8", cssVar: "--space-8", px: "32px", rem: "2rem", utility: "p-8 / gap-8" },
+  { name: "space-10", cssVar: "--space-10", px: "40px", rem: "2.5rem", utility: "p-10 / gap-10" },
+  { name: "space-12", cssVar: "--space-12", px: "48px", rem: "3rem", utility: "p-12 / gap-12" },
+  { name: "space-16", cssVar: "--space-16", px: "64px", rem: "4rem", utility: "p-16 / gap-16" },
+  { name: "space-20", cssVar: "--space-20", px: "80px", rem: "5rem", utility: "p-20 / gap-20" },
+];
+
+const radiusTokens = [
+  { name: "radius-none", px: "0", rem: "0", utility: "rounded-none" },
+  { name: "radius-sm", px: "6px", rem: "0.375rem", utility: "rounded-sm" },
+  { name: "radius-md", px: "8px", rem: "0.5rem", utility: "rounded-md" },
+  { name: "radius-lg", px: "10px", rem: "0.625rem", utility: "rounded-lg" },
+  { name: "radius-xl", px: "12px", rem: "0.75rem", utility: "rounded-xl" },
+  { name: "radius-2xl", px: "16px", rem: "1rem", utility: "rounded-2xl" },
+  { name: "radius-full", px: "pill", rem: "9999rem", utility: "rounded-full" },
+];
+
+const fixedSizeTokens = [
+  { name: "icon-xs", cssVar: "--size-icon-xs", px: "16px", rem: "1rem", utility: "size-icon-xs" },
+  { name: "icon-sm", cssVar: "--size-icon-sm", px: "20px", rem: "1.25rem", utility: "size-icon-sm" },
+  { name: "icon-md", cssVar: "--size-icon-md", px: "24px", rem: "1.5rem", utility: "size-icon-md" },
+  { name: "icon-lg", cssVar: "--size-icon-lg", px: "32px", rem: "2rem", utility: "size-icon-lg" },
+  { name: "icon-xl", cssVar: "--size-icon-xl", px: "40px", rem: "2.5rem", utility: "size-icon-xl" },
+  { name: "control-sm", cssVar: "--size-control-sm", px: "32px", rem: "2rem", utility: "h-control-sm" },
+  { name: "control-md", cssVar: "--size-control-md", px: "40px", rem: "2.5rem", utility: "h-control-md" },
+  { name: "control-lg", cssVar: "--size-control-lg", px: "48px", rem: "3rem", utility: "h-control-lg" },
+];
+
+const iconSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("icon"));
+const controlSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("control"));
+
+const containerTokens = [
+  { name: "container-sm", cssVar: "--layout-container-sm", px: "640px", rem: "40rem", utility: "max-w-sm" },
+  { name: "container-md", cssVar: "--layout-container-md", px: "768px", rem: "48rem", utility: "max-w-md" },
+  { name: "container-lg", cssVar: "--layout-container-lg", px: "1024px", rem: "64rem", utility: "max-w-lg" },
+  { name: "container-xl", cssVar: "--layout-container-xl", px: "1280px", rem: "80rem", utility: "max-w-xl" },
+];
+
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
   AAA:        { bg: "var(--ds-guide-level-aaa-bg)",  color: "var(--ds-guide-level-aaa-fg)",  label: "AAA" },
   AA:         { bg: "var(--ds-guide-level-aa-bg)",   color: "var(--ds-guide-level-aa-fg)",   label: "AA" },
@@ -134,6 +180,39 @@ function LevelBadge({ level }: { level: ContrastLevel }) {
   );
 }
 
+function TokenValue({ px, rem }: { px: string; rem: string }) {
+  return (
+    <span className="flex flex-col leading-base font-mono">
+      <span className="text-label-sm font-semibold numeric-tabular text-foreground">{px}</span>
+      <span className="text-caption text-text-muted numeric-tabular">{rem}</span>
+    </span>
+  );
+}
+
+function MeasureBar({
+  cssVar,
+  label,
+  height = pxToRem(12),
+}: {
+  cssVar: string;
+  label: string;
+  height?: string;
+}) {
+  return (
+    <div className="h-9 bg-surface-subtle border border-border flex items-center px-3">
+      <span
+        role="img"
+        aria-label={label}
+        className="relative block bg-accent"
+        style={{ width: `var(${cssVar})`, height, borderRadius: pxToRem(2) }}
+      >
+        <span aria-hidden="true" className="absolute left-0 top-1/2 h-5 -translate-y-1/2 border-l border-accent" />
+        <span aria-hidden="true" className="absolute right-0 top-1/2 h-5 -translate-y-1/2 border-r border-accent" />
+      </span>
+    </div>
+  );
+}
+
 type SwatchInfo = { hex: string; label: string };
 
 export default function Home() {
@@ -141,19 +220,20 @@ export default function Home() {
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#171717", label: "Neutral 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
-  const [activeTab, setActiveTab] = useState<"color" | "type">("color");
+  const [activeTab, setActiveTab] = useState<"color" | "layout" | "type">("color");
   const colorTabRef = useRef<HTMLButtonElement>(null);
+  const layoutTabRef = useRef<HTMLButtonElement>(null);
   const typeTabRef = useRef<HTMLButtonElement>(null);
 
   // 탭 좌우/Home/End 키 이동 (WAI-ARIA tabs 패턴)
   function handleTabKeyDown(e: React.KeyboardEvent) {
-    const order: ("color" | "type")[] = ["color", "type"];
-    const refs = { color: colorTabRef, type: typeTabRef };
-    let next: "color" | "type" | null = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeTab) + 1) % 2];
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeTab) + 1) % 2];
+    const order: ("color" | "layout" | "type")[] = ["color", "layout", "type"];
+    const refs = { color: colorTabRef, layout: layoutTabRef, type: typeTabRef };
+    let next: "color" | "layout" | "type" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeTab) + 1) % order.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeTab) - 1 + order.length) % order.length];
     else if (e.key === "Home") next = order[0];
-    else if (e.key === "End") next = order[1];
+    else if (e.key === "End") next = order[order.length - 1];
     if (next) {
       e.preventDefault();
       setActiveTab(next);
@@ -251,6 +331,19 @@ export default function Home() {
             style={tabStyle(activeTab === "color")}
           >
             Color
+          </button>
+          <button
+            ref={layoutTabRef}
+            type="button"
+            role="tab"
+            id="tab-layout"
+            aria-selected={activeTab === "layout"}
+            aria-controls="panel-layout"
+            tabIndex={activeTab === "layout" ? 0 : -1}
+            onClick={() => setActiveTab("layout")}
+            style={tabStyle(activeTab === "layout")}
+          >
+            Layout
           </button>
           <button
             ref={typeTabRef}
@@ -778,7 +871,180 @@ export default function Home() {
 
         </div>{/* /panel-color */}
 
-        {/* ── Tab Panel 2: Typography ── */}
+        {/* ── Tab Panel 2: Layout ── */}
+        <div role="tabpanel" id="panel-layout" aria-labelledby="tab-layout" hidden={activeTab !== "layout"}>
+          <h2 className="text-heading-lg font-bold mb-1">Layout & Size</h2>
+          <p className="text-body-sm text-text-muted mb-10">
+            여백, 모서리, 반복 크기, 콘텐츠 폭 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
+          </p>
+
+          <section aria-labelledby="section-spacing" className="mb-16">
+            <h3 id="section-spacing" className="text-heading-md font-bold mb-2">Spacing</h3>
+            <p className="text-body-sm text-text-muted mb-6">
+              margin, padding, gap의 기준 스케일입니다. `--space-*` 원본 토큰이 `--spacing-*`로 노출됩니다.
+            </p>
+            <div role="list" className="flex flex-col gap-2">
+              <div
+                aria-hidden="true"
+                className="grid gap-4 items-center pb-1"
+                style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
+              >
+                <span className="text-caption text-text-muted">Token</span>
+                <span className="text-caption text-text-muted">Preview</span>
+                <span className="text-caption text-text-muted">Size</span>
+                <span className="text-caption text-text-muted">Utility</span>
+              </div>
+              {spacingTokens.map(({ name, cssVar, px, rem, utility }) => (
+                <div
+                  role="listitem"
+                  key={name}
+                  className="grid gap-4 items-center"
+                  style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
+                >
+                  <span className="text-label-sm font-semibold">{name}</span>
+                  <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 여백 길이 견본`} />
+                  <TokenValue px={px} rem={rem} />
+                  <span className="text-caption text-text-muted font-mono">{utility}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section aria-labelledby="section-radius" className="mb-16">
+            <h3 id="section-radius" className="text-heading-md font-bold mb-2">Radius</h3>
+            <p className="text-body-sm text-text-muted mb-6">
+              원본은 `--shape-radius-*`, 유틸리티 노출은 `--radius-*`로 분리해 이름 충돌을 피합니다.
+            </p>
+            <div role="list" className="grid grid-cols-2 gap-4">
+              {radiusTokens.map(({ name, px, rem, utility }) => (
+                <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-border">
+                  <div
+                    role="img"
+                    aria-label={`${name} ${px}, ${rem} 모서리 견본`}
+                    className={`w-24 h-14 bg-accent border border-border-overlay ${utility}`}
+                  />
+                  <div>
+                    <p className="m-0 text-label-sm font-semibold">{name}</p>
+                    <p className="m-0 text-caption text-text-muted font-mono">
+                      <span className="font-semibold text-foreground">{px}</span>
+                      <span> · {rem} · {utility}</span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section aria-labelledby="section-fixed-size" className="mb-16">
+            <h3 id="section-fixed-size" className="text-heading-md font-bold mb-2">Fixed Size</h3>
+            <p className="text-body-sm text-text-muted mb-6">
+              아이콘과 컨트롤처럼 반복되는 고정 크기입니다. `--size-*`를 spacing namespace에 연결해 `size-*`, `h-*` 계열로 사용할 수 있습니다.
+            </p>
+            <div className="flex flex-col gap-10">
+              <div>
+                <h4 className="text-label-xl font-semibold mb-1">Icon Size</h4>
+                <p className="text-caption text-text-muted mb-4">
+                  아이콘 자체의 정사각 영역입니다. `icon-md` 24px를 일반 UI 기본값으로 사용합니다.
+                </p>
+                <div role="list" className="grid grid-cols-2 gap-4">
+                  {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                      <p className="m-0 text-label-sm font-semibold">{name}</p>
+                      <p className="mt-0.5 mb-4 text-caption text-text-muted font-mono">
+                        <span className="font-semibold text-foreground">{px}</span>
+                        <span> · {rem} · {utility}</span>
+                      </p>
+                      <div className="flex flex-col gap-2">
+                        <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 아이콘 길이 견본`} height={pxToRem(10)} />
+                        <div className="flex items-center gap-3">
+                          <span aria-hidden="true" className="text-caption text-text-muted" style={{ width: pxToRem(56) }}>
+                            square
+                          </span>
+                          <span
+                            role="img"
+                            aria-label={`${name} ${px}, ${rem} 아이콘 정사각 크기 견본`}
+                            className="bg-accent"
+                            style={{
+                              width: `var(${cssVar})`,
+                              height: `var(${cssVar})`,
+                              borderRadius: pxToRem(2),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-label-xl font-semibold mb-1">Control Height</h4>
+                <p className="text-caption text-text-muted mb-4">
+                  버튼·입력창처럼 인터랙티브 요소의 높이 기준입니다. 폭은 콘텐츠와 padding 조합으로 결정합니다.
+                </p>
+                <div role="list" className="grid grid-cols-2 gap-4">
+                  {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                      <p className="m-0 text-label-sm font-semibold">{name}</p>
+                      <p className="mt-0.5 mb-4 text-caption text-text-muted font-mono">
+                        <span className="font-semibold text-foreground">{px}</span>
+                        <span> · {rem} · {utility}</span>
+                      </p>
+                      <div className="flex flex-col gap-2">
+                        <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 컨트롤 높이 견본`} height={pxToRem(10)} />
+                        <div className="flex items-center gap-3">
+                          <span aria-hidden="true" className="text-caption text-text-muted" style={{ width: pxToRem(56) }}>
+                            height
+                          </span>
+                          <span
+                            role="img"
+                            aria-label={`${name} ${px}, ${rem} 컨트롤 높이 실제 견본`}
+                            className="bg-accent"
+                            style={{
+                              width: pxToRem(112),
+                              height: `var(${cssVar})`,
+                              borderRadius: pxToRem(2),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="section-container">
+            <h3 id="section-container" className="text-heading-md font-bold mb-2">Container</h3>
+            <p className="text-body-sm text-text-muted mb-6">
+              콘텐츠 최대 폭 토큰입니다. 원본은 `--layout-container-*`, Tailwind 노출은 `--container-*`로 분리합니다.
+            </p>
+            <div role="list" className="flex flex-col gap-4">
+              {containerTokens.map(({ name, cssVar, px, rem, utility }) => (
+                <div key={name} role="listitem">
+                  <div className="flex items-baseline justify-between gap-4 mb-2">
+                    <span className="text-label-sm font-semibold">{name}</span>
+                    <span className="text-caption text-text-muted font-mono">
+                      <span className="font-semibold text-foreground">{px}</span>
+                      <span> · {rem} · {utility}</span>
+                    </span>
+                  </div>
+                  <div className="w-full rounded-lg bg-surface-subtle border border-border p-2">
+                    <div
+                      role="img"
+                      aria-label={`${name} ${px}, ${rem} 콘텐츠 폭 견본`}
+                      className="relative h-5 bg-accent"
+                      style={{ width: `min(var(${cssVar}), 100%)`, borderRadius: pxToRem(2) }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>{/* /panel-layout */}
+
+        {/* ── Tab Panel 3: Typography ── */}
         <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"}>
 
         {/* ── Font Family ── */}

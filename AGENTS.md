@@ -23,6 +23,15 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - 새 색이 필요하면: raw에 추가 → `--ds-*`에 매핑 → `@theme inline`의 `--color-*`로 노출 → 컴포넌트에서 사용.
 - 큐레이션 가이드 화면 전용 표시/검증 토큰은 `guide-*` 접두를 붙입니다. 예: `--ds-guide-level-*`, `--color-guide-level-*`, `--text-guide-*`.
 
+## 레이아웃 / 크기 토큰
+
+- 여백은 `--space-*`를 원본으로 두고 `@theme inline`의 `--spacing-*`로 노출합니다. 컴포넌트에서는 `p-4`, `gap-6`, `m-8`처럼 Tailwind spacing 유틸리티를 우선 사용합니다.
+- radius 원본은 `--shape-radius-*`, Tailwind 노출은 `--radius-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
+- 반복 크기는 `--size-icon-*`, `--size-control-*`로 정의하고, `--spacing-icon-*`, `--spacing-control-*` 노출을 통해 `size-icon-md`, `h-control-md` 같은 유틸리티로 사용합니다.
+- 아이콘 크기는 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다. 일반 UI 기본값은 `icon-md`이며, 인라인 보조 아이콘은 `xs/sm`, 섹션 강조 아이콘은 `lg/xl`을 사용합니다.
+- 콘텐츠 폭은 `--layout-container-*`를 원본으로 두고 `--container-*`로 노출합니다. `max-w-md` 같은 container 유틸리티를 사용합니다.
+- 모든 크기 값은 rem 기반입니다. 새 px 값이 필요하면 토큰/헬퍼에서 rem으로 환산하고, 인라인 고정 px를 추가하지 않습니다.
+
 ## 접근성 (필수)
 
 - 목표: **한국 웹접근성 마크(KWCAG 2.2) 1등급**. 체크리스트·패턴은 [`docs/accessibility.md`](docs/accessibility.md) 참조.
