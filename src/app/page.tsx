@@ -262,9 +262,15 @@ export default function Home() {
         {/* ── Tab Panel 1: Color ── */}
         <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"}>
 
+        {/* ===== 그룹: Raw Color ===== */}
+        <h2 style={{ fontSize: "var(--font-size-heading-lg)", fontWeight: 700, marginBottom: "4px" }}>Raw Color</h2>
+        <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--color-text-muted)", marginBottom: "40px" }}>
+          가공 전 원본 팔레트(raw)와 대비 검증 도구입니다.
+        </p>
+
         {/* ── Color Palette ── */}
         <section aria-labelledby="section-color" style={{ marginBottom: "64px" }}>
-          <h2 id="section-color" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Color Palette</h2>
+          <h3 id="section-color" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Color Palette</h3>
 
           {/* 선택 모드 안내 */}
           {selecting && (
@@ -429,9 +435,9 @@ export default function Home() {
 
         {/* ── Contrast Checker ── */}
         <section aria-labelledby="section-contrast" style={{ marginBottom: "64px" }}>
-          <h2 id="section-contrast" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "24px" }}>
+          <h3 id="section-contrast" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "24px" }}>
             Contrast Checker
-          </h2>
+          </h3>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "24px" }}>
             {/* BG 선택 */}
@@ -702,9 +708,9 @@ export default function Home() {
 
           {/* 전체 팔레트 대비 매트릭스 */}
           <div style={{ marginTop: "32px" }}>
-            <h3 style={{ fontSize: "var(--font-size-heading-sm)", fontWeight: 700, marginBottom: "16px" }}>
+            <h4 style={{ fontSize: "var(--font-size-heading-sm)", fontWeight: 700, marginBottom: "16px" }}>
               현재 배경색 기준 — 전체 팔레트 대비율
-            </h3>
+            </h4>
             <div role="group" aria-label="전체 팔레트 대비율 매트릭스" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <div aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "80px repeat(10, 1fr)", gap: "4px" }}>
                 <span style={{ fontSize: "var(--font-size-caption)", color: "var(--color-neutral-400)" }} />
@@ -752,9 +758,15 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ===== 그룹: Semantic Color ===== */}
+        <h2 style={{ fontSize: "var(--font-size-heading-lg)", fontWeight: 700, marginBottom: "4px", marginTop: "40px", paddingTop: "48px", borderTop: "1px solid var(--color-border)" }}>Semantic Color</h2>
+        <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--color-text-muted)", marginBottom: "40px" }}>
+          raw를 용도·모드(라이트/다크)에 맞게 매핑한 의미 기반 토큰입니다.
+        </p>
+
         {/* ── Overlay (반투명, 모드 인지) ── */}
         <section aria-labelledby="section-alpha" style={{ marginBottom: "64px" }}>
-          <h2 id="section-alpha" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Overlay</h2>
+          <h3 id="section-alpha" style={{ fontSize: "var(--font-size-heading-md)", fontWeight: 700, marginBottom: "8px" }}>Overlay</h3>
           <p style={{ fontSize: "var(--font-size-body-sm)", color: "var(--color-text-muted)", marginBottom: "24px" }}>
             오버레이용 반투명 시맨틱 토큰. 라이트=검정α / 다크=흰색α로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
           </p>
