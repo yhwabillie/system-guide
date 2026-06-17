@@ -29,13 +29,12 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - radius 원본은 `--shape-radius-*`, Tailwind 노출은 `--radius-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
 - 반복 크기는 `--size-icon-*`, `--size-control-*`로 정의하고, `--spacing-icon-*`, `--spacing-control-*` 노출을 통해 `size-icon-md`, `h-control-md` 같은 유틸리티로 사용합니다.
 - 아이콘 크기는 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다. 일반 UI 기본값은 `icon-md`이며, 인라인 보조 아이콘은 `xs/sm`, 섹션 강조 아이콘은 `lg/xl`을 사용합니다.
-- 콘텐츠 폭은 `--layout-container-*`를 원본으로 두고 `--container-*`로 노출합니다. `max-w-md` 같은 container 유틸리티를 사용합니다.
+- 콘텐츠 폭은 `--layout-container-*`를 원본으로 두고 `--container-*`로 노출합니다. 페이지·사이드메뉴 레이아웃은 `layout-page`·`layout-sidenav-content`가 이 토큰을 직접 참조합니다.
 - container 좌우 gutter는 `--layout-gutter-sm`(18px, md 미만), `--layout-gutter-md`(30px, md 이상)을 원본으로 두고 `--spacing-gutter-*` → `px-gutter-sm`, `md:px-gutter-md`로 노출합니다.
-- 그리드 프리셋은 `--layout-grid-*` 원본 → `@theme`의 `--grid-template-columns-*` → `grid-cols-sidebar` 등으로 노출합니다. gap은 spacing 토큰(`gap-4` 등)과 조합합니다.
+- 그리드 shell 트랙은 `--layout-grid-sidebar`·`--layout-grid-sidebar-wide` 원본을 `layout-sidenav`·`layout-sidenav-wide` `@utility`에서 직접 참조합니다. gap은 spacing 토큰(`gap-4` 등)과 조합합니다.
 - breakpoint 원본은 `--layout-breakpoint-*`(:root), Tailwind 노출은 `@theme`의 `--breakpoint-*`에 **리터럴 rem**으로 정의합니다(`@media`에서 `var()` 참조 불가). 두 값은 동기화를 유지합니다.
 - 그라데이션은 `--ds-gradient-*` → `@theme` `--background-image-gradient-*` → `bg-gradient-accent` 등으로 노출합니다.
-- 반응형 container·grid·breakpoint 계산과 권장 class 조합은 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 일원화합니다. 페이지 콘텐츠 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css) `@utility layout-page`(container + gutter + 1→2→4→8→12열 grid)입니다. 자식 영역은 `col-span-*`를 breakpoint별 열 수에 맞게 조합합니다(`layoutPageColSpanFull` / `Main` / `Aside` export). 패딩 있는 래퍼 안에서 viewport 폭 맞출 때는 `@utility layout-bleed`를 사용합니다. `layout-page`에 `p-0`·`px-*`를 추가하면 gutter가 사라집니다. container만 분리가 필요하면 `lg:max-w-xl`(1280px 상한, lg부터) + gutter 유틸리티 조합을 사용합니다.
-- 실시간 viewport·container·margin·padding 검증은 [`/guide/responsive`](src/app/guide/responsive/page.tsx)에서 확인합니다(Layout 탭 Breakpoints 옆 링크).
+- 반응형 container·grid·breakpoint 계산과 권장 class 조합은 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 일원화합니다. 페이지 콘텐츠 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css) `@utility layout-page`(container + gutter + 1→2→4→8→12열 grid)입니다. 자식 영역은 `col-span-*`를 breakpoint별 열 수에 맞게 조합합니다(`layoutPageColSpanFull` / `Main` / `Aside` export). 패딩 있는 래퍼 안에서 viewport 폭 맞출 때는 `@utility layout-bleed`를 사용합니다. `layout-page`에 `p-0`·`px-*`를 추가하면 gutter가 사라집니다. container·margin·gutter 실측은 [`/guide/responsive`](src/app/guide/responsive/page.tsx)에서 확인합니다.
 - 사이드메뉴 프리셋은 `@utility layout-sidenav` + `layout-sidenav-menu` + `layout-sidenav-content` 조합입니다. `layout-sidenav` shell에는 gap 없음 — 콘텐츠 좌우 gutter·container 상한은 `layout-sidenav-content`가 담당합니다(`layout-page`와 동일). 넓은 menu는 `layout-sidenav-wide`입니다.
 - 모든 크기 값은 rem 기반입니다. 새 px 값이 필요하면 토큰/헬퍼에서 rem으로 환산하고, 인라인 고정 px를 추가하지 않습니다.
 

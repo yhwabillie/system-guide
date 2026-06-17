@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
-import { breakpointTokens, containerTokens, layoutSidenavClass, layoutSidenavContentClass, layoutSidenavMenuClass } from "@/lib/layout-tokens";
+import { breakpointTokens } from "@/lib/layout-tokens";
 import { pxToRem } from "@/lib/tokens";
 
 const primitiveColors = [
@@ -177,14 +177,6 @@ const gridGapTokens = [
   { name: "gap-8", cssVar: "--space-8", px: "32px", rem: "2rem", utility: "gap-8", desc: "넓은 간격 — 랜딩·갤러리" },
 ];
 
-const gridPresetTokens = [
-  { name: "layout-sidenav", utility: "layout-sidenav", px: "stack / 16rem + 1fr", rem: "lg: menu + content", desc: "사이드메뉴 + layout-sidenav-content 콘텐츠", preset: "layout-sidenav" as const },
-  { name: "grid-cols-sidebar", utility: "grid-cols-sidebar", px: "256px + 1fr", rem: "16rem + 1fr", desc: "사이드바 + 콘텐츠(단순 grid)", preset: "sidebar" as const },
-  { name: "grid-cols-sidebar-wide", utility: "grid-cols-sidebar-wide", px: "320px + 1fr", rem: "20rem + 1fr", desc: "넓은 사이드바 + 콘텐츠", preset: "sidebar-wide" as const },
-  { name: "grid-cols-form", utility: "grid-cols-form", px: "2 × 1fr", rem: "repeat(2, 1fr)", desc: "2열 폼 레이아웃", preset: "form" as const },
-  { name: "grid-cols-cards", utility: "grid-cols-cards", px: "auto-fit ≥256px", rem: "minmax(16rem, 1fr)", desc: "반응형 카드 그리드", preset: "cards" as const },
-];
-
 const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
   AAA:        { bg: "var(--ds-guide-level-aaa-bg)",  color: "var(--ds-guide-level-aaa-fg)",  label: "AAA" },
   AA:         { bg: "var(--ds-guide-level-aa-bg)",   color: "var(--ds-guide-level-aa-fg)",   label: "AA" },
@@ -235,16 +227,6 @@ function MeasureBar({
         <span aria-hidden="true" className="absolute right-0 top-1/2 h-5 -translate-y-1/2 border-r border-accent" />
       </span>
     </div>
-  );
-}
-
-function GridCell({ muted = false, tall = false }: { muted?: boolean; tall?: boolean }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={muted ? "bg-accent/25 border border-accent" : "bg-accent"}
-      style={{ height: tall ? pxToRem(48) : pxToRem(32), borderRadius: pxToRem(2) }}
-    />
   );
 }
 
@@ -301,48 +283,6 @@ function GridGapPreview({ utility, label }: { utility: string; label: string }) 
           밝은 블록 = grid item
         </span>
       </p>
-    </div>
-  );
-}
-
-function GridPresetPreview({ preset, label }: { preset: "layout-sidenav" | "sidebar" | "sidebar-wide" | "form" | "cards"; label: string }) {
-  if (preset === "layout-sidenav") {
-    return (
-      <div role="img" aria-label={label} className={`${layoutSidenavClass} p-3 bg-surface-subtle border border-border`}>
-        <div className={`${layoutSidenavMenuClass} bg-accent/25 border border-accent min-h-14 flex items-center px-2`}>
-          <span className="text-caption font-semibold text-foreground">menu</span>
-        </div>
-        <div className={`${layoutSidenavContentClass} min-h-14`}>
-          <div className="bg-accent h-full min-h-14 flex items-center justify-center text-caption font-semibold text-on-accent">
-            layout-sidenav-content
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (preset === "sidebar" || preset === "sidebar-wide") {
-    const utility = preset === "sidebar" ? "grid-cols-sidebar" : "grid-cols-sidebar-wide";
-    return (
-      <div role="img" aria-label={label} className={`grid gap-2 p-3 bg-surface-subtle border border-border ${utility}`}>
-        <GridCell muted />
-        <GridCell />
-      </div>
-    );
-  }
-  if (preset === "form") {
-    return (
-      <div role="img" aria-label={label} className="grid grid-cols-form gap-2 p-3 bg-surface-subtle border border-border">
-        {Array.from({ length: 4 }, (_, i) => (
-          <GridCell key={i} />
-        ))}
-      </div>
-    );
-  }
-  return (
-    <div role="img" aria-label={label} className="grid grid-cols-cards gap-4 p-3 bg-surface-subtle border border-border">
-      {Array.from({ length: 4 }, (_, i) => (
-        <GridCell key={i} tall />
-      ))}
     </div>
   );
 }
@@ -1195,7 +1135,7 @@ export default function Home() {
           <section aria-labelledby="section-grid" className="mb-16">
             <h3 id="section-grid" className="text-heading-md font-bold mb-2">Grid</h3>
             <p className="text-body-sm text-text-muted mb-6">
-              열 수·간격·레이아웃 프리셋을 `--layout-grid-*`와 Tailwind `grid-*` 유틸리티로 관리합니다. gap은 spacing 토큰(`gap-4` 등)과 함께 사용합니다.
+              열 수·간격은 Tailwind `grid-cols-*`·`gap-*`와 spacing 토큰으로 관리합니다. 페이지·사이드메뉴 shell 레이아웃은 `layout-page`·`layout-sidenav` shorthand를 사용합니다.
             </p>
 
             <div className="flex flex-col gap-10">
@@ -1236,26 +1176,6 @@ export default function Home() {
                         label={`${name} ${px}, ${rem} — 초록 gap 영역과 grid item 견본`}
                       />
                       <p className="mt-2 mb-0 text-caption text-text-muted">{desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-label-xl font-semibold mb-1">Layout Presets</h4>
-                <p className="text-caption text-text-muted mb-4">
-                  반복 레이아웃은 `--layout-grid-*` 원본 → `--grid-template-columns-*` 노출 → `grid-cols-*` 유틸리티로 사용합니다.
-                </p>
-                <div role="list" className="grid grid-cols-2 gap-4">
-                  {gridPresetTokens.map(({ name, utility, px, rem, desc, preset }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
-                      <p className="m-0 text-label-sm font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-3 text-caption text-text-muted font-mono">
-                        <span className="font-semibold text-foreground">{px}</span>
-                        <span> · {rem}</span>
-                      </p>
-                      <GridPresetPreview preset={preset} label={`${name} — ${desc}`} />
-                      <p className="mt-2 mb-0 text-caption text-text-muted">{utility} · {desc}</p>
                     </div>
                   ))}
                 </div>
@@ -1304,35 +1224,6 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-            </div>
-          </section>
-
-          <section aria-labelledby="section-container">
-            <h3 id="section-container" className="text-heading-md font-bold mb-2">Container</h3>
-            <p className="text-body-sm text-text-muted mb-6">
-              콘텐츠 최대 폭 토큰입니다. 원본은 `--layout-container-*`, Tailwind 노출은 `--container-*`로 분리합니다.
-              페이지 전체 레이아웃(container + 반응형 grid)은 <code className="font-mono text-caption">layout-page</code> 한 클래스로 적용합니다.
-            </p>
-            <div role="list" className="flex flex-col gap-4">
-              {containerTokens.map(({ name, cssVar, px, rem, utility }) => (
-                <div key={name} role="listitem">
-                  <div className="flex items-baseline justify-between gap-4 mb-2">
-                    <span className="text-label-sm font-semibold">{name}</span>
-                    <span className="text-caption text-text-muted font-mono">
-                      <span className="font-semibold text-foreground">{px}</span>
-                      <span> · {rem} · {utility}</span>
-                    </span>
-                  </div>
-                  <div className="w-full rounded-lg bg-surface-subtle border border-border p-2">
-                    <div
-                      role="img"
-                      aria-label={`${name} ${px}, ${rem} 콘텐츠 폭 견본`}
-                      className="relative h-5 bg-accent"
-                      style={{ width: `min(var(${cssVar}), 100%)`, borderRadius: pxToRem(2) }}
-                    />
-                  </div>
-                </div>
-              ))}
             </div>
           </section>
         </div>{/* /panel-layout */}

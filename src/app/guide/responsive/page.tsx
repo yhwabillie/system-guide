@@ -718,7 +718,7 @@ export default function ResponsiveGuidePage() {
             className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
             style={{ minHeight: pxToRem(48) }}
           >
-            <span className="text-caption font-semibold text-foreground numeric-tabular">menu · 16rem</span>
+            <span className="text-caption font-semibold text-foreground numeric-tabular">menu</span>
           </aside>
           <main className={layoutSidenavContentClass}>
             {Array.from({ length: sidenavMetrics.gridCols }, (_, i) => (
@@ -749,7 +749,7 @@ export default function ResponsiveGuidePage() {
             className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
             style={{ minHeight: pxToRem(48) }}
           >
-            <span className="text-caption font-semibold text-foreground numeric-tabular">menu · 16rem</span>
+            <span className="text-caption font-semibold text-foreground numeric-tabular">menu</span>
           </aside>
           <main className={layoutSidenavContentClass}>
             <LayoutPageCell label="content · full" className={layoutPageColSpanFull} />

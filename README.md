@@ -73,13 +73,16 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 
 큐레이션 가이드 화면에서만 쓰는 표시/검증용 토큰은 `guide-*` 접두로 구분합니다. 예: `--color-guide-level-*`, `--text-guide-*`.
 
-레이아웃 토큰은 source token과 Tailwind 노출 token을 분리합니다. 여백은 `--space-*` → `--spacing-*`, radius는 `--shape-radius-*` → `--radius-*`, 콘텐츠 폭은 `--layout-container-*` → `--container-*`, gutter는 `--layout-gutter-*` → `--spacing-gutter-*` 흐름입니다. 그리드 프리셋은 `--layout-grid-*` → `grid-cols-sidebar` 등, breakpoint는 `--layout-breakpoint-*`(:root 문서용)와 `@theme` `--breakpoint-*`(리터럴 rem)를 동기화합니다. 반복 크기인 `--size-icon-*`, `--size-control-*`는 spacing namespace에 연결해 `size-icon-md`, `h-control-md`처럼 사용할 수 있습니다. 아이콘은 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다.
+레이아웃 토큰은 source token과 Tailwind 노출 token을 분리합니다. 여백은 `--space-*` → `--spacing-*`, radius는 `--shape-radius-*` → `--radius-*`, 콘텐츠 폭은 `--layout-container-*` → `--container-*`(`layout-page`·`layout-sidenav-content`에서 참조), gutter는 `--layout-gutter-*` → `--spacing-gutter-*` 흐름입니다. 사이드메뉴 shell 트랙은 `--layout-grid-sidebar`·`--layout-grid-sidebar-wide`를 `layout-sidenav`·`layout-sidenav-wide`에서 참조합니다. breakpoint는 `--layout-breakpoint-*`(:root 문서용)와 `@theme` `--breakpoint-*`(리터럴 rem)를 동기화합니다. 반복 크기인 `--size-icon-*`, `--size-control-*`는 spacing namespace에 연결해 `size-icon-md`, `h-control-md`처럼 사용할 수 있습니다. 아이콘은 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다.
 
 ```tsx
 <div className="p-6 gap-4 rounded-xl max-w-lg" />
 <span className="size-icon-md" />
 <button className="h-control-md px-4" />
-<div className="grid grid-cols-sidebar gap-4" />
+<div className="layout-sidenav">
+  <nav className="layout-sidenav-menu">...</nav>
+  <main className="layout-sidenav-content">...</main>
+</div>
 <div className="bg-gradient-accent" />
 ```
 

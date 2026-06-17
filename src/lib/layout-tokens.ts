@@ -79,12 +79,6 @@ export const gridColsXl = 12;
 export const responsiveGridClass =
   "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:grid-cols-12 gap-4 md:gap-6";
 
-export const responsiveSidebarClass =
-  "grid grid-cols-1 lg:grid-cols-sidebar gap-4";
-
-export const responsiveCardsClass =
-  "grid grid-cols-cards gap-4";
-
 const breakpointOrder: BreakpointName[] = ["base", "sm", "md", "lg", "xl"];
 
 export function getActiveBreakpoint(width: number): BreakpointName {
