@@ -9,7 +9,7 @@
 | [`/`](src/app/page.tsx) | 메인 토큰 큐레이션 — Color / Font & Type / Spacing & Size / Grid 탭 · Layout & Breakpoint(새 창) |
 | [`/guide/responsive`](src/app/guide/responsive/page.tsx) | 반응형 layout 가이드 — `layout-page`·`layout-sidenav` margin·gutter·container·grid 실시간 확인 |
 
-반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다. 페이지 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css)의 `@utility layout-page`, `layout-sidenav`·`layout-sidenav-menu`·`layout-sidenav-content`, `layout-bleed`입니다.
+반응형 container·grid·breakpoint 헬퍼는 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 정의합니다. 페이지 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css)의 `@utility layout-page`, `layout-sidenav`·`layout-sidenav-menu`·`layout-sidenav-content`, `layout-bleed`, `layout-guide-tabpanel`(서브탭 패널 패딩)입니다.
 
 ### layout-page
 

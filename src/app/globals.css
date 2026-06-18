@@ -151,6 +151,10 @@
   --layout-header-padding-sm: var(--layout-screen-margin-sm);
   --layout-header-padding-md: var(--layout-screen-margin-md);
 
+  /* 가이드 콘텐츠 서브탭 패널 인셋 — 60px(상하) × 30px(좌우) */
+  --layout-guide-tabpanel-py: 3.75rem;
+  --layout-guide-tabpanel-px: 1.875rem;
+
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
      라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
@@ -284,8 +288,9 @@
   --ds-guide-level-warn-fg: var(--raw-brown-900);
   --ds-guide-level-fail-bg: var(--raw-red-500);
   --ds-guide-level-fail-fg: var(--raw-white);
-  --ds-guide-callout-bg: var(--ds-green-50);
-  --ds-guide-callout-accent: var(--ds-green-500);
+  --ds-guide-callout-bg: var(--ds-neutral-100);
+  --ds-guide-callout-accent: var(--ds-neutral-900);
+  --ds-guide-callout-fg: var(--ds-neutral-700);
   --ds-guide-intro-bg: var(--ds-neutral-100);
   --ds-guide-intro-eyebrow: var(--ds-neutral-600);
   --ds-guide-intro-body: var(--ds-neutral-700);
@@ -405,6 +410,7 @@
   --color-guide-level-fail-fg: var(--ds-guide-level-fail-fg);
   --color-guide-callout-bg: var(--ds-guide-callout-bg);
   --color-guide-callout-accent: var(--ds-guide-callout-accent);
+  --color-guide-callout-fg: var(--ds-guide-callout-fg);
   --color-guide-intro-bg: var(--ds-guide-intro-bg);
   --color-guide-intro-eyebrow: var(--ds-guide-intro-eyebrow);
   --color-guide-intro-body: var(--ds-guide-intro-body);
@@ -653,6 +659,12 @@
     gap: var(--space-6);
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
+}
+
+/* 가이드 메인 콘텐츠 서브탭 패널 — 탭 바로 아래 콘텐츠 영역 패딩 */
+@utility layout-guide-tabpanel {
+  padding-block: var(--layout-guide-tabpanel-py);
+  padding-inline: var(--layout-guide-tabpanel-px);
 }
 
 /* 부모 p-6 md:p-10 padding 상쇄 — layout-page 등을 viewport 폭과 맞출 때 사용 */

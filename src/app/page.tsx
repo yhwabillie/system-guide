@@ -86,6 +86,386 @@ const gradientTokens = [
   { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
 ];
 
+type SemanticColorReadMode = "text" | "bg" | "border";
+
+type SemanticColorTokenDef = {
+  token: string;
+  utility: string;
+  cssVar: string;
+  readAs: SemanticColorReadMode;
+};
+
+type SemanticColorGroupDef = {
+  id: string;
+  label: string;
+  tokens: SemanticColorTokenDef[];
+};
+
+type SemanticColorCategoryDef = {
+  id: string;
+  title: string;
+  description: React.ReactNode;
+  groups: SemanticColorGroupDef[];
+};
+
+const semanticColorCatalog: SemanticColorCategoryDef[] = [
+  {
+    id: "semantic-text",
+    title: "Text",
+    description: (
+      <>
+        본문·캡션·버튼 등 UI 전반의 <strong>텍스트</strong>에 사용되는 시맨틱 색입니다. <strong>text-*</strong> 유틸리티로 적용합니다.
+      </>
+    ),
+    groups: [
+      {
+        id: "primary",
+        label: "primary",
+        tokens: [
+          { token: "foreground", utility: "text-foreground", cssVar: "--color-foreground", readAs: "text" },
+        ],
+      },
+      {
+        id: "muted",
+        label: "muted",
+        tokens: [
+          { token: "text-muted", utility: "text-text-muted", cssVar: "--color-text-muted", readAs: "text" },
+        ],
+      },
+      {
+        id: "accent",
+        label: "accent",
+        tokens: [
+          { token: "accent", utility: "text-accent", cssVar: "--color-accent", readAs: "text" },
+          { token: "on-accent", utility: "text-on-accent", cssVar: "--color-on-accent", readAs: "text" },
+        ],
+      },
+      {
+        id: "danger",
+        label: "danger",
+        tokens: [
+          { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "semantic-surface",
+    title: "Surface",
+    description: (
+      <>
+        페이지·카드·패널 등 <strong>배경 표면</strong>에 사용합니다. <strong>bg-*</strong> 유틸리티로 적용합니다.
+      </>
+    ),
+    groups: [
+      {
+        id: "base",
+        label: "base",
+        tokens: [
+          { token: "background", utility: "bg-background", cssVar: "--color-background", readAs: "bg" },
+        ],
+      },
+      {
+        id: "subtle",
+        label: "subtle",
+        tokens: [
+          { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "semantic-border",
+    title: "Border",
+    description: (
+      <>
+        구분선·아웃라인·칩 테두리 등 <strong>경계</strong>에 사용합니다. <strong>border-*</strong> 유틸리티로 적용합니다.
+      </>
+    ),
+    groups: [
+      {
+        id: "default",
+        label: "default",
+        tokens: [
+          { token: "border", utility: "border-border", cssVar: "--color-border", readAs: "border" },
+        ],
+      },
+      {
+        id: "strong",
+        label: "strong",
+        tokens: [
+          { token: "border-strong", utility: "border-border-strong", cssVar: "--color-border-strong", readAs: "border" },
+        ],
+      },
+      {
+        id: "overlay",
+        label: "overlay",
+        tokens: [
+          { token: "border-overlay", utility: "border-border-overlay", cssVar: "--color-border-overlay", readAs: "border" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "semantic-accent",
+    title: "Accent",
+    description: (
+      <>
+        CTA·선택·강조 상태 등 <strong>브랜드·위험</strong> 의미의 채움 색입니다. 버튼·배지에 <strong>bg-*</strong>로 적용합니다.
+      </>
+    ),
+    groups: [
+      {
+        id: "brand",
+        label: "brand",
+        tokens: [
+          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg" },
+        ],
+      },
+      {
+        id: "on-brand",
+        label: "on-brand",
+        tokens: [
+          { token: "on-accent", utility: "bg-on-accent", cssVar: "--color-on-accent", readAs: "bg" },
+        ],
+      },
+      {
+        id: "danger",
+        label: "danger",
+        tokens: [
+          { token: "accent-danger", utility: "bg-accent-danger", cssVar: "--color-accent-danger", readAs: "bg" },
+        ],
+      },
+    ],
+  },
+];
+
+const semanticOverlayCatalog = {
+  id: "semantic-overlay",
+  title: "Overlay",
+  description: (
+    <>
+      오버레이용 반투명 시맨틱 토큰. 라이트=<strong>검정α</strong> / 다크=<strong>흰색α</strong>로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
+    </>
+  ),
+  groups: overlayTokens.map(({ label, cssVar, light, dark }) => ({
+    id: label,
+    label,
+    cssVar,
+    utility: `bg-${label}`,
+    light,
+    dark,
+  })),
+};
+
+const semanticGradientCatalog = {
+  id: "semantic-gradient",
+  title: "Gradient",
+  description: (
+    <>
+      용도 기반 그라데이션 토큰입니다. <strong>--ds-gradient-*</strong> 원본이 <strong>bg-gradient-*</strong>로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
+    </>
+  ),
+  tokens: gradientTokens,
+};
+
+function probeSemanticUtilityColor(probe: HTMLDivElement, utility: string, readAs: SemanticColorReadMode): string {
+  if (readAs === "border") {
+    probe.className = `box-border size-8 border bg-transparent ${utility}`;
+    return getComputedStyle(probe).borderTopColor;
+  }
+  probe.className = utility;
+  const cs = getComputedStyle(probe);
+  return readAs === "bg" ? cs.backgroundColor : cs.color;
+}
+
+/** computed rgb/rgba → 큐레이션 표시용 불투명 hex (#rrggbb, 알파 제거) */
+function cssColorToHex(color: string): string {
+  if (!color || color === "transparent") return "—";
+
+  if (color.startsWith("#")) {
+    const hex = color.toLowerCase();
+    if (hex.length === 4) {
+      return `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+    }
+    if (hex.length === 9) {
+      return hex.slice(0, 7);
+    }
+    return hex;
+  }
+
+  const rgbMatch = color.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([0-9.]+))?\s*\)/);
+  if (!rgbMatch) return color;
+
+  const toHex = (n: number) => n.toString(16).padStart(2, "0");
+  const r = Number(rgbMatch[1]);
+  const g = Number(rgbMatch[2]);
+  const b = Number(rgbMatch[3]);
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function semanticSwatchNeedsBorder(color: string): boolean {
+  if (!color || color === "transparent") return true;
+
+  const rgbMatch = color.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+  if (rgbMatch) {
+    const r = Number(rgbMatch[1]);
+    const g = Number(rgbMatch[2]);
+    const b = Number(rgbMatch[3]);
+    const alphaPart = color.startsWith("rgba") ? color.split(",").pop()?.trim().replace(")", "") : "1";
+    const alpha = alphaPart ? parseFloat(alphaPart) : 1;
+    if (alpha < 0.45) return true;
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.85;
+  }
+
+  if (color.startsWith("#")) {
+    try {
+      return contrastRatio(color, "#ffffff") >= 3;
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+function SemanticColorSwatchCard({
+  token,
+  utility,
+  color,
+}: {
+  token: string;
+  utility: string;
+  color: string;
+}) {
+  const needsBorder = semanticSwatchNeedsBorder(color);
+  const hexLabel = cssColorToHex(color);
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+      <div
+        role="img"
+        aria-label={`${token} 색상 견본 ${hexLabel}`}
+        className={[
+          "h-24 w-full",
+          needsBorder ? "border-b border-border" : "",
+        ].join(" ")}
+        style={{ backgroundColor: color }}
+      />
+      <div className="p-4">
+        <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
+        <p className="m-0 mt-1 text-caption text-text-muted">{utility}</p>
+        <p className="m-0 mt-0.5 font-mono text-caption text-text-muted numeric-tabular">{hexLabel}</p>
+      </div>
+    </div>
+  );
+}
+
+function SemanticOverlaySwatchCard({
+  token,
+  utility,
+  cssVar,
+  valueLabel,
+  isDark,
+}: {
+  token: string;
+  utility: string;
+  cssVar: string;
+  valueLabel: string;
+  isDark: boolean;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+      <div
+        role="img"
+        aria-label={`${token} — 체크무늬 위 반투명 견본`}
+        className="h-24 w-full overflow-hidden border-b border-border"
+        style={isDark ? checkerDark : checkerLight}
+      >
+        <div className="size-full" style={{ background: `var(${cssVar})` }} />
+      </div>
+      <div className="p-4">
+        <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
+        <p className="m-0 mt-1 text-caption text-text-muted font-mono">{utility}</p>
+        <p className="m-0 mt-0.5 font-mono text-caption text-text-muted">{valueLabel}</p>
+      </div>
+    </div>
+  );
+}
+
+function SemanticGradientSwatchCard({
+  token,
+  utility,
+  desc,
+}: {
+  token: string;
+  utility: string;
+  desc: string;
+}) {
+  const isFade = token.includes("fade");
+  const underlayStyle = token.includes("overlay") ? checkerLight : { background: "var(--ds-green-100)" };
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+      {isFade ? (
+        <div className="h-24 w-full overflow-hidden border-b border-border" style={underlayStyle}>
+          <div role="img" aria-label={`${token} — ${desc}`} className={`size-full ${utility}`} />
+        </div>
+      ) : (
+        <div
+          role="img"
+          aria-label={`${token} — ${desc}`}
+          className={`h-24 w-full border-b border-border ${utility}`}
+        />
+      )}
+      <div className="p-4">
+        <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
+        <p className="m-0 mt-1 font-mono text-caption text-text-muted">{utility}</p>
+        <p className="m-0 mt-0.5 text-caption text-text-muted">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+function SemanticColorGroupGrid({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mb-8 last:mb-0">
+      <h4 className="m-0 mb-3 text-label-md font-semibold lowercase text-text-muted">{label}</h4>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>
+    </div>
+  );
+}
+
+function SemanticColorCategorySection({
+  id,
+  title,
+  description,
+  lead = false,
+  children,
+}: {
+  id: string;
+  title: string;
+  description: React.ReactNode;
+  lead?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <section aria-labelledby={id} className="mb-24 last:mb-0">
+      <ContentSectionTitle id={id} lead={lead} description={description}>
+        {title}
+      </ContentSectionTitle>
+      {children}
+    </section>
+  );
+}
+
 // 투명도 확인용 체크무늬(모드 무관 고정) — 위에 알파 색을 올려 투명도를 가시화
 const makeChecker = (base: string, square: string): React.CSSProperties => ({
   backgroundColor: base,
@@ -235,7 +615,7 @@ function TabDescriptionCallout({
     <div
       className={[
         margin,
-        "border-l-4 border-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-foreground [&_strong]:font-bold [&_a]:font-semibold [&_a]:text-accent [&_a]:no-underline hover:[&_a]:underline",
+        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:text-foreground [&_a]:font-semibold [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
         className,
       ]
         .filter(Boolean)
@@ -318,7 +698,7 @@ function ContentSectionTitle({
       <h3
         id={id}
         className={[
-          "m-0 text-heading-lg font-bold leading-base text-foreground",
+          "m-0 text-heading-sm font-bold leading-base text-foreground",
           titleMargin,
           className,
         ]
@@ -369,6 +749,10 @@ function ContentGroupTitle({ children, className = "" }: { children: React.React
     </h4>
   );
 }
+
+/** 콘텐츠 영역 서브탭 — 탭 패널 상위 네비게이션 */
+const contentSubTabListClass = "mt-6 flex gap-1 border-b border-border";
+const contentSubTabPanelClass = "layout-guide-tabpanel";
 
 const guideHeaderHeightClass = "h-[3.75rem]";
 const guideHeaderOffsetClass = "top-[3.75rem]";
@@ -1565,14 +1949,15 @@ export default function Home() {
 
   const contentSubTabClass = (active: boolean) =>
     [
-      "cursor-pointer border-0 bg-transparent font-sans text-label-lg leading-base transition-colors duration-150",
-      "border-b-2 -mb-px py-2.5 px-4",
+      "cursor-pointer border-0 bg-transparent font-sans text-heading-md leading-base transition-colors duration-150",
+      "border-b-2 -mb-px py-3 px-5",
       active
         ? "border-accent font-bold text-foreground"
-        : "border-transparent font-medium text-neutral-600 hover:text-foreground",
+        : "border-transparent font-medium text-text-muted hover:text-foreground",
     ].join(" ");
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
   const [resolved, setResolved] = useState<Record<string, string>>({});
+  const [semanticResolved, setSemanticResolved] = useState<Record<string, string>>({});
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
@@ -1587,6 +1972,22 @@ export default function Home() {
         }
       }
       setResolved(map);
+
+      const probe = document.createElement("div");
+      probe.setAttribute("aria-hidden", "true");
+      probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;top:0;left:0";
+      document.body.appendChild(probe);
+
+      const semanticMap: Record<string, string> = {};
+      for (const category of semanticColorCatalog) {
+        for (const group of category.groups) {
+          for (const token of group.tokens) {
+            semanticMap[token.cssVar] = probeSemanticUtilityColor(probe, token.utility, token.readAs);
+          }
+        }
+      }
+      document.body.removeChild(probe);
+      setSemanticResolved(semanticMap);
     });
 
     return () => cancelAnimationFrame(frameId);
@@ -1909,7 +2310,7 @@ export default function Home() {
           role="tablist"
           aria-label="색상 카테고리"
           onKeyDown={handleColorTabKeyDown}
-          className="mt-6 mb-4 flex gap-1 border-b border-border"
+          className={contentSubTabListClass}
         >
           <button
             ref={rawColorTabRef}
@@ -1941,7 +2342,7 @@ export default function Home() {
 
         </ContentIntroShell>
 
-        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"}>
+        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"} className={contentSubTabPanelClass}>
         <section aria-labelledby="section-color" className="mb-24">
           <ContentSectionTitle
             id="section-color"
@@ -2258,105 +2659,59 @@ export default function Home() {
 
         </div>{/* /panel-color-raw */}
 
-        <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"}>
-        <ContentSectionTitle
-          id="section-semantic-color"
-          lead
-          description={
-            <>
-              <strong>raw</strong>를 용도·모드(<strong>라이트/다크</strong>)에 맞게 매핑한 <strong>의미 기반 토큰</strong>입니다.
-            </>
-          }
-        >
-          Semantic Color
-        </ContentSectionTitle>
-
-        {/* ── Overlay (반투명, 모드 인지) ── */}
-        <section aria-labelledby="section-alpha" className="mb-24">
-          <ContentSectionTitle
-            id="section-alpha"
-            description={
-              <>
-                오버레이용 반투명 시맨틱 토큰. 라이트=<strong>검정α</strong> / 다크=<strong>흰색α</strong>로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
-              </>
-            }
-          >
-            Overlay
-          </ContentSectionTitle>
-          <div role="list" className="flex flex-col gap-2">
-            {/* 헤더 */}
-            <div aria-hidden="true" className="grid gap-4 items-center pb-1" style={{ gridTemplateColumns: "160px 1fr 200px" }}>
-              <span className="text-caption text-text-muted">Token</span>
-              <span className="text-caption text-text-muted">Transparency</span>
-              <span className="text-caption text-text-muted">Value ({isDark ? "Dark" : "Light"})</span>
-            </div>
-            {overlayTokens.map(({ label, cssVar, light, dark }) => (
-              <div role="listitem" key={label} className="grid gap-4 items-center" style={{ gridTemplateColumns: "160px 1fr 200px" }}>
-                <span className="text-label-sm font-semibold">{label}</span>
-                {/* 체크무늬 위에 알파 색을 올려 투명도를 가시화. 다크모드(흰색α)는 어두운 체커 */}
-                <div
-                  role="img"
-                  aria-label={`${label} — 체크무늬 위 반투명 견본`}
-                  className="h-10 rounded-md overflow-hidden border border-border"
-                  style={isDark ? checkerDark : checkerLight}
-                >
-                  <div className="w-full h-full" style={{ background: `var(${cssVar})` }} />
-                </div>
-                <span className="text-caption text-text-muted font-mono">{isDark ? dark : light}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Gradient (시맨틱 그라데이션) ── */}
-        <section aria-labelledby="section-gradient" className="mb-24">
-          <ContentSectionTitle
-            id="section-gradient"
-            description={
-              <>
-                용도 기반 그라데이션 토큰입니다. <strong>--ds-gradient-*</strong> 원본이 <strong>--background-image-gradient-*</strong>로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
-              </>
-            }
-          >
-            Gradient
-          </ContentSectionTitle>
-          <div role="list" className="flex flex-col gap-2">
-            <div aria-hidden="true" className="grid gap-4 items-center pb-1" style={{ gridTemplateColumns: "180px 1fr 1fr" }}>
-              <span className="text-caption text-text-muted">Token</span>
-              <span className="text-caption text-text-muted">Preview</span>
-              <span className="text-caption text-text-muted">Utility / Description</span>
-            </div>
-            {gradientTokens.map(({ label, utility, desc }) => {
-              const isFade = label.includes("fade");
-              const underlayStyle = label.includes("overlay") ? checkerLight : { background: "var(--ds-green-100)" };
-              return (
-              <div role="listitem" key={label} className="grid gap-4 items-center" style={{ gridTemplateColumns: "180px 1fr 1fr" }}>
-                <span className="text-label-sm font-semibold">{label}</span>
-                {isFade ? (
-                  <div className="h-10 rounded-md border border-border overflow-hidden" style={underlayStyle}>
-                    <div
-                      role="img"
-                      aria-label={`${label} — ${desc}`}
-                      className={`h-full ${utility}`}
+        <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"} className={contentSubTabPanelClass}>
+          {semanticColorCatalog.map((category, index) => (
+            <SemanticColorCategorySection
+              key={category.id}
+              id={category.id}
+              title={category.title}
+              description={category.description}
+              lead={index === 0}
+            >
+              {category.groups.map((group) => (
+                <SemanticColorGroupGrid key={group.id} label={group.label}>
+                  {group.tokens.map((token) => (
+                    <SemanticColorSwatchCard
+                      key={token.cssVar}
+                      token={token.token}
+                      utility={token.utility}
+                      color={semanticResolved[token.cssVar] ?? "—"}
                     />
-                  </div>
-                ) : (
-                  <div
-                    role="img"
-                    aria-label={`${label} — ${desc}`}
-                    className={`h-10 rounded-md border border-border overflow-hidden ${utility}`}
-                  />
-                )}
-                <div>
-                  <p className="m-0 text-caption text-text-muted font-mono">{utility}</p>
-                  <p className="mt-0.5 mb-0 text-caption text-text-muted">{desc}</p>
-                </div>
-              </div>
-              );
-            })}
-          </div>
-        </section>
+                  ))}
+                </SemanticColorGroupGrid>
+              ))}
+            </SemanticColorCategorySection>
+          ))}
 
+          <SemanticColorCategorySection
+            id={semanticOverlayCatalog.id}
+            title={semanticOverlayCatalog.title}
+            description={semanticOverlayCatalog.description}
+          >
+            {semanticOverlayCatalog.groups.map((group) => (
+              <SemanticColorGroupGrid key={group.id} label={group.label}>
+                <SemanticOverlaySwatchCard
+                  token={group.label}
+                  utility={group.utility}
+                  cssVar={group.cssVar}
+                  valueLabel={isDark ? group.dark : group.light}
+                  isDark={isDark}
+                />
+              </SemanticColorGroupGrid>
+            ))}
+          </SemanticColorCategorySection>
+
+          <SemanticColorCategorySection
+            id={semanticGradientCatalog.id}
+            title={semanticGradientCatalog.title}
+            description={semanticGradientCatalog.description}
+          >
+            <SemanticColorGroupGrid label="gradient">
+              {semanticGradientCatalog.tokens.map(({ label, utility, desc }) => (
+                <SemanticGradientSwatchCard key={label} token={label} utility={utility} desc={desc} />
+              ))}
+            </SemanticColorGroupGrid>
+          </SemanticColorCategorySection>
         </div>{/* /panel-color-semantic */}
 
         </div>{/* /panel-color */}
@@ -2374,7 +2729,7 @@ export default function Home() {
             role="tablist"
             aria-label="Spacing & Size 카테고리"
             onKeyDown={handleSpacingTabKeyDown}
-            className="mt-6 mb-4 flex gap-1 border-b border-border"
+            className={contentSubTabListClass}
           >
             <button
               ref={spacingMeasureTabRef}
@@ -2419,7 +2774,7 @@ export default function Home() {
 
           </ContentIntroShell>
 
-          <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"}>
+          <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"} className={contentSubTabPanelClass}>
           <section aria-labelledby="section-spacing" className="mb-0">
             <ContentSectionTitle
               id="section-spacing"
@@ -2462,7 +2817,7 @@ export default function Home() {
 
           </div>{/* /panel-spacing-measure */}
 
-          <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"}>
+          <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"} className={contentSubTabPanelClass}>
           <section aria-labelledby="section-radius" className="mb-0">
             <ContentSectionTitle
               id="section-radius"
@@ -2497,7 +2852,7 @@ export default function Home() {
 
           </div>{/* /panel-spacing-radius */}
 
-          <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"}>
+          <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"} className={contentSubTabPanelClass}>
           <section aria-labelledby="section-fixed-size" className="mb-0">
             <ContentSectionTitle
               id="section-fixed-size"
@@ -2597,7 +2952,7 @@ export default function Home() {
             role="tablist"
             aria-label="Grid 카테고리"
             onKeyDown={handleGridTabKeyDown}
-            className="mt-6 mb-4 flex gap-1 border-b border-border"
+            className={contentSubTabListClass}
           >
             <button
               ref={gridColumnsTabRef}
@@ -2629,7 +2984,7 @@ export default function Home() {
 
           </ContentIntroShell>
 
-          <div role="tabpanel" id="panel-grid-columns" aria-labelledby="tab-grid-columns" hidden={activeGridTab !== "columns"}>
+          <div role="tabpanel" id="panel-grid-columns" aria-labelledby="tab-grid-columns" hidden={activeGridTab !== "columns"} className={contentSubTabPanelClass}>
           <section aria-labelledby="section-grid-columns" className="mb-0">
             <ContentSectionTitle
               id="section-grid-columns"
@@ -2657,7 +3012,7 @@ export default function Home() {
           </section>
           </div>{/* /panel-grid-columns */}
 
-          <div role="tabpanel" id="panel-grid-gap" aria-labelledby="tab-grid-gap" hidden={activeGridTab !== "gap"}>
+          <div role="tabpanel" id="panel-grid-gap" aria-labelledby="tab-grid-gap" hidden={activeGridTab !== "gap"} className={contentSubTabPanelClass}>
           <section aria-labelledby="section-grid-gap" className="mb-0">
             <ContentSectionTitle
               id="section-grid-gap"
@@ -2690,7 +3045,7 @@ export default function Home() {
           role="tablist"
           aria-label="Font & Type 카테고리"
           onKeyDown={handleTypeTabKeyDown}
-          className="mt-6 mb-4 flex gap-1 border-b border-border"
+          className={contentSubTabListClass}
         >
           <button
             ref={fontFamilyTabRef}
@@ -2722,7 +3077,7 @@ export default function Home() {
 
         </ContentIntroShell>
 
-        <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"}>
+        <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
         <section aria-labelledby="section-font-family" className="mb-0">
           <FontStackCuration />
 
@@ -2916,7 +3271,7 @@ export default function Home() {
 
         </div>{/* /panel-type-font-family */}
 
-        <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"}>
+        <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
         <section aria-labelledby="section-typography-scale" className="mb-0">
           <ContentSectionTitle
             id="section-typography-scale"
