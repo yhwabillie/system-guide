@@ -17,6 +17,7 @@
 /* ============================================================
    TIER 1 — RAW (원본 팔레트)
    불변·모드 무관. raw 값은 여기서만 단 한 번 정의한다.
+   family 행 순서: hue 스펙트럼(따뜻→차가움) Red → Orange → Brown → Sand → Green → Cyan → Neutral
    (스케일 명명은 라이트 기준 = 캐논값)
    ============================================================ */
 :root {
@@ -31,6 +32,18 @@
   --raw-red-700: #550011;
   --raw-red-800: #3d000c;
   --raw-red-900: #250007;
+
+  /* Orange — 다크 모드 포커스 outline(500=#ffa94d) */
+  --raw-orange-50: #fff4e6;
+  --raw-orange-100: #ffe8cc;
+  --raw-orange-200: #ffd8a8;
+  --raw-orange-300: #ffc078;
+  --raw-orange-400: #ffb366;
+  --raw-orange-500: #ffa94d;
+  --raw-orange-600: #fd8f2a;
+  --raw-orange-700: #e6770f;
+  --raw-orange-800: #c45f00;
+  --raw-orange-900: #803d00;
 
   /* Brown */
   --raw-brown-50: #f8f3f1;
@@ -67,6 +80,18 @@
   --raw-green-700: #08422f;
   --raw-green-800: #063426;
   --raw-green-900: #03251b;
+
+  /* Cyan — 라이트 모드 포커스 outline(500=#00cbde) */
+  --raw-cyan-50: #e8fbfd;
+  --raw-cyan-100: #d1f7fb;
+  --raw-cyan-200: #a3eff7;
+  --raw-cyan-300: #75e7f3;
+  --raw-cyan-400: #47dfef;
+  --raw-cyan-500: #00cbde;
+  --raw-cyan-600: #00a3b2;
+  --raw-cyan-700: #007b86;
+  --raw-cyan-800: #00535a;
+  --raw-cyan-900: #002b2e;
 
   /* Neutral */
   --raw-neutral-50: #fafafa;
@@ -166,6 +191,12 @@
   --ds-red-600: var(--raw-red-600);  --ds-red-700: var(--raw-red-700);
   --ds-red-800: var(--raw-red-800);  --ds-red-900: var(--raw-red-900);
 
+  --ds-orange-50: var(--raw-orange-50);    --ds-orange-100: var(--raw-orange-100);
+  --ds-orange-200: var(--raw-orange-200);  --ds-orange-300: var(--raw-orange-300);
+  --ds-orange-400: var(--raw-orange-400);  --ds-orange-500: var(--raw-orange-500);
+  --ds-orange-600: var(--raw-orange-600);  --ds-orange-700: var(--raw-orange-700);
+  --ds-orange-800: var(--raw-orange-800);  --ds-orange-900: var(--raw-orange-900);
+
   --ds-brown-50: var(--raw-brown-50);    --ds-brown-100: var(--raw-brown-100);
   --ds-brown-200: var(--raw-brown-200);  --ds-brown-300: var(--raw-brown-300);
   --ds-brown-400: var(--raw-brown-400);  --ds-brown-500: var(--raw-brown-500);
@@ -183,6 +214,12 @@
   --ds-green-400: var(--raw-green-400);  --ds-green-500: var(--raw-green-500);
   --ds-green-600: var(--raw-green-600);  --ds-green-700: var(--raw-green-700);
   --ds-green-800: var(--raw-green-800);  --ds-green-900: var(--raw-green-900);
+
+  --ds-cyan-50: var(--raw-cyan-50);    --ds-cyan-100: var(--raw-cyan-100);
+  --ds-cyan-200: var(--raw-cyan-200);  --ds-cyan-300: var(--raw-cyan-300);
+  --ds-cyan-400: var(--raw-cyan-400);  --ds-cyan-500: var(--raw-cyan-500);
+  --ds-cyan-600: var(--raw-cyan-600);  --ds-cyan-700: var(--raw-cyan-700);
+  --ds-cyan-800: var(--raw-cyan-800);  --ds-cyan-900: var(--raw-cyan-900);
 
   --ds-neutral-50: var(--raw-neutral-50);    --ds-neutral-100: var(--raw-neutral-100);
   --ds-neutral-200: var(--raw-neutral-200);  --ds-neutral-300: var(--raw-neutral-300);
@@ -254,6 +291,12 @@
   --ds-surface-subtle: var(--ds-neutral-50);
   --ds-text-muted: var(--ds-neutral-400);
 
+  /* 포커스 — :focus-visible outline. 라이트=cyan-500 · 다크=orange-500(.dark) */
+  --ds-outline-focus: var(--raw-cyan-500);
+  --outline-focus-width: 0.15625rem; /* 2.5px */
+  --outline-focus-offset: 0.125rem; /* 2px — tab 제외 기본 offset */
+  --outline-focus-tab-offset: -0.125rem; /* -2px — tab·TOC 등 인셋 outline */
+
   /* 스크롤바 — 모드 인지 스케일 참조(다크 자동 반사). thumb=중립 mid, track=subtle */
   --ds-scroll-thumb: var(--ds-neutral-300);
   --ds-scroll-track: var(--ds-neutral-100);
@@ -313,11 +356,20 @@
   --ds-overlay: var(--raw-white-a10);
   --ds-overlay-strong: var(--raw-white-a20);
 
+  /* 포커스 outline — 다크 배경 대비용 orange */
+  --ds-outline-focus: var(--raw-orange-500);
+
   --ds-red-50: var(--raw-red-900);   --ds-red-100: var(--raw-red-800);
   --ds-red-200: var(--raw-red-700);  --ds-red-300: var(--raw-red-600);
   --ds-red-400: var(--raw-red-500);  --ds-red-500: var(--raw-red-400);
   --ds-red-600: var(--raw-red-300);  --ds-red-700: var(--raw-red-200);
   --ds-red-800: var(--raw-red-100);  --ds-red-900: var(--raw-red-50);
+
+  --ds-orange-50: var(--raw-orange-900);   --ds-orange-100: var(--raw-orange-800);
+  --ds-orange-200: var(--raw-orange-700);  --ds-orange-300: var(--raw-orange-600);
+  --ds-orange-400: var(--raw-orange-500);  --ds-orange-500: var(--raw-orange-400);
+  --ds-orange-600: var(--raw-orange-300);  --ds-orange-700: var(--raw-orange-200);
+  --ds-orange-800: var(--raw-orange-100);  --ds-orange-900: var(--raw-orange-50);
 
   --ds-brown-50: var(--raw-brown-900);   --ds-brown-100: var(--raw-brown-800);
   --ds-brown-200: var(--raw-brown-700);  --ds-brown-300: var(--raw-brown-600);
@@ -336,6 +388,12 @@
   --ds-green-400: var(--raw-green-500);  --ds-green-500: var(--raw-green-400);
   --ds-green-600: var(--raw-green-300);  --ds-green-700: var(--raw-green-200);
   --ds-green-800: var(--raw-green-100);  --ds-green-900: var(--raw-green-50);
+
+  --ds-cyan-50: var(--raw-cyan-900);   --ds-cyan-100: var(--raw-cyan-800);
+  --ds-cyan-200: var(--raw-cyan-700);  --ds-cyan-300: var(--raw-cyan-600);
+  --ds-cyan-400: var(--raw-cyan-500);  --ds-cyan-500: var(--raw-cyan-400);
+  --ds-cyan-600: var(--raw-cyan-300);  --ds-cyan-700: var(--raw-cyan-200);
+  --ds-cyan-800: var(--raw-cyan-100);  --ds-cyan-900: var(--raw-cyan-50);
 
   --ds-neutral-50: var(--raw-neutral-900);   --ds-neutral-100: var(--raw-neutral-800);
   --ds-neutral-200: var(--raw-neutral-700);  --ds-neutral-300: var(--raw-neutral-600);
@@ -362,6 +420,11 @@
   --color-red-400: var(--ds-red-400);   --color-red-500: var(--ds-red-500);
   --color-red-600: var(--ds-red-600);   --color-red-700: var(--ds-red-700);
   --color-red-800: var(--ds-red-800);   --color-red-900: var(--ds-red-900);
+  --color-orange-50: var(--ds-orange-50);     --color-orange-100: var(--ds-orange-100);
+  --color-orange-200: var(--ds-orange-200);   --color-orange-300: var(--ds-orange-300);
+  --color-orange-400: var(--ds-orange-400);   --color-orange-500: var(--ds-orange-500);
+  --color-orange-600: var(--ds-orange-600);   --color-orange-700: var(--ds-orange-700);
+  --color-orange-800: var(--ds-orange-800);   --color-orange-900: var(--ds-orange-900);
   --color-brown-50: var(--ds-brown-50);     --color-brown-100: var(--ds-brown-100);
   --color-brown-200: var(--ds-brown-200);   --color-brown-300: var(--ds-brown-300);
   --color-brown-400: var(--ds-brown-400);   --color-brown-500: var(--ds-brown-500);
@@ -377,6 +440,11 @@
   --color-green-400: var(--ds-green-400);   --color-green-500: var(--ds-green-500);
   --color-green-600: var(--ds-green-600);   --color-green-700: var(--ds-green-700);
   --color-green-800: var(--ds-green-800);   --color-green-900: var(--ds-green-900);
+  --color-cyan-50: var(--ds-cyan-50);     --color-cyan-100: var(--ds-cyan-100);
+  --color-cyan-200: var(--ds-cyan-200);   --color-cyan-300: var(--ds-cyan-300);
+  --color-cyan-400: var(--ds-cyan-400);   --color-cyan-500: var(--ds-cyan-500);
+  --color-cyan-600: var(--ds-cyan-600);   --color-cyan-700: var(--ds-cyan-700);
+  --color-cyan-800: var(--ds-cyan-800);   --color-cyan-900: var(--ds-cyan-900);
   --color-neutral-50: var(--ds-neutral-50);     --color-neutral-100: var(--ds-neutral-100);
   --color-neutral-200: var(--ds-neutral-200);   --color-neutral-300: var(--ds-neutral-300);
   --color-neutral-400: var(--ds-neutral-400);   --color-neutral-500: var(--ds-neutral-500);
@@ -386,6 +454,7 @@
   --color-line: var(--ds-border);
   --color-line-strong: var(--ds-border-strong);
   --color-line-overlay: var(--ds-border-overlay);
+  --color-focus: var(--ds-outline-focus);
   --color-surface-subtle: var(--ds-surface-subtle);
   --color-muted: var(--ds-text-muted);
   --color-accent: var(--ds-accent);
@@ -754,8 +823,13 @@ img {
 
 /* 키보드 포커스 인디케이터 — 항상 표시(저시력/키보드 사용자) */
 :focus-visible {
-  outline: 2px solid var(--ds-accent);
-  outline-offset: 2px;
+  outline: var(--outline-focus-width) dashed var(--ds-outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+[role="tab"]:focus-visible,
+.guide-toc :is(a, button):focus-visible {
+  outline-offset: var(--outline-focus-tab-offset);
 }
 
 .sr-only {

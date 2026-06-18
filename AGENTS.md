@@ -24,7 +24,8 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - **TIER 3 `--color-*` 슬러그에는 Tailwind 유틸 접두(`text`·`bg`·`border`)를 넣지 않는다.** 유틸리티는 `{접두}-{슬러그}`로 조합되므로, 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생긴다.
   - 올바른 예: `--color-muted` → `text-muted` · `--color-line` → `border-line` · `--color-background` → `bg-background`
   - 금지 예: `--color-text-muted` → `text-text-muted` · `--color-border` → `border-border`
-  - TIER 2 `--ds-*` 용도명(`--ds-text-muted`·`--ds-border`)은 내부 의미용으로 유지 가능. TIER 3 노출명만 슬러그 규칙을 따른다.
+  - TIER 2 `--ds-*` 용도명(`--ds-text-muted`·`--ds-border`·`--ds-outline-focus`)은 내부 의미용으로 유지 가능. TIER 3 노출명만 슬러그 규칙을 따른다.
+  - 포커스 색은 TIER 2 `--ds-outline-focus` → TIER 3 `--color-focus` → 유틸 `outline-focus`. 라이트 `--raw-cyan-500` `#00cbde` · 다크 `--raw-orange-500` `#ffa94d`(.dark에서 `--ds-outline-focus` 재매핑). **border·ring으로 포커스를 대체하지 않는다.** 전역 `:focus-visible` outline이 기본이며, 컴포넌트에서 `outline-none`·`focus-visible:border-*`·`ring-focus`로 덮어쓰지 않는다.
 - 큐레이션 가이드 화면 전용 표시/검증 토큰은 `guide-*` 접두를 붙입니다. 예: `--ds-guide-level-*`, `--color-guide-level-*`, `--ds-guide-callout-*`·`--color-guide-callout-*`(탭 설명 콜아웃), `--ds-guide-intro-*`·`--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).
 
 ## 레이아웃 / 크기 토큰
@@ -54,7 +55,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 
 - 목표: **한국 웹접근성 마크(KWCAG 2.2) 1등급**. 체크리스트·패턴은 [`docs/accessibility.md`](docs/accessibility.md) 참조.
 - 모든 변경은 WAVE / W3C Validator 기준 **오류 0** 유지. 시맨틱 HTML 우선, 인터랙티브 요소는 네이티브 태그(`button`/`a`) 사용.
-- 포커스는 전역 `:focus-visible`(`--ds-accent`)로 항상 표시. outline 제거 금지.
+- 포커스는 전역 `:focus-visible` **outline**(`2.5px dashed` · `--ds-outline-focus`, offset `0.125rem`). 라이트 `#00cbde` · 다크 `#ffa94d`. `role="tab"`·`.guide-toc` 포커스는 **outline-offset: -2px**(`--outline-focus-tab-offset`). outline 제거·`outline-none`·border/ring 대체 금지.
 
 ## 타이포그래피 / 폰트
 

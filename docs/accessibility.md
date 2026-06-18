@@ -230,10 +230,16 @@
 ## CSS 코딩 규칙
 
 ```css
-/* ✅ 포커스 스타일 — outline 제거 절대 금지, 커스텀으로 대체 (globals.css 적용됨) */
+/* ✅ 포커스 스타일 — outline 제거 절대 금지, 전역 outline으로 표시 (globals.css 적용됨)
+   border·ring으로 포커스를 대체하지 않는다. tab·TOC는 outline-offset: -2px. */
 :focus-visible {
-  outline: 2px solid var(--ds-accent);
-  outline-offset: 2px;
+  outline: var(--outline-focus-width) dashed var(--ds-outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+[role="tab"]:focus-visible,
+.guide-toc :is(a, button):focus-visible {
+  outline-offset: var(--outline-focus-tab-offset);
 }
 
 /* ✅ 스크린리더 전용 텍스트 */

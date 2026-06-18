@@ -22,6 +22,16 @@ const primitiveColors = [
     ],
   },
   {
+    family: "Orange", name: "orange",
+    swatches: [
+      { scale: 50, hex: "#fff4e6" }, { scale: 100, hex: "#ffe8cc" },
+      { scale: 200, hex: "#ffd8a8" }, { scale: 300, hex: "#ffc078" },
+      { scale: 400, hex: "#ffb366" }, { scale: 500, hex: "#ffa94d" },
+      { scale: 600, hex: "#fd8f2a" }, { scale: 700, hex: "#e6770f" },
+      { scale: 800, hex: "#c45f00" }, { scale: 900, hex: "#803d00" },
+    ],
+  },
+  {
     family: "Brown", name: "brown",
     swatches: [
       { scale: 50, hex: "#f8f3f1" }, { scale: 100, hex: "#eadcd5" },
@@ -49,6 +59,16 @@ const primitiveColors = [
       { scale: 400, hex: "#3fa87f" }, { scale: 500, hex: "#0f5b41" },
       { scale: 600, hex: "#0b4f38" }, { scale: 700, hex: "#08422f" },
       { scale: 800, hex: "#063426" }, { scale: 900, hex: "#03251b" },
+    ],
+  },
+  {
+    family: "Cyan", name: "cyan",
+    swatches: [
+      { scale: 50, hex: "#e8fbfd" }, { scale: 100, hex: "#d1f7fb" },
+      { scale: 200, hex: "#a3eff7" }, { scale: 300, hex: "#75e7f3" },
+      { scale: 400, hex: "#47dfef" }, { scale: 500, hex: "#00cbde" },
+      { scale: 600, hex: "#00a3b2" }, { scale: 700, hex: "#007b86" },
+      { scale: 800, hex: "#00535a" }, { scale: 900, hex: "#002b2e" },
     ],
   },
   {
@@ -86,7 +106,7 @@ const gradientTokens = [
   { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
 ];
 
-type SemanticColorReadMode = "text" | "bg" | "border";
+type SemanticColorReadMode = "text" | "bg" | "border" | "outline";
 
 type SemanticColorTokenDef = {
   token: string;
@@ -179,7 +199,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Border",
     description: (
       <>
-        구분선·아웃라인·칩 테두리 등 <strong>경계</strong>에 사용합니다. <strong>border-*</strong> 유틸리티로 적용합니다.
+        구분선·칩 테두리 등 <strong>경계선(border)</strong>에 사용합니다. <strong>border-*</strong> 유틸리티로 적용합니다.
       </>
     ),
     groups: [
@@ -202,6 +222,24 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         label: "overlay",
         tokens: [
           { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "semantic-focus",
+    title: "Focus",
+    description: (
+      <>
+        키보드 <strong>:focus-visible</strong> 인디케이터 전용 색입니다. <strong>outline</strong>(<strong>2.5px dashed</strong>)로만 적용하며 <strong>border</strong>·<strong>ring</strong> 대체용이 아닙니다. 탭(<code className="font-mono text-caption">role=&quot;tab&quot;</code>)·목차(<code className="font-mono text-caption">.guide-toc</code>)는 <strong>outline-offset: -2px</strong>. 라이트 <strong>#00cbde</strong>(<strong>--raw-cyan-500</strong>) · 다크 <strong>#ffa94d</strong>(<strong>--raw-orange-500</strong>) — <strong>--ds-outline-focus</strong>가 모드별 자동 전환합니다.
+      </>
+    ),
+    groups: [
+      {
+        id: "outline",
+        label: "outline",
+        tokens: [
+          { token: "focus", utility: "outline-focus", cssVar: "--color-focus", readAs: "outline" },
         ],
       },
     ],
@@ -292,16 +330,26 @@ const typographyTocSections: TocSection[] = [
   { id: "section-typography-example", label: "Example of Use" },
 ];
 
-const iconsTocSections: TocSection[] = [
-  { id: "section-outline-icon", label: "Outline Icon" },
-  { id: "section-icon-source", label: "Source" },
+const outlineIconsTocSections: TocSection[] = [
+  { id: "section-outline-icon", label: "Outline" },
+  { id: "section-outline-icon-source", label: "Source" },
   { id: "section-outline-icons", label: "Sizes" },
+];
+
+const filledIconsTocSections: TocSection[] = [
+  { id: "section-filled-icon", label: "Filled" },
+  { id: "section-filled-icon-source", label: "Source" },
+  { id: "section-filled-icons", label: "Sizes" },
 ];
 
 function probeSemanticUtilityColor(probe: HTMLDivElement, utility: string, readAs: SemanticColorReadMode): string {
   if (readAs === "border") {
     probe.className = `box-border size-8 border bg-transparent ${utility}`;
     return getComputedStyle(probe).borderTopColor;
+  }
+  if (readAs === "outline") {
+    probe.className = `box-border size-8 bg-transparent outline outline-2 ${utility}`;
+    return getComputedStyle(probe).outlineColor;
   }
   probe.className = utility;
   const cs = getComputedStyle(probe);
@@ -792,7 +840,7 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
   return (
     <nav
       aria-labelledby={headingId}
-      className="sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
+      className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
       <div className="overflow-hidden rounded-md border border-line bg-surface-subtle">
         <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3.5">
@@ -1136,7 +1184,7 @@ function GuideSiteHeader({
               type="search"
               name="guide-search"
               placeholder="가이드 검색..."
-              className="h-control-sm w-[12.5rem] rounded-full border border-line bg-surface-subtle pl-9 pr-4 text-label-sm text-foreground outline-none placeholder:text-muted focus-visible:border-accent md:w-[15rem]"
+              className="h-control-sm w-[12.5rem] rounded-full border border-line bg-surface-subtle pl-9 pr-4 text-label-sm text-foreground placeholder:text-muted md:w-[15rem]"
             />
           </label>
         </div>
@@ -1407,7 +1455,15 @@ const fixedSizeTokens = [
 const iconSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("icon"));
 const controlSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("control"));
 
-const projectIconCatalog = [
+type IconStyle = "outline" | "filled";
+
+type IconCatalogEntry = {
+  id: string;
+  label: string;
+  innerMarkup: string;
+};
+
+const outlineIconCatalog: readonly IconCatalogEntry[] = [
   {
     id: "home",
     label: "홈",
@@ -1466,29 +1522,63 @@ const projectIconCatalog = [
   },
 ] as const;
 
-const iconSource = {
-  name: "Feather Icons",
-  style: "Outline",
-  sourceUrl: "https://feathericons.com/",
-  specs: [
-    { label: "viewBox", value: "0 0 24 24" },
-    { label: "stroke-width", value: "1.75" },
-    { label: "stroke", value: "currentColor" },
-    { label: "크기", value: "size-icon-* 유틸리티" },
-  ],
+const filledIconCatalog: readonly IconCatalogEntry[] = [];
+
+const iconSourceByStyle = {
+  outline: {
+    name: "Feather Icons",
+    style: "Outline",
+    sourceUrl: "https://feathericons.com/",
+    specs: [
+      { label: "viewBox", value: "0 0 24 24" },
+      { label: "stroke-width", value: "1.75" },
+      { label: "stroke", value: "currentColor" },
+      { label: "크기", value: "size-icon-* 유틸리티" },
+    ],
+  },
+  filled: {
+    name: "TBD",
+    style: "Filled",
+    sourceUrl: null as string | null,
+    specs: [
+      { label: "viewBox", value: "0 0 24 24" },
+      { label: "fill", value: "currentColor" },
+      { label: "크기", value: "size-icon-* 유틸리티" },
+    ],
+  },
 } as const;
 
-function buildIconSvgMarkup(utility: string, innerMarkup: string) {
+function buildIconSvgMarkup(style: IconStyle, utility: string, innerMarkup: string) {
+  if (style === "filled") {
+    return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="${utility} shrink-0 text-foreground">\n  ${innerMarkup}\n</svg>`;
+  }
   return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="${utility} shrink-0 text-foreground">\n  ${innerMarkup}\n</svg>`;
 }
 
-function ProjectIconGlyph({ innerMarkup, className }: { innerMarkup: string; className?: string }) {
-  return (
-    <NavIcon
-      innerMarkup={innerMarkup}
-      className={className ?? "size-icon-md shrink-0 text-foreground"}
-    />
-  );
+function ProjectIconGlyph({
+  innerMarkup,
+  className,
+  style = "outline",
+}: {
+  innerMarkup: string;
+  className?: string;
+  style?: IconStyle;
+}) {
+  const resolvedClassName = className ?? "size-icon-md shrink-0 text-foreground";
+
+  if (style === "filled") {
+    return (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className={resolvedClassName}
+        dangerouslySetInnerHTML={{ __html: innerMarkup }}
+      />
+    );
+  }
+
+  return <NavIcon innerMarkup={innerMarkup} className={resolvedClassName} />;
 }
 
 function IconCopyCell({
@@ -1496,17 +1586,19 @@ function IconCopyCell({
   label,
   utility,
   innerMarkup,
+  style,
 }: {
   iconId: string;
   label: string;
   utility: string;
   innerMarkup: string;
+  style: IconStyle;
 }) {
   const toast = useToast();
 
   async function handleCopy() {
     try {
-      await copyTextToClipboard(buildIconSvgMarkup(utility, innerMarkup));
+      await copyTextToClipboard(buildIconSvgMarkup(style, utility, innerMarkup));
       toast?.showToast(`${iconId} 마크업 복사됨`);
     } catch {
       toast?.showToast("복사에 실패했습니다");
@@ -1516,7 +1608,7 @@ function IconCopyCell({
   return (
     <td className="px-3 py-2 text-center align-middle">
       <div className="group relative flex min-h-[4.5rem] items-center justify-center">
-        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 text-foreground`} />
+        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 text-foreground`} style={style} />
         <button
           type="button"
           onClick={() => void handleCopy()}
@@ -1530,11 +1622,23 @@ function IconCopyCell({
   );
 }
 
-function OutlineIconMatrix() {
+function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatalogEntry[]; style: IconStyle }) {
+  const styleLabel = style === "outline" ? "Outline" : "Filled";
+
+  if (catalog.length === 0) {
+    return (
+      <div className="rounded-xl border border-line bg-surface-subtle p-6">
+        <p className="m-0 text-body-sm text-muted">
+          <strong>{styleLabel}</strong> 아이콘 세트가 아직 등록되지 않았습니다. 글리프를 추가하면 이 표에 크기별 배리에이션이 표시됩니다.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto rounded-xl border border-line">
       <table className="w-full min-w-[44rem] border-collapse text-left">
-        <caption className="sr-only">Outline Icon — Tailwind utility class 크기별 배리에이션</caption>
+        <caption className="sr-only">{styleLabel} Icon — Tailwind utility class 크기별 배리에이션</caption>
         <thead>
           <tr className="border-b border-line bg-neutral-50">
             <th scope="col" className="px-4 py-3">
@@ -1550,7 +1654,7 @@ function OutlineIconMatrix() {
           </tr>
         </thead>
         <tbody>
-          {projectIconCatalog.map(({ id, label, innerMarkup }) => (
+          {catalog.map(({ id, label, innerMarkup }) => (
             <tr key={id} className="border-b border-line last:border-b-0">
               <th scope="row" className="px-4 py-4 align-middle">
                 <span className="font-mono text-caption text-muted">{id}</span>
@@ -1563,6 +1667,7 @@ function OutlineIconMatrix() {
                   label={label}
                   utility={token.utility}
                   innerMarkup={innerMarkup}
+                  style={style}
                 />
               ))}
             </tr>
@@ -1573,24 +1678,38 @@ function OutlineIconMatrix() {
   );
 }
 
-function IconSourceCuration() {
+function IconStyleCuration({ style }: { style: IconStyle }) {
+  const catalog = style === "outline" ? outlineIconCatalog : filledIconCatalog;
+  const source = iconSourceByStyle[style];
+  const isOutline = style === "outline";
+  const sectionId = isOutline ? "section-outline-icon" : "section-filled-icon";
+  const sourceSectionId = isOutline ? "section-outline-icon-source" : "section-filled-icon-source";
+  const sizesSectionId = isOutline ? "section-outline-icons" : "section-filled-icons";
+  const title = isOutline ? "Outline" : "Filled";
+
   return (
     <>
       <ContentSectionTitle
-        id="section-outline-icon"
+        id={sectionId}
         lead
         description={
-          <>
-            <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘과 <strong>size-icon-*</strong> 크기 토큰입니다. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
-            <strong>외부 CDN·아이콘 폰트·스프라이트</strong>는 사용하지 않습니다.
-          </>
+          isOutline ? (
+            <>
+              <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘과 <strong>size-icon-*</strong> 크기 토큰입니다. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
+              <strong>외부 CDN·아이콘 폰트·스프라이트</strong>는 사용하지 않습니다.
+            </>
+          ) : (
+            <>
+              <strong>fill</strong> 기반 <strong>24×24</strong> 솔리드 아이콘과 <strong>size-icon-*</strong> 크기 토큰입니다. 세트가 준비되면 outline과 동일한 방식으로 <strong>인라인 SVG</strong>로 포함합니다.
+            </>
+          )
         }
       >
-        Outline Icon
+        {title}
       </ContentSectionTitle>
 
-      <section aria-labelledby="section-icon-source" className="mb-20">
-        <ContentSubsectionTitle id="section-icon-source">Source</ContentSubsectionTitle>
+      <section aria-labelledby={sourceSectionId} className="mb-20">
+        <ContentSubsectionTitle id={sourceSectionId}>Source</ContentSubsectionTitle>
         <div className="flex gap-4">
           <span
             aria-hidden="true"
@@ -1600,22 +1719,28 @@ function IconSourceCuration() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-label-lg font-bold text-foreground">{iconSource.name}</span>
-              <span className="text-caption font-semibold text-accent">{iconSource.style}</span>
+              <span className="text-label-lg font-bold text-foreground">{source.name}</span>
+              <span className="text-caption font-semibold text-accent">{source.style}</span>
             </div>
             <p className="m-0 mt-0.5 font-mono text-caption text-muted">
-              <a
-                href={iconSource.sourceUrl}
-                className="text-accent underline-offset-2 hover:underline"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                feathericons.com
-              </a>
-              {" · MIT License"}
+              {source.sourceUrl ? (
+                <>
+                  <a
+                    href={source.sourceUrl}
+                    className="text-accent underline-offset-2 hover:underline"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {source.sourceUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                  </a>
+                  {" · MIT License"}
+                </>
+              ) : (
+                "소스 미정 — filled 세트 추가 시 업데이트"
+              )}
             </p>
             <dl className="m-0 mt-3 grid gap-2 sm:grid-cols-2">
-              {iconSource.specs.map(({ label, value }) => (
+              {source.specs.map(({ label, value }) => (
                 <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <dt className="m-0 font-mono text-caption text-muted">{label}</dt>
                   <dd className="m-0 font-mono text-caption text-foreground">{value}</dd>
@@ -1626,11 +1751,11 @@ function IconSourceCuration() {
         </div>
       </section>
 
-      <section aria-labelledby="section-outline-icons" className="mb-0">
-        <ContentSubsectionTitle id="section-outline-icons" spaced>
+      <section aria-labelledby={sizesSectionId} className="mb-0">
+        <ContentSubsectionTitle id={sizesSectionId} spaced>
           Sizes
         </ContentSubsectionTitle>
-        <OutlineIconMatrix />
+        <IconSizeMatrix catalog={catalog} style={style} />
       </section>
     </>
   );
@@ -1696,6 +1821,38 @@ const contrastPickPaletteIcon =
 const contrastPickChevronIcon = '<polyline points="9 18 15 12 9 6" />';
 const contrastPickCloseIcon = '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />';
 
+/** 팔레트 스와치 — 선택 시 accent ring(피커 버튼과 동일), 비선택은 얇은 line 보더 */
+function contrastSwatchClass(isBg: boolean, isText: boolean, isInteractive: boolean, extra = ""): string {
+  const isSelected = isBg || isText;
+  return [
+    "h-10 rounded-md relative",
+    extra,
+    isInteractive ? "cursor-pointer border-0 p-0 transition-[opacity,box-shadow,transform] duration-150" : "",
+    isSelected
+      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-accent ring-offset-2 ring-offset-background"
+      : "border border-line-overlay",
+    isInteractive && !isSelected ? "opacity-75 hover:opacity-100 hover:scale-[1.02]" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+/** BG·TXT 역할 배지 — accent/foreground로 역할만 구분(성공·실패 색상 미사용) */
+function ContrastSwatchRoleMarker({ role }: { role: "BG" | "TXT" }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={[
+        "absolute top-1 left-1 rounded px-1.5 py-0.5 font-bold leading-none shadow-sm",
+        role === "BG" ? "bg-accent text-on-accent" : "bg-foreground text-background",
+      ].join(" ")}
+      style={{ fontSize: pxToRem(10) }}
+    >
+      {role}
+    </span>
+  );
+}
+
 function ContrastColorPickButton({
   labelId,
   labelText,
@@ -1732,7 +1889,6 @@ function ContrastColorPickButton({
         aria-describedby={valueId}
         className={[
           "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
           isSelecting
             ? "bg-neutral-100 shadow-sm ring-2 ring-accent"
             : "bg-surface-subtle hover:bg-neutral-100 hover:shadow-sm hover:ring-1 hover:ring-line",
@@ -2100,10 +2256,12 @@ export default function Home() {
   const [activeTypeTab, setActiveTypeTab] = useState<"font-family" | "typography">("font-family");
   const [activeSpacingTab, setActiveSpacingTab] = useState<"spacing" | "radius" | "fixed-size">("spacing");
   const [activeGridTab, setActiveGridTab] = useState<"columns" | "gap">("columns");
+  const [activeIconsTab, setActiveIconsTab] = useState<"outline" | "filled">("outline");
   const [colorMenuExpanded, setColorMenuExpanded] = useState(true);
   const [typeMenuExpanded, setTypeMenuExpanded] = useState(true);
   const [spacingMenuExpanded, setSpacingMenuExpanded] = useState(true);
   const [gridMenuExpanded, setGridMenuExpanded] = useState(true);
+  const [iconsMenuExpanded, setIconsMenuExpanded] = useState(true);
   const [isSidenavOpen, setIsSidenavOpen] = useState(true);
   const colorTabRef = useRef<HTMLButtonElement>(null);
   const spacingTabRef = useRef<HTMLButtonElement>(null);
@@ -2119,6 +2277,8 @@ export default function Home() {
   const fixedSizeTabRef = useRef<HTMLButtonElement>(null);
   const gridColumnsTabRef = useRef<HTMLButtonElement>(null);
   const gridGapTabRef = useRef<HTMLButtonElement>(null);
+  const outlineIconTabRef = useRef<HTMLButtonElement>(null);
+  const filledIconTabRef = useRef<HTMLButtonElement>(null);
 
   // 탭 좌우/Home/End 키 이동 (WAI-ARIA tabs 패턴)
   function handleTabKeyDown(e: React.KeyboardEvent) {
@@ -2196,6 +2356,21 @@ export default function Home() {
     }
   }
 
+  function handleIconsTabKeyDown(e: React.KeyboardEvent) {
+    const order: ("outline" | "filled")[] = ["outline", "filled"];
+    const refs = { outline: outlineIconTabRef, filled: filledIconTabRef };
+    let next: "outline" | "filled" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeIconsTab) + 1) % order.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeIconsTab) - 1 + order.length) % order.length];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[order.length - 1];
+    if (next) {
+      e.preventDefault();
+      selectIconsSection(next);
+      refs[next].current?.focus();
+    }
+  }
+
   const navExternalLinkClass =
     "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-accent no-underline transition-colors duration-150 hover:bg-neutral-100";
 
@@ -2240,6 +2415,12 @@ export default function Home() {
     setActiveTab("grid");
     setActiveGridTab(sub);
     setGridMenuExpanded(true);
+  }
+
+  function selectIconsSection(sub: "outline" | "filled") {
+    setActiveTab("icons");
+    setActiveIconsTab(sub);
+    setIconsMenuExpanded(true);
   }
 
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
@@ -2543,21 +2724,57 @@ export default function Home() {
 
             <div className="mt-5 border-t border-line pt-5">
               <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Assets</p>
-              <div className={navParentGroupClass(activeTab === "icons")}>
-                <button
-                  ref={iconsTabRef}
-                  type="button"
-                  role="tab"
-                  id="tab-icons"
-                  aria-selected={activeTab === "icons"}
-                  aria-controls="panel-icons"
-                  tabIndex={activeTab === "icons" ? 0 : -1}
-                  onClick={() => setActiveTab("icons")}
-                  className={navParentButtonClass(activeTab === "icons")}
-                >
-                  {navIconAssets}
-                  Icons
-                </button>
+              <div className="flex flex-col gap-0.5">
+                <div className={navParentGroupClass(activeTab === "icons")}>
+                  <button
+                    ref={iconsTabRef}
+                    type="button"
+                    role="tab"
+                    id="tab-icons"
+                    aria-selected={activeTab === "icons"}
+                    aria-controls="panel-icons"
+                    tabIndex={activeTab === "icons" ? 0 : -1}
+                    onClick={() => {
+                      setActiveTab("icons");
+                      setIconsMenuExpanded(true);
+                    }}
+                    className={navParentButtonClass(activeTab === "icons")}
+                  >
+                    {navIconAssets}
+                    Icons
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={iconsMenuExpanded ? "Icons 하위 메뉴 접기" : "Icons 하위 메뉴 펼치기"}
+                    aria-expanded={iconsMenuExpanded}
+                    onClick={() => setIconsMenuExpanded((open) => !open)}
+                    className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                  >
+                    <NavIcon
+                      className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${iconsMenuExpanded ? "rotate-180" : ""}`}
+                    >
+                      <path d="M6 9l6 6 6-6" />
+                    </NavIcon>
+                  </button>
+                </div>
+                {iconsMenuExpanded && (
+                  <NavSubTree
+                    ariaLabel="Icons 하위 메뉴"
+                    itemClassName={navSubItemClass}
+                    items={[
+                      {
+                        label: "Outline",
+                        active: activeTab === "icons" && activeIconsTab === "outline",
+                        onClick: () => selectIconsSection("outline"),
+                      },
+                      {
+                        label: "Filled",
+                        active: activeTab === "icons" && activeIconsTab === "filled",
+                        onClick: () => selectIconsSection("filled"),
+                      },
+                    ]}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -2613,7 +2830,7 @@ export default function Home() {
             lead
             description={
               <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. family × scale(50~900) 그리드와 <strong>White/Black</strong> 앵커를 확인합니다.
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. family는 hue 순(<strong>Red → Orange → Brown → Sand → Green → Cyan → Neutral</strong>)으로 배열하고, scale(50~900) 그리드와 <strong>White/Black</strong> 앵커를 확인합니다.
               </>
             }
           >
@@ -2670,20 +2887,6 @@ export default function Home() {
                   const labelText = isInteractive
                     ? `${label} (${currentHex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`
                     : `${label} — ${currentHex}`;
-                  const swatchBorder = isBg
-                    ? "3px solid var(--ds-accent)"
-                    : isText
-                    ? "3px solid var(--ds-accent-danger)"
-                    : "1px solid var(--ds-border-overlay)";
-                  const marker = (txt: string) => (
-                    <span
-                      aria-hidden="true"
-                      className="absolute top-0.5 left-[3px] font-bold"
-                      style={{ fontSize: pxToRem(11), color: contrastRatio(currentHex, "#000") > 4.5 ? "#000" : "#fff" }}
-                    >
-                      {txt}
-                    </span>
-                  );
                   return isInteractive ? (
                     <button
                       key={scale}
@@ -2691,22 +2894,22 @@ export default function Home() {
                       onClick={() => handleSwatchClick(currentHex, label)}
                       aria-label={labelText}
                       aria-pressed={isBg || isText}
-                      className="h-10 rounded-md relative cursor-pointer p-0 transition-opacity duration-100"
-                      style={{ backgroundColor: cssVar, border: swatchBorder, opacity: !isBg && !isText ? 0.75 : 1 }}
+                      className={contrastSwatchClass(isBg, isText, true)}
+                      style={{ backgroundColor: cssVar }}
                     >
-                      {isBg && marker("BG")}
-                      {isText && marker("TXT")}
+                      {isBg && <ContrastSwatchRoleMarker role="BG" />}
+                      {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </button>
                   ) : (
                     <div
                       key={scale}
                       aria-label={`${label} — ${currentHex}`}
                       role="img"
-                      className="h-10 rounded-md relative"
-                      style={{ backgroundColor: cssVar, border: swatchBorder }}
+                      className={contrastSwatchClass(isBg, isText, false)}
+                      style={{ backgroundColor: cssVar }}
                     >
-                      {isBg && marker("BG")}
-                      {isText && marker("TXT")}
+                      {isBg && <ContrastSwatchRoleMarker role="BG" />}
+                      {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </div>
                   );
                 })}
@@ -2721,15 +2924,6 @@ export default function Home() {
               const isBg = bgColor.hex === hex;
               const isText = textColor.hex === hex;
               const isInteractive = !!selecting;
-              const markerColor = contrastRatio(hex, "#000") > 4.5 ? "#000" : "#fff";
-              const swatchBorder = isBg
-                ? "3px solid var(--ds-accent)"
-                : isText
-                ? "3px solid var(--ds-accent-danger)"
-                : "1px solid var(--ds-border-overlay)";
-              const marker = (txt: string) => (
-                <span aria-hidden="true" className="absolute top-0.5 left-[3px] font-bold" style={{ fontSize: pxToRem(11), color: markerColor }}>{txt}</span>
-              );
               return (
                 <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
                   <span className="text-label-sm font-semibold">{label}</span>
@@ -2739,21 +2933,21 @@ export default function Home() {
                       onClick={() => handleSwatchClick(hex, label)}
                       aria-label={`${label} (${hex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`}
                       aria-pressed={isBg || isText}
-                      className="col-start-2 h-10 rounded-md relative cursor-pointer p-0 transition-opacity duration-100"
-                      style={{ backgroundColor: cssVar, border: swatchBorder, opacity: !isBg && !isText ? 0.75 : 1 }}
+                      className={contrastSwatchClass(isBg, isText, true, "col-start-2")}
+                      style={{ backgroundColor: cssVar }}
                     >
-                      {isBg && marker("BG")}
-                      {isText && marker("TXT")}
+                      {isBg && <ContrastSwatchRoleMarker role="BG" />}
+                      {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </button>
                   ) : (
                     <div
                       role="img"
                       aria-label={`${label} — ${hex}`}
-                      className="col-start-2 h-10 rounded-md relative"
-                      style={{ backgroundColor: cssVar, border: swatchBorder }}
+                      className={contrastSwatchClass(isBg, isText, false, "col-start-2")}
+                      style={{ backgroundColor: cssVar }}
                     >
-                      {isBg && marker("BG")}
-                      {isText && marker("TXT")}
+                      {isBg && <ContrastSwatchRoleMarker role="BG" />}
+                      {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </div>
                   )}
                 </div>
@@ -2828,7 +3022,7 @@ export default function Home() {
                   그래픽 미리보기
                 </p>
                 <div role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 그래픽 견본`} className="flex items-center gap-4" style={{ color: textColor.hex }}>
-                  {projectIconCatalog.slice(0, 5).map((icon) => (
+                  {outlineIconCatalog.slice(0, 5).map((icon) => (
                     <ProjectIconGlyph key={icon.id} innerMarkup={icon.innerMarkup} className="size-icon-lg shrink-0" />
                   ))}
                 </div>
@@ -3486,10 +3680,29 @@ export default function Home() {
             title="Icons"
             titleId="content-icons"
           />
+
+          <ContentOutlineTabList
+            ariaLabel="아이콘 스타일"
+            activeValue={activeIconsTab}
+            onSelect={(value) => selectIconsSection(value as "outline" | "filled")}
+            onKeyDown={handleIconsTabKeyDown}
+            tabs={[
+              { value: "outline", tabId: "tab-icons-outline", panelId: "panel-icons-outline", label: "Outline", ref: outlineIconTabRef },
+              { value: "filled", tabId: "tab-icons-filled", panelId: "panel-icons-filled", label: "Filled", ref: filledIconTabRef },
+            ]}
+          />
+
           </ContentIntroShell>
-          <div className={contentSubTabPanelClass}>
-            <GuideContentLayout sections={iconsTocSections}>
-              <IconSourceCuration />
+
+          <div role="tabpanel" id="panel-icons-outline" aria-labelledby="tab-icons-outline" hidden={activeIconsTab !== "outline"} className={contentSubTabPanelClass}>
+            <GuideContentLayout sections={outlineIconsTocSections}>
+              <IconStyleCuration style="outline" />
+            </GuideContentLayout>
+          </div>
+
+          <div role="tabpanel" id="panel-icons-filled" aria-labelledby="tab-icons-filled" hidden={activeIconsTab !== "filled"} className={contentSubTabPanelClass}>
+            <GuideContentLayout sections={filledIconsTocSections}>
+              <IconStyleCuration style="filled" />
             </GuideContentLayout>
           </div>
         </div>{/* /panel-icons */}
