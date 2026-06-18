@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 import {
   GUIDE_ROUTES,
   guideColorTabHref,
@@ -63,16 +63,18 @@ const navParentLinkClass = (active: boolean) =>
   ].join(" ");
 
 function GuideNavSubLinks({
-  ariaLabel,
+  listId,
+  labelledBy,
   items,
 }: {
-  ariaLabel: string;
+  listId: string;
+  labelledBy: string;
   items: { label: string; href: string; active: boolean }[];
 }) {
   return (
     <ul
-      role="group"
-      aria-label={ariaLabel}
+      id={listId}
+      aria-labelledby={labelledBy}
       className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-line py-1 pl-4 pr-1"
     >
       {items.map((item) => (
@@ -100,7 +102,6 @@ function GuideNavSubLinks({
 }
 
 function GuideNavCategory({
-  href,
   active,
   expanded,
   onToggleExpand,
@@ -109,7 +110,6 @@ function GuideNavCategory({
   expandLabel,
   subItems,
 }: {
-  href: string;
   active: boolean;
   expanded: boolean;
   onToggleExpand: () => void;
@@ -118,17 +118,21 @@ function GuideNavCategory({
   expandLabel: string;
   subItems: { label: string; href: string; active: boolean }[];
 }) {
+  const labelId = useId();
+  const listId = useId();
+
   return (
     <div className="flex flex-col gap-0.5">
       <div className={navParentGroupClass(active)}>
-        <Link href={href} aria-current={active ? "page" : undefined} className={navParentLinkClass(active)}>
+        <span id={labelId} className={navParentLinkClass(active)}>
           {icon}
           {label}
-        </Link>
+        </span>
         <button
           type="button"
           aria-label={expanded ? `${expandLabel} 하위 메뉴 접기` : `${expandLabel} 하위 메뉴 펼치기`}
           aria-expanded={expanded}
+          aria-controls={listId}
           onClick={onToggleExpand}
           className={navExpandToggleClass}
         >
@@ -139,7 +143,7 @@ function GuideNavCategory({
           </NavIcon>
         </button>
       </div>
-      {expanded ? <GuideNavSubLinks ariaLabel={`${expandLabel} 하위 메뉴`} items={subItems} /> : null}
+      {expanded ? <GuideNavSubLinks listId={listId} labelledBy={labelId} items={subItems} /> : null}
     </div>
   );
 }
@@ -216,7 +220,6 @@ export function GuideShell({ children }: { children: ReactNode }) {
             <p className={navSectionEyebrowClass}>Tokens</p>
             <div className="flex flex-col gap-0.5">
               <GuideNavCategory
-                href={GUIDE_ROUTES.color}
                 active={isColor}
                 expanded={colorMenuExpanded}
                 onToggleExpand={() => setColorMenuExpanded((open) => !open)}
@@ -229,7 +232,6 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 ]}
               />
               <GuideNavCategory
-                href={GUIDE_ROUTES.type}
                 active={isType}
                 expanded={typeMenuExpanded}
                 onToggleExpand={() => setTypeMenuExpanded((open) => !open)}
@@ -242,7 +244,6 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 ]}
               />
               <GuideNavCategory
-                href={GUIDE_ROUTES.spacing}
                 active={isSpacing}
                 expanded={spacingMenuExpanded}
                 onToggleExpand={() => setSpacingMenuExpanded((open) => !open)}
@@ -256,7 +257,6 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 ]}
               />
               <GuideNavCategory
-                href={GUIDE_ROUTES.grid}
                 active={isGrid}
                 expanded={gridMenuExpanded}
                 onToggleExpand={() => setGridMenuExpanded((open) => !open)}
@@ -273,7 +273,6 @@ export function GuideShell({ children }: { children: ReactNode }) {
             <div className="mt-5 border-t border-line pt-5">
               <p className={navSectionEyebrowClass}>Assets</p>
               <GuideNavCategory
-                href={GUIDE_ROUTES.icons}
                 active={isIcons}
                 expanded={iconsMenuExpanded}
                 onToggleExpand={() => setIconsMenuExpanded((open) => !open)}
@@ -289,7 +288,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
 
             <div className="mt-5 border-t border-line pt-5">
               <p className={navSectionEyebrowClass}>Layout</p>
-              <Link href={GUIDE_ROUTES.responsive} className={navExternalLinkClass}>
+              <Link id="nav-layout-breakpoint" href={GUIDE_ROUTES.responsive} className={navExternalLinkClass}>
                 {navIconLayout}
                 Layout & Breakpoint
                 <ExternalLinkIcon className="ml-auto size-icon-xs shrink-0" />

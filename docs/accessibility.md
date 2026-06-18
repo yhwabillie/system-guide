@@ -211,12 +211,36 @@
 - 사이드 nav·헤더 등 **전역 네비에 이미 있는 가이드 링크**는 본문에서 같은 URL `<a>`로 반복하지 않는다.
 - 본문에서 위치만 안내할 때는 **페이지 내 앵커**(`href="#nav-…"`)로 canonical 링크 요소로 이동시키거나, 링크 없이 텍스트로 안내한다.
 
+#### 사이드 nav 계층 메뉴 (Tokens·Assets)
+- 카테고리 헤더(Color·Font & Type 등)와 **기본 서브탭**(Raw Color·Font Family·Spacing 등)이 **같은 URL**이면 WAVE가 Redundant link로 잡는다. 예: `/guide/color` + `/guide/color`.
+- **부모 행은 링크가 아닌 그룹 라벨**(`span` + `id`)로 두고, **이동은 서브 `<Link>`만** 제공한다. `aria-current="page"`도 서브 항목에만 붙인다.
+- 서브 목록은 `<ul aria-labelledby={카테고리라벨id}>` — **`role="group"` 중첩 금지**(바깥 `group` + 안쪽 `group` 이중 구조는 WAVE·스크린리더에서 중복 랜드마크가 된다).
+- **헤더 홈 아이콘**은 `href="/"`(루트 리다이렉트)만 사용한다. `/guide/color`와 동일 href를 쓰면 Raw Color 서브 링크와 Redundant link가 남는다.
+- 펼치기/접기는 부모 옆 **`button`**(`aria-expanded`·`aria-controls`)만 담당한다.
+
+```tsx
+{/* ✅ guide-shell GuideNavCategory — 부모 span, 서브만 Link */}
+<div>
+  <div className={navParentGroupClass(active)}>
+    <span id={labelId}>Color</span>
+    <button type="button" aria-expanded={expanded} aria-controls={listId} aria-label="Color 하위 메뉴 펼치기">…</button>
+  </div>
+  <ul id={listId} aria-labelledby={labelId}>
+    <li><Link href="/guide/color" aria-current="page">Raw Color</Link></li>
+    <li><Link href="/guide/color?tab=semantic">Semantic Color</Link></li>
+  </ul>
+</div>
+
+{/* ❌ 부모·첫 서브·헤더 홈이 동일 href */}
+<Link href="/guide/color">홈</Link>
+<Link href="/guide/color">Raw Color</Link>
+```
+
 ```tsx
 {/* ✅ canonical — 사이드 nav 한 곳만 */}
-<a id="nav-layout-breakpoint" href="/guide/responsive" target="_blank" rel="noopener noreferrer">
+<a id="nav-layout-breakpoint" href="/guide/responsive">
   Layout & Breakpoint
   <ExternalLinkIcon className="size-icon-xs shrink-0" />
-  <span className="sr-only">(새 창에서 열림)</span>
 </a>
 
 {/* ✅ 본문 — 같은 URL <a> 반복 금지, 앵커로 canonical 링크 위치 안내 */}
@@ -314,7 +338,7 @@ const FONT_LINE = 1.25;
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
 - **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-line-overlay`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
 - **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 중립 `text-foreground`·`ring-foreground`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
-- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`text-muted` 금지**(다크 accent ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`text-foreground` 사용. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `bg-surface-brand` + `text-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수)
+- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`text-muted` 금지**(다크 accent ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`text-foreground` 사용. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `bg-surface-brand` + `text-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
 - **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `text-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
 - **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
 - `user-scalable=no` meta viewport 금지

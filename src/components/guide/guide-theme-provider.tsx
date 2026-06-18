@@ -1,10 +1,17 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import {
-  applyColorModeClass,
-  readStoredColorMode,
-  writeStoredColorMode,
+  createContext,
+  useCallback,
+  useContext,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
+import {
+  readActiveColorMode,
+  setColorMode,
+  subscribeToColorMode,
+  type ColorMode,
 } from "@/lib/theme-preference";
 import { ToastProvider } from "@/components/guide/shared";
 
@@ -16,29 +23,27 @@ type GuideThemeContextValue = {
 
 const GuideThemeContext = createContext<GuideThemeContextValue | null>(null);
 
+function getServerColorModeSnapshot(): ColorMode {
+  return "light";
+}
+
 export function GuideThemeProvider({ children }: { children: ReactNode }) {
-  const [isDark, setIsDark] = useState(false);
-  const themeHydratedRef = useRef(false);
+  const colorMode = useSyncExternalStore(
+    subscribeToColorMode,
+    readActiveColorMode,
+    getServerColorModeSnapshot,
+  );
+  const isDark = colorMode === "dark";
 
-  useEffect(() => {
-    if (!themeHydratedRef.current) {
-      themeHydratedRef.current = true;
-      const stored = readStoredColorMode();
-      if (stored === "dark" && !isDark) {
-        setIsDark(true);
-        return;
-      }
-      if (stored === "light" && isDark) {
-        setIsDark(false);
-        return;
-      }
-    }
+  const setIsDark = useCallback(
+    (value: boolean | ((prev: boolean) => boolean)) => {
+      const next = typeof value === "function" ? value(isDark) : value;
+      setColorMode(next ? "dark" : "light");
+    },
+    [isDark],
+  );
 
-    applyColorModeClass(isDark ? "dark" : "light");
-    writeStoredColorMode(isDark ? "dark" : "light");
-  }, [isDark]);
-
-  const toggleDark = () => setIsDark((prev) => !prev);
+  const toggleDark = useCallback(() => setIsDark((prev) => !prev), [setIsDark]);
 
   return (
     <ToastProvider>

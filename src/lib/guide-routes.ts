@@ -1,6 +1,7 @@
 /** 디자인 토큰 가이드 — 카테고리별 라우트 */
 export const GUIDE_ROUTES = {
-  home: "/guide/color",
+  /** 루트 리다이렉트 엔트리 — 사이드 nav 서브탭 URL과 href 중복 방지 */
+  home: "/",
   color: "/guide/color",
   type: "/guide/type",
   spacing: "/guide/spacing",
