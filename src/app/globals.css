@@ -6,7 +6,7 @@
    --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
    --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
    --typography-* : font shorthand 묶음 토큰. family/size/weight/line-height 포함.
-   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-gutter-* : 레이아웃·크기 기반 토큰.
+   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-screen-margin-* : 레이아웃·크기 기반 토큰.
    --ds-gradient-* : 그라데이션 토큰. @theme --background-image-gradient-* 로 노출.
    guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
@@ -127,6 +127,9 @@
   --size-control-md: 2.5rem;
   --size-control-lg: 3rem;
 
+  /* 스크롤바 두께 — 6px */
+  --size-scrollbar: 0.375rem;
+
   --layout-container-sm: 40rem;
   --layout-container-md: 48rem;
   --layout-container-lg: 64rem;
@@ -136,13 +139,14 @@
   --layout-breakpoint-md: 48rem;
   --layout-breakpoint-lg: 64rem;
   --layout-breakpoint-xl: 80rem;
+  --layout-breakpoint-2xl: 90rem;
 
   --layout-grid-sidebar: 16rem minmax(0, 1fr);
   --layout-grid-sidebar-wide: 20rem minmax(0, 1fr);
 
-  /* container 좌우 padding — md(768px) 미만 18px, 이상 30px */
-  --layout-gutter-sm: 1.125rem;
-  --layout-gutter-md: 1.875rem;
+  /* 최소 스크린 마진 — content 좌우 여백 하한. small(<768px) 16px, medium 이상 24px */
+  --layout-screen-margin-sm: 1rem;
+  --layout-screen-margin-md: 1.5rem;
 
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
@@ -241,6 +245,10 @@
   --ds-border-overlay: var(--raw-black-a10);
   --ds-surface-subtle: var(--ds-neutral-50);
   --ds-text-muted: var(--ds-neutral-400);
+
+  /* 스크롤바 — 모드 인지 스케일 참조(다크 자동 반사). thumb=중립 mid, track=subtle */
+  --ds-scroll-thumb: var(--ds-neutral-300);
+  --ds-scroll-track: var(--ds-neutral-100);
 
   /* 그림자 — 모드 무관(검정α) */
   --ds-shadow: var(--raw-black-a20);
@@ -407,8 +415,8 @@
   --spacing-control-sm: var(--size-control-sm);
   --spacing-control-md: var(--size-control-md);
   --spacing-control-lg: var(--size-control-lg);
-  --spacing-gutter-sm: var(--layout-gutter-sm);
-  --spacing-gutter-md: var(--layout-gutter-md);
+  --spacing-screen-margin-sm: var(--layout-screen-margin-sm);
+  --spacing-screen-margin-md: var(--layout-screen-margin-md);
 
   --radius-none: var(--shape-radius-none);
   --radius-sm: var(--shape-radius-sm);
@@ -429,6 +437,7 @@
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 90rem;
 
   --text-display-lg: var(--font-size-display-lg);
   --text-display-md: var(--font-size-display-md);
@@ -548,43 +557,33 @@
   font-variant-numeric: var(--font-numeric-tabular);
 }
 
-/* Layout shorthand — 반응형 container(gutter·max-width) + content grid.
+/* Layout shorthand — 반응형 container(screen-margin·max-width) + content grid(4→8→12열).
    자식 요소가 grid item이 됩니다. col-span-* 로 열 병합.
-   gutter는 padding-inline(토큰)으로 적용 — p-0·px-* 등과 함께 쓰면 덮어씌워집니다. */
+   최소 스크린 마진은 padding-inline(토큰)으로 적용 — p-0·px-* 등과 함께 쓰면 덮어씌워집니다. */
 @utility layout-page {
   box-sizing: border-box;
   width: 100%;
   margin-inline: auto;
   max-width: 100%;
-  padding-inline: var(--layout-gutter-sm);
+  padding-inline: var(--layout-screen-margin-sm);
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-4);
 
-  @variant sm {
-    max-width: var(--container-sm);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   @variant md {
-    max-width: var(--container-md);
-    padding-inline: var(--layout-gutter-md);
-    gap: var(--space-6);
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-inline: var(--layout-screen-margin-md);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
   @variant lg {
     max-width: var(--container-xl);
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-
-  @variant xl {
+    gap: var(--space-6);
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
 
 /* 사이드메뉴 프리셋 — lg부터 16rem menu + 1fr content. shell gap 없음.
-   콘텐츠 좌우 gutter는 layout-sidenav-content padding-inline만 사용 */
+   콘텐츠 좌우 스크린 마진은 layout-sidenav-content padding-inline만 사용 */
 @utility layout-sidenav {
   display: grid;
   width: 100%;
@@ -611,36 +610,26 @@
   min-width: 0;
 }
 
-/* layout-page와 동일 container·grid·gutter — sidebar 옆 1fr 열 안에서 max-width 상한·중앙 정렬 */
+/* layout-page와 동일 container·grid·screen-margin — sidebar 옆 1fr 열 안에서 max-width 상한·중앙 정렬 */
 @utility layout-sidenav-content {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   margin-inline: auto;
   max-width: 100%;
-  padding-inline: var(--layout-gutter-sm);
+  padding-inline: var(--layout-screen-margin-sm);
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-4);
 
-  @variant sm {
-    max-width: var(--container-sm);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   @variant md {
-    max-width: var(--container-md);
-    padding-inline: var(--layout-gutter-md);
-    gap: var(--space-6);
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-inline: var(--layout-screen-margin-md);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
   @variant lg {
     max-width: var(--container-xl);
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-
-  @variant xl {
+    gap: var(--space-6);
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
@@ -655,6 +644,31 @@
     margin-inline: calc(var(--space-10) * -1);
     width: calc(100% + var(--space-10) * 2);
   }
+}
+
+/* 스크롤바 자리를 항상 예약 — 오버플로 유무와 무관하게 콘텐츠 폭을 일정하게 유지(layout shift 방지).
+   클래식 스크롤바 환경에서도 페이지 간 가로폭이 흔들리지 않는다. 오버레이 스크롤바면 영향 없음.
+   ⚠️ 표준 scrollbar-width/scrollbar-color 는 의도적으로 두지 않는다 —
+   Chrome 121+ 에서 표준 속성이 있으면 ::-webkit-scrollbar 커스텀(6px)을 무시하고
+   'thin'(플랫폼 기본 ~11px)을 적용해, 예약 gutter 가 6px 가 아니게 된다. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* WebKit/Blink 공통 스크롤바 — 모든 스크롤 영역에 적용. 크기는 rem 토큰, 색은 --ds-*.
+   Firefox 는 이 pseudo-element 를 지원하지 않아 기본 스크롤바를 사용한다(레퍼런스도 webkit 전용). */
+::-webkit-scrollbar {
+  width: var(--size-scrollbar);
+  height: var(--size-scrollbar);
+  background-color: var(--ds-scroll-track);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: var(--shape-radius-sm);
+  background-color: var(--ds-scroll-thumb);
+}
+::-webkit-scrollbar-track {
+  border-radius: var(--shape-radius-sm);
+  background-color: var(--ds-scroll-track);
 }
 
 body {
