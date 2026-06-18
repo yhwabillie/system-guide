@@ -311,8 +311,8 @@ const FONT_LINE = 1.25;
 - **`line-height` 1.5 이외 값 금지** — 프로젝트 행간은 **전역 `1.5` 단일 토큰**(`tokens.ts` `FONT_LINE` → CSS `--font-line`)만 사용한다. `leading-none`·`leading-tight`·`line-height: 1`·`1.25`·고정 `px` 행간, 역할별 `--font-line-*` 토큰 신설, `globals.css`에 `--font-line` 숫자 직접 정의 모두 금지. 변경이 필요하면 **`FONT_LINE` 한 곳만** 수정하고 `body`·`@theme --leading-*`·`--typography-*` 연쇄를 따른다. 인라인은 `lineHeight: "var(--font-line)"`만 허용
 - **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
-- **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-50)·`gray-100` 위 `text-muted`(gray-400)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-600`~`text-gray-700`, 배경은 `bg-gray-100` 등으로 조합 검증
-- **`text-gray-400` 본문·캡션 금지(흰 배경)** — gray-400는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-500` 이상
+- **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `text-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
+- **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
 - `user-scalable=no` meta viewport 금지
 - `tabindex` 양수값 사용 금지 (`tabindex="1"` 등)
 - `div`, `span`에 클릭 이벤트만 추가하는 패턴 금지

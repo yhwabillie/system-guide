@@ -61,7 +61,7 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 색상 토큰은 `src/app/globals.css`에서 3단계로 관리합니다.
 
 ```css
---raw-*    /* 원본 팔레트·알파 램프. 불변·모드 무관 */
+--raw-*    /* 원본 팔레트·알파 램프. 불변·모드 무관. family는 hue명만(red·violet·gray …), brand/primary/accent 등 역할명 금지 */
 --ds-*     /* Design System 토큰. 모드 인지 스케일/용도 값 */
 --color-*  /* Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름 */
 --typography-*  /* font shorthand 묶음 토큰 */
@@ -69,7 +69,7 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 --ds-gradient-*  /* 그라데이션. @theme → bg-gradient-* */
 ```
 
-흐름은 `--raw-green-500` → `--ds-green-500` → `--color-green-500` → `bg-green-500`처럼 이어집니다. `.dark`에서는 `--ds-*`만 재매핑하므로 Tailwind 유틸리티도 같은 클래스명으로 다크 모드 값을 사용합니다.
+흐름은 `--raw-green-50` → `--ds-green-50` → `--color-green-50` → `bg-green-50`처럼 이어집니다. 스케일 단위는 `0·5·10·20…90·95·100`(KRDS family는 5~90). `.dark`에서는 `--ds-*`만 재매핑하므로 Tailwind 유틸리티도 같은 클래스명으로 다크 모드 값을 사용합니다.
 
 `--color-*` 슬러그에는 `text`·`bg`·`border` 접두를 넣지 않습니다. 유틸리티가 `{접두}-{슬러그}`로 조합되므로 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생깁니다. 예: `--color-muted` → `text-muted`, `--color-line` → `border-line`. 자세한 규칙은 [`AGENTS.md`](AGENTS.md) 참조.
 

@@ -9,9 +9,8 @@ import {
   layoutSidenavMenuClass,
 } from "@/lib/layout-tokens";
 import { FONT_LINE, fontSizePx, pxToRem } from "@/lib/tokens";
-import { primitiveColors } from "@/lib/raw-color-palettes";
+import { RAW_COLOR_SCALE_UNITS, primitiveColors } from "@/lib/raw-color-palettes";
 
-const scales = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
 // 표면 앵커 — 중립 램프 밖 순백/심흑(모드 무관 고정)
 const surfaceAnchors = [
@@ -48,8 +47,8 @@ const overlayTokens = [
 ];
 
 const gradientTokens = [
-  { label: "gradient-accent", utility: "bg-gradient-accent", dsVar: "--ds-gradient-accent", desc: "브랜드 강조 — blue 400 → 600 (135°)" },
-  { label: "gradient-accent-subtle", utility: "bg-gradient-accent-subtle", dsVar: "--ds-gradient-accent-subtle", desc: "은은한 강조 배경 — blue 50 → 100 (↓)" },
+  { label: "gradient-accent", utility: "bg-gradient-accent", dsVar: "--ds-gradient-accent", desc: "브랜드 강조 — violet 40 → 60 (135°)" },
+  { label: "gradient-accent-subtle", utility: "bg-gradient-accent-subtle", dsVar: "--ds-gradient-accent-subtle", desc: "은은한 강조 배경 — violet 5 → 10 (↓)" },
   { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", dsVar: "--ds-gradient-surface-fade-down", desc: "표면 하단 페이드 — background → transparent (↓)" },
   { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", dsVar: "--ds-gradient-surface-fade-up", desc: "표면 상단 페이드 — background → transparent (↑)" },
   { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", dsVar: "--ds-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
@@ -89,29 +88,14 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "primary",
         label: "primary",
         tokens: [
-          { token: "foreground", utility: "text-foreground", cssVar: "--color-foreground", readAs: "text", rawVar: "--raw-gray-900" },
-        ],
-      },
-      {
-        id: "muted",
-        label: "muted",
-        tokens: [
-          { token: "muted", utility: "text-muted", cssVar: "--color-muted", readAs: "text", rawVar: "--raw-gray-400" },
-        ],
-      },
-      {
-        id: "accent",
-        label: "accent",
-        tokens: [
-          { token: "accent", utility: "text-accent", cssVar: "--color-accent", readAs: "text", rawVar: "--raw-blue-500" },
-          { token: "on-accent", utility: "text-on-accent", cssVar: "--color-on-accent", readAs: "text", rawVar: "--raw-white" },
+          { token: "foreground", utility: "text-foreground", cssVar: "--color-foreground", readAs: "text", rawVar: "--raw-gray-90" },
         ],
       },
       {
         id: "danger",
         label: "danger",
         tokens: [
-          { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text", rawVar: "--raw-red-500" },
+          { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text", rawVar: "--raw-red-50" },
         ],
       },
     ],
@@ -136,7 +120,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "subtle",
         label: "subtle",
         tokens: [
-          { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-50" },
+          { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-5" },
         ],
       },
     ],
@@ -154,14 +138,14 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "default",
         label: "default",
         tokens: [
-          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border", rawVar: "--raw-gray-200" },
+          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border", rawVar: "--raw-gray-20" },
         ],
       },
       {
         id: "strong",
         label: "strong",
         tokens: [
-          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border", rawVar: "--raw-gray-300" },
+          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border", rawVar: "--raw-gray-30" },
         ],
       },
       {
@@ -186,7 +170,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg", rawVar: "--raw-blue-500" },
+          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg", rawVar: "--raw-violet-50" },
         ],
       },
       {
@@ -200,7 +184,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "danger",
         label: "danger",
         tokens: [
-          { token: "accent-danger", utility: "bg-accent-danger", cssVar: "--color-accent-danger", readAs: "bg", rawVar: "--raw-red-500" },
+          { token: "accent-danger", utility: "bg-accent-danger", cssVar: "--color-accent-danger", readAs: "bg", rawVar: "--raw-red-50" },
         ],
       },
     ],
@@ -238,14 +222,14 @@ const semanticUtilityCatalog: SemanticColorCategoryDef = {
           utility: "bg-utility-scroll-thumb",
           cssVar: "--color-utility-scroll-thumb",
           readAs: "bg",
-          rawVar: "--raw-gray-300",
+          rawVar: "--raw-gray-30",
         },
         {
           token: "utility-scroll-track",
           utility: "bg-utility-scroll-track",
           cssVar: "--color-utility-scroll-track",
           readAs: "bg",
-          rawVar: "--raw-gray-100",
+          rawVar: "--raw-gray-10",
         },
       ],
     },
@@ -406,8 +390,8 @@ function SwatchCardMeta({
   return (
     <div className="p-4">
       <p className="m-0 font-mono text-label-md font-bold text-foreground">{utility}</p>
-      <p className="m-0 mt-1 font-mono text-caption text-gray-600">{sourceVar}</p>
-      <p className="m-0 mt-0.5 font-mono text-caption text-gray-600 numeric-tabular">{value}</p>
+      <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
+      <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
     </div>
   );
 }
@@ -476,7 +460,7 @@ function SemanticGradientSwatchCard({
   desc: string;
 }) {
   const isFade = dsVar.includes("fade");
-  const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-blue-100)" };
+  const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-violet-10)" };
 
   return (
     <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
@@ -501,7 +485,7 @@ function SemanticColorGroupGrid({
 }) {
   return (
     <div className="mb-8 last:mb-0">
-      <h4 className="m-0 mb-3 text-label-md font-semibold lowercase text-gray-600">{label}</h4>
+      <h4 className="m-0 mb-3 text-label-md font-semibold lowercase text-gray-60">{label}</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>
     </div>
   );
@@ -542,8 +526,8 @@ const makeChecker = (base: string, square: string): React.CSSProperties => ({
   backgroundPosition: "0 0, 0 7px, 7px -7px, -7px 0",
 });
 // 검정 알파는 밝은 체커, 흰색 알파는 어두운 체커 위에서 차이가 잘 보임
-const checkerLight = makeChecker("var(--raw-white)", "var(--raw-gray-200)");
-const checkerDark = makeChecker("var(--raw-black)", "var(--raw-gray-700)");
+const checkerLight = makeChecker("var(--raw-white)", "var(--raw-gray-20)");
+const checkerDark = makeChecker("var(--raw-black)", "var(--raw-gray-70)");
 
 // 폰트 폴백 체인 — 각 단계는 해당 폰트로 렌더되어 시각 비교 가능
 const fontStack = [
@@ -554,7 +538,7 @@ const fontStack = [
 
 const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
   primary: "bg-accent text-on-accent",
-  fallback: "bg-gray-100 text-foreground ring-1 ring-line",
+  fallback: "bg-gray-10 text-foreground ring-1 ring-line",
   system: "bg-transparent text-muted ring-1 ring-dashed ring-line",
 };
 
@@ -839,7 +823,7 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
             onClick={() => setCollapsed((prev) => !prev)}
             aria-expanded={!collapsed}
             aria-controls={listId}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-background px-2.5 py-1 text-caption font-medium text-gray-600 transition-colors hover:text-foreground"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:text-foreground"
           >
             {collapsed ? "펼치기" : "접기"}
             <NavIcon
@@ -867,8 +851,8 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
                     className={[
                       "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
                       isActive
-                        ? "bg-gray-50 font-bold text-foreground"
-                        : "font-normal text-gray-600 hover:bg-gray-50 hover:text-foreground",
+                        ? "bg-gray-5 font-bold text-foreground"
+                        : "font-normal text-gray-60 hover:bg-gray-5 hover:text-foreground",
                     ].join(" ")}
                   >
                     {label}
@@ -953,7 +937,7 @@ const contentOutlineSubTabClass = (active: boolean) =>
     "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-0 border-b-0 border-t-2 border-l-2 border-r-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-[color,background-color] duration-200",
     active
       ? "z-[1] -mb-0.5 border-accent bg-background font-bold text-accent after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
-      : "border-transparent bg-surface-subtle font-medium text-foreground hover:bg-gray-100",
+      : "border-transparent bg-surface-subtle font-medium text-foreground hover:bg-gray-10",
   ].join(" ");
 
 const guideTabScrollBtnClass =
@@ -1096,7 +1080,7 @@ const guideHeaderHeightClass = "h-[3.75rem]";
 const guideHeaderOffsetClass = "top-[3.75rem]";
 const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 const guideHeaderIconButtonClass =
-  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle text-foreground transition-colors duration-150 hover:bg-green-50 hover:text-accent";
+  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle text-foreground transition-colors duration-150 hover:bg-green-5 hover:text-accent";
 
 function GuideLogoMark() {
   return (
@@ -1327,11 +1311,11 @@ const typographyExamples = [
 
 function TypographyScaleTable() {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200">
+    <div className="overflow-x-auto rounded-xl border border-gray-20">
       <table className="w-full min-w-[36rem] border-collapse text-left">
         <caption className="sr-only">타이포그래피 스케일 — 계층, 굵기, 크기, 행간, Tailwind utility class</caption>
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
+          <tr className="border-b border-gray-20 bg-gray-5">
             <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
               Hierarchy
             </th>
@@ -1356,7 +1340,7 @@ function TypographyScaleTable() {
             const lineHeightPx = Math.round(sizePx * FONT_LINE);
 
             return (
-              <tr key={cssVar} className="border-b border-gray-200 last:border-b-0">
+              <tr key={cssVar} className="border-b border-gray-20 last:border-b-0">
                 <td className="px-4 py-4 align-middle">
                   <span role="img" aria-label={`${label} 견본`} className={typoClass}>
                     {label}
@@ -1387,7 +1371,7 @@ function TypographyExampleOfUse() {
   return (
     <section aria-labelledby="section-typography-example" className="mt-24">
       <ContentSubsectionTitle id="section-typography-example">Example of Use</ContentSubsectionTitle>
-      <div className="rounded-xl border border-gray-200 p-6">
+      <div className="rounded-xl border border-gray-20 p-6">
         <div className="flex flex-col gap-5">
           {typographyExamples.map(({ chip, className, text, ariaLabel }) => (
             <div key={chip} className="grid items-center gap-3 sm:grid-cols-[minmax(0,1fr)_2rem_auto]">
@@ -1606,7 +1590,7 @@ function IconCopyCell({
           type="button"
           onClick={() => void handleCopy()}
           aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
-          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line bg-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-600 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:text-foreground focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line bg-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:text-foreground focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
         >
           copy
         </button>
@@ -1620,8 +1604,8 @@ function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatalogEntry
 
   if (catalog.length === 0) {
     return (
-      <div className="rounded-xl border border-line bg-gray-100 p-6">
-        <p className="m-0 text-body-sm text-gray-700">
+      <div className="rounded-xl border border-line bg-gray-10 p-6">
+        <p className="m-0 text-body-sm text-gray-70">
           <strong>{styleLabel}</strong> 아이콘 세트가 아직 등록되지 않았습니다. 글리프를 추가하면 이 표에 크기별 배리에이션이 표시됩니다.
         </p>
       </div>
@@ -1633,7 +1617,7 @@ function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatalogEntry
       <table className="w-full min-w-[44rem] border-collapse text-left">
         <caption className="sr-only">{styleLabel} Icon — Tailwind utility class 크기별 배리에이션</caption>
         <thead>
-          <tr className="border-b border-line bg-gray-50">
+          <tr className="border-b border-line bg-gray-5">
             <th scope="col" className="px-4 py-3">
               <span className="sr-only">Icon</span>
             </th>
@@ -1650,7 +1634,7 @@ function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatalogEntry
           {catalog.map(({ id, label, innerMarkup }) => (
             <tr key={id} className="border-b border-line last:border-b-0">
               <th scope="row" className="px-4 py-4 align-middle">
-                <span className="font-mono text-caption text-gray-600">{id}</span>
+                <span className="font-mono text-caption text-gray-60">{id}</span>
                 <span className="sr-only">{label}</span>
               </th>
               {iconSizeTokens.map((token) => (
@@ -1715,7 +1699,7 @@ function IconStyleCuration({ style }: { style: IconStyle }) {
               <span className="text-label-lg font-bold text-foreground">{source.name}</span>
               <span className="text-caption font-semibold text-accent">{source.style}</span>
             </div>
-            <p className="m-0 mt-0.5 font-mono text-caption text-gray-600">
+            <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">
               {source.sourceUrl ? (
                 <>
                   <a
@@ -1735,7 +1719,7 @@ function IconStyleCuration({ style }: { style: IconStyle }) {
             <dl className="m-0 mt-3 grid gap-2 sm:grid-cols-2">
               {source.specs.map(({ label, value }) => (
                 <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                  <dt className="m-0 font-mono text-caption text-gray-600">{label}</dt>
+                  <dt className="m-0 font-mono text-caption text-gray-60">{label}</dt>
                   <dd className="m-0 font-mono text-caption text-foreground">{value}</dd>
                 </div>
               ))}
@@ -1777,7 +1761,7 @@ const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: stri
 };
 
 /** 명암비 결과 카드 — 숫자·기준 박스 배경 통일 */
-const contrastResultSurfaceClass = "rounded-xl bg-gray-50";
+const contrastResultSurfaceClass = "rounded-xl bg-gray-5";
 
 function LevelBadge({ level }: { level: ContrastLevel }) {
   const s = levelStyle[level];
@@ -1890,8 +1874,8 @@ function ContrastColorPickButton({
         className={[
           "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
           isSelecting
-            ? "bg-gray-100 shadow-sm ring-2 ring-accent"
-            : "bg-surface-subtle hover:bg-gray-100 hover:shadow-sm hover:ring-1 hover:ring-line",
+            ? "bg-gray-10 shadow-sm ring-2 ring-accent"
+            : "bg-surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-line",
         ].join(" ")}
       >
         <span
@@ -1904,7 +1888,7 @@ function ContrastColorPickButton({
         />
         <span className="flex min-w-0 flex-col text-left">
           <span className="text-label-md font-semibold">{colorLabel}</span>
-          <span id={valueId} className="text-caption text-gray-600 font-mono numeric-tabular">{colorHex}</span>
+          <span id={valueId} className="text-caption text-gray-60 font-mono numeric-tabular">{colorHex}</span>
         </span>
         <span
           aria-hidden="true"
@@ -1939,7 +1923,7 @@ function ContrastCriterionBox({ grade, threshold, passed }: { grade: string; thr
     <div className={`flex items-center gap-2 py-2.5 px-3 ${contrastResultSurfaceClass}`}>
       <ContrastCircle passed={passed} />
       <span className="text-label-md font-bold text-foreground">{grade}</span>
-      <span className="ml-auto text-caption text-gray-700 numeric-tabular">{threshold}</span>
+      <span className="ml-auto text-caption text-gray-70 numeric-tabular">{threshold}</span>
     </div>
   );
 }
@@ -1956,7 +1940,7 @@ function ContrastCategory({
 }) {
   return (
     <div>
-      <p className="text-label-sm font-semibold text-gray-600 mb-2">{title}</p>
+      <p className="text-label-sm font-semibold text-gray-60 mb-2">{title}</p>
       <div className="grid grid-cols-2 gap-2">
         <ContrastCriterionBox grade="AA" threshold={aa.threshold} passed={aa.passed} />
         <ContrastCriterionBox grade="AAA" threshold={aaa.threshold} passed={aaa.passed} />
@@ -2018,7 +2002,7 @@ function GridGapPreview({ utility, label }: { utility: string; label: string }) 
     <div
       role="img"
       aria-label={label}
-      className={`grid w-full grid-cols-2 ${utility} bg-red-200`}
+      className={`grid w-full grid-cols-2 ${utility} bg-red-20`}
     >
       {Array.from({ length: 4 }, (_, i) => (
         <div
@@ -2058,7 +2042,7 @@ function GridGapCuration() {
       </p>
       <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-muted">
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block size-2 bg-red-200" />
+          <span aria-hidden="true" className="inline-block size-2 bg-red-20" />
           붉은색 = gap
         </span>
         <span className="inline-flex items-center gap-1.5">
@@ -2383,25 +2367,25 @@ export default function Home() {
   }
 
   const navExternalLinkClass =
-    "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-accent no-underline transition-colors duration-150 hover:bg-gray-100";
+    "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-accent no-underline transition-colors duration-150 hover:bg-gray-10";
 
   const navSubItemClass = (active: boolean) =>
     [
       "flex w-full items-center justify-between gap-2 text-left rounded-lg border-0 cursor-pointer font-sans text-label-sm leading-base",
       "py-2 px-3 transition-colors duration-150",
       active
-        ? "bg-gray-50 text-foreground font-semibold"
-        : "bg-transparent text-gray-600 font-medium hover:bg-gray-50 hover:text-foreground",
+        ? "bg-gray-5 text-foreground font-semibold"
+        : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:text-foreground",
     ].join(" ");
 
   const navParentGroupClass = (active: boolean) =>
-    ["flex items-center rounded-xl", active ? "bg-green-50" : "bg-transparent"].join(" ");
+    ["flex items-center rounded-xl", active ? "bg-green-5" : "bg-transparent"].join(" ");
 
   const navParentButtonClass = (active: boolean) =>
     [
       "flex min-w-0 flex-1 items-center gap-3 border-0 bg-transparent text-left font-sans text-label-md leading-base",
       "cursor-pointer py-2.5 pl-3.5 pr-1 transition-colors duration-150",
-      active ? "font-semibold text-green-600" : "font-medium text-gray-600 hover:text-foreground",
+      active ? "font-semibold text-green-60" : "font-medium text-gray-60 hover:text-foreground",
     ].join(" ");
 
   function selectColorSection(sub: "raw" | "semantic") {
@@ -2555,7 +2539,7 @@ export default function Home() {
                   aria-label={colorMenuExpanded ? "Color 하위 메뉴 접기" : "Color 하위 메뉴 펼치기"}
                   aria-expanded={colorMenuExpanded}
                   onClick={() => setColorMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${colorMenuExpanded ? "rotate-180" : ""}`}
@@ -2607,7 +2591,7 @@ export default function Home() {
                   aria-label={typeMenuExpanded ? "Font & Type 하위 메뉴 접기" : "Font & Type 하위 메뉴 펼치기"}
                   aria-expanded={typeMenuExpanded}
                   onClick={() => setTypeMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${typeMenuExpanded ? "rotate-180" : ""}`}
@@ -2659,7 +2643,7 @@ export default function Home() {
                   aria-label={spacingMenuExpanded ? "Spacing & Size 하위 메뉴 접기" : "Spacing & Size 하위 메뉴 펼치기"}
                   aria-expanded={spacingMenuExpanded}
                   onClick={() => setSpacingMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${spacingMenuExpanded ? "rotate-180" : ""}`}
@@ -2716,7 +2700,7 @@ export default function Home() {
                   aria-label={gridMenuExpanded ? "Grid 하위 메뉴 접기" : "Grid 하위 메뉴 펼치기"}
                   aria-expanded={gridMenuExpanded}
                   onClick={() => setGridMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${gridMenuExpanded ? "rotate-180" : ""}`}
@@ -2771,7 +2755,7 @@ export default function Home() {
                     aria-label={iconsMenuExpanded ? "Icons 하위 메뉴 접기" : "Icons 하위 메뉴 펼치기"}
                     aria-expanded={iconsMenuExpanded}
                     onClick={() => setIconsMenuExpanded((open) => !open)}
-                    className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-100 hover:text-foreground"
+                    className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
                   >
                     <NavIcon
                       className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${iconsMenuExpanded ? "rotate-180" : ""}`}
@@ -2853,7 +2837,7 @@ export default function Home() {
             lead
             description={
               <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Navy → Gray) 순으로 배열하고, scale(50~900) 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. hex는 <a href="https://www.krds.go.kr/html/site/style/style_02.html" className="font-semibold text-foreground underline underline-offset-2 hover:text-accent">KRDS 색상 가이드</a> 표준형 5~90 단계를 50~900에 매핑한 값입니다. primary·danger 등 시맨틱 역할은 Semantic Color 탭에서 매핑합니다.
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray) 순으로 배열하고, 스케일 단위 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. KRDS 표준형 family는 5~90 단계를 그대로 쓰고, <strong>Violet</strong>(<code className="font-mono text-caption">#5B4CF0</code>=<strong>50</strong> base)는 0(white)~100(black) 전 구간 스케일입니다. surface·base·text 등 역할은 Semantic Color 탭에서 매핑합니다.
               </>
             }
           >
@@ -2881,7 +2865,7 @@ export default function Home() {
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-muted transition-colors hover:bg-gray-100 hover:text-foreground"
+                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-muted transition-colors hover:bg-gray-10 hover:text-foreground"
               >
                 <NavIcon innerMarkup={contrastPickCloseIcon} className="size-icon-xs shrink-0" />
               </button>
@@ -2890,17 +2874,24 @@ export default function Home() {
 
           <div role="group" aria-label="색상 팔레트" className="flex flex-col gap-2">
             {/* 스케일 헤더 */}
-            <div aria-hidden="true" className="grid gap-1 mb-1" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
-              <span className="text-caption text-gray-500">Family</span>
-              {scales.map((s) => (
-                <span key={s} className="text-caption text-gray-500 text-center">{s}</span>
+            <div aria-hidden="true" className="grid gap-1 mb-1" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
+              <span className="text-caption text-gray-50">Family</span>
+              {RAW_COLOR_SCALE_UNITS.map((s) => (
+                <span key={s} className="text-caption text-gray-50 text-center">{s}</span>
               ))}
             </div>
 
-            {primitiveColors.map(({ family, name, swatches }) => (
-              <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+            {primitiveColors.map(({ family, name, swatches }) => {
+              const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
+              return (
+              <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
                 <span className="text-label-sm font-semibold">{family}</span>
-                {swatches.map(({ scale, hex }) => {
+                {RAW_COLOR_SCALE_UNITS.map((unit) => {
+                  const sw = swatchByScale[unit];
+                  if (!sw) {
+                    return <div key={unit} aria-hidden="true" className="min-h-8 rounded-sm bg-transparent" />;
+                  }
+                  const { scale, hex } = sw;
                   const label = `${family} ${scale}`;
                   const cssVar = `var(--ds-${name}-${scale})`;
                   const currentHex = hexOf(name, scale, hex);
@@ -2936,9 +2927,9 @@ export default function Home() {
                   );
                 })}
               </div>
-            ))}
+            );})}
 
-            {/* 스케일 팔레트와 구분 — 앵커는 스케일(50~900)과 무관 */}
+            {/* 스케일 팔레트와 구분 — 앵커는 스케일(0~100)과 무관 */}
             <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-line" />
 
             {/* Surface 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
@@ -2947,7 +2938,7 @@ export default function Home() {
               const isText = textColor.hex === hex;
               const isInteractive = !!selecting;
               return (
-                <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+                <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
                   <span className="text-label-sm font-semibold">{label}</span>
                   {isInteractive ? (
                     <button
@@ -3014,7 +3005,7 @@ export default function Home() {
           </div>
 
           {/* 결과 — 미리보기(선택 배경색 위) + 명암비 카드 */}
-          <div className="rounded-2xl overflow-hidden border border-gray-200 grid lg:grid-cols-[1.4fr_1fr]">
+          <div className="rounded-2xl overflow-hidden border border-gray-20 grid lg:grid-cols-[1.4fr_1fr]">
             {/* 미리보기 — 시각 견본만 제공, 결과는 우측 region aria-label로 전달 */}
             <div aria-hidden="true" className="p-8 md:p-10 flex flex-col gap-8" style={{ background: bgColor.hex }}>
               {/* 대형 텍스트 미리보기 */}
@@ -3056,7 +3047,7 @@ export default function Home() {
               aria-label={`대비율 결과: ${ratio}:1 — ${level}`}
               aria-live="polite"
               aria-atomic="true"
-              className="bg-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-200"
+              className="bg-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
@@ -3065,7 +3056,7 @@ export default function Home() {
                 </div>
                 <output className={`block py-5 text-center text-foreground ${contrastResultSurfaceClass}`}>
                   <span className="font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
-                    {ratio}<span className="font-normal text-gray-600" style={{ fontSize: pxToRem(18) }}> : 1</span>
+                    {ratio}<span className="font-normal text-gray-60" style={{ fontSize: pxToRem(18) }}> : 1</span>
                   </span>
                 </output>
               </div>
@@ -3094,16 +3085,23 @@ export default function Home() {
               현재 배경색 기준 — 전체 팔레트 대비율
             </ContentGroupTitle>
             <div role="group" aria-label="전체 팔레트 대비율 매트릭스" className="flex flex-col gap-1.5">
-              <div aria-hidden="true" className="grid gap-1" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
-                <span className="text-caption text-gray-500" />
-                {scales.map((s) => (
-                  <span key={s} className="text-caption text-gray-500 text-center">{s}</span>
+              <div aria-hidden="true" className="grid gap-1" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
+                <span className="text-caption text-gray-50" />
+                {RAW_COLOR_SCALE_UNITS.map((s) => (
+                  <span key={s} className="text-caption text-gray-50 text-center">{s}</span>
                 ))}
               </div>
-              {primitiveColors.map(({ family, name, swatches }) => (
-                <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
+              {primitiveColors.map(({ family, name, swatches }) => {
+                const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
+                return (
+                <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
                   <span className="text-label-sm font-semibold">{family}</span>
-                  {swatches.map(({ scale, hex }) => {
+                  {RAW_COLOR_SCALE_UNITS.map((unit) => {
+                    const sw = swatchByScale[unit];
+                    if (!sw) {
+                      return <div key={unit} aria-hidden="true" className="min-h-10 rounded-md bg-transparent" />;
+                    }
+                    const { scale, hex } = sw;
                     const r = contrastRatio(bgColor.hex, hexOf(name, scale, hex));
                     const lv = getContrastLevel(r);
                     const s = levelStyle[lv];
@@ -3120,13 +3118,13 @@ export default function Home() {
                     );
                   })}
                 </div>
-              ))}
+              );})}
             </div>
             <div role="list" aria-label="대비율 등급 범례" className="flex gap-3 mt-3 flex-wrap">
               {(Object.entries(levelStyle) as [ContrastLevel, typeof levelStyle[ContrastLevel]][]).map(([lv, s]) => (
                 <div key={lv} role="listitem" className="flex items-center gap-1.5">
                   <div aria-hidden="true" className="w-3 h-3 rounded-[3px]" style={{ background: s.bg }} />
-                  <span className="text-caption text-gray-500">
+                  <span className="text-caption text-gray-50">
                     {lv === "AAA" ? "AAA 7:1+" : lv === "AA" ? "AA 4.5:1+" : lv === "AA Large" ? "AA Large 3:1+" : "Fail"}
                   </span>
                 </div>
@@ -3499,17 +3497,17 @@ export default function Home() {
           <FontStackCuration />
 
           {/* Pretendard GOV */}
-          <div className="rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="py-3 px-10 bg-gray-50 border-b border-gray-200">
+          <div className="rounded-2xl border border-gray-20 overflow-hidden">
+            <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
               <h4 className="m-0 text-label-xl font-semibold text-foreground">Pretendard GOV</h4>
               <p className="m-0 mt-1 text-caption text-muted">기본 폰트 · 1순위</p>
             </div>
-            <div className="py-12 px-10 bg-gray-50 border-b border-gray-200 flex flex-col gap-1">
+            <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
               <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>Pretendard GOV</span>
               <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-500" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-50" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
@@ -3525,7 +3523,7 @@ export default function Home() {
                   { label: "CSS 변수", value: "--font-pretendard-gov" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt className="text-caption text-gray-400 font-semibold tracking-normal uppercase">{label}</dt>
+                    <dt className="text-caption text-gray-40 font-semibold tracking-normal uppercase">{label}</dt>
                     <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
                   </div>
                 ))}
@@ -3533,45 +3531,45 @@ export default function Home() {
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-0.5">공식 GitHub</p>
-                  <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">공식 GitHub</p>
+                  <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
                     github.com/orioncactus/pretendard
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-0.5">원본 다운로드</p>
-                  <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">원본 다운로드</p>
+                  <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
                     github.com/orioncactus/pretendard/releases/tag/v1.3.9
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
-                  <p className="mt-1 text-caption text-gray-400">Assets → pretendard-gov.zip 다운로드</p>
+                  <p className="mt-1 text-caption text-gray-40">Assets → pretendard-gov.zip 다운로드</p>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
-                  <p className="mb-2 text-caption text-gray-400">자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
-                  <pre className="m-0 py-3 px-4 rounded-lg bg-gray-100 text-caption text-gray-700 border border-gray-200 break-all whitespace-pre-wrap">
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="mb-2 text-caption text-gray-40">자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
+                  <pre className="m-0 py-3 px-4 rounded-lg bg-gray-10 text-caption text-gray-70 border border-gray-20 break-all whitespace-pre-wrap">
                     <code>{`localFont({ src: "./fonts/PretendardGOVVariable.woff2", weight: "100 900", variable: "--font-pretendard-gov" })`}</code>
                   </pre>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-1">GOV 버전 특징</p>
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">GOV 버전 특징</p>
                   <ul className="m-0 pl-4 flex flex-col gap-1">
                     {["공공기관·정부 웹사이트 최적화", "한국 웹 접근성 지침(KWCAG) 대응", "완성형 한글 11,172자 전체 지원", "다양한 weight 지원 (100–900)"].map((item) => (
-                      <li key={item} className="text-caption text-gray-600">{item}</li>
+                      <li key={item} className="text-caption text-gray-60">{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
             </div>
 
-            <div className="py-6 px-10 border-t border-gray-200 flex flex-col gap-3">
-              <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase m-0">Weight</p>
+            <div className="py-6 px-10 border-t border-gray-20 flex flex-col gap-3">
+              <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase m-0">Weight</p>
               <div className="grid grid-cols-5 gap-4">
                 {[{ weight: 100, label: "Thin" }, { weight: 300, label: "Light" }, { weight: 400, label: "Regular" }, { weight: 600, label: "SemiBold" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
                     <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-pretendard-gov), sans-serif" }}>가나다 Aa</span>
-                    <span className="text-caption text-gray-400">{weight} · {label}</span>
+                    <span className="text-caption text-gray-40">{weight} · {label}</span>
                   </div>
                 ))}
               </div>
@@ -3579,17 +3577,17 @@ export default function Home() {
           </div>
 
           {/* Noto Sans KR */}
-          <div className="mt-8 rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="py-3 px-10 bg-gray-50 border-b border-gray-200">
+          <div className="mt-8 rounded-2xl border border-gray-20 overflow-hidden">
+            <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
               <h4 className="m-0 text-label-xl font-semibold text-foreground">Noto Sans KR</h4>
               <p className="m-0 mt-1 text-caption text-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
             </div>
-            <div className="py-12 px-10 bg-gray-50 border-b border-gray-200 flex flex-col gap-1">
+            <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
               <span role="img" aria-label="Noto Sans KR 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-noto), sans-serif" }}>Noto Sans KR</span>
               <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-noto), sans-serif" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-500" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-noto), sans-serif" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-50" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-noto), sans-serif" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
@@ -3605,7 +3603,7 @@ export default function Home() {
                   { label: "CSS 변수", value: "--font-noto" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt className="text-caption text-gray-400 font-semibold tracking-normal uppercase">{label}</dt>
+                    <dt className="text-caption text-gray-40 font-semibold tracking-normal uppercase">{label}</dt>
                     <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
                   </div>
                 ))}
@@ -3613,24 +3611,24 @@ export default function Home() {
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-0.5">공식 페이지</p>
-                  <a href="https://fonts.google.com/noto/specimen/Noto+Sans+KR" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">공식 페이지</p>
+                  <a href="https://fonts.google.com/noto/specimen/Noto+Sans+KR" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
                     fonts.google.com/noto/specimen/Noto+Sans+KR
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-0.5">원본 저장소</p>
-                  <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">원본 저장소</p>
+                  <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
                     github.com/notofonts/noto-cjk
                     <span className="sr-only">(새 창에서 열림)</span>
                   </a>
-                  <p className="mt-1 text-caption text-gray-400">한글 static woff2를 src/app/fonts에 self-host</p>
+                  <p className="mt-1 text-caption text-gray-40">한글 static woff2를 src/app/fonts에 self-host</p>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
-                  <p className="mb-2 text-caption text-gray-400">자체 호스팅 — next/font/local. <code className="font-mono">preload: false</code>로 평상시 다운로드를 막고, Pretendard 미로드 시에만 브라우저가 폴백으로 로드합니다.</p>
-                  <pre className="m-0 py-3 px-4 rounded-lg bg-gray-100 text-caption text-gray-700 border border-gray-200 break-all whitespace-pre-wrap">
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="mb-2 text-caption text-gray-40">자체 호스팅 — next/font/local. <code className="font-mono">preload: false</code>로 평상시 다운로드를 막고, Pretendard 미로드 시에만 브라우저가 폴백으로 로드합니다.</p>
+                  <pre className="m-0 py-3 px-4 rounded-lg bg-gray-10 text-caption text-gray-70 border border-gray-20 break-all whitespace-pre-wrap">
                     <code>{`localFont({
   src: [
     { path: "./fonts/NotoSansKR-100.woff2", weight: "100" },
@@ -3646,7 +3644,7 @@ export default function Home() {
                   </pre>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase mb-1">폴백 적용 시 유의사항</p>
+                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">폴백 적용 시 유의사항</p>
                   <ul className="m-0 pl-4 flex flex-col gap-1">
                     {[
                       "next/font/google 사용 불가 — Google 메타데이터에 complete Korean subset이 없어 한글 글리프 누락",
@@ -3655,15 +3653,15 @@ export default function Home() {
                       "런타임 CDN 요청 없음 — 공공·폐쇄망·CSP 환경 대응",
                       "Pretendard 로드 실패 시에만 네트워크·용량 비용 발생",
                     ].map((item) => (
-                      <li key={item} className="text-caption text-gray-600">{item}</li>
+                      <li key={item} className="text-caption text-gray-60">{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
             </div>
 
-            <div className="py-6 px-10 border-t border-gray-200 flex flex-col gap-3">
-              <p className="text-caption text-gray-400 font-semibold tracking-normal uppercase m-0">Weight</p>
+            <div className="py-6 px-10 border-t border-gray-20 flex flex-col gap-3">
+              <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase m-0">Weight</p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
                 {[
                   { weight: 100, label: "Thin" },
@@ -3675,7 +3673,7 @@ export default function Home() {
                 ].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
                     <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-noto), sans-serif" }}>가나다 Aa</span>
-                    <span className="text-caption text-gray-400">{weight} · {label}</span>
+                    <span className="text-caption text-gray-40">{weight} · {label}</span>
                   </div>
                 ))}
               </div>

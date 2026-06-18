@@ -10,8 +10,7 @@
    --ds-gradient-* : 그라데이션 토큰. @theme --background-image-gradient-* 로 노출.
    guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
-   예: --raw-green-500 → --ds-green-500 → --color-green-500
-       → bg-green-500 / text-green-500 / border-green-500
+   예: --raw-green-50 → --ds-green-50 → --color-green-50 → bg-green-50
    ============================================================ */
 
 /* ============================================================
@@ -21,102 +20,141 @@
    (스케일 명명은 라이트 기준 = 캐논값)
    ============================================================ */
 :root {
-  /* KRDS 표준형 hue 팔레트 — src/lib/raw-color-palettes.ts 와 동기화 */
+  /* KRDS 표준형 hue 팔레트 + Violet — src/lib/raw-color-palettes.ts 와 동기화 */
   /* Red */
-  --raw-red-50: #fdefec;
-  --raw-red-100: #fcdfd9;
-  --raw-red-200: #f7afa1;
-  --raw-red-300: #f48771;
-  --raw-red-400: #f05f42;
-  --raw-red-500: #de3412;
-  --raw-red-600: #bd2c0f;
-  --raw-red-700: #8a240f;
-  --raw-red-800: #5c180a;
-  --raw-red-900: #390d05;
+  --raw-red-0: #ffffff;
+  --raw-red-5: #fdefec;
+  --raw-red-10: #fcdfd9;
+  --raw-red-20: #f7afa1;
+  --raw-red-30: #f48771;
+  --raw-red-40: #f05f42;
+  --raw-red-50: #de3412;
+  --raw-red-60: #bd2c0f;
+  --raw-red-70: #8a240f;
+  --raw-red-80: #5c180a;
+  --raw-red-90: #390d05;
+  --raw-red-95: #1c0602;
+  --raw-red-100: #000000;
 
   /* Rose */
-  --raw-rose-50: #fbeff0;
-  --raw-rose-100: #f5d6d9;
-  --raw-rose-200: #ebadb2;
-  --raw-rose-300: #e0858c;
-  --raw-rose-400: #d65c66;
-  --raw-rose-500: #d63d4a;
-  --raw-rose-600: #ab2b36;
-  --raw-rose-700: #7a1f26;
-  --raw-rose-800: #521419;
-  --raw-rose-900: #310c0f;
+  --raw-rose-0: #ffffff;
+  --raw-rose-5: #fbeff0;
+  --raw-rose-10: #f5d6d9;
+  --raw-rose-20: #ebadb2;
+  --raw-rose-30: #e0858c;
+  --raw-rose-40: #d65c66;
+  --raw-rose-50: #d63d4a;
+  --raw-rose-60: #ab2b36;
+  --raw-rose-70: #7a1f26;
+  --raw-rose-80: #521419;
+  --raw-rose-90: #310c0f;
+  --raw-rose-95: #180608;
+  --raw-rose-100: #000000;
 
   /* Orange */
-  --raw-orange-50: #fff3db;
-  --raw-orange-100: #ffe0a3;
-  --raw-orange-200: #ffc95c;
-  --raw-orange-300: #ffb114;
-  --raw-orange-400: #c78500;
-  --raw-orange-500: #9e6a00;
-  --raw-orange-600: #8a5c00;
-  --raw-orange-700: #614100;
-  --raw-orange-800: #422c00;
-  --raw-orange-900: #2e1f00;
+  --raw-orange-0: #ffffff;
+  --raw-orange-5: #fff3db;
+  --raw-orange-10: #ffe0a3;
+  --raw-orange-20: #ffc95c;
+  --raw-orange-30: #ffb114;
+  --raw-orange-40: #c78500;
+  --raw-orange-50: #9e6a00;
+  --raw-orange-60: #8a5c00;
+  --raw-orange-70: #614100;
+  --raw-orange-80: #422c00;
+  --raw-orange-90: #2e1f00;
+  --raw-orange-95: #171000;
+  --raw-orange-100: #000000;
 
   /* Green */
-  --raw-green-50: #eaf6ec;
-  --raw-green-100: #d8eedd;
-  --raw-green-200: #a9dab4;
-  --raw-green-300: #7ec88e;
-  --raw-green-400: #3fa654;
-  --raw-green-500: #228738;
-  --raw-green-600: #267337;
-  --raw-green-700: #285d33;
-  --raw-green-800: #1f4727;
-  --raw-green-900: #122b18;
+  --raw-green-0: #ffffff;
+  --raw-green-5: #eaf6ec;
+  --raw-green-10: #d8eedd;
+  --raw-green-20: #a9dab4;
+  --raw-green-30: #7ec88e;
+  --raw-green-40: #3fa654;
+  --raw-green-50: #228738;
+  --raw-green-60: #267337;
+  --raw-green-70: #285d33;
+  --raw-green-80: #1f4727;
+  --raw-green-90: #122b18;
+  --raw-green-95: #09160c;
+  --raw-green-100: #000000;
 
   /* Cyan */
-  --raw-cyan-50: #e7f4fe;
-  --raw-cyan-100: #d3ebfd;
-  --raw-cyan-200: #9ed2fa;
-  --raw-cyan-300: #5fb5f7;
-  --raw-cyan-400: #2098f3;
-  --raw-cyan-500: #0b78cb;
-  --raw-cyan-600: #096ab3;
-  --raw-cyan-700: #085691;
-  --raw-cyan-800: #053961;
-  --raw-cyan-900: #03253f;
+  --raw-cyan-0: #ffffff;
+  --raw-cyan-5: #e7f4fe;
+  --raw-cyan-10: #d3ebfd;
+  --raw-cyan-20: #9ed2fa;
+  --raw-cyan-30: #5fb5f7;
+  --raw-cyan-40: #2098f3;
+  --raw-cyan-50: #0b78cb;
+  --raw-cyan-60: #096ab3;
+  --raw-cyan-70: #085691;
+  --raw-cyan-80: #053961;
+  --raw-cyan-90: #03253f;
+  --raw-cyan-95: #021220;
+  --raw-cyan-100: #000000;
 
   /* Blue */
-  --raw-blue-50: #ecf2fe;
-  --raw-blue-100: #d8e5fd;
-  --raw-blue-200: #b1cefb;
-  --raw-blue-300: #86aff9;
-  --raw-blue-400: #4c87f6;
-  --raw-blue-500: #256ef4;
-  --raw-blue-600: #0b50d0;
-  --raw-blue-700: #083891;
-  --raw-blue-800: #052561;
-  --raw-blue-900: #03163a;
+  --raw-blue-0: #ffffff;
+  --raw-blue-5: #ecf2fe;
+  --raw-blue-10: #d8e5fd;
+  --raw-blue-20: #b1cefb;
+  --raw-blue-30: #86aff9;
+  --raw-blue-40: #4c87f6;
+  --raw-blue-50: #256ef4;
+  --raw-blue-60: #0b50d0;
+  --raw-blue-70: #083891;
+  --raw-blue-80: #052561;
+  --raw-blue-90: #03163a;
+  --raw-blue-95: #020b1d;
+  --raw-blue-100: #000000;
+
+  /* Violet — 보라 hue(#5B4CF0=50). 스케일 0·5·10·…·100 */
+  --raw-violet-0: #ffffff;
+  --raw-violet-5: #efedfe;
+  --raw-violet-10: #dedbfc;
+  --raw-violet-20: #bdb7f9;
+  --raw-violet-30: #9d94f6;
+  --raw-violet-40: #7c70f3;
+  --raw-violet-50: #5b4cf0;
+  --raw-violet-60: #493dc0;
+  --raw-violet-70: #372e90;
+  --raw-violet-80: #241e60;
+  --raw-violet-90: #120f30;
+  --raw-violet-95: #090818;
+  --raw-violet-100: #000000;
 
   /* Navy */
-  --raw-navy-50: #eef2f7;
-  --raw-navy-100: #d6e0eb;
-  --raw-navy-200: #bacbde;
-  --raw-navy-300: #90b0d5;
-  --raw-navy-400: #6b96c7;
-  --raw-navy-500: #346fb2;
-  --raw-navy-600: #1c589c;
-  --raw-navy-700: #063a74;
-  --raw-navy-800: #052b57;
-  --raw-navy-900: #031f3f;
+  --raw-navy-0: #ffffff;
+  --raw-navy-5: #eef2f7;
+  --raw-navy-10: #d6e0eb;
+  --raw-navy-20: #bacbde;
+  --raw-navy-30: #90b0d5;
+  --raw-navy-40: #6b96c7;
+  --raw-navy-50: #346fb2;
+  --raw-navy-60: #1c589c;
+  --raw-navy-70: #063a74;
+  --raw-navy-80: #052b57;
+  --raw-navy-90: #031f3f;
+  --raw-navy-95: #021020;
+  --raw-navy-100: #000000;
 
   /* Gray */
-  --raw-gray-50: #f4f5f6;
-  --raw-gray-100: #e6e8ea;
-  --raw-gray-200: #cdd1d5;
-  --raw-gray-300: #b1b8be;
-  --raw-gray-400: #8a949e;
-  --raw-gray-500: #6d7882;
-  --raw-gray-600: #58616a;
-  --raw-gray-700: #464c53;
-  --raw-gray-800: #33363d;
-  --raw-gray-900: #1e2124;
+  --raw-gray-0: #ffffff;
+  --raw-gray-5: #f4f5f6;
+  --raw-gray-10: #e6e8ea;
+  --raw-gray-20: #cdd1d5;
+  --raw-gray-30: #b1b8be;
+  --raw-gray-40: #8a949e;
+  --raw-gray-50: #6d7882;
+  --raw-gray-60: #58616a;
+  --raw-gray-70: #464c53;
+  --raw-gray-80: #33363d;
+  --raw-gray-90: #1e2124;
+  --raw-gray-95: #0f1012;
+  --raw-gray-100: #000000;
 
   /* Surface anchors — 중립 램프 밖 순백/심흑(페이지 표면용) */
   --raw-white: #ffffff;
@@ -201,53 +239,78 @@
      라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
      컴포넌트/팔레트 뷰어는 이 --ds-{family}-{scale} 을 소비한다.
      ============================================================ */
-  --ds-red-50: var(--raw-red-50);    --ds-red-100: var(--raw-red-100);
-  --ds-red-200: var(--raw-red-200);  --ds-red-300: var(--raw-red-300);
-  --ds-red-400: var(--raw-red-400);  --ds-red-500: var(--raw-red-500);
-  --ds-red-600: var(--raw-red-600);  --ds-red-700: var(--raw-red-700);
-  --ds-red-800: var(--raw-red-800);  --ds-red-900: var(--raw-red-900);
+  --ds-red-0: var(--raw-red-0);    --ds-red-5: var(--raw-red-5);
+  --ds-red-10: var(--raw-red-10);    --ds-red-20: var(--raw-red-20);
+  --ds-red-30: var(--raw-red-30);    --ds-red-40: var(--raw-red-40);
+  --ds-red-50: var(--raw-red-50);    --ds-red-60: var(--raw-red-60);
+  --ds-red-70: var(--raw-red-70);    --ds-red-80: var(--raw-red-80);
+  --ds-red-90: var(--raw-red-90);    --ds-red-95: var(--raw-red-95);
+  --ds-red-100: var(--raw-red-100);
 
-  --ds-rose-50: var(--raw-rose-50);    --ds-rose-100: var(--raw-rose-100);
-  --ds-rose-200: var(--raw-rose-200);  --ds-rose-300: var(--raw-rose-300);
-  --ds-rose-400: var(--raw-rose-400);  --ds-rose-500: var(--raw-rose-500);
-  --ds-rose-600: var(--raw-rose-600);  --ds-rose-700: var(--raw-rose-700);
-  --ds-rose-800: var(--raw-rose-800);  --ds-rose-900: var(--raw-rose-900);
+  --ds-rose-0: var(--raw-rose-0);    --ds-rose-5: var(--raw-rose-5);
+  --ds-rose-10: var(--raw-rose-10);    --ds-rose-20: var(--raw-rose-20);
+  --ds-rose-30: var(--raw-rose-30);    --ds-rose-40: var(--raw-rose-40);
+  --ds-rose-50: var(--raw-rose-50);    --ds-rose-60: var(--raw-rose-60);
+  --ds-rose-70: var(--raw-rose-70);    --ds-rose-80: var(--raw-rose-80);
+  --ds-rose-90: var(--raw-rose-90);    --ds-rose-95: var(--raw-rose-95);
+  --ds-rose-100: var(--raw-rose-100);
 
-  --ds-orange-50: var(--raw-orange-50);    --ds-orange-100: var(--raw-orange-100);
-  --ds-orange-200: var(--raw-orange-200);  --ds-orange-300: var(--raw-orange-300);
-  --ds-orange-400: var(--raw-orange-400);  --ds-orange-500: var(--raw-orange-500);
-  --ds-orange-600: var(--raw-orange-600);  --ds-orange-700: var(--raw-orange-700);
-  --ds-orange-800: var(--raw-orange-800);  --ds-orange-900: var(--raw-orange-900);
+  --ds-orange-0: var(--raw-orange-0);    --ds-orange-5: var(--raw-orange-5);
+  --ds-orange-10: var(--raw-orange-10);    --ds-orange-20: var(--raw-orange-20);
+  --ds-orange-30: var(--raw-orange-30);    --ds-orange-40: var(--raw-orange-40);
+  --ds-orange-50: var(--raw-orange-50);    --ds-orange-60: var(--raw-orange-60);
+  --ds-orange-70: var(--raw-orange-70);    --ds-orange-80: var(--raw-orange-80);
+  --ds-orange-90: var(--raw-orange-90);    --ds-orange-95: var(--raw-orange-95);
+  --ds-orange-100: var(--raw-orange-100);
 
-  --ds-green-50: var(--raw-green-50);    --ds-green-100: var(--raw-green-100);
-  --ds-green-200: var(--raw-green-200);  --ds-green-300: var(--raw-green-300);
-  --ds-green-400: var(--raw-green-400);  --ds-green-500: var(--raw-green-500);
-  --ds-green-600: var(--raw-green-600);  --ds-green-700: var(--raw-green-700);
-  --ds-green-800: var(--raw-green-800);  --ds-green-900: var(--raw-green-900);
+  --ds-green-0: var(--raw-green-0);    --ds-green-5: var(--raw-green-5);
+  --ds-green-10: var(--raw-green-10);    --ds-green-20: var(--raw-green-20);
+  --ds-green-30: var(--raw-green-30);    --ds-green-40: var(--raw-green-40);
+  --ds-green-50: var(--raw-green-50);    --ds-green-60: var(--raw-green-60);
+  --ds-green-70: var(--raw-green-70);    --ds-green-80: var(--raw-green-80);
+  --ds-green-90: var(--raw-green-90);    --ds-green-95: var(--raw-green-95);
+  --ds-green-100: var(--raw-green-100);
 
-  --ds-cyan-50: var(--raw-cyan-50);    --ds-cyan-100: var(--raw-cyan-100);
-  --ds-cyan-200: var(--raw-cyan-200);  --ds-cyan-300: var(--raw-cyan-300);
-  --ds-cyan-400: var(--raw-cyan-400);  --ds-cyan-500: var(--raw-cyan-500);
-  --ds-cyan-600: var(--raw-cyan-600);  --ds-cyan-700: var(--raw-cyan-700);
-  --ds-cyan-800: var(--raw-cyan-800);  --ds-cyan-900: var(--raw-cyan-900);
+  --ds-cyan-0: var(--raw-cyan-0);    --ds-cyan-5: var(--raw-cyan-5);
+  --ds-cyan-10: var(--raw-cyan-10);    --ds-cyan-20: var(--raw-cyan-20);
+  --ds-cyan-30: var(--raw-cyan-30);    --ds-cyan-40: var(--raw-cyan-40);
+  --ds-cyan-50: var(--raw-cyan-50);    --ds-cyan-60: var(--raw-cyan-60);
+  --ds-cyan-70: var(--raw-cyan-70);    --ds-cyan-80: var(--raw-cyan-80);
+  --ds-cyan-90: var(--raw-cyan-90);    --ds-cyan-95: var(--raw-cyan-95);
+  --ds-cyan-100: var(--raw-cyan-100);
 
-  --ds-blue-50: var(--raw-blue-50);    --ds-blue-100: var(--raw-blue-100);
-  --ds-blue-200: var(--raw-blue-200);  --ds-blue-300: var(--raw-blue-300);
-  --ds-blue-400: var(--raw-blue-400);  --ds-blue-500: var(--raw-blue-500);
-  --ds-blue-600: var(--raw-blue-600);  --ds-blue-700: var(--raw-blue-700);
-  --ds-blue-800: var(--raw-blue-800);  --ds-blue-900: var(--raw-blue-900);
+  --ds-blue-0: var(--raw-blue-0);    --ds-blue-5: var(--raw-blue-5);
+  --ds-blue-10: var(--raw-blue-10);    --ds-blue-20: var(--raw-blue-20);
+  --ds-blue-30: var(--raw-blue-30);    --ds-blue-40: var(--raw-blue-40);
+  --ds-blue-50: var(--raw-blue-50);    --ds-blue-60: var(--raw-blue-60);
+  --ds-blue-70: var(--raw-blue-70);    --ds-blue-80: var(--raw-blue-80);
+  --ds-blue-90: var(--raw-blue-90);    --ds-blue-95: var(--raw-blue-95);
+  --ds-blue-100: var(--raw-blue-100);
 
-  --ds-navy-50: var(--raw-navy-50);    --ds-navy-100: var(--raw-navy-100);
-  --ds-navy-200: var(--raw-navy-200);  --ds-navy-300: var(--raw-navy-300);
-  --ds-navy-400: var(--raw-navy-400);  --ds-navy-500: var(--raw-navy-500);
-  --ds-navy-600: var(--raw-navy-600);  --ds-navy-700: var(--raw-navy-700);
-  --ds-navy-800: var(--raw-navy-800);  --ds-navy-900: var(--raw-navy-900);
+  --ds-violet-0: var(--raw-violet-0);    --ds-violet-5: var(--raw-violet-5);
+  --ds-violet-10: var(--raw-violet-10);    --ds-violet-20: var(--raw-violet-20);
+  --ds-violet-30: var(--raw-violet-30);    --ds-violet-40: var(--raw-violet-40);
+  --ds-violet-50: var(--raw-violet-50);    --ds-violet-60: var(--raw-violet-60);
+  --ds-violet-70: var(--raw-violet-70);    --ds-violet-80: var(--raw-violet-80);
+  --ds-violet-90: var(--raw-violet-90);    --ds-violet-95: var(--raw-violet-95);
+  --ds-violet-100: var(--raw-violet-100);
 
-  --ds-gray-50: var(--raw-gray-50);    --ds-gray-100: var(--raw-gray-100);
-  --ds-gray-200: var(--raw-gray-200);  --ds-gray-300: var(--raw-gray-300);
-  --ds-gray-400: var(--raw-gray-400);  --ds-gray-500: var(--raw-gray-500);
-  --ds-gray-600: var(--raw-gray-600);  --ds-gray-700: var(--raw-gray-700);
-  --ds-gray-800: var(--raw-gray-800);  --ds-gray-900: var(--raw-gray-900);
+  --ds-navy-0: var(--raw-navy-0);    --ds-navy-5: var(--raw-navy-5);
+  --ds-navy-10: var(--raw-navy-10);    --ds-navy-20: var(--raw-navy-20);
+  --ds-navy-30: var(--raw-navy-30);    --ds-navy-40: var(--raw-navy-40);
+  --ds-navy-50: var(--raw-navy-50);    --ds-navy-60: var(--raw-navy-60);
+  --ds-navy-70: var(--raw-navy-70);    --ds-navy-80: var(--raw-navy-80);
+  --ds-navy-90: var(--raw-navy-90);    --ds-navy-95: var(--raw-navy-95);
+  --ds-navy-100: var(--raw-navy-100);
+
+  --ds-gray-0: var(--raw-gray-0);    --ds-gray-5: var(--raw-gray-5);
+  --ds-gray-10: var(--raw-gray-10);    --ds-gray-20: var(--raw-gray-20);
+  --ds-gray-30: var(--raw-gray-30);    --ds-gray-40: var(--raw-gray-40);
+  --ds-gray-50: var(--raw-gray-50);    --ds-gray-60: var(--raw-gray-60);
+  --ds-gray-70: var(--raw-gray-70);    --ds-gray-80: var(--raw-gray-80);
+  --ds-gray-90: var(--raw-gray-90);    --ds-gray-95: var(--raw-gray-95);
+  --ds-gray-100: var(--raw-gray-100);
+
 
   /* Typography(--font-size-*) 는 src/lib/tokens.ts 단일 소스에서 생성되어
      layout.tsx <style> 로 :root 에 주입됩니다(px→rem 환산). 여기엔 두지 않음. */
@@ -300,27 +363,27 @@
 
   /* 표면(페이지)
      - background: 램프 밖 앵커라 모드별 명시(:root/.dark)
-     - foreground: 모드 인지 스케일 참조 → 라이트 gray-900(#1E2124), 다크 gray-50(#F4F5F6) 자동 */
+     - foreground: 모드 인지 스케일 참조 → 라이트 gray-90(#1E2124), 다크 gray-10(#E6E8EA) 자동 */
   --ds-background: var(--raw-white);
-  --ds-foreground: var(--ds-gray-900);
+  --ds-foreground: var(--ds-gray-90);
 
   /* 선·표면·보조 텍스트 — 모드 인지 스케일 참조(자동 대응) */
-  --ds-border: var(--ds-gray-200);
-  --ds-border-strong: var(--ds-gray-300);
+  --ds-border: var(--ds-gray-20);
+  --ds-border-strong: var(--ds-gray-30);
   /* 어느 배경에도 보이는 반투명 선/오버레이 — 라이트=검정α, 다크=흰색α(.dark) */
   --ds-border-overlay: var(--raw-black-a10);
-  --ds-surface-subtle: var(--ds-gray-50);
-  --ds-text-muted: var(--ds-gray-400);
+  --ds-surface-subtle: var(--ds-gray-5);
+  --ds-text-muted: var(--ds-gray-40);
 
-  /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-300(.dark) */
+  /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-30(.dark) */
   --ds-utility-focus-ring: var(--raw-utility-focus-ring);
   --outline-focus-width: 0.15625rem; /* 2.5px */
   --outline-focus-offset: 0.125rem; /* 2px — tab 제외 기본 offset */
   --outline-focus-tab-offset: -0.125rem; /* -2px — tab·TOC 등 인셋 outline */
 
   /* Utility — 스크롤바(WebKit pseudo). 모드 인지 gray 스케일 참조 */
-  --ds-utility-scroll-thumb: var(--ds-gray-300);
-  --ds-utility-scroll-track: var(--ds-gray-100);
+  --ds-utility-scroll-thumb: var(--ds-gray-30);
+  --ds-utility-scroll-track: var(--ds-gray-10);
 
   /* 그림자 — 모드 무관(검정α) */
   --ds-shadow: var(--raw-black-a20);
@@ -339,36 +402,36 @@
 
   /* 강조(선택) — base(500) 스케일은 라이트/다크 모두 가시성이 좋음 */
   --ds-accent: var(--ds-blue-500);
-  --ds-accent-danger: var(--ds-red-500);
+  --ds-accent-danger: var(--ds-red-50);
   --ds-on-accent: var(--raw-white);
 
-  /* Guide-only: 대비 체커 등급 — AA는 green-300+900, AA Large는 orange-200+900, AAA는 600+white, Fail은 700+white */
-  --ds-guide-level-aaa-bg: var(--raw-green-600);
+  /* Guide-only: 대비 체커 등급 — AA는 green-30+90, AA Large는 orange-20+90, AAA는 60+white, Fail은 70+white */
+  --ds-guide-level-aaa-bg: var(--raw-green-60);
   --ds-guide-level-aaa-fg: var(--raw-white);
-  --ds-guide-level-aa-bg: var(--raw-green-300);
-  --ds-guide-level-aa-fg: var(--raw-green-900);
-  --ds-guide-level-warn-bg: var(--raw-orange-200);
-  --ds-guide-level-warn-fg: var(--raw-orange-900);
-  --ds-guide-level-fail-bg: var(--raw-red-700);
+  --ds-guide-level-aa-bg: var(--raw-green-30);
+  --ds-guide-level-aa-fg: var(--raw-green-90);
+  --ds-guide-level-warn-bg: var(--raw-orange-20);
+  --ds-guide-level-warn-fg: var(--raw-orange-90);
+  --ds-guide-level-fail-bg: var(--raw-red-70);
   --ds-guide-level-fail-fg: var(--raw-white);
-  --ds-guide-callout-bg: var(--ds-gray-50);
-  --ds-guide-callout-accent: var(--ds-gray-900);
-  --ds-guide-callout-fg: var(--ds-gray-700);
-  --ds-guide-intro-bg: var(--ds-gray-50);
-  --ds-guide-intro-eyebrow: var(--ds-gray-600);
-  --ds-guide-intro-body: var(--ds-gray-700);
+  --ds-guide-callout-bg: var(--ds-gray-5);
+  --ds-guide-callout-accent: var(--ds-gray-90);
+  --ds-guide-callout-fg: var(--ds-gray-70);
+  --ds-guide-intro-bg: var(--ds-gray-5);
+  --ds-guide-intro-eyebrow: var(--ds-gray-60);
+  --ds-guide-intro-body: var(--ds-gray-70);
 }
 
 /* ============================================================
    DARK MODE — 시맨틱 스케일만 재매핑
-   다크 팔레트 = raw 의 반사(50↔900, 100↔800, 200↔700, 300↔600, 400↔500).
+   다크 팔레트 = raw 의 반사(u ↔ 100−u). 모든 hue family가 0·5·10·…·100 전 구간을 갖는다.
    raw 는 건드리지 않고, --ds-{family}-{scale} 만 반사로 가리킨다.
    → 다크용 hex 중복이 전혀 없고, 인버전 규칙이 한눈에 보인다.
    용도 토큰(--ds-border/accent 등)은 이 스케일을 참조하므로 자동 대응.
    ============================================================ */
 .dark {
   --ds-background: var(--raw-black);
-  /* --ds-foreground 는 --ds-gray-900 이 반사되어 #fafafa 자동 적용 */
+  /* --ds-foreground 는 --ds-gray-90 이 반사되어 #fafafa 자동 적용 */
 
   /* 다크 배경엔 흰색 반투명 오버레이가 더 자연스러움 */
   --ds-border-overlay: var(--raw-white-a10);
@@ -377,110 +440,166 @@
   --ds-overlay-strong: var(--raw-white-a20);
 
   /* Utility focus-ring — 다크 배경 대비 */
-  --ds-utility-focus-ring: var(--raw-orange-300);
+  --ds-utility-focus-ring: var(--raw-orange-30);
 
-  --ds-red-50: var(--raw-red-900);   --ds-red-100: var(--raw-red-800);
-  --ds-red-200: var(--raw-red-700);  --ds-red-300: var(--raw-red-600);
-  --ds-red-400: var(--raw-red-500);  --ds-red-500: var(--raw-red-400);
-  --ds-red-600: var(--raw-red-300);  --ds-red-700: var(--raw-red-200);
-  --ds-red-800: var(--raw-red-100);  --ds-red-900: var(--raw-red-50);
+  --ds-red-0: var(--raw-red-100);   --ds-red-5: var(--raw-red-95);
+  --ds-red-10: var(--raw-red-90);   --ds-red-20: var(--raw-red-80);
+  --ds-red-30: var(--raw-red-70);   --ds-red-40: var(--raw-red-60);
+  --ds-red-50: var(--raw-red-50);   --ds-red-60: var(--raw-red-40);
+  --ds-red-70: var(--raw-red-30);   --ds-red-80: var(--raw-red-20);
+  --ds-red-90: var(--raw-red-10);   --ds-red-95: var(--raw-red-5);
+  --ds-red-100: var(--raw-red-0);
 
-  --ds-rose-50: var(--raw-rose-900);   --ds-rose-100: var(--raw-rose-800);
-  --ds-rose-200: var(--raw-rose-700);  --ds-rose-300: var(--raw-rose-600);
-  --ds-rose-400: var(--raw-rose-500);  --ds-rose-500: var(--raw-rose-400);
-  --ds-rose-600: var(--raw-rose-300);  --ds-rose-700: var(--raw-rose-200);
-  --ds-rose-800: var(--raw-rose-100);  --ds-rose-900: var(--raw-rose-50);
+  --ds-rose-0: var(--raw-rose-100);   --ds-rose-5: var(--raw-rose-95);
+  --ds-rose-10: var(--raw-rose-90);   --ds-rose-20: var(--raw-rose-80);
+  --ds-rose-30: var(--raw-rose-70);   --ds-rose-40: var(--raw-rose-60);
+  --ds-rose-50: var(--raw-rose-50);   --ds-rose-60: var(--raw-rose-40);
+  --ds-rose-70: var(--raw-rose-30);   --ds-rose-80: var(--raw-rose-20);
+  --ds-rose-90: var(--raw-rose-10);   --ds-rose-95: var(--raw-rose-5);
+  --ds-rose-100: var(--raw-rose-0);
 
-  --ds-orange-50: var(--raw-orange-900);   --ds-orange-100: var(--raw-orange-800);
-  --ds-orange-200: var(--raw-orange-700);  --ds-orange-300: var(--raw-orange-600);
-  --ds-orange-400: var(--raw-orange-500);  --ds-orange-500: var(--raw-orange-400);
-  --ds-orange-600: var(--raw-orange-300);  --ds-orange-700: var(--raw-orange-200);
-  --ds-orange-800: var(--raw-orange-100);  --ds-orange-900: var(--raw-orange-50);
+  --ds-orange-0: var(--raw-orange-100);   --ds-orange-5: var(--raw-orange-95);
+  --ds-orange-10: var(--raw-orange-90);   --ds-orange-20: var(--raw-orange-80);
+  --ds-orange-30: var(--raw-orange-70);   --ds-orange-40: var(--raw-orange-60);
+  --ds-orange-50: var(--raw-orange-50);   --ds-orange-60: var(--raw-orange-40);
+  --ds-orange-70: var(--raw-orange-30);   --ds-orange-80: var(--raw-orange-20);
+  --ds-orange-90: var(--raw-orange-10);   --ds-orange-95: var(--raw-orange-5);
+  --ds-orange-100: var(--raw-orange-0);
 
-  --ds-green-50: var(--raw-green-900);   --ds-green-100: var(--raw-green-800);
-  --ds-green-200: var(--raw-green-700);  --ds-green-300: var(--raw-green-600);
-  --ds-green-400: var(--raw-green-500);  --ds-green-500: var(--raw-green-400);
-  --ds-green-600: var(--raw-green-300);  --ds-green-700: var(--raw-green-200);
-  --ds-green-800: var(--raw-green-100);  --ds-green-900: var(--raw-green-50);
+  --ds-green-0: var(--raw-green-100);   --ds-green-5: var(--raw-green-95);
+  --ds-green-10: var(--raw-green-90);   --ds-green-20: var(--raw-green-80);
+  --ds-green-30: var(--raw-green-70);   --ds-green-40: var(--raw-green-60);
+  --ds-green-50: var(--raw-green-50);   --ds-green-60: var(--raw-green-40);
+  --ds-green-70: var(--raw-green-30);   --ds-green-80: var(--raw-green-20);
+  --ds-green-90: var(--raw-green-10);   --ds-green-95: var(--raw-green-5);
+  --ds-green-100: var(--raw-green-0);
 
-  --ds-cyan-50: var(--raw-cyan-900);   --ds-cyan-100: var(--raw-cyan-800);
-  --ds-cyan-200: var(--raw-cyan-700);  --ds-cyan-300: var(--raw-cyan-600);
-  --ds-cyan-400: var(--raw-cyan-500);  --ds-cyan-500: var(--raw-cyan-400);
-  --ds-cyan-600: var(--raw-cyan-300);  --ds-cyan-700: var(--raw-cyan-200);
-  --ds-cyan-800: var(--raw-cyan-100);  --ds-cyan-900: var(--raw-cyan-50);
+  --ds-cyan-0: var(--raw-cyan-100);   --ds-cyan-5: var(--raw-cyan-95);
+  --ds-cyan-10: var(--raw-cyan-90);   --ds-cyan-20: var(--raw-cyan-80);
+  --ds-cyan-30: var(--raw-cyan-70);   --ds-cyan-40: var(--raw-cyan-60);
+  --ds-cyan-50: var(--raw-cyan-50);   --ds-cyan-60: var(--raw-cyan-40);
+  --ds-cyan-70: var(--raw-cyan-30);   --ds-cyan-80: var(--raw-cyan-20);
+  --ds-cyan-90: var(--raw-cyan-10);   --ds-cyan-95: var(--raw-cyan-5);
+  --ds-cyan-100: var(--raw-cyan-0);
 
-  --ds-blue-50: var(--raw-blue-900);   --ds-blue-100: var(--raw-blue-800);
-  --ds-blue-200: var(--raw-blue-700);  --ds-blue-300: var(--raw-blue-600);
-  --ds-blue-400: var(--raw-blue-500);  --ds-blue-500: var(--raw-blue-400);
-  --ds-blue-600: var(--raw-blue-300);  --ds-blue-700: var(--raw-blue-200);
-  --ds-blue-800: var(--raw-blue-100);  --ds-blue-900: var(--raw-blue-50);
+  --ds-blue-0: var(--raw-blue-100);   --ds-blue-5: var(--raw-blue-95);
+  --ds-blue-10: var(--raw-blue-90);   --ds-blue-20: var(--raw-blue-80);
+  --ds-blue-30: var(--raw-blue-70);   --ds-blue-40: var(--raw-blue-60);
+  --ds-blue-50: var(--raw-blue-50);   --ds-blue-60: var(--raw-blue-40);
+  --ds-blue-70: var(--raw-blue-30);   --ds-blue-80: var(--raw-blue-20);
+  --ds-blue-90: var(--raw-blue-10);   --ds-blue-95: var(--raw-blue-5);
+  --ds-blue-100: var(--raw-blue-0);
 
-  --ds-navy-50: var(--raw-navy-900);   --ds-navy-100: var(--raw-navy-800);
-  --ds-navy-200: var(--raw-navy-700);  --ds-navy-300: var(--raw-navy-600);
-  --ds-navy-400: var(--raw-navy-500);  --ds-navy-500: var(--raw-navy-400);
-  --ds-navy-600: var(--raw-navy-300);  --ds-navy-700: var(--raw-navy-200);
-  --ds-navy-800: var(--raw-navy-100);  --ds-navy-900: var(--raw-navy-50);
+  --ds-violet-0: var(--raw-violet-100);   --ds-violet-5: var(--raw-violet-95);
+  --ds-violet-10: var(--raw-violet-90);   --ds-violet-20: var(--raw-violet-80);
+  --ds-violet-30: var(--raw-violet-70);   --ds-violet-40: var(--raw-violet-60);
+  --ds-violet-50: var(--raw-violet-50);   --ds-violet-60: var(--raw-violet-40);
+  --ds-violet-70: var(--raw-violet-30);   --ds-violet-80: var(--raw-violet-20);
+  --ds-violet-90: var(--raw-violet-10);   --ds-violet-95: var(--raw-violet-5);
+  --ds-violet-100: var(--raw-violet-0);
 
-  --ds-gray-50: var(--raw-gray-900);   --ds-gray-100: var(--raw-gray-800);
-  --ds-gray-200: var(--raw-gray-700);  --ds-gray-300: var(--raw-gray-600);
-  --ds-gray-400: var(--raw-gray-500);  --ds-gray-500: var(--raw-gray-400);
-  --ds-gray-600: var(--raw-gray-300);  --ds-gray-700: var(--raw-gray-200);
-  --ds-gray-800: var(--raw-gray-100);  --ds-gray-900: var(--raw-gray-50);
+  --ds-navy-0: var(--raw-navy-100);   --ds-navy-5: var(--raw-navy-95);
+  --ds-navy-10: var(--raw-navy-90);   --ds-navy-20: var(--raw-navy-80);
+  --ds-navy-30: var(--raw-navy-70);   --ds-navy-40: var(--raw-navy-60);
+  --ds-navy-50: var(--raw-navy-50);   --ds-navy-60: var(--raw-navy-40);
+  --ds-navy-70: var(--raw-navy-30);   --ds-navy-80: var(--raw-navy-20);
+  --ds-navy-90: var(--raw-navy-10);   --ds-navy-95: var(--raw-navy-5);
+  --ds-navy-100: var(--raw-navy-0);
+
+  --ds-gray-0: var(--raw-gray-100);   --ds-gray-5: var(--raw-gray-95);
+  --ds-gray-10: var(--raw-gray-90);   --ds-gray-20: var(--raw-gray-80);
+  --ds-gray-30: var(--raw-gray-70);   --ds-gray-40: var(--raw-gray-60);
+  --ds-gray-50: var(--raw-gray-50);   --ds-gray-60: var(--raw-gray-40);
+  --ds-gray-70: var(--raw-gray-30);   --ds-gray-80: var(--raw-gray-20);
+  --ds-gray-90: var(--raw-gray-10);   --ds-gray-95: var(--raw-gray-5);
+  --ds-gray-100: var(--raw-gray-0);
+
 }
 
 /* ============================================================
    @theme — 디자인 토큰을 Tailwind 유틸리티로 노출(브리지)
    --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
-   이름으로 사용한다: --color-green-500 → bg/text/border-green-500.
+   이름으로 사용한다: --color-green-50 → bg/text/border-green-50.
    슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
    예: --color-muted → text-muted · --color-line → border-line.
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
-   생성 유틸 예: bg-gray-200 / text-green-500 / text-body-md / leading-base ...
+   생성 유틸 예: bg-gray-20 / text-green-50 / text-body-md / leading-base ...
    ============================================================ */
 @theme inline {
   --color-background: var(--ds-background);
   --color-foreground: var(--ds-foreground);
 
-  --color-red-50: var(--ds-red-50);     --color-red-100: var(--ds-red-100);
-  --color-red-200: var(--ds-red-200);   --color-red-300: var(--ds-red-300);
-  --color-red-400: var(--ds-red-400);   --color-red-500: var(--ds-red-500);
-  --color-red-600: var(--ds-red-600);   --color-red-700: var(--ds-red-700);
-  --color-red-800: var(--ds-red-800);   --color-red-900: var(--ds-red-900);
-  --color-rose-50: var(--ds-rose-50);     --color-rose-100: var(--ds-rose-100);
-  --color-rose-200: var(--ds-rose-200);   --color-rose-300: var(--ds-rose-300);
-  --color-rose-400: var(--ds-rose-400);   --color-rose-500: var(--ds-rose-500);
-  --color-rose-600: var(--ds-rose-600);   --color-rose-700: var(--ds-rose-700);
-  --color-rose-800: var(--ds-rose-800);   --color-rose-900: var(--ds-rose-900);
-  --color-orange-50: var(--ds-orange-50);     --color-orange-100: var(--ds-orange-100);
-  --color-orange-200: var(--ds-orange-200);   --color-orange-300: var(--ds-orange-300);
-  --color-orange-400: var(--ds-orange-400);   --color-orange-500: var(--ds-orange-500);
-  --color-orange-600: var(--ds-orange-600);   --color-orange-700: var(--ds-orange-700);
-  --color-orange-800: var(--ds-orange-800);   --color-orange-900: var(--ds-orange-900);
-  --color-green-50: var(--ds-green-50);     --color-green-100: var(--ds-green-100);
-  --color-green-200: var(--ds-green-200);   --color-green-300: var(--ds-green-300);
-  --color-green-400: var(--ds-green-400);   --color-green-500: var(--ds-green-500);
-  --color-green-600: var(--ds-green-600);   --color-green-700: var(--ds-green-700);
-  --color-green-800: var(--ds-green-800);   --color-green-900: var(--ds-green-900);
-  --color-cyan-50: var(--ds-cyan-50);     --color-cyan-100: var(--ds-cyan-100);
-  --color-cyan-200: var(--ds-cyan-200);   --color-cyan-300: var(--ds-cyan-300);
-  --color-cyan-400: var(--ds-cyan-400);   --color-cyan-500: var(--ds-cyan-500);
-  --color-cyan-600: var(--ds-cyan-600);   --color-cyan-700: var(--ds-cyan-700);
-  --color-cyan-800: var(--ds-cyan-800);   --color-cyan-900: var(--ds-cyan-900);
-  --color-blue-50: var(--ds-blue-50);     --color-blue-100: var(--ds-blue-100);
-  --color-blue-200: var(--ds-blue-200);   --color-blue-300: var(--ds-blue-300);
-  --color-blue-400: var(--ds-blue-400);   --color-blue-500: var(--ds-blue-500);
-  --color-blue-600: var(--ds-blue-600);   --color-blue-700: var(--ds-blue-700);
-  --color-blue-800: var(--ds-blue-800);   --color-blue-900: var(--ds-blue-900);
-  --color-navy-50: var(--ds-navy-50);     --color-navy-100: var(--ds-navy-100);
-  --color-navy-200: var(--ds-navy-200);   --color-navy-300: var(--ds-navy-300);
-  --color-navy-400: var(--ds-navy-400);   --color-navy-500: var(--ds-navy-500);
-  --color-navy-600: var(--ds-navy-600);   --color-navy-700: var(--ds-navy-700);
-  --color-navy-800: var(--ds-navy-800);   --color-navy-900: var(--ds-navy-900);
-  --color-gray-50: var(--ds-gray-50);     --color-gray-100: var(--ds-gray-100);
-  --color-gray-200: var(--ds-gray-200);   --color-gray-300: var(--ds-gray-300);
-  --color-gray-400: var(--ds-gray-400);   --color-gray-500: var(--ds-gray-500);
-  --color-gray-600: var(--ds-gray-600);   --color-gray-700: var(--ds-gray-700);
-  --color-gray-800: var(--ds-gray-800);   --color-gray-900: var(--ds-gray-900);
+  --color-red-0: var(--ds-red-0);   --color-red-5: var(--ds-red-5);
+  --color-red-10: var(--ds-red-10);   --color-red-20: var(--ds-red-20);
+  --color-red-30: var(--ds-red-30);   --color-red-40: var(--ds-red-40);
+  --color-red-50: var(--ds-red-50);   --color-red-60: var(--ds-red-60);
+  --color-red-70: var(--ds-red-70);   --color-red-80: var(--ds-red-80);
+  --color-red-90: var(--ds-red-90);   --color-red-95: var(--ds-red-95);
+  --color-red-100: var(--ds-red-100);
+
+  --color-rose-0: var(--ds-rose-0);   --color-rose-5: var(--ds-rose-5);
+  --color-rose-10: var(--ds-rose-10);   --color-rose-20: var(--ds-rose-20);
+  --color-rose-30: var(--ds-rose-30);   --color-rose-40: var(--ds-rose-40);
+  --color-rose-50: var(--ds-rose-50);   --color-rose-60: var(--ds-rose-60);
+  --color-rose-70: var(--ds-rose-70);   --color-rose-80: var(--ds-rose-80);
+  --color-rose-90: var(--ds-rose-90);   --color-rose-95: var(--ds-rose-95);
+  --color-rose-100: var(--ds-rose-100);
+
+  --color-orange-0: var(--ds-orange-0);   --color-orange-5: var(--ds-orange-5);
+  --color-orange-10: var(--ds-orange-10);   --color-orange-20: var(--ds-orange-20);
+  --color-orange-30: var(--ds-orange-30);   --color-orange-40: var(--ds-orange-40);
+  --color-orange-50: var(--ds-orange-50);   --color-orange-60: var(--ds-orange-60);
+  --color-orange-70: var(--ds-orange-70);   --color-orange-80: var(--ds-orange-80);
+  --color-orange-90: var(--ds-orange-90);   --color-orange-95: var(--ds-orange-95);
+  --color-orange-100: var(--ds-orange-100);
+
+  --color-green-0: var(--ds-green-0);   --color-green-5: var(--ds-green-5);
+  --color-green-10: var(--ds-green-10);   --color-green-20: var(--ds-green-20);
+  --color-green-30: var(--ds-green-30);   --color-green-40: var(--ds-green-40);
+  --color-green-50: var(--ds-green-50);   --color-green-60: var(--ds-green-60);
+  --color-green-70: var(--ds-green-70);   --color-green-80: var(--ds-green-80);
+  --color-green-90: var(--ds-green-90);   --color-green-95: var(--ds-green-95);
+  --color-green-100: var(--ds-green-100);
+
+  --color-cyan-0: var(--ds-cyan-0);   --color-cyan-5: var(--ds-cyan-5);
+  --color-cyan-10: var(--ds-cyan-10);   --color-cyan-20: var(--ds-cyan-20);
+  --color-cyan-30: var(--ds-cyan-30);   --color-cyan-40: var(--ds-cyan-40);
+  --color-cyan-50: var(--ds-cyan-50);   --color-cyan-60: var(--ds-cyan-60);
+  --color-cyan-70: var(--ds-cyan-70);   --color-cyan-80: var(--ds-cyan-80);
+  --color-cyan-90: var(--ds-cyan-90);   --color-cyan-95: var(--ds-cyan-95);
+  --color-cyan-100: var(--ds-cyan-100);
+
+  --color-blue-0: var(--ds-blue-0);   --color-blue-5: var(--ds-blue-5);
+  --color-blue-10: var(--ds-blue-10);   --color-blue-20: var(--ds-blue-20);
+  --color-blue-30: var(--ds-blue-30);   --color-blue-40: var(--ds-blue-40);
+  --color-blue-50: var(--ds-blue-50);   --color-blue-60: var(--ds-blue-60);
+  --color-blue-70: var(--ds-blue-70);   --color-blue-80: var(--ds-blue-80);
+  --color-blue-90: var(--ds-blue-90);   --color-blue-95: var(--ds-blue-95);
+  --color-blue-100: var(--ds-blue-100);
+
+  --color-violet-0: var(--ds-violet-0);   --color-violet-5: var(--ds-violet-5);
+  --color-violet-10: var(--ds-violet-10);   --color-violet-20: var(--ds-violet-20);
+  --color-violet-30: var(--ds-violet-30);   --color-violet-40: var(--ds-violet-40);
+  --color-violet-50: var(--ds-violet-50);   --color-violet-60: var(--ds-violet-60);
+  --color-violet-70: var(--ds-violet-70);   --color-violet-80: var(--ds-violet-80);
+  --color-violet-90: var(--ds-violet-90);   --color-violet-95: var(--ds-violet-95);
+  --color-violet-100: var(--ds-violet-100);
+
+  --color-navy-0: var(--ds-navy-0);   --color-navy-5: var(--ds-navy-5);
+  --color-navy-10: var(--ds-navy-10);   --color-navy-20: var(--ds-navy-20);
+  --color-navy-30: var(--ds-navy-30);   --color-navy-40: var(--ds-navy-40);
+  --color-navy-50: var(--ds-navy-50);   --color-navy-60: var(--ds-navy-60);
+  --color-navy-70: var(--ds-navy-70);   --color-navy-80: var(--ds-navy-80);
+  --color-navy-90: var(--ds-navy-90);   --color-navy-95: var(--ds-navy-95);
+  --color-navy-100: var(--ds-navy-100);
+
+  --color-gray-0: var(--ds-gray-0);   --color-gray-5: var(--ds-gray-5);
+  --color-gray-10: var(--ds-gray-10);   --color-gray-20: var(--ds-gray-20);
+  --color-gray-30: var(--ds-gray-30);   --color-gray-40: var(--ds-gray-40);
+  --color-gray-50: var(--ds-gray-50);   --color-gray-60: var(--ds-gray-60);
+  --color-gray-70: var(--ds-gray-70);   --color-gray-80: var(--ds-gray-80);
+  --color-gray-90: var(--ds-gray-90);   --color-gray-95: var(--ds-gray-95);
+  --color-gray-100: var(--ds-gray-100);
 
   --color-line: var(--ds-border);
   --color-line-strong: var(--ds-border-strong);
