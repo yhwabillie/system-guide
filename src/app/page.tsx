@@ -795,7 +795,7 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
       aria-labelledby={headingId}
       className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
-      <div className="overflow-hidden rounded-md border border-line bg-surface-subtle">
+      <div className="overflow-hidden rounded-md border border-line bg-background">
         <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3.5">
           <h2 id={headingId} className="m-0 text-label-md font-bold text-foreground">
             목차
@@ -833,8 +833,8 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
                     className={[
                       "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
                       isActive
-                        ? "bg-gray-100 font-bold text-foreground"
-                        : "font-normal text-gray-600 hover:text-foreground",
+                        ? "bg-gray-50 font-bold text-foreground"
+                        : "font-normal text-gray-600 hover:bg-gray-50 hover:text-foreground",
                     ].join(" ")}
                   >
                     {label}
