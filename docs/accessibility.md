@@ -267,6 +267,10 @@
 **금지 패턴**
 - `outline: none` / `outline: 0` 단독 사용 금지
 - `px` 단위 폰트 크기 사용 금지 → `rem` 사용
+- **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
+- **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
+- **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-50)·`gray-100` 위 `text-muted`(gray-400)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-600`~`text-gray-700`, 배경은 `bg-gray-100` 등으로 조합 검증
+- **`text-gray-400` 본문·캡션 금지(흰 배경)** — gray-400는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-500` 이상
 - `user-scalable=no` meta viewport 금지
 - `tabindex` 양수값 사용 금지 (`tabindex="1"` 등)
 - `div`, `span`에 클릭 이벤트만 추가하는 패턴 금지

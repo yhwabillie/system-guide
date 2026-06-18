@@ -88,6 +88,9 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
   - CSS 변수 `--font-size-*` → `fontSizeCssVars()`가 생성해 `layout.tsx <style>`로 `:root` 주입
   - 둘 다 같은 px 정의 + `REM_BASE(16)`에서 파생 → 기준값 중복 없음.
 - **모든 px 크기는 rem으로**(반응형·접근성 3.1.3). 인라인은 `pxToRem()`, 토큰은 tokens.ts에서. globals.css에 `--font-size-*` 직접 정의 금지(거기 두지 않음).
+- **렌더되는 글리프 최소 크기 = `caption`(12px)** — `text-caption` 미만(`pxToRem(10)` 등) 인라인 `font-size` 금지. WAVE Very small text 방지. 상세·금지 예시는 [`docs/accessibility.md`](docs/accessibility.md) 금지 패턴 참조.
+- **장식 색상 스와치** — `role="img"`+`aria-label` 대신 `aria-hidden="true"`; 인접 텍스트로 토큰·hex 전달. 대비 매트릭스·**대비 미리보기 견본** 등 시각 보조도 동일.
+- **`text-muted` on `surface-subtle`/`gray-100` 금지** — gray-400 계열은 밝은 회색 배경에서 대비 부족. `text-gray-600` 이상 사용.
 - weight 원본은 `--typography-weight-*`, Tailwind 유틸리티 노출은 `@theme`의 `--font-weight-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
 - line-height·letter-spacing도 토큰: `--font-line`, `--font-tracking`.
 - line-height는 **단일 토큰 `--font-line: 1.5`** (WCAG 1.4.12 충족, 전 역할 공통).

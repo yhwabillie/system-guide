@@ -40,10 +40,7 @@ function LayoutPageCell({
       className={`bg-accent text-on-accent flex min-w-0 items-center justify-center font-semibold ${className ?? ""}`}
       style={{ minHeight: pxToRem(48) }}
     >
-      <span
-        className={compact ? "numeric-tabular" : "text-caption numeric-tabular"}
-        style={compact ? { fontSize: pxToRem(10), lineHeight: 1 } : undefined}
-      >
+      <span className="text-caption numeric-tabular leading-none">
         {label}
       </span>
     </div>
@@ -72,7 +69,7 @@ function MinMarginCell({ px }: { px: number }) {
       aria-hidden="true"
       className="flex flex-col items-center justify-center min-w-0 leading-tight bg-accent/10 text-muted text-center"
     >
-      <span className="numeric-tabular font-mono" style={{ fontSize: pxToRem(10), lineHeight: 1.2 }}>
+      <span className="text-caption numeric-tabular font-mono leading-none">
         {px}
       </span>
     </div>
