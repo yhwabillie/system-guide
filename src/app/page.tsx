@@ -1885,8 +1885,8 @@ function rawPaletteSwatchClass(isBg: boolean, isText: boolean, isInteractive: bo
 function RawPaletteSwatchFill({ cssVar, checker }: { cssVar: string; checker: React.CSSProperties }) {
   return (
     <>
-      <div aria-hidden="true" className="absolute inset-0" style={checker} />
-      <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: cssVar }} />
+      <span aria-hidden="true" className="absolute inset-0 block" style={checker} />
+      <span aria-hidden="true" className="absolute inset-0 block" style={{ backgroundColor: cssVar }} />
     </>
   );
 }
@@ -1895,8 +1895,8 @@ function RawPaletteSwatchFill({ cssVar, checker }: { cssVar: string; checker: Re
 function ContrastSwatchFill({ hex, checker }: { hex: string; checker: React.CSSProperties }) {
   return (
     <>
-      <div aria-hidden="true" className="absolute inset-0" style={checker} />
-      <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: hex }} />
+      <span aria-hidden="true" className="absolute inset-0 block" style={checker} />
+      <span aria-hidden="true" className="absolute inset-0 block" style={{ backgroundColor: hex }} />
     </>
   );
 }

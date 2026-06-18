@@ -312,8 +312,8 @@ const FONT_LINE = 1.25;
 - **`line-height` 1.5 이외 값 금지** — 프로젝트 행간은 **전역 `1.5` 단일 토큰**(`tokens.ts` `FONT_LINE` → CSS `--font-line`)만 사용한다. `leading-none`·`leading-tight`·`line-height: 1`·`1.25`·고정 `px` 행간, 역할별 `--font-line-*` 토큰 신설, `globals.css`에 `--font-line` 숫자 직접 정의 모두 금지. 변경이 필요하면 **`FONT_LINE` 한 곳만** 수정하고 `body`·`@theme --leading-*`·`--typography-*` 연쇄를 따른다. 인라인은 `lineHeight: "var(--font-line)"`만 허용
 - **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
-- **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-line-overlay`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`
-- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 중립 `text-foreground`·`ring-foreground`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이. 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
+- **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-line-overlay`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
+- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 중립 `text-foreground`·`ring-foreground`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
 - **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`text-muted` 금지**(다크 accent ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`text-foreground` 사용. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `bg-surface-brand` + `text-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수)
 - **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `text-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
 - **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
@@ -323,6 +323,28 @@ const FONT_LINE = 1.25;
 - 레이아웃 목적 `<table>` 사용 금지
 - 외부 링크·장식 표시에 유니코드 `↗`·이모지 텍스트 + `opacity-*` / `text-muted` 조합 금지 (WAVE 대비 오류) → SVG + `currentColor` + `.sr-only`
 - 동일 URL을 가리키는 `<a>`를 한 화면에 중복 배치 금지 (WAVE Redundant link) → nav canonical 1개 + 본문은 `#id` 앵커 또는 텍스트 안내
+
+### W3C Validator 마크업
+
+> **오류 예:** `Element div not allowed as child of element span in this context` · `button` 내부 `div`도 동일하게 **오류**.
+
+**콘텐츠 모델**
+- `span`·`button`·`a` 등 **phrasing content** 컨테이너에는 **phrasing content만** 자식으로 둔다. `div`·`p`·`section` 등 flow content **금지**.
+- 팔레트 스와치·Contrast Checker 피커처럼 `button`/`span` 안에 겹쳐 깔는 장식 레이어는 `div` 대신 아래 패턴을 쓴다.
+
+```tsx
+// ✅ RawPaletteSwatchFill · ContrastSwatchFill (src/app/page.tsx)
+<span aria-hidden="true" className="absolute inset-0 block" style={checker} />
+<span aria-hidden="true" className="absolute inset-0 block" style={{ backgroundColor: cssVar }} />
+
+// ❌ 금지 — W3C Validator 오류 + button 자식으로도 invalid
+<div aria-hidden="true" className="absolute inset-0" style={checker} />
+```
+
+**체크리스트**
+- 색 견본·체커보드를 `span`/`button`/`label` 안에 넣을 때 자식 태그가 `div`가 아닌지 확인
+- 레이아웃 래퍼가 flow content가 필요하면 바깥을 `div`로 두고, 안쪽 겹침 레이어만 `span.block`
+- PR·릴리즈 전 [W3C HTML Validator](https://validator.w3.org/) **오류 0** 재확인
 
 ---
 
@@ -439,7 +461,7 @@ const FONT_LINE = 1.25;
 
 - [ ] OpenWAX / axe DevTools — 오류 0건
 - [ ] Lighthouse 접근성 점수 **95점 이상**
-- [ ] W3C HTML Validator 통과
+- [ ] W3C HTML Validator 통과 — `span`/`button` 안 `div` 없음([W3C Validator 마크업](#w3c-validator-마크업))
 - [ ] Tab 키 전체 플로우 수동 테스트
 - [ ] VoiceOver 주요 플로우 수동 테스트
 - [ ] NVDA 주요 플로우 수동 테스트
