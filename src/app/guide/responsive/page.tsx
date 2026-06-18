@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { pxToRem } from "@/lib/tokens";
+import { GUIDE_ROUTES } from "@/lib/guide-routes";
 import {
   containerTokens,
   getActiveContainerToken,
@@ -457,11 +458,11 @@ export default function ResponsiveGuidePage() {
   const sidenavMetrics = getSidenavLayoutMetrics(layoutWidth || 375, tier);
 
   return (
-    <main className="min-h-screen font-sans bg-background text-foreground">
+    <div className={layoutPageColSpanFull}>
       <div className="p-6 md:p-10">
       <header className="mb-16">
         <p className="m-0 mb-2">
-          <Link href="/" className="text-body-sm text-accent no-underline hover:underline">
+          <Link href={GUIDE_ROUTES.color} className="text-body-sm text-accent no-underline hover:underline">
             ← Design Token Preview
           </Link>
         </p>
@@ -772,6 +773,6 @@ export default function ResponsiveGuidePage() {
         </div>
       </section>
       </div>{/* /guide prose padding */}
-    </main>
+    </div>
   );
 }
