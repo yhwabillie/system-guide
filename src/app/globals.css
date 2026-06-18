@@ -291,15 +291,15 @@
   --ds-surface-subtle: var(--ds-neutral-50);
   --ds-text-muted: var(--ds-neutral-400);
 
-  /* 포커스 — :focus-visible outline. 라이트=cyan-500 · 다크=orange-500(.dark) */
-  --ds-outline-focus: var(--raw-cyan-500);
+  /* Utility — 포커스 링(outline) 색. 라이트=cyan-500 · 다크=orange-500(.dark) */
+  --ds-utility-focus-ring: var(--raw-cyan-500);
   --outline-focus-width: 0.15625rem; /* 2.5px */
   --outline-focus-offset: 0.125rem; /* 2px — tab 제외 기본 offset */
   --outline-focus-tab-offset: -0.125rem; /* -2px — tab·TOC 등 인셋 outline */
 
-  /* 스크롤바 — 모드 인지 스케일 참조(다크 자동 반사). thumb=중립 mid, track=subtle */
-  --ds-scroll-thumb: var(--ds-neutral-300);
-  --ds-scroll-track: var(--ds-neutral-100);
+  /* Utility — 스크롤바(WebKit pseudo). 모드 인지 neutral 스케일 참조 */
+  --ds-utility-scroll-thumb: var(--ds-neutral-300);
+  --ds-utility-scroll-track: var(--ds-neutral-100);
 
   /* 그림자 — 모드 무관(검정α) */
   --ds-shadow: var(--raw-black-a20);
@@ -356,8 +356,8 @@
   --ds-overlay: var(--raw-white-a10);
   --ds-overlay-strong: var(--raw-white-a20);
 
-  /* 포커스 outline — 다크 배경 대비용 orange */
-  --ds-outline-focus: var(--raw-orange-500);
+  /* Utility focus-ring — 다크 배경 대비 */
+  --ds-utility-focus-ring: var(--raw-orange-500);
 
   --ds-red-50: var(--raw-red-900);   --ds-red-100: var(--raw-red-800);
   --ds-red-200: var(--raw-red-700);  --ds-red-300: var(--raw-red-600);
@@ -454,7 +454,9 @@
   --color-line: var(--ds-border);
   --color-line-strong: var(--ds-border-strong);
   --color-line-overlay: var(--ds-border-overlay);
-  --color-focus: var(--ds-outline-focus);
+  --color-utility-focus-ring: var(--ds-utility-focus-ring);
+  --color-utility-scroll-thumb: var(--ds-utility-scroll-thumb);
+  --color-utility-scroll-track: var(--ds-utility-scroll-track);
   --color-surface-subtle: var(--ds-surface-subtle);
   --color-muted: var(--ds-text-muted);
   --color-accent: var(--ds-accent);
@@ -799,15 +801,15 @@ html {
 ::-webkit-scrollbar {
   width: var(--size-scrollbar);
   height: var(--size-scrollbar);
-  background-color: var(--ds-scroll-track);
+  background-color: var(--ds-utility-scroll-track);
 }
 ::-webkit-scrollbar-thumb {
   border-radius: var(--shape-radius-sm);
-  background-color: var(--ds-scroll-thumb);
+  background-color: var(--ds-utility-scroll-thumb);
 }
 ::-webkit-scrollbar-track {
   border-radius: var(--shape-radius-sm);
-  background-color: var(--ds-scroll-track);
+  background-color: var(--ds-utility-scroll-track);
 }
 
 body {
@@ -823,7 +825,7 @@ img {
 
 /* 키보드 포커스 인디케이터 — 항상 표시(저시력/키보드 사용자) */
 :focus-visible {
-  outline: var(--outline-focus-width) dashed var(--ds-outline-focus);
+  outline: var(--outline-focus-width) dashed var(--ds-utility-focus-ring);
   outline-offset: var(--outline-focus-offset);
 }
 

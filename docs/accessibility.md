@@ -233,7 +233,7 @@
 /* ✅ 포커스 스타일 — outline 제거 절대 금지, 전역 outline으로 표시 (globals.css 적용됨)
    border·ring으로 포커스를 대체하지 않는다. tab·TOC는 outline-offset: -2px. */
 :focus-visible {
-  outline: var(--outline-focus-width) dashed var(--ds-outline-focus);
+  outline: var(--outline-focus-width) dashed var(--ds-utility-focus-ring);
   outline-offset: var(--outline-focus-offset);
 }
 

@@ -227,19 +227,42 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
     ],
   },
   {
-    id: "semantic-focus",
-    title: "Focus",
+    id: "semantic-utility",
+    title: "Utility",
     description: (
       <>
-        키보드 <strong>:focus-visible</strong> 인디케이터 전용 색입니다. <strong>outline</strong>(<strong>2.5px dashed</strong>)로만 적용하며 <strong>border</strong>·<strong>ring</strong> 대체용이 아닙니다. 탭(<code className="font-mono text-caption">role=&quot;tab&quot;</code>)·목차(<code className="font-mono text-caption">.guide-toc</code>)는 <strong>outline-offset: -2px</strong>. 라이트 <strong>#00cbde</strong>(<strong>--raw-cyan-500</strong>) · 다크 <strong>#ffa94d</strong>(<strong>--raw-orange-500</strong>) — <strong>--ds-outline-focus</strong>가 모드별 자동 전환합니다.
+        컴포넌트 border·ring·채움 의미색이 아닌 <strong>유틸리티 전용</strong> 색상입니다. <strong>focus-ring</strong>·<strong>scroll</strong>(thumb/track) 등 단일 목적 토큰을 <strong>utility-*</strong> 슬러그로 관리합니다.
       </>
     ),
     groups: [
       {
-        id: "outline",
-        label: "outline",
+        id: "focus-ring",
+        label: "focus-ring",
         tokens: [
-          { token: "focus", utility: "outline-focus", cssVar: "--color-focus", readAs: "outline" },
+          {
+            token: "utility-focus-ring",
+            utility: "outline-utility-focus-ring",
+            cssVar: "--color-utility-focus-ring",
+            readAs: "outline",
+          },
+        ],
+      },
+      {
+        id: "scroll",
+        label: "scroll",
+        tokens: [
+          {
+            token: "utility-scroll-thumb",
+            utility: "bg-utility-scroll-thumb",
+            cssVar: "--color-utility-scroll-thumb",
+            readAs: "bg",
+          },
+          {
+            token: "utility-scroll-track",
+            utility: "bg-utility-scroll-track",
+            cssVar: "--color-utility-scroll-track",
+            readAs: "bg",
+          },
         ],
       },
     ],
@@ -342,16 +365,26 @@ const filledIconsTocSections: TocSection[] = [
   { id: "section-filled-icons", label: "Sizes" },
 ];
 
-function probeSemanticUtilityColor(probe: HTMLDivElement, utility: string, readAs: SemanticColorReadMode): string {
+function probeSemanticUtilityColor(
+  probe: HTMLDivElement,
+  utility: string,
+  readAs: SemanticColorReadMode,
+  cssVar?: string,
+): string {
   if (readAs === "border") {
     probe.className = `box-border size-8 border bg-transparent ${utility}`;
+    probe.style.backgroundColor = "";
     return getComputedStyle(probe).borderTopColor;
   }
-  if (readAs === "outline") {
-    probe.className = `box-border size-8 bg-transparent outline outline-2 ${utility}`;
-    return getComputedStyle(probe).outlineColor;
+  if (readAs === "outline" && cssVar) {
+    probe.className = "box-border size-8";
+    probe.style.backgroundColor = `var(${cssVar})`;
+    const color = getComputedStyle(probe).backgroundColor;
+    probe.style.backgroundColor = "";
+    return color;
   }
   probe.className = utility;
+  probe.style.backgroundColor = "";
   const cs = getComputedStyle(probe);
   return readAs === "bg" ? cs.backgroundColor : cs.color;
 }
@@ -988,6 +1021,8 @@ function ContentOutlineTabList({
   onKeyDown: (e: React.KeyboardEvent) => void;
 }) {
   const tabListRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef(tabs);
+  tabsRef.current = tabs;
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
@@ -1000,20 +1035,26 @@ function ContentOutlineTabList({
   }, []);
 
   const scrollToTab = useCallback((tabId: string, immediate = false) => {
+    const container = tabListRef.current;
     const targetTab = document.getElementById(tabId);
-    if (targetTab) {
-      targetTab.scrollIntoView({
-        behavior: immediate ? "auto" : "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-    }
+    if (!container || !targetTab) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const tabRect = targetTab.getBoundingClientRect();
+    const tabCenterInContainer =
+      tabRect.left - containerRect.left + container.scrollLeft + tabRect.width / 2;
+    const scrollLeft = tabCenterInContainer - container.clientWidth / 2;
+
+    container.scrollTo({
+      left: Math.max(0, Math.min(scrollLeft, container.scrollWidth - container.clientWidth)),
+      behavior: immediate ? "auto" : "smooth",
+    });
   }, []);
 
   useEffect(() => {
-    const activeTab = tabs.find((tab) => tab.value === activeValue);
+    const activeTab = tabsRef.current.find((tab) => tab.value === activeValue);
     if (activeTab) scrollToTab(activeTab.tabId);
-  }, [activeValue, tabs, scrollToTab]);
+  }, [activeValue, scrollToTab]);
 
   useEffect(() => {
     checkScroll();
@@ -2200,6 +2241,20 @@ const themeIconMoon = (
   </NavIcon>
 );
 
+const scrollToTopIcon = (
+  <NavIcon className="size-icon-md shrink-0">
+    <polyline points="18 15 12 9 6 15" />
+  </NavIcon>
+);
+
+const guideFabButtonClass =
+  "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150";
+
+const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
+const guideFabSurfaceClass = `${guideFabButtonClass} bg-background text-foreground ring-1 ring-line`;
+
+const GUIDE_SCROLL_TOP_THRESHOLD = 240;
+
 type NavSubTreeItem = {
   label: string;
   active: boolean;
@@ -2263,6 +2318,7 @@ export default function Home() {
   const [gridMenuExpanded, setGridMenuExpanded] = useState(true);
   const [iconsMenuExpanded, setIconsMenuExpanded] = useState(true);
   const [isSidenavOpen, setIsSidenavOpen] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const colorTabRef = useRef<HTMLButtonElement>(null);
   const spacingTabRef = useRef<HTMLButtonElement>(null);
   const gridTabRef = useRef<HTMLButtonElement>(null);
@@ -2428,6 +2484,13 @@ export default function Home() {
   const [semanticResolved, setSemanticResolved] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > GUIDE_SCROLL_TOP_THRESHOLD);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
 
     const frameId = requestAnimationFrame(() => {
@@ -2450,7 +2513,7 @@ export default function Home() {
       for (const category of semanticColorCatalog) {
         for (const group of category.groups) {
           for (const token of group.tokens) {
-            semanticMap[token.cssVar] = probeSemanticUtilityColor(probe, token.utility, token.readAs);
+            semanticMap[token.cssVar] = probeSemanticUtilityColor(probe, token.utility, token.readAs, token.cssVar);
           }
         }
       }
@@ -2471,6 +2534,11 @@ export default function Home() {
     if (selecting === "bg") setBgColor({ hex, label });
     else if (selecting === "text") setTextColor({ hex, label });
     setSelecting(null);
+  }
+
+  function scrollToPageTop() {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
   }
 
   return (
@@ -3711,16 +3779,28 @@ export default function Home() {
         </div>
       </div>
 
-        {/* 모드 토글 — DOM 마지막에 두어 콘텐츠 뒤에 포커스. fixed라 시각 위치는 우하단 고정 */}
-        <button
-          type="button"
-          onClick={() => setIsDark(!isDark)}
-          aria-pressed={isDark}
-          aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-          className="fixed bottom-6 right-6 z-50 inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 bg-accent text-on-accent shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150"
-        >
-          {isDark ? themeIconSun : themeIconMoon}
-        </button>
+        {/* 우하단 FAB — 맨 위로·모드 토글. DOM 마지막에 두어 콘텐츠 뒤에 포커스 */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+          {showScrollTop ? (
+            <button
+              type="button"
+              onClick={scrollToPageTop}
+              aria-label="맨 위로 스크롤"
+              className={guideFabSurfaceClass}
+            >
+              {scrollToTopIcon}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => setIsDark(!isDark)}
+            aria-pressed={isDark}
+            aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+            className={guideFabAccentClass}
+          >
+            {isDark ? themeIconSun : themeIconMoon}
+          </button>
+        </div>
     </>
     </ToastProvider>
   );
