@@ -132,11 +132,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
   {
     id: "semantic-text",
     title: "Text",
-    description: (
-      <>
-        본문·캡션·버튼 등 UI 전반의 <strong>텍스트</strong>에 사용되는 시맨틱 색입니다. <strong>text-*</strong> 유틸리티로 적용합니다.
-      </>
-    ),
+    description: <>기본 본문, 캡션, 버튼 등 UI 전반의 텍스트에 사용되는 색상입니다.</>,
     groups: [
       {
         id: "primary",
@@ -227,47 +223,6 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
     ],
   },
   {
-    id: "semantic-utility",
-    title: "Utility",
-    description: (
-      <>
-        컴포넌트 border·ring·채움 의미색이 아닌 <strong>유틸리티 전용</strong> 색상입니다. <strong>focus-ring</strong>·<strong>scroll</strong>(thumb/track) 등 단일 목적 토큰을 <strong>utility-*</strong> 슬러그로 관리합니다.
-      </>
-    ),
-    groups: [
-      {
-        id: "focus-ring",
-        label: "focus-ring",
-        tokens: [
-          {
-            token: "utility-focus-ring",
-            utility: "outline-utility-focus-ring",
-            cssVar: "--color-utility-focus-ring",
-            readAs: "outline",
-          },
-        ],
-      },
-      {
-        id: "scroll",
-        label: "scroll",
-        tokens: [
-          {
-            token: "utility-scroll-thumb",
-            utility: "bg-utility-scroll-thumb",
-            cssVar: "--color-utility-scroll-thumb",
-            readAs: "bg",
-          },
-          {
-            token: "utility-scroll-track",
-            utility: "bg-utility-scroll-track",
-            cssVar: "--color-utility-scroll-track",
-            readAs: "bg",
-          },
-        ],
-      },
-    ],
-  },
-  {
     id: "semantic-accent",
     title: "Accent",
     description: (
@@ -300,6 +255,48 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
     ],
   },
 ];
+
+const semanticUtilityCatalog: SemanticColorCategoryDef = {
+  id: "semantic-utility",
+  title: "Utility",
+  description: (
+    <>
+      컴포넌트 border·ring·채움 의미색이 아닌 <strong>유틸리티 전용</strong> 색상입니다. <strong>focus-ring</strong>·<strong>scroll</strong>(thumb/track) 등 단일 목적 토큰을 <strong>utility-*</strong> 슬러그로 관리합니다.
+    </>
+  ),
+  groups: [
+    {
+      id: "focus-ring",
+      label: "focus-ring",
+      tokens: [
+        {
+          token: "utility-focus-ring",
+          utility: "outline-utility-focus-ring",
+          cssVar: "--color-utility-focus-ring",
+          readAs: "outline",
+        },
+      ],
+    },
+    {
+      id: "scroll",
+      label: "scroll",
+      tokens: [
+        {
+          token: "utility-scroll-thumb",
+          utility: "bg-utility-scroll-thumb",
+          cssVar: "--color-utility-scroll-thumb",
+          readAs: "bg",
+        },
+        {
+          token: "utility-scroll-track",
+          utility: "bg-utility-scroll-track",
+          cssVar: "--color-utility-scroll-track",
+          readAs: "bg",
+        },
+      ],
+    },
+  ],
+};
 
 const semanticOverlayCatalog = {
   id: "semantic-overlay",
@@ -341,6 +338,7 @@ const semanticTocSections: TocSection[] = [
   ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title })),
   { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title },
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title },
+  { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title },
 ];
 
 const fontFamilyTocSections: TocSection[] = [
@@ -2510,7 +2508,7 @@ export default function Home() {
       document.body.appendChild(probe);
 
       const semanticMap: Record<string, string> = {};
-      for (const category of semanticColorCatalog) {
+      for (const category of [...semanticColorCatalog, semanticUtilityCatalog]) {
         for (const group of category.groups) {
           for (const token of group.tokens) {
             semanticMap[token.cssVar] = probeSemanticUtilityColor(probe, token.utility, token.readAs, token.cssVar);
@@ -3239,6 +3237,25 @@ export default function Home() {
                 <SemanticGradientSwatchCard key={label} token={label} utility={utility} desc={desc} />
               ))}
             </SemanticColorGroupGrid>
+          </SemanticColorCategorySection>
+
+          <SemanticColorCategorySection
+            id={semanticUtilityCatalog.id}
+            title={semanticUtilityCatalog.title}
+            description={semanticUtilityCatalog.description}
+          >
+            {semanticUtilityCatalog.groups.map((group) => (
+              <SemanticColorGroupGrid key={group.id} label={group.label}>
+                {group.tokens.map((token) => (
+                  <SemanticColorSwatchCard
+                    key={token.cssVar}
+                    token={token.token}
+                    utility={token.utility}
+                    color={semanticResolved[token.cssVar] ?? "—"}
+                  />
+                ))}
+              </SemanticColorGroupGrid>
+            ))}
           </SemanticColorCategorySection>
         </GuideContentLayout>
         </div>{/* /panel-color-semantic */}
