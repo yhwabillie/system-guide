@@ -50,7 +50,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - 폰트는 **자체 호스팅**(`next/font/local`). 외부 CDN `<link>` 추가 금지 — 공공/폐쇄망·개인정보(IP 외부 전송)·CSP 때문.
 - 파일: `src/app/fonts/`의 woff2. `layout.tsx`에서 `localFont()`로 주입.
   - `pretendardGov` → `--font-pretendard-gov` (기본, variable woff2)
-  - `notoSansKR` → `--font-noto` (폴백, static 400/700, `preload: false`)
+  - `notoSansKR` → `--font-noto` (폴백, static 100/300/400/500/600/700, `preload: false`)
 - 폴백 체인은 `--font-family-base`(globals.css) 하나로 관리: `var(--font-pretendard-gov), var(--font-noto), sans-serif`. 컴포넌트는 이 토큰만 사용.
 - ⚠️ **Noto Sans KR은 `next/font/google` 사용 불가** — Google 메타데이터에 한글('korean') subset이 없어 한글 글리프가 빠짐. 반드시 로컬 woff2로 self-host.
 - `next/font`가 생성하는 내부 family 이름은 **JS 변수명에서 파생**되므로, 변수명은 의미가 드러나게(`pretendardGov` 등) 짓는다.
@@ -66,7 +66,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
     --unicodes="U+0000-04FF,U+1100-11FF,U+2000-206F,U+20A0-20CF,U+2100-214F,U+2190-22FF,U+2460-24FF,U+25A0-26FF,U+3000-303F,U+3130-318F,U+AC00-D7A3,U+FF00-FFEF"
   ```
   원본: `cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-gov/dist/web/variable/woff2/PretendardGOVVariable.woff2`
-- 폰트 파일은 `.gitattributes`에서 바이너리 처리. 총량 ~2.9MB라 일반 git 커밋(LFS 불필요).
+- 폰트 파일은 `.gitattributes`에서 바이너리 처리. 총량 ~5.4MB(Noto 폴백 6 weight 포함)라 일반 git 커밋(LFS 불필요).
 
 ### 타이포 토큰 / 단위
 

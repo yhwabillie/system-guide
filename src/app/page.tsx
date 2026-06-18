@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext, useCallback } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
 import {
+  guideHeaderPaddingClass,
   layoutPageColSpanFull,
-  layoutSidenavClass,
   layoutSidenavContentClass,
   layoutSidenavMenuClass,
 } from "@/lib/layout-tokens";
-import { pxToRem } from "@/lib/tokens";
+import { fontSizePx, pxToRem } from "@/lib/tokens";
 
 const primitiveColors = [
   {
@@ -103,10 +103,335 @@ const checkerDark = makeChecker("var(--raw-black)", "var(--raw-neutral-700)");
 
 // 폰트 폴백 체인 — 각 단계는 해당 폰트로 렌더되어 시각 비교 가능
 const fontStack = [
-  { order: 1, name: "Pretendard GOV", family: "var(--font-pretendard-gov), sans-serif", role: "기본", source: "자체 호스팅 (next/font/local)", desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용." },
-  { order: 2, name: "Noto Sans KR", family: "var(--font-noto), sans-serif", role: "폴백", source: "자체 호스팅 (next/font/local)", desc: "Pretendard 미로드 시 사용. preload:false 로 평상시엔 다운로드 안 함." },
-  { order: 3, name: "sans-serif", family: "sans-serif", role: "최종", source: "시스템 기본", desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체." },
+  { order: 1, name: "Pretendard GOV", family: "var(--font-pretendard-gov), sans-serif", role: "기본", source: "자체 호스팅 (next/font/local)", desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용.", emphasis: "primary" as const },
+  { order: 2, name: "Noto Sans KR", family: "var(--font-noto), sans-serif", role: "폴백", source: "자체 호스팅 (next/font/local)", desc: "Pretendard 미로드 시 사용. preload:false 로 평상시엔 다운로드 안 함.", emphasis: "fallback" as const },
+  { order: 3, name: "sans-serif", family: "sans-serif", role: "최종", source: "시스템 기본", desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체.", emphasis: "system" as const },
 ];
+
+const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
+  primary: "bg-accent text-on-accent",
+  fallback: "bg-neutral-100 text-foreground ring-1 ring-border",
+  system: "bg-transparent text-text-muted ring-1 ring-dashed ring-border",
+};
+
+const TOAST_DURATION_MS = 2500;
+
+type ToastContextValue = {
+  showToast: (message: string) => void;
+};
+
+const ToastContext = createContext<ToastContextValue | null>(null);
+
+function useToast() {
+  return useContext(ToastContext);
+}
+
+function ToastProvider({ children }: { children: React.ReactNode }) {
+  const [toast, setToast] = useState<{ message: string; key: number } | null>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showToast = useCallback((message: string) => {
+    setToast({ message, key: Date.now() });
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setToast(null), TOAST_DURATION_MS);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
+  }, []);
+
+  return (
+    <ToastContext.Provider value={{ showToast }}>
+      {children}
+      {toast ? (
+        <div
+          key={toast.key}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-border bg-background px-4 py-3 text-label-sm font-medium text-foreground shadow-[0_6px_24px_var(--ds-shadow)]"
+        >
+          {toast.message}
+        </div>
+      ) : null}
+    </ToastContext.Provider>
+  );
+}
+
+async function copyTextToClipboard(text: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+}
+
+function TokenChip({
+  children,
+  size = "md",
+  copyValue,
+}: {
+  children: React.ReactNode;
+  size?: "md" | "lg";
+  copyValue?: string;
+}) {
+  const toast = useToast();
+
+  const chipClassName = [
+    "inline-flex w-fit items-center rounded-full border border-accent bg-transparent font-mono font-semibold text-accent",
+    size === "lg" ? "px-4 py-1.5 text-label-md" : "px-3 py-1 text-label-sm",
+    copyValue ? "cursor-pointer transition-colors hover:bg-accent/5" : "",
+  ].join(" ");
+
+  if (!copyValue) {
+    return <span className={chipClassName}>{children}</span>;
+  }
+
+  async function handleCopy() {
+    const value = copyValue;
+    if (!value) return;
+
+    try {
+      await copyTextToClipboard(value);
+      toast?.showToast(`${value} 복사됨`);
+    } catch {
+      toast?.showToast("복사에 실패했습니다");
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className={chipClassName}
+      onClick={() => void handleCopy()}
+      aria-label={`${copyValue} 복사`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ContentTitleBlock({
+  eyebrow,
+  title,
+  description,
+  titleId,
+  className = "",
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  titleId?: string;
+  className?: string;
+}) {
+  return (
+    <header className={["mb-10", className].filter(Boolean).join(" ")}>
+      {eyebrow ? (
+        <p className="m-0 text-caption font-semibold uppercase tracking-normal text-text-muted">{eyebrow}</p>
+      ) : null}
+      <h2
+        id={titleId}
+        className={`m-0 font-bold text-foreground ${eyebrow ? "mt-2" : ""} text-display-sm`}
+      >
+        {title}
+      </h2>
+      {description ? (
+        <p className="m-0 mt-4 max-w-3xl text-body-lg text-text-muted">{description}</p>
+      ) : null}
+    </header>
+  );
+}
+
+function ContentSectionTitle({ id, children }: { id?: string; children: React.ReactNode }) {
+  return (
+    <h3 id={id} className="m-0 mb-4 text-heading-md font-bold text-accent">
+      {children}
+    </h3>
+  );
+}
+
+const guideHeaderHeightClass = "h-[3.75rem]";
+const guideHeaderOffsetClass = "top-[3.75rem]";
+const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
+const guideHeaderIconButtonClass =
+  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle text-foreground transition-colors duration-150 hover:bg-green-50 hover:text-accent";
+
+function GuideLogoMark() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 32 20"
+      className="size-icon-sm shrink-0 text-accent"
+      fill="currentColor"
+    >
+      <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
+      <circle cx="22" cy="10" r="8" fill="currentColor" />
+    </svg>
+  );
+}
+
+function GuideSiteHeader({
+  isSidenavOpen,
+  onToggleSidenav,
+}: {
+  isSidenavOpen: boolean;
+  onToggleSidenav: () => void;
+}) {
+  return (
+    <header
+      className={`sticky z-40 border-b border-border bg-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
+    >
+      <div className={`grid w-full ${guideHeaderHeightClass} grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6`}>
+        <div className="flex items-center gap-1 justify-self-start">
+          <a
+            href="/"
+            aria-label="가이드 홈"
+            className={`${guideHeaderIconButtonClass} cursor-pointer`}
+          >
+            <NavIcon className="size-icon-sm shrink-0">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </NavIcon>
+          </a>
+          <button
+            type="button"
+            aria-label={isSidenavOpen ? "사이드 메뉴 접기" : "사이드 메뉴 펼치기"}
+            aria-expanded={isSidenavOpen}
+            aria-controls="guide-sidenav"
+            onClick={onToggleSidenav}
+            className={`${guideHeaderIconButtonClass} cursor-pointer`}
+          >
+            <NavIcon className="size-icon-sm shrink-0">
+              {isSidenavOpen ? (
+                <>
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="9" y1="3" x2="9" y2="21" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </NavIcon>
+          </button>
+        </div>
+
+        <div className="flex min-w-0 items-center justify-center gap-2 justify-self-center">
+          <GuideLogoMark />
+          <h1 className="truncate text-label-lg font-bold text-foreground">디자인 시스템 가이드</h1>
+        </div>
+
+        <div className="flex items-center justify-self-end">
+          <label className="relative hidden items-center sm:flex">
+            <span className="sr-only">가이드 검색</span>
+            <NavIcon
+              aria-hidden="true"
+              className="pointer-events-none absolute left-3 size-icon-xs shrink-0 text-text-muted"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </NavIcon>
+            <input
+              type="search"
+              name="guide-search"
+              placeholder="가이드 검색..."
+              className="h-control-sm w-[12.5rem] rounded-full border border-border bg-surface-subtle pl-9 pr-4 text-label-sm text-foreground outline-none placeholder:text-text-muted focus-visible:border-accent md:w-[15rem]"
+            />
+          </label>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function FontTokenGuide() {
+  return (
+    <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-border pb-6">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <p className="m-0 text-caption font-semibold uppercase tracking-normal text-foreground">
+          Tailwind utility class
+        </p>
+        <TokenChip size="lg" copyValue="font-sans">
+          font-sans
+        </TokenChip>
+      </div>
+    </section>
+  );
+}
+
+function FontStackCuration() {
+  return (
+    <>
+      <ContentTitleBlock
+        eyebrow="Typography"
+        title="Font Family"
+        titleId="content-font-family"
+        description="Pretendard GOV를 기본으로 하는 폴백 체인입니다. font-sans 유틸리티로 --font-family-base 토큰을 적용합니다."
+      />
+
+      <FontTokenGuide />
+
+      <ContentSectionTitle id="section-font-stack">Font Stack</ContentSectionTitle>
+      <ol className="m-0 flex list-none flex-col p-0">
+        {fontStack.map(({ order, name, family, role, source, desc, emphasis }, index) => (
+          <li key={order}>
+            <div className="flex gap-4">
+              <div className="flex w-8 shrink-0 flex-col items-center">
+                <span
+                  aria-hidden="true"
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full text-caption font-bold ${fontStackBadgeClass[emphasis]}`}
+                >
+                  {order}
+                </span>
+                {index < fontStack.length - 1 && (
+                  <span aria-hidden="true" className="my-1 w-px flex-1 min-h-4 bg-border" />
+                )}
+              </div>
+              <div className={`min-w-0 flex-1 ${index < fontStack.length - 1 ? "pb-5" : ""}`}>
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <span
+                    role="img"
+                    aria-label={`${name} 글꼴 견본`}
+                    className={`leading-base ${emphasis === "primary" ? "text-label-lg font-bold" : "text-label-md font-semibold"}`}
+                    style={{ fontFamily: family }}
+                  >
+                    {name}
+                  </span>
+                  <span
+                    className={`text-caption font-semibold ${emphasis === "primary" ? "text-accent" : "text-text-muted"}`}
+                  >
+                    {role}
+                  </span>
+                </div>
+                <p className="m-0 mt-1 text-caption text-text-muted">{desc}</p>
+                <p className="m-0 mt-0.5 font-mono text-caption text-text-muted">{source}</p>
+              </div>
+            </div>
+            {index < fontStack.length - 1 && (
+              <p className="mb-1 mt-0 flex items-center gap-4 pl-0 text-caption text-text-muted" aria-hidden="true">
+                <span className="flex w-8 shrink-0 justify-center">↓</span>
+                <span>미로드 시</span>
+              </p>
+            )}
+          </li>
+        ))}
+      </ol>
+    </>
+  );
+}
 
 const typographySample = "다람쥐 헌 쳇바퀴에 타고파 · ABC xyz 123 (4.5:1) !?";
 
@@ -127,6 +452,126 @@ const typographyTokens = [
   { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold", typoClass: "typo-label-sm" },
   { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular", typoClass: "typo-caption" },
 ];
+
+const FONT_LINE = 1.5;
+
+const typographyWeightLabel: Record<string, string> = {
+  "--font-weight-regular": "Regular",
+  "--font-weight-medium": "Medium",
+  "--font-weight-semibold": "Semibold",
+  "--font-weight-bold": "Bold",
+};
+
+const typographyExamples = [
+  {
+    chip: "typo-label-sm",
+    className: "typo-label-sm uppercase",
+    text: "Latest News",
+    ariaLabel: "Label SM 견본",
+  },
+  {
+    chip: "typo-display-md",
+    className: "typo-display-md",
+    text: "데이터를 더 스마트하게 관리하는 방법",
+    ariaLabel: "Display MD 견본",
+  },
+  {
+    chip: "typo-body-lg",
+    className: "typo-body-lg",
+    text: "디자인 토큰과 Tailwind 유틸리티로 일관된 타이포 스케일을 적용합니다. 개발자는 typo-* 클래스만 지정하면 됩니다.",
+    ariaLabel: "Body LG 견본",
+  },
+  {
+    chip: "typo-label-md",
+    className: "typo-label-md inline-flex rounded-lg bg-accent px-4 py-2 text-on-accent",
+    text: "시작하기",
+    ariaLabel: "Label MD 버튼 견본",
+  },
+] as const;
+
+function TypographyScaleTable() {
+  return (
+    <div className="overflow-x-auto rounded-xl border border-neutral-200">
+      <table className="w-full min-w-[36rem] border-collapse text-left">
+        <caption className="sr-only">타이포그래피 스케일 — 계층, 굵기, 크기, 행간, Tailwind utility class</caption>
+        <thead>
+          <tr className="border-b border-neutral-200 bg-neutral-50">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+              Hierarchy
+            </th>
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+              Weight
+            </th>
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+              Size
+            </th>
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+              Line Height
+            </th>
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+              Tailwind utility class
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {typographyTokens.map(({ label, var: cssVar, weight, typoClass }) => {
+            const sizeKey = cssVar.replace("--font-size-", "") as keyof typeof fontSizePx;
+            const sizePx = fontSizePx[sizeKey];
+            const lineHeightPx = Math.round(sizePx * FONT_LINE);
+
+            return (
+              <tr key={cssVar} className="border-b border-neutral-200 last:border-b-0">
+                <td className="px-4 py-4 align-middle">
+                  <span role="img" aria-label={`${label} 견본`} className={typoClass}>
+                    {label}
+                  </span>
+                </td>
+                <td className="px-4 py-4 align-middle text-label-sm text-foreground">
+                  {typographyWeightLabel[weight] ?? weight}
+                </td>
+                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular text-foreground">
+                  {sizePx}
+                </td>
+                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular text-foreground">
+                  {lineHeightPx}
+                </td>
+                <td className="px-4 py-4 align-middle">
+                  <TokenChip copyValue={typoClass}>{typoClass}</TokenChip>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function TypographyExampleOfUse() {
+  return (
+    <section aria-labelledby="section-typography-example" className="mt-12">
+      <ContentSectionTitle id="section-typography-example">Example of Use</ContentSectionTitle>
+      <div className="rounded-xl border border-neutral-200 p-6">
+        <div className="flex flex-col gap-5">
+          {typographyExamples.map(({ chip, className, text, ariaLabel }) => (
+            <div key={chip} className="grid items-center gap-3 sm:grid-cols-[minmax(0,1fr)_2rem_auto]">
+              <div className="min-w-0">
+                <span role="img" aria-label={ariaLabel} className={className}>
+                  {text}
+                </span>
+              </div>
+              <span
+                aria-hidden="true"
+                className="hidden h-px w-full border-t border-dashed border-border sm:block"
+              />
+              <TokenChip>{chip}</TokenChip>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const spacingTokens = [
   { name: "space-0", cssVar: "--space-0", px: "0", rem: "0", utility: "p-0 / gap-0" },
@@ -166,6 +611,228 @@ const fixedSizeTokens = [
 
 const iconSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("icon"));
 const controlSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("control"));
+
+const projectIconCatalog = [
+  {
+    id: "home",
+    label: "홈",
+    innerMarkup:
+      '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />',
+  },
+  {
+    id: "search",
+    label: "검색",
+    innerMarkup: '<circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />',
+  },
+  {
+    id: "bell",
+    label: "알림",
+    innerMarkup:
+      '<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" />',
+  },
+  {
+    id: "user",
+    label: "사용자",
+    innerMarkup:
+      '<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />',
+  },
+  {
+    id: "settings",
+    label: "설정",
+    innerMarkup:
+      '<circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />',
+  },
+  {
+    id: "add",
+    label: "추가",
+    innerMarkup: '<line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />',
+  },
+  {
+    id: "close",
+    label: "닫기",
+    innerMarkup: '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />',
+  },
+  {
+    id: "external",
+    label: "외부 링크",
+    innerMarkup:
+      '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><path d="M15 3h6v6" /><path d="M10 14 21 3" />',
+  },
+  {
+    id: "sun",
+    label: "라이트 모드",
+    innerMarkup:
+      '<circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="M4.93 4.93l1.41 1.41" /><path d="M17.66 17.66l1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="M4.93 19.07l1.41-1.41" /><path d="M17.66 6.34l1.41-1.41" />',
+  },
+  {
+    id: "moon",
+    label: "다크 모드",
+    innerMarkup: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z" />',
+  },
+] as const;
+
+const iconSource = {
+  name: "Feather Icons",
+  style: "Outline",
+  sourceUrl: "https://feathericons.com/",
+  desc: "stroke 기반 24×24 라인 아이콘. 글리프 path는 프로젝트에 인라인 SVG로 포함하며, 외부 CDN·아이콘 폰트·스프라이트는 사용하지 않습니다.",
+  specs: [
+    { label: "viewBox", value: "0 0 24 24" },
+    { label: "stroke-width", value: "1.75" },
+    { label: "stroke", value: "currentColor" },
+    { label: "크기", value: "size-icon-* 유틸리티" },
+  ],
+} as const;
+
+function buildIconSvgMarkup(utility: string, innerMarkup: string) {
+  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="${utility} shrink-0 text-foreground">\n  ${innerMarkup}\n</svg>`;
+}
+
+function ProjectIconGlyph({ innerMarkup, className }: { innerMarkup: string; className?: string }) {
+  return (
+    <NavIcon
+      innerMarkup={innerMarkup}
+      className={className ?? "size-icon-md shrink-0 text-foreground"}
+    />
+  );
+}
+
+function IconCopyCell({
+  iconId,
+  label,
+  utility,
+  innerMarkup,
+}: {
+  iconId: string;
+  label: string;
+  utility: string;
+  innerMarkup: string;
+}) {
+  const toast = useToast();
+
+  async function handleCopy() {
+    try {
+      await copyTextToClipboard(buildIconSvgMarkup(utility, innerMarkup));
+      toast?.showToast(`${iconId} 마크업 복사됨`);
+    } catch {
+      toast?.showToast("복사에 실패했습니다");
+    }
+  }
+
+  return (
+    <td className="px-3 py-2 text-center align-middle">
+      <div className="group relative flex min-h-[4.5rem] items-center justify-center">
+        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 text-foreground`} />
+        <button
+          type="button"
+          onClick={() => void handleCopy()}
+          aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
+          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-border bg-background px-1.5 text-caption font-semibold uppercase leading-none text-text-muted opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:text-foreground focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+        >
+          copy
+        </button>
+      </div>
+    </td>
+  );
+}
+
+function OutlineIconMatrix() {
+  return (
+    <div className="overflow-x-auto rounded-xl border border-border">
+      <table className="w-full min-w-[44rem] border-collapse text-left">
+        <caption className="sr-only">Outline Icon — Tailwind utility class 크기별 배리에이션</caption>
+        <thead>
+          <tr className="border-b border-border bg-neutral-50">
+            <th scope="col" className="px-4 py-3">
+              <span className="sr-only">Icon</span>
+            </th>
+            {iconSizeTokens.map((token) => (
+              <th key={token.name} scope="col" className="px-3 py-3 text-center align-middle">
+                <span className="font-mono text-label-sm font-semibold text-foreground">
+                  {token.utility} ({token.px})
+                </span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {projectIconCatalog.map(({ id, label, innerMarkup }) => (
+            <tr key={id} className="border-b border-border last:border-b-0">
+              <th scope="row" className="px-4 py-4 align-middle">
+                <span className="font-mono text-caption text-text-muted">{id}</span>
+                <span className="sr-only">{label}</span>
+              </th>
+              {iconSizeTokens.map((token) => (
+                <IconCopyCell
+                  key={token.name}
+                  iconId={id}
+                  label={label}
+                  utility={token.utility}
+                  innerMarkup={innerMarkup}
+                />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function IconSourceCuration() {
+  return (
+    <>
+      <ContentTitleBlock
+        eyebrow="Icons"
+        title="Outline Icon"
+        titleId="content-outline-icon"
+        description={iconSource.desc}
+      />
+
+      <section aria-labelledby="section-icon-source" className="mb-12">
+        <ContentSectionTitle id="section-icon-source">Source</ContentSectionTitle>
+        <div className="flex gap-4">
+          <span
+            aria-hidden="true"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent text-caption font-bold text-on-accent"
+          >
+            1
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="text-label-lg font-bold text-foreground">{iconSource.name}</span>
+              <span className="text-caption font-semibold text-accent">{iconSource.style}</span>
+            </div>
+            <p className="m-0 mt-0.5 font-mono text-caption text-text-muted">
+              <a
+                href={iconSource.sourceUrl}
+                className="text-accent underline-offset-2 hover:underline"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                feathericons.com
+              </a>
+              {" · MIT License"}
+            </p>
+            <dl className="m-0 mt-3 grid gap-2 sm:grid-cols-2">
+              {iconSource.specs.map(({ label, value }) => (
+                <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                  <dt className="m-0 font-mono text-caption text-text-muted">{label}</dt>
+                  <dd className="m-0 font-mono text-caption text-foreground">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="section-outline-icons" className="mb-0">
+        <ContentSectionTitle id="section-outline-icons">Sizes</ContentSectionTitle>
+        <OutlineIconMatrix />
+      </section>
+    </>
+  );
+}
 
 const gridColumnTokens = [
   { name: "grid-cols-1", cols: 1, utility: "grid-cols-1", desc: "단일 열 — 히어로·상세 본문" },
@@ -241,10 +908,10 @@ function GridColumnPreview({ cols, utility, label }: { cols: number; utility: st
     <div
       role="img"
       aria-label={label}
-      className={`grid gap-2 p-3 bg-surface-subtle border border-border ${utility}`}
+      className={`grid gap-2 ${utility}`}
     >
       {Array.from({ length: cols }, (_, i) => (
-        <div key={i} className="bg-accent" style={{ height: cellHeight, borderRadius: pxToRem(2) }} aria-hidden="true" />
+        <div key={i} className="bg-accent" style={{ height: cellHeight }} aria-hidden="true" />
       ))}
     </div>
   );
@@ -252,39 +919,54 @@ function GridColumnPreview({ cols, utility, label }: { cols: number; utility: st
 
 function GridGapPreview({ utility, label }: { utility: string; label: string }) {
   return (
-    <div className="border border-border overflow-hidden" style={{ borderRadius: pxToRem(2) }}>
-      {/* padding 영역 — gap 토큰과 구분되도록 옅은색 + 점선 */}
-      <div className="p-3 bg-accent/10 border border-dashed border-accent/35">
+    <div
+      role="img"
+      aria-label={label}
+      className={`grid w-full grid-cols-2 ${utility} bg-red-200`}
+    >
+      {Array.from({ length: 4 }, (_, i) => (
         <div
-          role="img"
-          aria-label={label}
-          className={`grid grid-cols-4 ${utility} bg-accent`}
-        >
-          {Array.from({ length: 4 }, (_, i) => (
-            <div
-              key={i}
-              aria-hidden="true"
-              className="bg-background border border-border"
-              style={{ height: pxToRem(32), borderRadius: pxToRem(2) }}
+          key={i}
+          aria-hidden="true"
+          className="bg-background"
+          style={{ height: pxToRem(32) }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function GridGapCuration() {
+  return (
+    <div className="rounded-xl border border-border p-6">
+      <div
+        role="list"
+        aria-label="gap 크기 배리에이션"
+        className="flex items-end justify-between gap-6 overflow-x-auto"
+      >
+        {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
+          <div key={name} role="listitem" className="flex min-w-[5rem] flex-1 flex-col items-center gap-2">
+            <span className="text-label-sm font-semibold numeric-tabular text-foreground">{px}</span>
+            <GridGapPreview
+              utility={utility}
+              label={`${name} ${px}, ${rem} — 좌우·상하 gap과 grid item 견본`}
             />
-          ))}
-        </div>
+            <span className="font-mono text-caption font-semibold text-foreground">{name}</span>
+            <span className="text-center text-caption text-text-muted">{desc}</span>
+          </div>
+        ))}
       </div>
-      <p className="m-0 py-1.5 px-3 text-caption text-text-muted bg-surface-subtle border-t border-border flex flex-wrap items-center gap-x-3 gap-y-1">
+      <p className="mt-6 mb-3 text-caption text-text-muted">
+        Linear: 16px → 24px → 32px (+8px) — <span className="font-mono">gap-*</span>는{" "}
+        <span className="font-mono">space-*</span> 토큰과 1:1 대응합니다.
+      </p>
+      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-text-muted">
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
-          진한 초록 = gap
+          <span aria-hidden="true" className="inline-block size-2 bg-red-200" />
+          붉은색 = gap
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span
-            aria-hidden="true"
-            className="inline-block w-2 h-2 border border-dashed border-accent/35 bg-accent/10"
-            style={{ borderRadius: pxToRem(2) }}
-          />
-          점선/옅은 = padding
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-border" style={{ borderRadius: pxToRem(2) }} />
+          <span aria-hidden="true" className="inline-block size-2 bg-background border border-border" />
           밝은 블록 = grid item
         </span>
       </p>
@@ -294,7 +976,33 @@ function GridGapPreview({ utility, label }: { utility: string; label: string }) 
 
 type SwatchInfo = { hex: string; label: string };
 
-function NavIcon({ children, className }: { children: React.ReactNode; className?: string }) {
+function NavIcon({
+  children,
+  innerMarkup,
+  className,
+}: {
+  children?: React.ReactNode;
+  innerMarkup?: string;
+  className?: string;
+}) {
+  const svgClassName = className ?? "size-icon-sm shrink-0";
+
+  if (innerMarkup) {
+    return (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={svgClassName}
+        dangerouslySetInnerHTML={{ __html: innerMarkup }}
+      />
+    );
+  }
+
   return (
     <svg
       aria-hidden="true"
@@ -304,7 +1012,7 @@ function NavIcon({ children, className }: { children: React.ReactNode; className
       strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className ?? "size-icon-sm shrink-0"}
+      className={svgClassName}
     >
       {children}
     </svg>
@@ -350,6 +1058,15 @@ const navIconLayout = (
     <rect x="4" y="5" width="16" height="14" rx="2" />
     <path d="M4 9h16" />
     <path d="M8 5v14" />
+  </NavIcon>
+);
+
+const navIconAssets = (
+  <NavIcon>
+    <rect x="3" y="3" width="8" height="8" rx="1.5" />
+    <circle cx="17.5" cy="6.5" r="2.5" />
+    <path d="M14 14l7 7" />
+    <path d="M3 17l5-5" />
   </NavIcon>
 );
 
@@ -434,7 +1151,7 @@ export default function Home() {
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#171717", label: "Neutral 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
-  const [activeTab, setActiveTab] = useState<"color" | "spacing" | "grid" | "type">("color");
+  const [activeTab, setActiveTab] = useState<"color" | "spacing" | "grid" | "type" | "icons">("color");
   const [activeColorTab, setActiveColorTab] = useState<"raw" | "semantic">("raw");
   const [activeTypeTab, setActiveTypeTab] = useState<"font-family" | "typography">("font-family");
   const [activeSpacingTab, setActiveSpacingTab] = useState<"spacing" | "radius" | "fixed-size">("spacing");
@@ -443,10 +1160,12 @@ export default function Home() {
   const [typeMenuExpanded, setTypeMenuExpanded] = useState(true);
   const [spacingMenuExpanded, setSpacingMenuExpanded] = useState(true);
   const [gridMenuExpanded, setGridMenuExpanded] = useState(true);
+  const [isSidenavOpen, setIsSidenavOpen] = useState(true);
   const colorTabRef = useRef<HTMLButtonElement>(null);
   const spacingTabRef = useRef<HTMLButtonElement>(null);
   const gridTabRef = useRef<HTMLButtonElement>(null);
   const typeTabRef = useRef<HTMLButtonElement>(null);
+  const iconsTabRef = useRef<HTMLButtonElement>(null);
   const rawColorTabRef = useRef<HTMLButtonElement>(null);
   const semanticColorTabRef = useRef<HTMLButtonElement>(null);
   const fontFamilyTabRef = useRef<HTMLButtonElement>(null);
@@ -459,9 +1178,9 @@ export default function Home() {
 
   // 탭 좌우/Home/End 키 이동 (WAI-ARIA tabs 패턴)
   function handleTabKeyDown(e: React.KeyboardEvent) {
-    const order: ("color" | "spacing" | "grid" | "type")[] = ["color", "type", "spacing", "grid"];
-    const refs = { color: colorTabRef, spacing: spacingTabRef, grid: gridTabRef, type: typeTabRef };
-    let next: "color" | "spacing" | "grid" | "type" | null = null;
+    const order: ("color" | "spacing" | "grid" | "type" | "icons")[] = ["color", "type", "spacing", "grid", "icons"];
+    const refs = { color: colorTabRef, spacing: spacingTabRef, grid: gridTabRef, type: typeTabRef, icons: iconsTabRef };
+    let next: "color" | "spacing" | "grid" | "type" | "icons" | null = null;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeTab) + 1) % order.length];
     else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeTab) - 1 + order.length) % order.length];
     else if (e.key === "Home") next = order[0];
@@ -621,6 +1340,7 @@ export default function Home() {
   }
 
   return (
+    <ToastProvider>
     <>
       {/* 스킵 네비게이션 */}
       <a
@@ -633,18 +1353,19 @@ export default function Home() {
         본문 바로가기
       </a>
 
-      <div className={`${layoutSidenavClass} min-h-screen font-sans bg-background text-foreground transition-colors duration-300`}>
-        <nav
-          aria-label="디자인 토큰 가이드"
-          className={`${layoutSidenavMenuClass} flex flex-col border-b border-border py-6 px-4 md:px-6 lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10`}
-        >
-          <header className="mb-6 px-1">
-            <h1 className="text-heading-md font-bold lg:text-heading-lg">디자인 시스템 가이드</h1>
-            <p className="mt-1 text-caption text-text-muted">
-              토큰 정의와 Tailwind 적용, 웹접근성 대비 검증을 한곳에서
-            </p>
-          </header>
+      <div className="min-h-screen font-sans bg-background text-foreground transition-colors duration-300">
+        <GuideSiteHeader
+          isSidenavOpen={isSidenavOpen}
+          onToggleSidenav={() => setIsSidenavOpen((open) => !open)}
+        />
 
+        <div className={isSidenavOpen ? "lg:pl-64" : undefined}>
+        <nav
+          id="guide-sidenav"
+          hidden={!isSidenavOpen}
+          aria-label="디자인 토큰 가이드"
+          className={`${layoutSidenavMenuClass} flex flex-col border-b border-border bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
+        >
           <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Tokens</p>
           <div
             role="tablist"
@@ -865,6 +1586,26 @@ export default function Home() {
                   ]}
                 />
               )}
+            </div>
+
+            <div className="mt-5 border-t border-border pt-5">
+              <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Assets</p>
+              <div className={navParentGroupClass(activeTab === "icons")}>
+                <button
+                  ref={iconsTabRef}
+                  type="button"
+                  role="tab"
+                  id="tab-icons"
+                  aria-selected={activeTab === "icons"}
+                  aria-controls="panel-icons"
+                  tabIndex={activeTab === "icons" ? 0 : -1}
+                  onClick={() => setActiveTab("icons")}
+                  className={navParentButtonClass(activeTab === "icons")}
+                >
+                  {navIconAssets}
+                  Icons
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1746,7 +2487,6 @@ export default function Home() {
                   <p className="m-0 text-label-sm font-semibold">{name}</p>
                   <p className="mt-0.5 mb-3 text-caption text-text-muted">{desc}</p>
                   <GridColumnPreview cols={cols} utility={utility} label={`${name} ${cols}열 그리드 견본`} />
-                  <p className="mt-2 mb-0 text-caption text-text-muted font-mono">{utility}</p>
                 </div>
               ))}
             </div>
@@ -1757,26 +2497,9 @@ export default function Home() {
           <section aria-labelledby="section-grid-gap" className="mb-0">
             <h3 id="section-grid-gap" className="sr-only">Gap</h3>
             <p className="text-body-sm text-text-muted mb-6">
-              그리드 간격(gap)은 item 사이 margin 역할입니다. 진한 초록은 gap, 점선/옅은 영역은 미리보기용 padding입니다.
+              그리드 간격(gap)은 item 사이 margin 역할입니다. `gap-*`는 좌우·상하에 동일하게 적용되며, 아래 스케일에서 크기별 견본을 한눈에 비교할 수 있습니다.
             </p>
-            <div role="list" className="flex flex-col gap-4">
-              {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
-                <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
-                  <div className="flex items-baseline justify-between gap-4 mb-3">
-                    <span className="text-label-sm font-semibold">{name}</span>
-                    <span className="text-caption text-text-muted font-mono">
-                      <span className="font-semibold text-foreground">{px}</span>
-                      <span> · {rem} · {utility}</span>
-                    </span>
-                  </div>
-                  <GridGapPreview
-                    utility={utility}
-                    label={`${name} ${px}, ${rem} — 초록 gap 영역과 grid item 견본`}
-                  />
-                  <p className="mt-2 mb-0 text-caption text-text-muted">{desc}</p>
-                </div>
-              ))}
-            </div>
+            <GridGapCuration />
           </section>
           </div>{/* /panel-grid-gap */}
 
@@ -1784,11 +2507,6 @@ export default function Home() {
 
         {/* ── Tab Panel 3: Typography ── */}
         <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"} className={layoutPageColSpanFull}>
-
-        <h2 className="text-heading-lg font-bold mb-2">Typography</h2>
-        <p className="text-body-sm text-text-muted mb-6">
-          폰트 패밀리·폴백 체인과 타이포그래피 토큰을 확인합니다.
-        </p>
 
         <div
           role="tablist"
@@ -1825,12 +2543,8 @@ export default function Home() {
         </div>
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"}>
-        {/* ── Font Family ── */}
-        <section aria-labelledby="section-font" className="mb-0">
-          <h3 id="section-font" className="sr-only">Font Family</h3>
-          <p className="text-body-sm text-text-muted mb-8">
-            기본은 Pretendard GOV, 미로드 시 Noto Sans KR 폴백입니다. 둘 다 자체 호스팅(런타임 외부 요청 0)이며 최종 폴백은 시스템 sans-serif입니다.
-          </p>
+        <section aria-labelledby="content-font-family" className="mb-0">
+          <FontStackCuration />
 
           {/* Pretendard GOV */}
           <div className="rounded-2xl border border-neutral-200 overflow-hidden">
@@ -1935,7 +2649,7 @@ export default function Home() {
                   { label: "제작자", value: "Google" },
                   { label: "역할", value: "Pretendard GOV 미로드 시 폴백 (font-family 2순위)" },
                   { label: "라이선스", value: "SIL Open Font License 1.1 (OFL-1.1) — 상업적 사용 가능, 수정·재배포 가능" },
-                  { label: "제공 weight", value: "400 Regular · 700 Bold (static woff2)" },
+                  { label: "제공 weight", value: "100 Thin · 300 Light · 400 Regular · 500 Medium · 600 SemiBold · 700 Bold (static woff2)" },
                   { label: "CSS 변수", value: "--font-noto" },
                 ].map(({ label, value }) => (
                   <div key={label}>
@@ -1967,7 +2681,11 @@ export default function Home() {
                   <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
                     <code>{`localFont({
   src: [
+    { path: "./fonts/NotoSansKR-100.woff2", weight: "100" },
+    { path: "./fonts/NotoSansKR-300.woff2", weight: "300" },
     { path: "./fonts/NotoSansKR-400.woff2", weight: "400" },
+    { path: "./fonts/NotoSansKR-500.woff2", weight: "500" },
+    { path: "./fonts/NotoSansKR-600.woff2", weight: "600" },
     { path: "./fonts/NotoSansKR-700.woff2", weight: "700" },
   ],
   variable: "--font-noto",
@@ -1981,6 +2699,7 @@ export default function Home() {
                     {[
                       "next/font/google 사용 불가 — Google 메타데이터에 complete Korean subset이 없어 한글 글리프 누락",
                       "반드시 로컬 woff2 self-host로 한글 글리프 보장",
+                      "font-synthesis-weight: none — 미제공 weight는 브라우저가 합성하지 않으므로 타이포 토큰(400·500·600·700) weight 파일 필요",
                       "런타임 CDN 요청 없음 — 공공·폐쇄망·CSP 환경 대응",
                       "Pretendard 로드 실패 시에만 네트워크·용량 비용 발생",
                     ].map((item) => (
@@ -1993,43 +2712,24 @@ export default function Home() {
 
             <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-3">
               <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase m-0">Weight</p>
-              <div className="grid grid-cols-2 gap-4 max-w-md">
-                {[{ weight: 400, label: "Regular" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+                {[
+                  { weight: 100, label: "Thin" },
+                  { weight: 300, label: "Light" },
+                  { weight: 400, label: "Regular" },
+                  { weight: 500, label: "Medium" },
+                  { weight: 600, label: "SemiBold" },
+                  { weight: 700, label: "Bold" },
+                ].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
                     <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-noto), sans-serif" }}>가나다 Aa</span>
                     <span className="text-caption text-neutral-400">{weight} · {label}</span>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* Font Stack */}
-          <div className="mt-8 rounded-2xl border border-neutral-200 overflow-hidden">
-            <div className="py-6 px-10 flex flex-col gap-4">
-              <div>
-                <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase m-0">Font Stack (폴백 체인)</p>
-                <p className="mt-1 text-caption text-text-muted">
-                  컴포넌트는 <code className="font-mono">--font-family-base</code>만 사용합니다. Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
-                </p>
-              </div>
-              <ol className="list-none m-0 p-0 flex flex-col gap-2">
-                {fontStack.map(({ order, name, family, role, source, desc }) => (
-                  <li key={order} className="grid gap-4 items-center py-3 px-4 rounded-lg border border-border" style={{ gridTemplateColumns: "28px 1fr auto" }}>
-                    <span aria-hidden="true" className="w-6 h-6 rounded-full bg-accent text-on-accent flex items-center justify-center text-caption font-bold">{order}</span>
-                    <div>
-                      <span role="img" aria-label={`${name} 글꼴 견본`} className="block font-semibold leading-base" style={{ fontFamily: family, fontSize: pxToRem(20) }}>{name} · {typographySample}</span>
-                      <p className="mt-0.5 text-caption text-text-muted">{desc}</p>
-                    </div>
-                    <span className="text-caption text-text-muted text-right leading-base">
-                      {role}<br />{source}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
-                <code>{`--font-family-base: var(--font-pretendard-gov), var(--font-noto), sans-serif;`}</code>
-              </pre>
+              <p className="m-0 text-caption text-text-muted">
+                타이포 토큰의 <span className="font-mono">font-medium(500)</span>·<span className="font-mono">font-semibold(600)</span>도 self-host 파일로 제공합니다. Pretendard는 variable(100–900), Noto는 동일 구간을 static weight로 대응합니다.
+              </p>
             </div>
           </div>
         </section>
@@ -2037,36 +2737,28 @@ export default function Home() {
         </div>{/* /panel-type-font-family */}
 
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"}>
-        {/* ── Typography ── */}
-        <section aria-labelledby="section-typography" className="mb-0">
-          <p className="text-body-sm text-text-muted mb-8">
-            개별 유틸리티(`text-*`·`font-*`·`leading-base`)와 묶음 유틸리티(`typo-*`)로 타이포 스케일을 적용합니다.
-          </p>
-          <h3 id="section-typography" className="sr-only">Typography 토큰</h3>
-          <dl className="flex flex-col gap-4 m-0">
-            {typographyTokens.map(({ label, var: cssVar, weight, typoClass }) => (
-              <div key={cssVar} className="flex items-baseline gap-4 border-b border-neutral-200 pb-3">
-                <dt className="w-[120px] shrink-0">
-                  <span className="block text-label-sm font-semibold">{label}</span>
-                  {/* size / weight / shorthand 토큰 메타 (line-height는 전역 --font-line: 1.5) */}
-                  <span className="block text-text-muted" style={{ fontSize: pxToRem(11) }}>
-                    {cssVar.replace("--font-size-", "")} · {weight.replace("--font-weight-", "w/")} · {typoClass}
-                  </span>
-                </dt>
-                {/* 견본은 dd 안의 span role="img"로 표시 (토큰명은 dt가 전달) */}
-                <dd className={`${typoClass} m-0`}>
-                  <span role="img" aria-label={`${label} 글꼴 견본`}>{typographySample}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <section aria-labelledby="content-typography" className="mb-0">
+          <ContentTitleBlock
+            eyebrow="Typography"
+            title="Typography"
+            titleId="content-typography"
+            description="역할별 타이포 스케일과 typo-* 묶음 유틸리티를 확인합니다."
+          />
+          <TypographyScaleTable />
+          <TypographyExampleOfUse />
         </section>
 
         </div>{/* /panel-type-typography */}
 
         </div>{/* /panel-type */}
 
+        {/* ── Tab Panel: Icons ── */}
+        <div role="tabpanel" id="panel-icons" aria-labelledby="tab-icons" hidden={activeTab !== "icons"} className={layoutPageColSpanFull}>
+          <IconSourceCuration />
+        </div>{/* /panel-icons */}
+
         </main>
+        </div>
       </div>
 
         {/* 모드 토글 — DOM 마지막에 두어 콘텐츠 뒤에 포커스. fixed라 시각 위치는 우하단 고정 */}
@@ -2080,5 +2772,6 @@ export default function Home() {
           {isDark ? themeIconSun : themeIconMoon}
         </button>
     </>
+    </ToastProvider>
   );
 }

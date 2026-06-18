@@ -6,7 +6,7 @@
    --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
    --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
    --typography-* : font shorthand 묶음 토큰. family/size/weight/line-height 포함.
-   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-screen-margin-* : 레이아웃·크기 기반 토큰.
+   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-screen-margin-* / --layout-header-padding-* : 레이아웃·크기 기반 토큰.
    --ds-gradient-* : 그라데이션 토큰. @theme --background-image-gradient-* 로 노출.
    guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
 
@@ -146,6 +146,10 @@
   /* 최소 스크린 마진 — content 좌우 여백 하한. small(<768px) 16px, medium 이상 24px */
   --layout-screen-margin-sm: 1rem;
   --layout-screen-margin-md: 1.5rem;
+
+  /* 사이트 헤더 shell 좌우 패딩 — 스크린 마진과 동기화(small 16px, medium+ 24px) */
+  --layout-header-padding-sm: var(--layout-screen-margin-sm);
+  --layout-header-padding-md: var(--layout-screen-margin-md);
 
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
@@ -416,6 +420,8 @@
   --spacing-control-lg: var(--size-control-lg);
   --spacing-screen-margin-sm: var(--layout-screen-margin-sm);
   --spacing-screen-margin-md: var(--layout-screen-margin-md);
+  --spacing-header-padding-sm: var(--layout-header-padding-sm);
+  --spacing-header-padding-md: var(--layout-header-padding-md);
 
   --radius-none: var(--shape-radius-none);
   --radius-sm: var(--shape-radius-sm);
@@ -580,7 +586,7 @@
   }
 }
 
-/* 사이드메뉴 프리셋 — lg부터 16rem menu + 1fr content. shell gap 없음.
+/* 사이드메뉴 프리셋 — lg부터 16rem fixed menu + 콘텐츠 열(pl-64 래퍼).
    콘텐츠 좌우 스크린 마진은 layout-sidenav-content padding-inline만 사용 */
 @utility layout-sidenav {
   display: grid;
@@ -608,7 +614,7 @@
   min-width: 0;
 }
 
-/* layout-page와 동일 container·grid·screen-margin — sidebar 옆 1fr 열 안에서 max-width 상한·중앙 정렬 */
+/* layout-page와 동일 container·grid·screen-margin — pl-64 래퍼(콘텐츠 열) 안에서 상한·중앙 정렬 */
 @utility layout-sidenav-content {
   box-sizing: border-box;
   width: 100%;

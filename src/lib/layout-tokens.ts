@@ -67,6 +67,11 @@ export const screenMarginMdPx = 24;
 
 export const responsiveScreenMarginClass = "px-screen-margin-sm md:px-screen-margin-md";
 
+/** 사이트 헤더 shell 좌우 패딩(px). 스크린 마진과 동기화 — small 16px, medium+ 24px. */
+export const headerPaddingSmPx = screenMarginSmPx;
+export const headerPaddingMdPx = screenMarginMdPx;
+export const guideHeaderPaddingClass = "px-header-padding-sm md:px-header-padding-md";
+
 export const responsiveContainerClass =
   `w-full mx-auto ${responsiveScreenMarginClass} max-w-full lg:max-w-xl`;
 

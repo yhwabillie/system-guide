@@ -12,10 +12,14 @@ const pretendardGov = localFont({
 });
 
 // 폴백 폰트 — Noto Sans KR (자체 호스팅). Pretendard 미로드 시에만 사용되므로
-// preload: false 로 평상시 다운로드를 막음.
+// preload: false 로 평상시 다운로드를 막음. 타이포 토큰·Pretendard 쇼케이스와 동일 weight 제공.
 const notoSansKR = localFont({
   src: [
+    { path: "./fonts/NotoSansKR-100.woff2", weight: "100", style: "normal" },
+    { path: "./fonts/NotoSansKR-300.woff2", weight: "300", style: "normal" },
     { path: "./fonts/NotoSansKR-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/NotoSansKR-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/NotoSansKR-600.woff2", weight: "600", style: "normal" },
     { path: "./fonts/NotoSansKR-700.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-noto",
