@@ -1241,15 +1241,22 @@ export default function Home() {
         {/* ── Font Family ── */}
         <section aria-labelledby="section-font" className="mb-0">
           <h2 id="section-font" className="text-heading-lg font-bold mb-2">Font Family</h2>
+          <p className="text-body-sm text-text-muted mb-8">
+            기본은 Pretendard GOV, 미로드 시 Noto Sans KR 폴백입니다. 둘 다 자체 호스팅(런타임 외부 요청 0)이며 최종 폴백은 시스템 sans-serif입니다.
+          </p>
 
+          {/* Pretendard GOV */}
           <div className="rounded-2xl border border-neutral-200 overflow-hidden">
-            {/* 글꼴 견본 — 큰 텍스트 요소 자체에 role="img" (정보는 아래 dl에서 제공) */}
+            <div className="py-3 px-10 bg-neutral-50 border-b border-neutral-200">
+              <h3 className="m-0 text-label-xl font-semibold text-foreground">Pretendard GOV</h3>
+              <p className="m-0 mt-1 text-caption text-text-muted">기본 폰트 · 1순위</p>
+            </div>
             <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
-              <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-family-base)" }}>Pretendard GOV</span>
-              <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-family-base)" }}>
+              <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>Pretendard GOV</span>
+              <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-neutral-500" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-family-base)" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-neutral-500" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
@@ -1262,7 +1269,7 @@ export default function Home() {
                   { label: "버전", value: "v1.3.9" },
                   { label: "라이선스", value: "SIL Open Font License 1.1 (OFL-1.1) — 상업적 사용 가능, 수정·재배포 가능" },
                   { label: "기반 폰트", value: "Inter (라틴) + Apple SD Gothic Neo (한글) — Apple의 산돌 서체 기반" },
-                  { label: "CSS 변수", value: "--font-family-base" },
+                  { label: "CSS 변수", value: "--font-pretendard-gov" },
                 ].map(({ label, value }) => (
                   <div key={label}>
                     <dt className="text-caption text-neutral-400 font-semibold tracking-normal uppercase">{label}</dt>
@@ -1310,20 +1317,113 @@ export default function Home() {
               <div className="grid grid-cols-5 gap-4">
                 {[{ weight: 100, label: "Thin" }, { weight: 300, label: "Light" }, { weight: 400, label: "Regular" }, { weight: 600, label: "SemiBold" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
-                    {/* 견본 글자는 그래픽으로 표시 — 정보는 아래 레이블이 전달 */}
-                    <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-family-base)" }}>가나다 Aa</span>
+                    <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-pretendard-gov), sans-serif" }}>가나다 Aa</span>
                     <span className="text-caption text-neutral-400">{weight} · {label}</span>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Font Stack — 폴백 체인 큐레이션 */}
-            <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-4">
+          {/* Noto Sans KR */}
+          <div className="mt-8 rounded-2xl border border-neutral-200 overflow-hidden">
+            <div className="py-3 px-10 bg-neutral-50 border-b border-neutral-200">
+              <h3 className="m-0 text-label-xl font-semibold text-foreground">Noto Sans KR</h3>
+              <p className="m-0 mt-1 text-caption text-text-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
+            </div>
+            <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
+              <span role="img" aria-label="Noto Sans KR 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-noto), sans-serif" }}>Noto Sans KR</span>
+              <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-noto), sans-serif" }}>
+                가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
+              </span>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-neutral-500" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-noto), sans-serif" }}>
+                abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
+              </span>
+            </div>
+
+            <div className="py-8 px-10 grid grid-cols-2 gap-8">
+              <dl className="flex flex-col gap-4 m-0">
+                {[
+                  { label: "폰트명", value: "Noto Sans KR" },
+                  { label: "제작자", value: "Google" },
+                  { label: "역할", value: "Pretendard GOV 미로드 시 폴백 (font-family 2순위)" },
+                  { label: "라이선스", value: "SIL Open Font License 1.1 (OFL-1.1) — 상업적 사용 가능, 수정·재배포 가능" },
+                  { label: "제공 weight", value: "400 Regular · 700 Bold (static woff2)" },
+                  { label: "CSS 변수", value: "--font-noto" },
+                ].map(({ label, value }) => (
+                  <div key={label}>
+                    <dt className="text-caption text-neutral-400 font-semibold tracking-normal uppercase">{label}</dt>
+                    <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="flex flex-col gap-4">
+                <div>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-0.5">공식 페이지</p>
+                  <a href="https://fonts.google.com/noto/specimen/Noto+Sans+KR" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
+                    fonts.google.com/noto/specimen/Noto+Sans+KR
+                    <span className="sr-only">(새 창에서 열림)</span>
+                  </a>
+                </div>
+                <div>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-0.5">원본 저장소</p>
+                  <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-500 break-all">
+                    github.com/notofonts/noto-cjk
+                    <span className="sr-only">(새 창에서 열림)</span>
+                  </a>
+                  <p className="mt-1 text-caption text-neutral-400">한글 static woff2를 src/app/fonts에 self-host</p>
+                </div>
+                <div>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="mb-2 text-caption text-neutral-400">자체 호스팅 — next/font/local. <code className="font-mono">preload: false</code>로 평상시 다운로드를 막고, Pretendard 미로드 시에만 브라우저가 폴백으로 로드합니다.</p>
+                  <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
+                    <code>{`localFont({
+  src: [
+    { path: "./fonts/NotoSansKR-400.woff2", weight: "400" },
+    { path: "./fonts/NotoSansKR-700.woff2", weight: "700" },
+  ],
+  variable: "--font-noto",
+  preload: false,
+})`}</code>
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase mb-1">폴백 적용 시 유의사항</p>
+                  <ul className="m-0 pl-4 flex flex-col gap-1">
+                    {[
+                      "next/font/google 사용 불가 — Google 메타데이터에 complete Korean subset이 없어 한글 글리프 누락",
+                      "반드시 로컬 woff2 self-host로 한글 글리프 보장",
+                      "런타임 CDN 요청 없음 — 공공·폐쇄망·CSP 환경 대응",
+                      "Pretendard 로드 실패 시에만 네트워크·용량 비용 발생",
+                    ].map((item) => (
+                      <li key={item} className="text-caption text-neutral-600">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="py-6 px-10 border-t border-neutral-200 flex flex-col gap-3">
+              <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase m-0">Weight</p>
+              <div className="grid grid-cols-2 gap-4 max-w-md">
+                {[{ weight: 400, label: "Regular" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
+                  <div key={weight} className="flex flex-col gap-0.5">
+                    <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-noto), sans-serif" }}>가나다 Aa</span>
+                    <span className="text-caption text-neutral-400">{weight} · {label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Font Stack */}
+          <div className="mt-8 rounded-2xl border border-neutral-200 overflow-hidden">
+            <div className="py-6 px-10 flex flex-col gap-4">
               <div>
                 <p className="text-caption text-neutral-400 font-semibold tracking-normal uppercase m-0">Font Stack (폴백 체인)</p>
                 <p className="mt-1 text-caption text-text-muted">
-                  Pretendard·Noto는 자체 호스팅(런타임 외부 요청 0). Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
+                  컴포넌트는 <code className="font-mono">--font-family-base</code>만 사용합니다. Pretendard 미로드 시 Noto Sans KR로, 그것도 불가하면 시스템 sans-serif로 자동 대체됩니다.
                 </p>
               </div>
               <ol className="list-none m-0 p-0 flex flex-col gap-2">
@@ -1341,7 +1441,7 @@ export default function Home() {
                 ))}
               </ol>
               <pre className="m-0 py-3 px-4 rounded-lg bg-neutral-100 text-caption text-neutral-700 border border-neutral-200 break-all whitespace-pre-wrap">
-                <code>{`font-family: "Pretendard GOV", "Noto Sans KR", sans-serif;`}</code>
+                <code>{`--font-family-base: var(--font-pretendard-gov), var(--font-noto), sans-serif;`}</code>
               </pre>
             </div>
           </div>
