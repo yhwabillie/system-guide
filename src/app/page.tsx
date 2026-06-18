@@ -225,14 +225,17 @@ function TokenChip({
 function TabDescriptionCallout({
   children,
   className = "",
+  margin = "mb-10",
 }: {
   children: React.ReactNode;
   className?: string;
+  margin?: string;
 }) {
   return (
     <div
       className={[
-        "mb-24 border-l-4 border-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-foreground [&_strong]:font-bold",
+        margin,
+        "border-l-4 border-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-foreground [&_strong]:font-bold [&_a]:font-semibold [&_a]:text-accent [&_a]:no-underline hover:[&_a]:underline",
         className,
       ]
         .filter(Boolean)
@@ -281,38 +284,51 @@ function ContentTitleBlock({
         {title}
       </h2>
       {description ? (
-        <TabDescriptionCallout className="mt-4">{description}</TabDescriptionCallout>
+        <TabDescriptionCallout className="mt-4" margin="mb-0">{description}</TabDescriptionCallout>
       ) : null}
     </header>
   );
 }
 
-/** 탭 패널 1단 — 주요 섹션 (콜아웃 아래) */
+/** 탭 패널 1단 — 주요 섹션 */
 function ContentSectionTitle({
   id,
   children,
   className = "",
   lead = false,
+  description,
 }: {
   id?: string;
   children: React.ReactNode;
   className?: string;
   /** 탭 콘텐츠 첫 섹션이면 true — 상단 여백 생략 */
   lead?: boolean;
+  description?: React.ReactNode;
 }) {
+  const titleMargin = description
+    ? lead
+      ? "mb-4"
+      : "mt-24 mb-4"
+    : lead
+      ? "mb-10"
+      : "mt-24 mb-10";
+
   return (
-    <h3
-      id={id}
-      className={[
-        "m-0 text-heading-lg font-bold leading-base text-foreground",
-        lead ? "mb-10" : "mt-24 mb-10",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {children}
-    </h3>
+    <>
+      <h3
+        id={id}
+        className={[
+          "m-0 text-heading-lg font-bold leading-base text-foreground",
+          titleMargin,
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {children}
+      </h3>
+      {description ? <TabDescriptionCallout>{description}</TabDescriptionCallout> : null}
+    </>
   );
 }
 
@@ -468,7 +484,15 @@ function FontTokenGuide() {
 function FontStackCuration() {
   return (
     <>
-      <ContentSectionTitle id="section-font-family" lead>
+      <ContentSectionTitle
+        id="section-font-family"
+        lead
+        description={
+          <>
+            <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. <strong>font-sans</strong> 유틸리티로 <strong>--font-family-base</strong> 토큰을 적용합니다.
+          </>
+        }
+      >
         Font Family
       </ContentSectionTitle>
 
@@ -873,13 +897,18 @@ function OutlineIconMatrix() {
 function IconSourceCuration() {
   return (
     <>
-      <ContentSectionTitle id="section-outline-icon" lead>
+      <ContentSectionTitle
+        id="section-outline-icon"
+        lead
+        description={
+          <>
+            <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘과 <strong>size-icon-*</strong> 크기 토큰입니다. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
+            <strong>외부 CDN·아이콘 폰트·스프라이트</strong>는 사용하지 않습니다.
+          </>
+        }
+      >
         Outline Icon
       </ContentSectionTitle>
-      <TabDescriptionCallout>
-        <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
-        <strong>외부 CDN·아이콘 폰트·스프라이트</strong>는 사용하지 않습니다.
-      </TabDescriptionCallout>
 
       <section aria-labelledby="section-icon-source" className="mb-20">
         <ContentSubsectionTitle id="section-icon-source">Source</ContentSubsectionTitle>
@@ -980,6 +1009,92 @@ function ContrastCircle({ passed }: { passed: boolean }) {
         className="size-icon-xs text-on-accent"
       />
     </span>
+  );
+}
+
+const contrastPickPaletteIcon =
+  '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor" stroke="none" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" stroke="none" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" stroke="none" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" stroke="none" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />';
+const contrastPickChevronIcon = '<polyline points="9 18 15 12 9 6" />';
+const contrastPickCloseIcon = '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />';
+
+function ContrastColorPickButton({
+  labelId,
+  labelText,
+  valueId,
+  swatchHex,
+  colorLabel,
+  colorHex,
+  isSelecting,
+  onToggle,
+}: {
+  labelId: string;
+  labelText: string;
+  valueId: string;
+  swatchHex: string;
+  colorLabel: string;
+  colorHex: string;
+  isSelecting: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div>
+      <p id={labelId} className="mb-1.5 text-label-sm font-semibold text-foreground">
+        {labelText}
+      </p>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-label={
+          isSelecting
+            ? `${labelText} 선택 취소 — 현재 ${colorLabel} ${colorHex}`
+            : `${labelText} — 팔레트에서 색 고르기, 현재 ${colorLabel} ${colorHex}`
+        }
+        aria-expanded={isSelecting}
+        aria-describedby={valueId}
+        className={[
+          "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          isSelecting
+            ? "bg-neutral-100 shadow-sm ring-2 ring-accent"
+            : "bg-surface-subtle hover:bg-neutral-100 hover:shadow-sm hover:ring-1 hover:ring-border",
+        ].join(" ")}
+      >
+        <span
+          aria-hidden="true"
+          className={[
+            "block size-8 shrink-0 rounded-md border border-border-overlay transition-transform duration-150",
+            isSelecting ? "scale-105 ring-2 ring-accent ring-offset-1" : "group-hover:scale-105",
+          ].join(" ")}
+          style={{ background: swatchHex }}
+        />
+        <span className="flex min-w-0 flex-col text-left">
+          <span className="text-label-md font-semibold">{colorLabel}</span>
+          <span id={valueId} className="text-caption text-text-muted font-mono">{colorHex}</span>
+        </span>
+        <span
+          aria-hidden="true"
+          className={[
+            "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
+            isSelecting
+              ? "border-accent bg-background text-accent"
+              : "border-border bg-background text-accent group-hover:border-accent",
+          ].join(" ")}
+        >
+          {isSelecting ? (
+            <>
+              <NavIcon innerMarkup={contrastPickCloseIcon} className="size-icon-xs shrink-0" />
+              선택 중 · 취소
+            </>
+          ) : (
+            <>
+              <NavIcon innerMarkup={contrastPickPaletteIcon} className="size-icon-xs shrink-0" />
+              팔레트에서 선택
+              <NavIcon innerMarkup={contrastPickChevronIcon} className="size-icon-xs shrink-0" />
+            </>
+          )}
+        </span>
+      </button>
+    </div>
   );
 }
 
@@ -1824,22 +1939,19 @@ export default function Home() {
           </button>
         </div>
 
-        <TabDescriptionCallout>
-          {activeColorTab === "raw" ? (
-            <>
-              가공 전 <strong>원본 팔레트(raw)</strong>와 <strong>대비 검증</strong> 도구입니다.
-            </>
-          ) : (
-            <>
-              <strong>raw</strong>를 용도·모드(<strong>라이트/다크</strong>)에 맞게 매핑한 <strong>의미 기반 토큰</strong>입니다.
-            </>
-          )}
-        </TabDescriptionCallout>
         </ContentIntroShell>
 
         <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"}>
         <section aria-labelledby="section-color" className="mb-24">
-          <ContentSectionTitle id="section-color" lead>
+          <ContentSectionTitle
+            id="section-color"
+            lead
+            description={
+              <>
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. family × scale(50~900) 그리드와 <strong>White/Black</strong> 앵커를 확인합니다.
+              </>
+            }
+          >
             Color Palette
           </ContentSectionTitle>
 
@@ -1848,25 +1960,25 @@ export default function Home() {
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 py-2.5 px-4 rounded-lg text-label-md font-semibold flex items-center justify-between bg-surface-subtle text-foreground border border-neutral-200"
+              className="mb-3 flex items-center justify-between rounded-lg border border-accent bg-surface-subtle py-2.5 px-4 text-label-md font-semibold text-foreground ring-2 ring-accent"
             >
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+                  className="inline-block size-2.5 shrink-0 rounded-full ring-2 ring-accent ring-offset-1"
                   style={{ background: selecting === "bg" ? bgColor.hex : textColor.hex, border: "1px solid var(--ds-border-overlay)" }}
                 />
                 <span>
-                  <strong className="font-bold">{selecting === "bg" ? "배경색" : "텍스트색"}</strong>으로 사용할 컬러를 클릭하세요
+                  <strong className="font-bold">{selecting === "bg" ? "배경색" : "텍스트색"}</strong>으로 사용할 컬러를 팔레트에서 클릭하세요
                 </span>
               </span>
               <button
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                className="bg-transparent border-0 cursor-pointer font-bold text-body-md leading-none px-1 text-text-muted"
+                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-text-muted transition-colors hover:bg-neutral-100 hover:text-foreground"
               >
-                ✕
+                <NavIcon innerMarkup={contrastPickCloseIcon} className="size-icon-xs shrink-0" />
               </button>
             </div>
           )}
@@ -1987,68 +2099,38 @@ export default function Home() {
 
         {/* ── Contrast Checker ── */}
         <section aria-labelledby="section-contrast" className="mb-24">
-          <ContentSectionTitle id="section-contrast">
+          <ContentSectionTitle
+            id="section-contrast"
+            description={
+              <>
+                배경·텍스트 색 조합의 <strong>명암비</strong>를 계산하고 WCAG 등급(AA/AAA)을 검증합니다. 팔레트에서 색을 선택해 실시간으로 확인하세요.
+              </>
+            }
+          >
             Contrast Checker
           </ContentSectionTitle>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
-            {/* BG 선택 */}
-            <div>
-              <p id="label-bg" className="text-label-sm text-neutral-500 mb-1.5">
-                Background
-              </p>
-              <button
-                type="button"
-                onClick={() => setSelecting(selecting === "bg" ? null : "bg")}
-                aria-labelledby="label-bg"
-                aria-expanded={selecting === "bg"}
-                aria-describedby="bg-color-value"
-                className="w-full flex items-center gap-3 py-3 px-4 rounded-[10px] cursor-pointer bg-background"
-                style={{ border: selecting === "bg" ? "2px solid var(--ds-accent)" : "2px solid var(--ds-neutral-200)" }}
-              >
-                <span
-                  aria-hidden="true"
-                  className="block w-8 h-8 rounded-md shrink-0 border border-border-overlay"
-                  style={{ background: bgColor.hex }}
-                />
-                <span className="flex flex-col text-left">
-                  <span className="text-label-md font-semibold">{bgColor.label}</span>
-                  <span id="bg-color-value" className="text-caption text-neutral-400">{bgColor.hex}</span>
-                </span>
-                <span aria-hidden="true" className="ml-auto text-caption text-neutral-400">
-                  {selecting === "bg" ? "클릭 취소" : "팔레트에서 선택 →"}
-                </span>
-              </button>
-            </div>
-
-            {/* Text 선택 */}
-            <div>
-              <p id="label-text" className="text-label-sm text-neutral-500 mb-1.5">
-                Text
-              </p>
-              <button
-                type="button"
-                onClick={() => setSelecting(selecting === "text" ? null : "text")}
-                aria-labelledby="label-text"
-                aria-expanded={selecting === "text"}
-                aria-describedby="text-color-value"
-                className="w-full flex items-center gap-3 py-3 px-4 rounded-[10px] cursor-pointer bg-background"
-                style={{ border: selecting === "text" ? "2px solid var(--ds-accent-danger)" : "2px solid var(--ds-neutral-200)" }}
-              >
-                <span
-                  aria-hidden="true"
-                  className="block w-8 h-8 rounded-md shrink-0 border border-border-overlay"
-                  style={{ background: textColor.hex }}
-                />
-                <span className="flex flex-col text-left">
-                  <span className="text-label-md font-semibold">{textColor.label}</span>
-                  <span id="text-color-value" className="text-caption text-neutral-400">{textColor.hex}</span>
-                </span>
-                <span aria-hidden="true" className="ml-auto text-caption text-neutral-400">
-                  {selecting === "text" ? "클릭 취소" : "팔레트에서 선택 →"}
-                </span>
-              </button>
-            </div>
+            <ContrastColorPickButton
+              labelId="label-bg"
+              labelText="Background"
+              valueId="bg-color-value"
+              swatchHex={bgColor.hex}
+              colorLabel={bgColor.label}
+              colorHex={bgColor.hex}
+              isSelecting={selecting === "bg"}
+              onToggle={() => setSelecting(selecting === "bg" ? null : "bg")}
+            />
+            <ContrastColorPickButton
+              labelId="label-text"
+              labelText="Text"
+              valueId="text-color-value"
+              swatchHex={textColor.hex}
+              colorLabel={textColor.label}
+              colorHex={textColor.hex}
+              isSelecting={selecting === "text"}
+              onToggle={() => setSelecting(selecting === "text" ? null : "text")}
+            />
           </div>
 
           {/* 결과 — 미리보기(선택 배경색 위) + 명암비 카드 */}
@@ -2177,14 +2259,30 @@ export default function Home() {
         </div>{/* /panel-color-raw */}
 
         <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"}>
+        <ContentSectionTitle
+          id="section-semantic-color"
+          lead
+          description={
+            <>
+              <strong>raw</strong>를 용도·모드(<strong>라이트/다크</strong>)에 맞게 매핑한 <strong>의미 기반 토큰</strong>입니다.
+            </>
+          }
+        >
+          Semantic Color
+        </ContentSectionTitle>
+
         {/* ── Overlay (반투명, 모드 인지) ── */}
         <section aria-labelledby="section-alpha" className="mb-24">
-          <ContentSectionTitle id="section-alpha" lead>
+          <ContentSectionTitle
+            id="section-alpha"
+            description={
+              <>
+                오버레이용 반투명 시맨틱 토큰. 라이트=<strong>검정α</strong> / 다크=<strong>흰색α</strong>로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
+              </>
+            }
+          >
             Overlay
           </ContentSectionTitle>
-          <p className="text-body-sm text-text-muted mb-6">
-            오버레이용 반투명 시맨틱 토큰. 라이트=검정α / 다크=흰색α로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
-          </p>
           <div role="list" className="flex flex-col gap-2">
             {/* 헤더 */}
             <div aria-hidden="true" className="grid gap-4 items-center pb-1" style={{ gridTemplateColumns: "160px 1fr 200px" }}>
@@ -2212,12 +2310,16 @@ export default function Home() {
 
         {/* ── Gradient (시맨틱 그라데이션) ── */}
         <section aria-labelledby="section-gradient" className="mb-24">
-          <ContentSectionTitle id="section-gradient">
+          <ContentSectionTitle
+            id="section-gradient"
+            description={
+              <>
+                용도 기반 그라데이션 토큰입니다. <strong>--ds-gradient-*</strong> 원본이 <strong>--background-image-gradient-*</strong>로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
+              </>
+            }
+          >
             Gradient
           </ContentSectionTitle>
-          <p className="text-body-sm text-text-muted mb-6">
-            용도 기반 그라데이션 토큰입니다. `--ds-gradient-*` 원본이 `--background-image-gradient-*`로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
-          </p>
           <div role="list" className="flex flex-col gap-2">
             <div aria-hidden="true" className="grid gap-4 items-center pb-1" style={{ gridTemplateColumns: "180px 1fr 1fr" }}>
               <span className="text-caption text-text-muted">Token</span>
@@ -2315,28 +2417,22 @@ export default function Home() {
             </button>
           </div>
 
-          <TabDescriptionCallout>
-            {activeSpacingTab === "spacing" ? (
-              <>
-                <strong>margin</strong>, <strong>padding</strong>, <strong>gap</strong>의 기준 스케일입니다.{" "}
-                <strong>--space-*</strong> 원본 토큰이 <strong>--spacing-*</strong>로 노출됩니다.
-              </>
-            ) : activeSpacingTab === "radius" ? (
-              <>
-                원본은 <strong>--shape-radius-*</strong>, 유틸리티 노출은 <strong>--radius-*</strong>로 분리해 이름 충돌을 피합니다.
-              </>
-            ) : (
-              <>
-                아이콘과 컨트롤처럼 반복되는 <strong>고정 크기</strong>입니다. <strong>--size-*</strong>를 spacing namespace에 연결해{" "}
-                <strong>size-*</strong>, <strong>h-*</strong> 계열로 사용할 수 있습니다.
-              </>
-            )}
-          </TabDescriptionCallout>
           </ContentIntroShell>
 
           <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"}>
           <section aria-labelledby="section-spacing" className="mb-0">
-            <h3 id="section-spacing" className="sr-only">Spacing</h3>
+            <ContentSectionTitle
+              id="section-spacing"
+              lead
+              description={
+                <>
+                  <strong>margin</strong>, <strong>padding</strong>, <strong>gap</strong>의 기준 스케일입니다.{" "}
+                  <strong>--space-*</strong> 원본 토큰이 <strong>--spacing-*</strong>로 노출됩니다.
+                </>
+              }
+            >
+              Spacing
+            </ContentSectionTitle>
             <div role="list" className="flex flex-col gap-2">
               <div
                 aria-hidden="true"
@@ -2368,7 +2464,17 @@ export default function Home() {
 
           <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"}>
           <section aria-labelledby="section-radius" className="mb-0">
-            <h3 id="section-radius" className="sr-only">Radius</h3>
+            <ContentSectionTitle
+              id="section-radius"
+              lead
+              description={
+                <>
+                  원본은 <strong>--shape-radius-*</strong>, 유틸리티 노출은 <strong>--radius-*</strong>로 분리해 이름 충돌을 피합니다.
+                </>
+              }
+            >
+              Radius
+            </ContentSectionTitle>
             <div role="list" className="grid grid-cols-2 gap-4">
               {radiusTokens.map(({ name, px, rem, utility }) => (
                 <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-border">
@@ -2393,13 +2499,21 @@ export default function Home() {
 
           <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"}>
           <section aria-labelledby="section-fixed-size" className="mb-0">
-            <h3 id="section-fixed-size" className="sr-only">Fixed Size</h3>
+            <ContentSectionTitle
+              id="section-fixed-size"
+              lead
+              description={
+                <>
+                  아이콘과 컨트롤처럼 반복되는 <strong>고정 크기</strong>입니다. <strong>--size-*</strong>를 spacing namespace에 연결해{" "}
+                  <strong>size-*</strong>, <strong>h-*</strong> 계열로 사용할 수 있습니다.
+                </>
+              }
+            >
+              Fixed Size
+            </ContentSectionTitle>
             <div className="flex flex-col gap-10">
               <div>
-                <ContentGroupTitle className="mb-1">Icon Size</ContentGroupTitle>
-                <p className="text-caption text-text-muted mb-4">
-                  아이콘 자체의 정사각 영역입니다. `icon-md` 24px를 일반 UI 기본값으로 사용합니다.
-                </p>
+                <ContentGroupTitle>Icon Size</ContentGroupTitle>
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
                     <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
@@ -2432,10 +2546,7 @@ export default function Home() {
               </div>
 
               <div>
-                <ContentGroupTitle className="mb-1">Control Height</ContentGroupTitle>
-                <p className="text-caption text-text-muted mb-4">
-                  버튼·입력창처럼 인터랙티브 요소의 높이 기준입니다. 폭은 콘텐츠와 padding 조합으로 결정합니다.
-                </p>
+                <ContentGroupTitle>Control Height</ContentGroupTitle>
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
                     <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
@@ -2516,30 +2627,24 @@ export default function Home() {
             </button>
           </div>
 
-          <TabDescriptionCallout>
-            {activeGridTab === "columns" ? (
-              <>
-                Tailwind 기본 <strong>grid-cols-*</strong> 열 분할. <strong>12열</strong> 그리드는 <strong>col-span-*</strong>와 조합해 페이지 레이아웃을 구성합니다.{" "}
-                <strong>shell·breakpoint</strong> 검증은 사이드메뉴{" "}
-                <a
-                  href="#nav-layout-breakpoint"
-                  className="font-semibold text-accent no-underline hover:underline"
-                >
-                  Layout & Breakpoint
-                </a>
-                {" "}가이드를 참고하세요.
-              </>
-            ) : (
-              <>
-                <strong>그리드 간격(gap)</strong>은 item 사이 margin 역할입니다. <strong>gap-*</strong>는 좌우·상하에 동일하게 적용되며, 아래 스케일에서 크기별 견본을 한눈에 비교할 수 있습니다.
-              </>
-            )}
-          </TabDescriptionCallout>
           </ContentIntroShell>
 
           <div role="tabpanel" id="panel-grid-columns" aria-labelledby="tab-grid-columns" hidden={activeGridTab !== "columns"}>
           <section aria-labelledby="section-grid-columns" className="mb-0">
-            <h3 id="section-grid-columns" className="sr-only">Columns</h3>
+            <ContentSectionTitle
+              id="section-grid-columns"
+              lead
+              description={
+                <>
+                  Tailwind 기본 <strong>grid-cols-*</strong> 열 분할. <strong>12열</strong> 그리드는 <strong>col-span-*</strong>와 조합해 페이지 레이아웃을 구성합니다.{" "}
+                  <strong>shell·breakpoint</strong> 검증은 사이드메뉴{" "}
+                  <a href="#nav-layout-breakpoint">Layout & Breakpoint</a>
+                  {" "}가이드를 참고하세요.
+                </>
+              }
+            >
+              Columns
+            </ContentSectionTitle>
             <div role="list" className="grid grid-cols-2 gap-4">
               {gridColumnTokens.map(({ name, cols, utility, desc }) => (
                 <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
@@ -2554,7 +2659,17 @@ export default function Home() {
 
           <div role="tabpanel" id="panel-grid-gap" aria-labelledby="tab-grid-gap" hidden={activeGridTab !== "gap"}>
           <section aria-labelledby="section-grid-gap" className="mb-0">
-            <h3 id="section-grid-gap" className="sr-only">Gap</h3>
+            <ContentSectionTitle
+              id="section-grid-gap"
+              lead
+              description={
+                <>
+                  <strong>그리드 간격(gap)</strong>은 item 사이 margin 역할입니다. <strong>gap-*</strong>는 좌우·상하에 동일하게 적용되며, 아래 스케일에서 크기별 견본을 한눈에 비교할 수 있습니다.
+                </>
+              }
+            >
+              Gap
+            </ContentSectionTitle>
             <GridGapCuration />
           </section>
           </div>{/* /panel-grid-gap */}
@@ -2605,17 +2720,6 @@ export default function Home() {
           </button>
         </div>
 
-        <TabDescriptionCallout>
-          {activeTypeTab === "font-family" ? (
-            <>
-              <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. <strong>font-sans</strong> 유틸리티로 <strong>--font-family-base</strong> 토큰을 적용합니다.
-            </>
-          ) : (
-            <>
-              역할별 타이포 스케일과 <strong>typo-*</strong> 묶음 유틸리티를 확인합니다.
-            </>
-          )}
-        </TabDescriptionCallout>
         </ContentIntroShell>
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"}>
@@ -2814,7 +2918,15 @@ export default function Home() {
 
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"}>
         <section aria-labelledby="section-typography-scale" className="mb-0">
-          <ContentSectionTitle id="section-typography-scale" lead>
+          <ContentSectionTitle
+            id="section-typography-scale"
+            lead
+            description={
+              <>
+                역할별 타이포 스케일과 <strong>typo-*</strong> 묶음 유틸리티를 확인합니다.
+              </>
+            }
+          >
             Type Scale
           </ContentSectionTitle>
           <TypographyScaleTable />
@@ -2831,11 +2943,6 @@ export default function Home() {
           <ContentTitleBlock
             title="Icons"
             titleId="content-icons"
-            description={
-              <>
-                <strong>stroke</strong> 기반 라인 아이콘과 <strong>size-icon-*</strong> 크기 토큰을 확인합니다.
-              </>
-            }
             className="mb-0"
           />
           </ContentIntroShell>
