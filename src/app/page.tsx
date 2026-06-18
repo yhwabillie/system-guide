@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
-import { breakpointTokens } from "@/lib/layout-tokens";
 import { pxToRem } from "@/lib/tokens";
 
 const primitiveColors = [
@@ -294,16 +293,17 @@ export default function Home() {
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#171717", label: "Neutral 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
-  const [activeTab, setActiveTab] = useState<"color" | "layout" | "type">("color");
+  const [activeTab, setActiveTab] = useState<"color" | "spacing" | "grid" | "type">("color");
   const colorTabRef = useRef<HTMLButtonElement>(null);
-  const layoutTabRef = useRef<HTMLButtonElement>(null);
+  const spacingTabRef = useRef<HTMLButtonElement>(null);
+  const gridTabRef = useRef<HTMLButtonElement>(null);
   const typeTabRef = useRef<HTMLButtonElement>(null);
 
   // 탭 좌우/Home/End 키 이동 (WAI-ARIA tabs 패턴)
   function handleTabKeyDown(e: React.KeyboardEvent) {
-    const order: ("color" | "layout" | "type")[] = ["color", "layout", "type"];
-    const refs = { color: colorTabRef, layout: layoutTabRef, type: typeTabRef };
-    let next: "color" | "layout" | "type" | null = null;
+    const order: ("color" | "spacing" | "grid" | "type")[] = ["color", "type", "spacing", "grid"];
+    const refs = { color: colorTabRef, spacing: spacingTabRef, grid: gridTabRef, type: typeTabRef };
+    let next: "color" | "spacing" | "grid" | "type" | null = null;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeTab) + 1) % order.length];
     else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeTab) - 1 + order.length) % order.length];
     else if (e.key === "Home") next = order[0];
@@ -407,19 +407,6 @@ export default function Home() {
             Color
           </button>
           <button
-            ref={layoutTabRef}
-            type="button"
-            role="tab"
-            id="tab-layout"
-            aria-selected={activeTab === "layout"}
-            aria-controls="panel-layout"
-            tabIndex={activeTab === "layout" ? 0 : -1}
-            onClick={() => setActiveTab("layout")}
-            style={tabStyle(activeTab === "layout")}
-          >
-            Layout
-          </button>
-          <button
             ref={typeTabRef}
             type="button"
             role="tab"
@@ -432,6 +419,51 @@ export default function Home() {
           >
             Typography
           </button>
+          <button
+            ref={spacingTabRef}
+            type="button"
+            role="tab"
+            id="tab-spacing"
+            aria-selected={activeTab === "spacing"}
+            aria-controls="panel-spacing"
+            tabIndex={activeTab === "spacing" ? 0 : -1}
+            onClick={() => setActiveTab("spacing")}
+            style={tabStyle(activeTab === "spacing")}
+          >
+            Spacing & Size
+          </button>
+          <button
+            ref={gridTabRef}
+            type="button"
+            role="tab"
+            id="tab-grid"
+            aria-selected={activeTab === "grid"}
+            aria-controls="panel-grid"
+            tabIndex={activeTab === "grid" ? 0 : -1}
+            onClick={() => setActiveTab("grid")}
+            style={tabStyle(activeTab === "grid")}
+          >
+            Grid
+          </button>
+          <a
+            href="/guide/responsive"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 no-underline shrink-0"
+            style={{
+              padding: "10px 20px",
+              marginBottom: "-1px",
+              borderBottom: "2px solid transparent",
+              color: "var(--ds-accent)",
+              fontFamily: "var(--font-family-base)",
+              fontSize: "var(--font-size-label-lg)",
+              fontWeight: 600,
+            }}
+          >
+            Layout & Breakpoint
+            <span aria-hidden="true">↗</span>
+            <span className="sr-only">(새 창에서 열림)</span>
+          </a>
         </div>
 
         {/* ── Tab Panel 1: Color ── */}
@@ -988,11 +1020,11 @@ export default function Home() {
 
         </div>{/* /panel-color */}
 
-        {/* ── Tab Panel 2: Layout ── */}
-        <div role="tabpanel" id="panel-layout" aria-labelledby="tab-layout" hidden={activeTab !== "layout"}>
-          <h2 className="text-heading-lg font-bold mb-2">Layout & Size</h2>
+        {/* ── Tab Panel: Spacing & Size ── */}
+        <div role="tabpanel" id="panel-spacing" aria-labelledby="tab-spacing" hidden={activeTab !== "spacing"}>
+          <h2 className="text-heading-lg font-bold mb-2">Spacing & Size</h2>
           <p className="text-body-sm text-text-muted mb-12">
-            여백, 그리드, 모서리, 반복 크기, 콘텐츠 폭 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
+            여백·모서리·반복 크기 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
           </p>
 
           <section aria-labelledby="section-spacing" className="mb-16">
@@ -1131,11 +1163,30 @@ export default function Home() {
               </div>
             </div>
           </section>
+        </div>{/* /panel-spacing */}
+
+        {/* ── Tab Panel: Grid ── */}
+        <div role="tabpanel" id="panel-grid" aria-labelledby="tab-grid" hidden={activeTab !== "grid"}>
+          <h2 className="text-heading-lg font-bold mb-2">Grid</h2>
+          <p className="text-body-sm text-text-muted mb-12">
+            열 분할·간격(gap) 토큰입니다. 페이지·사이드메뉴 shell 레이아웃과 breakpoint 검증은{" "}
+            <a
+              href="/guide/responsive"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent font-semibold no-underline hover:underline"
+            >
+              Layout & Breakpoint
+              <span aria-hidden="true"> ↗</span>
+              <span className="sr-only"> (새 창에서 열림)</span>
+            </a>
+            {" "}가이드에서 확인합니다.
+          </p>
 
           <section aria-labelledby="section-grid" className="mb-16">
             <h3 id="section-grid" className="text-heading-md font-bold mb-2">Grid</h3>
             <p className="text-body-sm text-text-muted mb-6">
-              열 수·간격은 Tailwind `grid-cols-*`·`gap-*`와 spacing 토큰으로 관리합니다. 페이지·사이드메뉴 shell 레이아웃은 `layout-page`·`layout-sidenav` shorthand를 사용합니다.
+              Tailwind `grid-cols-*`·`gap-*`와 spacing 토큰으로 열 수·칼럼 간 가터를 관리합니다.
             </p>
 
             <div className="flex flex-col gap-10">
@@ -1180,53 +1231,9 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              <div>
-                <div className="flex flex-wrap items-center gap-3 mb-1">
-                  <h4 className="text-label-xl font-semibold m-0">Breakpoints</h4>
-                  <a
-                    href="/guide/responsive"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 py-1 px-3 rounded-md border border-border text-label-sm font-semibold text-accent no-underline bg-background hover:bg-surface-subtle"
-                  >
-                    반응형 가이드
-                    <span aria-hidden="true">↗</span>
-                    <span className="sr-only">(새 창에서 열림)</span>
-                  </a>
-                </div>
-                <p className="text-caption text-text-muted mb-4">
-                  반응형 그리드는 breakpoint 토큰과 prefix를 조합합니다. 예: 태블릿 이상 3열은 `md:` prefix + `grid-cols-3`.
-                </p>
-                <div role="list" className="flex flex-col gap-2">
-                  <div
-                    aria-hidden="true"
-                    className="grid gap-4 items-center pb-1"
-                    style={{ gridTemplateColumns: `${pxToRem(80)} 1fr ${pxToRem(120)} ${pxToRem(100)}` }}
-                  >
-                    <span className="text-caption text-text-muted">Token</span>
-                    <span className="text-caption text-text-muted">Description</span>
-                    <span className="text-caption text-text-muted">Size</span>
-                    <span className="text-caption text-text-muted">Prefix</span>
-                  </div>
-                  {breakpointTokens.map(({ name, px, rem, prefix, desc }) => (
-                    <div
-                      role="listitem"
-                      key={name}
-                      className="grid gap-4 items-center py-2 border-b border-border"
-                      style={{ gridTemplateColumns: `${pxToRem(80)} 1fr ${pxToRem(120)} ${pxToRem(100)}` }}
-                    >
-                      <span className="text-label-sm font-semibold">{name}</span>
-                      <span className="text-caption text-text-muted">{desc}</span>
-                      <TokenValue px={px} rem={rem} />
-                      <span className="text-caption text-text-muted font-mono">{prefix}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </section>
-        </div>{/* /panel-layout */}
+        </div>{/* /panel-grid */}
 
         {/* ── Tab Panel 3: Typography ── */}
         <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"}>
