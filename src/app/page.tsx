@@ -963,12 +963,13 @@ function LevelBadge({ level }: { level: ContrastLevel }) {
   );
 }
 
-function ContrastCriterionStatus({ passed }: { passed: boolean }) {
+/** 원형 통과/실패 배지 — accent(통과)·danger(실패) 채움 + 흰색 체크/엑스. */
+function ContrastCircle({ passed }: { passed: boolean }) {
   return (
     <span
-      role="img"
-      aria-label={passed ? "통과" : "실패"}
-      className="inline-flex items-center"
+      aria-hidden="true"
+      className="inline-flex items-center justify-center rounded-full shrink-0 size-icon-md"
+      style={{ background: passed ? "var(--ds-accent)" : "var(--ds-accent-danger)" }}
     >
       <NavIcon
         innerMarkup={
@@ -976,9 +977,45 @@ function ContrastCriterionStatus({ passed }: { passed: boolean }) {
             ? '<polyline points="20 6 9 17 4 12" />'
             : '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />'
         }
-        className={`size-icon-xs shrink-0 ${passed ? "text-accent" : "text-accent-danger"}`}
+        className="size-icon-xs text-on-accent"
       />
     </span>
+  );
+}
+
+/** 명암비 결과 카드의 단일 기준 박스 — 원형 배지 + 등급 + 임계 대비율. */
+function ContrastCriterionBox({ grade, threshold, passed }: { grade: string; threshold: string; passed: boolean }) {
+  return (
+    <div
+      role="img"
+      aria-label={`${grade} ${threshold} ${passed ? "통과" : "실패"}`}
+      className="flex items-center gap-2 rounded-lg bg-surface-subtle py-2.5 px-3"
+    >
+      <ContrastCircle passed={passed} />
+      <span className="text-label-md font-bold">{grade}</span>
+      <span className="ml-auto text-caption text-text-muted numeric-tabular">{threshold}</span>
+    </div>
+  );
+}
+
+/** 명암비 결과 카드의 카테고리(제목 + AA·AAA 박스). */
+function ContrastCategory({
+  title,
+  aa,
+  aaa,
+}: {
+  title: React.ReactNode;
+  aa: { threshold: string; passed: boolean };
+  aaa: { threshold: string; passed: boolean };
+}) {
+  return (
+    <div>
+      <p className="text-label-sm font-semibold text-text-muted mb-2">{title}</p>
+      <div className="grid grid-cols-2 gap-2">
+        <ContrastCriterionBox grade="AA" threshold={aa.threshold} passed={aa.passed} />
+        <ContrastCriterionBox grade="AAA" threshold={aaa.threshold} passed={aaa.passed} />
+      </div>
+    </div>
   );
 }
 
@@ -2011,201 +2048,78 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 결과 */}
-          <div className="rounded-2xl overflow-hidden border border-neutral-200">
-            {/* 미리보기 — 텍스트 견본은 role="img"로, 인터랙티브 데모는 일반 마크업으로 분리 */}
-            <div className="p-10 flex flex-col gap-5" style={{ background: bgColor.hex }}>
+          {/* 결과 — 미리보기(선택 배경색 위) + 명암비 카드 */}
+          <div className="rounded-2xl overflow-hidden border border-neutral-200 grid lg:grid-cols-[1.4fr_1fr]">
+            {/* 미리보기 — 텍스트 견본은 role="img"로 분리(WAVE가 의도된 저대비 견본을 오류로 잡지 않도록) */}
+            <div className="p-8 md:p-10 flex flex-col gap-8" style={{ background: bgColor.hex }}>
+              {/* 대형 텍스트 미리보기 */}
               <div className="flex flex-col gap-2">
-                {/* 큰 텍스트 견본은 요소 자체에 role="img" — WAVE는 부모가 아닌 텍스트 요소를 직접 평가함 */}
-                <span role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 큰 텍스트 견본`} style={{ display: "block", color: textColor.hex, fontSize: pxToRem(32), fontWeight: "var(--font-weight-bold)", lineHeight: "var(--font-line)" }}>
-                  큰 텍스트 — Large Text (Bold 18px+)
-                </span>
-                <p style={{ color: textColor.hex, fontSize: pxToRem(16), fontWeight: "var(--font-weight-regular)", margin: 0, lineHeight: "var(--font-line)" }}>
-                  일반 텍스트 — Normal Text (16px). 가나다라마바사 ABC 123. 웹 접근성 대비 확인 미리보기입니다.
+                <p aria-hidden="true" className="m-0" style={{ color: textColor.hex, fontSize: pxToRem(13), fontWeight: "var(--font-weight-semibold)", opacity: 0.65 }}>
+                  대형 텍스트 미리보기
                 </p>
-                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-regular)", margin: 0, lineHeight: "var(--font-line)" }}>
-                  작은 텍스트 — Caption (12px). 이 크기에서는 대비율이 더 중요합니다.
+                <span role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 대형 텍스트 견본`} style={{ display: "block", color: textColor.hex, fontSize: pxToRem(24), fontWeight: "var(--font-weight-bold)", lineHeight: "var(--font-line)" }}>
+                  대형 텍스트는 일반 굵기인 경우 18pt(24px) 이상, 굵은 글꼴일 경우 14pt 이상에 적용됩니다.
+                </span>
+              </div>
+
+              {/* 일반 텍스트 미리보기 */}
+              <div className="flex flex-col gap-2">
+                <p aria-hidden="true" className="m-0" style={{ color: textColor.hex, fontSize: pxToRem(13), fontWeight: "var(--font-weight-semibold)", opacity: 0.65 }}>
+                  일반 텍스트 미리보기
+                </p>
+                <p role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 일반 텍스트 견본`} className="m-0" style={{ color: textColor.hex, fontSize: pxToRem(16), fontWeight: "var(--font-weight-regular)", lineHeight: "var(--font-line)" }}>
+                  일반 텍스트는 일반 굵기인 경우 16pt(21px) 이하, 굵은 글꼴일 경우 12pt 이하에 적용됩니다.
                 </p>
               </div>
 
-              <div aria-hidden="true" style={{ borderTop: `1px solid ${textColor.hex}`, opacity: 0.15 }} />
-
-              {/* 아이콘 미리보기 */}
-              <div className="flex flex-col gap-3">
-                <p style={{ color: textColor.hex, fontSize: pxToRem(12), fontWeight: "var(--font-weight-semibold)", margin: 0, opacity: 0.6, letterSpacing: "var(--font-tracking)", textTransform: "uppercase" }}>
-                  Icon Preview (SC 1.4.11 — AA 3:1)
+              {/* 그래픽 미리보기 */}
+              <div className="flex flex-col gap-2">
+                <p aria-hidden="true" className="m-0" style={{ color: textColor.hex, fontSize: pxToRem(13), fontWeight: "var(--font-weight-semibold)", opacity: 0.65 }}>
+                  그래픽 미리보기
                 </p>
-                <div className="flex items-center gap-8 flex-wrap">
-                  {/* 아이콘 단독 */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div role="group" aria-label="아이콘 단독 예시" className="flex gap-3 items-center">
-                      <svg aria-label="홈" role="img" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                      </svg>
-                      <svg aria-label="검색" role="img" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                      </svg>
-                      <svg aria-label="알림" role="img" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
-                      </svg>
-                      <svg aria-label="사용자" role="img" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                      </svg>
-                      <svg aria-label="설정" role="img" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
-                      </svg>
-                    </div>
-                    <span aria-hidden="true" style={{ color: textColor.hex, fontSize: pxToRem(11), opacity: 0.6 }}>아이콘 단독</span>
-                  </div>
-
-                  {/* 아이콘 + 텍스트 (면제 케이스) */}
-                  <div className="flex flex-col items-start gap-2">
-                    <nav aria-label="아이콘과 텍스트 조합 예시">
-                      <ul className="list-none m-0 p-0 flex flex-col gap-2">
-                        <li>
-                          <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-2 no-underline" style={{ color: textColor.hex }}>
-                            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                            </svg>
-                            <span style={{ fontSize: pxToRem(14), fontWeight: "var(--font-weight-medium)" }}>홈</span>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-2 no-underline" style={{ color: textColor.hex }}>
-                            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                            </svg>
-                            <span style={{ fontSize: pxToRem(14), fontWeight: "var(--font-weight-medium)" }}>검색</span>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                    <span aria-hidden="true" style={{ color: textColor.hex, fontSize: pxToRem(11), opacity: 0.6 }}>아이콘 + 텍스트 (대비 요건 면제)</span>
-                  </div>
-
-                  {/* 버튼 UI 컴포넌트 */}
-                  <div className="flex flex-col items-start gap-2">
-                    <div className="flex gap-2 flex-wrap">
-                      <button
-                        type="button"
-                        style={{
-                          display: "flex", alignItems: "center", gap: "6px",
-                          padding: "8px 16px", borderRadius: "8px",
-                          border: `2px solid ${textColor.hex}`,
-                          background: "transparent", color: textColor.hex,
-                          fontSize: pxToRem(14), fontWeight: "var(--font-weight-medium)", cursor: "pointer",
-                        }}
-                      >
-                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        추가하기
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="닫기"
-                        style={{
-                          padding: "8px 12px", borderRadius: "8px",
-                          border: `2px solid ${textColor.hex}`,
-                          background: "transparent", cursor: "pointer",
-                        }}
-                      >
-                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={textColor.hex} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                      </button>
-                    </div>
-                    <span aria-hidden="true" style={{ color: textColor.hex, fontSize: pxToRem(11), opacity: 0.6 }}>UI 컴포넌트 (버튼 테두리 3:1)</span>
-                  </div>
+                <div role="img" aria-label={`배경색 ${bgColor.label}, 텍스트색 ${textColor.label} 그래픽 견본`} className="flex items-center gap-4" style={{ color: textColor.hex }}>
+                  {projectIconCatalog.slice(0, 5).map((icon) => (
+                    <ProjectIconGlyph key={icon.id} innerMarkup={icon.innerMarkup} className="size-icon-lg shrink-0" />
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* 결과 패널 */}
+            {/* 명암비 결과 카드 */}
             <div
               role="region"
               aria-label={`대비율 결과: ${ratio}:1 — ${level}`}
               aria-live="polite"
               aria-atomic="true"
-              className="bg-background p-6 grid items-start border-t border-neutral-200"
-              style={{ gridTemplateColumns: "auto 1fr 1fr 1fr 1fr" }}
+              className="bg-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-neutral-200"
             >
-              <div className="pr-8 border-r border-neutral-200">
-                <p className="text-caption text-neutral-400 mb-1">대비율</p>
-                <output className="block">
-                  {/* 숫자는 role="img" 그래픽으로 명시 — 제목 오인(Possible heading) 방지 */}
-                  <span role="img" aria-label={`대비율 ${ratio} 대 1`} className="block font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
-                    {ratio}<span aria-hidden="true" className="font-normal" style={{ fontSize: pxToRem(16) }}>:1</span>
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-label-md font-bold m-0">명암비</p>
+                  <LevelBadge level={level} />
+                </div>
+                <output className="block rounded-xl bg-surface-subtle py-5 text-center">
+                  <span role="img" aria-label={`대비율 ${ratio} 대 1`} className="font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
+                    {ratio}<span aria-hidden="true" className="font-normal text-text-muted" style={{ fontSize: pxToRem(18) }}> : 1</span>
                   </span>
                 </output>
-                <LevelBadge level={level} />
               </div>
 
-              <div className="pl-6 pr-6 border-r border-neutral-200">
-                <p className="text-caption text-neutral-400 mb-2 font-semibold">일반 텍스트</p>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400 numeric-tabular">4.5:1</span>
-                    <ContrastCriterionStatus passed={ratio >= 4.5} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AAA</span>
-                    <span className="text-caption text-neutral-400 numeric-tabular">7:1</span>
-                    <ContrastCriterionStatus passed={ratio >= 7} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pl-6 pr-6 border-r border-neutral-200">
-                <p className="text-caption text-neutral-400 mb-2 font-semibold">
-                  큰 텍스트 <span className="font-normal">(18px+ / bold 14px+)</span>
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
-                    <ContrastCriterionStatus passed={ratio >= 3} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AAA</span>
-                    <span className="text-caption text-neutral-400 numeric-tabular">4.5:1</span>
-                    <ContrastCriterionStatus passed={ratio >= 4.5} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pl-6 pr-6 border-r border-neutral-200">
-                <p className="text-caption text-neutral-400 mb-2 font-semibold">아이콘 / 그래픽</p>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
-                    <ContrastCriterionStatus passed={ratio >= 3} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AAA</span>
-                    <span className="text-caption text-neutral-400">—</span>
-                    <span className="text-caption text-neutral-500">기준 없음</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pl-6">
-                <p className="text-caption text-neutral-400 mb-2 font-semibold">UI 컴포넌트</p>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AA</span>
-                    <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
-                    <ContrastCriterionStatus passed={ratio >= 3} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-caption text-neutral-500 w-8">AAA</span>
-                    <span className="text-caption text-neutral-400">—</span>
-                    <span className="text-caption text-neutral-500">기준 없음</span>
-                  </div>
-                </div>
-              </div>
+              <ContrastCategory
+                title="일반텍스트"
+                aa={{ threshold: "4.5:1", passed: ratio >= 4.5 }}
+                aaa={{ threshold: "7:1", passed: ratio >= 7 }}
+              />
+              <ContrastCategory
+                title="대형텍스트"
+                aa={{ threshold: "3:1", passed: ratio >= 3 }}
+                aaa={{ threshold: "4.5:1", passed: ratio >= 4.5 }}
+              />
+              <ContrastCategory
+                title={<>그 외 텍스트 <span className="font-normal">(SVG, 그래픽아이콘 등)</span></>}
+                aa={{ threshold: "3:1", passed: ratio >= 3 }}
+                aaa={{ threshold: "4.5:1", passed: ratio >= 4.5 }}
+              />
             </div>
           </div>
 
