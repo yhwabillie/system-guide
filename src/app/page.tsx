@@ -2,6 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
+import {
+  layoutPageColSpanFull,
+  layoutSidenavClass,
+  layoutSidenavContentClass,
+  layoutSidenavMenuClass,
+} from "@/lib/layout-tokens";
 import { pxToRem } from "@/lib/tokens";
 
 const primitiveColors = [
@@ -288,16 +294,168 @@ function GridGapPreview({ utility, label }: { utility: string; label: string }) 
 
 type SwatchInfo = { hex: string; label: string };
 
+function NavIcon({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className ?? "size-icon-sm shrink-0"}
+    >
+      {children}
+    </svg>
+  );
+}
+
+const navIconColor = (
+  <NavIcon>
+    <circle cx="8" cy="8" r="3.5" />
+    <circle cx="16" cy="10" r="3.5" />
+    <circle cx="11" cy="16" r="3.5" />
+  </NavIcon>
+);
+
+const navIconType = (
+  <NavIcon>
+    <path d="M4 7h16" />
+    <path d="M7 12h10" />
+    <path d="M10 17h4" />
+  </NavIcon>
+);
+
+const navIconSpacing = (
+  <NavIcon>
+    <path d="M4 8h16" />
+    <path d="M4 16h16" />
+    <path d="M12 8v8" />
+    <path d="M9 12h6" />
+  </NavIcon>
+);
+
+const navIconGrid = (
+  <NavIcon>
+    <rect x="4" y="4" width="7" height="7" rx="1.5" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" />
+  </NavIcon>
+);
+
+const navIconLayout = (
+  <NavIcon>
+    <rect x="4" y="5" width="16" height="14" rx="2" />
+    <path d="M4 9h16" />
+    <path d="M8 5v14" />
+  </NavIcon>
+);
+
+function ExternalLinkIcon({ className }: { className?: string }) {
+  return (
+    <NavIcon className={className ?? "size-icon-xs shrink-0"}>
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <path d="M15 3h6v6" />
+      <path d="M10 14 21 3" />
+    </NavIcon>
+  );
+}
+
+const themeIconSun = (
+  <NavIcon className="size-icon-md shrink-0">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2" />
+    <path d="M12 20v2" />
+    <path d="M4.93 4.93l1.41 1.41" />
+    <path d="M17.66 17.66l1.41 1.41" />
+    <path d="M2 12h2" />
+    <path d="M20 12h2" />
+    <path d="M4.93 19.07l1.41-1.41" />
+    <path d="M17.66 6.34l1.41-1.41" />
+  </NavIcon>
+);
+
+const themeIconMoon = (
+  <NavIcon className="size-icon-md shrink-0">
+    <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z" />
+  </NavIcon>
+);
+
+type NavSubTreeItem = {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+};
+
+function NavSubTree({
+  ariaLabel,
+  items,
+  itemClassName,
+}: {
+  ariaLabel: string;
+  items: NavSubTreeItem[];
+  itemClassName: (active: boolean) => string;
+}) {
+  return (
+    <ul
+      role="group"
+      aria-label={ariaLabel}
+      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-border py-1 pl-4 pr-1"
+    >
+      {items.map((item) => (
+        <li key={item.label} className="relative">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-4 top-1/2 h-px w-4 -translate-y-1/2 bg-border"
+          />
+          <button
+            type="button"
+            onClick={item.onClick}
+            aria-current={item.active ? "page" : undefined}
+            className={itemClassName(item.active)}
+          >
+            <span>{item.label}</span>
+            {item.active && (
+              <NavIcon className="size-icon-xs shrink-0 opacity-50">
+                <path d="M9 6l6 6-6 6" />
+              </NavIcon>
+            )}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#171717", label: "Neutral 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
   const [activeTab, setActiveTab] = useState<"color" | "spacing" | "grid" | "type">("color");
+  const [activeColorTab, setActiveColorTab] = useState<"raw" | "semantic">("raw");
+  const [activeTypeTab, setActiveTypeTab] = useState<"font-family" | "typography">("font-family");
+  const [activeSpacingTab, setActiveSpacingTab] = useState<"spacing" | "radius" | "fixed-size">("spacing");
+  const [activeGridTab, setActiveGridTab] = useState<"columns" | "gap">("columns");
+  const [colorMenuExpanded, setColorMenuExpanded] = useState(true);
+  const [typeMenuExpanded, setTypeMenuExpanded] = useState(true);
+  const [spacingMenuExpanded, setSpacingMenuExpanded] = useState(true);
+  const [gridMenuExpanded, setGridMenuExpanded] = useState(true);
   const colorTabRef = useRef<HTMLButtonElement>(null);
   const spacingTabRef = useRef<HTMLButtonElement>(null);
   const gridTabRef = useRef<HTMLButtonElement>(null);
   const typeTabRef = useRef<HTMLButtonElement>(null);
+  const rawColorTabRef = useRef<HTMLButtonElement>(null);
+  const semanticColorTabRef = useRef<HTMLButtonElement>(null);
+  const fontFamilyTabRef = useRef<HTMLButtonElement>(null);
+  const typographyTabRef = useRef<HTMLButtonElement>(null);
+  const spacingMeasureTabRef = useRef<HTMLButtonElement>(null);
+  const radiusTabRef = useRef<HTMLButtonElement>(null);
+  const fixedSizeTabRef = useRef<HTMLButtonElement>(null);
+  const gridColumnsTabRef = useRef<HTMLButtonElement>(null);
+  const gridGapTabRef = useRef<HTMLButtonElement>(null);
 
   // 탭 좌우/Home/End 키 이동 (WAI-ARIA tabs 패턴)
   function handleTabKeyDown(e: React.KeyboardEvent) {
@@ -315,18 +473,120 @@ export default function Home() {
     }
   }
 
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: "10px 20px",
-    border: "none",
-    borderBottom: active ? "2px solid var(--ds-accent)" : "2px solid transparent",
-    background: "none",
-    color: active ? "var(--ds-foreground)" : "var(--ds-text-muted)",
-    fontFamily: "var(--font-family-base)",
-    fontSize: "var(--font-size-label-lg)",
-    fontWeight: active ? 700 : 500,
-    cursor: "pointer",
-    marginBottom: "-1px",
-  });
+  function handleColorTabKeyDown(e: React.KeyboardEvent) {
+    const order: ("raw" | "semantic")[] = ["raw", "semantic"];
+    const refs = { raw: rawColorTabRef, semantic: semanticColorTabRef };
+    let next: "raw" | "semantic" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeColorTab) + 1) % order.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeColorTab) - 1 + order.length) % order.length];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[order.length - 1];
+    if (next) {
+      e.preventDefault();
+      selectColorSection(next);
+      refs[next].current?.focus();
+    }
+  }
+
+  function handleTypeTabKeyDown(e: React.KeyboardEvent) {
+    const order: ("font-family" | "typography")[] = ["font-family", "typography"];
+    const refs = { "font-family": fontFamilyTabRef, typography: typographyTabRef };
+    let next: "font-family" | "typography" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeTypeTab) + 1) % order.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeTypeTab) - 1 + order.length) % order.length];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[order.length - 1];
+    if (next) {
+      e.preventDefault();
+      selectTypeSection(next);
+      refs[next].current?.focus();
+    }
+  }
+
+  function handleSpacingTabKeyDown(e: React.KeyboardEvent) {
+    const order: ("spacing" | "radius" | "fixed-size")[] = ["spacing", "radius", "fixed-size"];
+    const refs = { spacing: spacingMeasureTabRef, radius: radiusTabRef, "fixed-size": fixedSizeTabRef };
+    let next: "spacing" | "radius" | "fixed-size" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeSpacingTab) + 1) % order.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeSpacingTab) - 1 + order.length) % order.length];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[order.length - 1];
+    if (next) {
+      e.preventDefault();
+      selectSpacingSection(next);
+      refs[next].current?.focus();
+    }
+  }
+
+  function handleGridTabKeyDown(e: React.KeyboardEvent) {
+    const order: ("columns" | "gap")[] = ["columns", "gap"];
+    const refs = { columns: gridColumnsTabRef, gap: gridGapTabRef };
+    let next: "columns" | "gap" | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeGridTab) + 1) % order.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeGridTab) - 1 + order.length) % order.length];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[order.length - 1];
+    if (next) {
+      e.preventDefault();
+      selectGridSection(next);
+      refs[next].current?.focus();
+    }
+  }
+
+  const navExternalLinkClass =
+    "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-accent no-underline transition-colors duration-150 hover:bg-neutral-100";
+
+  const navSubItemClass = (active: boolean) =>
+    [
+      "flex w-full items-center justify-between gap-2 text-left rounded-lg border-0 cursor-pointer font-sans text-label-sm leading-base",
+      "py-2 px-3 transition-colors duration-150",
+      active
+        ? "bg-neutral-100 text-foreground font-semibold"
+        : "bg-transparent text-text-muted font-medium hover:bg-neutral-100 hover:text-foreground",
+    ].join(" ");
+
+  const navParentGroupClass = (active: boolean) =>
+    ["flex items-center rounded-xl", active ? "bg-green-50" : "bg-transparent"].join(" ");
+
+  const navParentButtonClass = (active: boolean) =>
+    [
+      "flex min-w-0 flex-1 items-center gap-3 border-0 bg-transparent text-left font-sans text-label-md leading-base",
+      "cursor-pointer py-2.5 pl-3.5 pr-1 transition-colors duration-150",
+      active ? "font-semibold text-green-600" : "font-medium text-text-muted hover:text-foreground",
+    ].join(" ");
+
+  function selectColorSection(sub: "raw" | "semantic") {
+    setActiveTab("color");
+    setActiveColorTab(sub);
+    setColorMenuExpanded(true);
+  }
+
+  function selectTypeSection(sub: "font-family" | "typography") {
+    setActiveTab("type");
+    setActiveTypeTab(sub);
+    setTypeMenuExpanded(true);
+  }
+
+  function selectSpacingSection(sub: "spacing" | "radius" | "fixed-size") {
+    setActiveTab("spacing");
+    setActiveSpacingTab(sub);
+    setSpacingMenuExpanded(true);
+  }
+
+  function selectGridSection(sub: "columns" | "gap") {
+    setActiveTab("grid");
+    setActiveGridTab(sub);
+    setGridMenuExpanded(true);
+  }
+
+  const contentSubTabClass = (active: boolean) =>
+    [
+      "cursor-pointer border-0 bg-transparent font-sans text-label-lg leading-base transition-colors duration-150",
+      "border-b-2 -mb-px py-2.5 px-4",
+      active
+        ? "border-accent font-bold text-foreground"
+        : "border-transparent font-medium text-text-muted hover:text-foreground",
+    ].join(" ");
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
   const [resolved, setResolved] = useState<Record<string, string>>({});
 
@@ -373,104 +633,305 @@ export default function Home() {
         본문 바로가기
       </a>
 
-      <main
-        id="main-content"
-        className="min-h-screen p-10 transition-colors duration-300 font-sans bg-background text-foreground"
-      >
-        {/* Header */}
-        <header className="mb-2">
-          <h1 className="text-display-lg font-bold">Design Token Preview</h1>
-        </header>
+      <div className={`${layoutSidenavClass} min-h-screen font-sans bg-background text-foreground transition-colors duration-300`}>
+        <nav
+          aria-label="디자인 토큰 가이드"
+          className={`${layoutSidenavMenuClass} flex flex-col border-b border-border py-6 px-4 md:px-6 lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10`}
+        >
+          <header className="mb-6 px-1">
+            <h1 className="text-heading-md font-bold lg:text-heading-lg">디자인 시스템 가이드</h1>
+            <p className="mt-1 text-caption text-text-muted">
+              토큰 정의와 Tailwind 적용, 웹접근성 대비 검증을 한곳에서
+            </p>
+          </header>
 
-        <p className="mb-6 text-body-md text-neutral-400">
-          Figma variables → CSS custom properties 적용 확인
+          <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Tokens</p>
+          <div
+            role="tablist"
+            aria-label="디자인 토큰 카테고리"
+            aria-orientation="vertical"
+            onKeyDown={handleTabKeyDown}
+            className="flex flex-col gap-0.5"
+          >
+            <div className="flex flex-col gap-0.5">
+              <div className={navParentGroupClass(activeTab === "color")}>
+                <button
+                  ref={colorTabRef}
+                  type="button"
+                  role="tab"
+                  id="tab-color"
+                  aria-selected={activeTab === "color"}
+                  aria-controls="panel-color"
+                  tabIndex={activeTab === "color" ? 0 : -1}
+                  onClick={() => {
+                    setActiveTab("color");
+                    setColorMenuExpanded(true);
+                  }}
+                  className={navParentButtonClass(activeTab === "color")}
+                >
+                  {navIconColor}
+                  Color
+                </button>
+                <button
+                  type="button"
+                  aria-label={colorMenuExpanded ? "Color 하위 메뉴 접기" : "Color 하위 메뉴 펼치기"}
+                  aria-expanded={colorMenuExpanded}
+                  onClick={() => setColorMenuExpanded((open) => !open)}
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                >
+                  <NavIcon
+                    className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${colorMenuExpanded ? "rotate-180" : ""}`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </NavIcon>
+                </button>
+              </div>
+              {colorMenuExpanded && (
+                <NavSubTree
+                  ariaLabel="Color 하위 메뉴"
+                  itemClassName={navSubItemClass}
+                  items={[
+                    {
+                      label: "Raw Color",
+                      active: activeTab === "color" && activeColorTab === "raw",
+                      onClick: () => selectColorSection("raw"),
+                    },
+                    {
+                      label: "Semantic Color",
+                      active: activeTab === "color" && activeColorTab === "semantic",
+                      onClick: () => selectColorSection("semantic"),
+                    },
+                  ]}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <div className={navParentGroupClass(activeTab === "type")}>
+                <button
+                  ref={typeTabRef}
+                  type="button"
+                  role="tab"
+                  id="tab-type"
+                  aria-selected={activeTab === "type"}
+                  aria-controls="panel-type"
+                  tabIndex={activeTab === "type" ? 0 : -1}
+                  onClick={() => {
+                    setActiveTab("type");
+                    setTypeMenuExpanded(true);
+                  }}
+                  className={navParentButtonClass(activeTab === "type")}
+                >
+                  {navIconType}
+                  Typography
+                </button>
+                <button
+                  type="button"
+                  aria-label={typeMenuExpanded ? "Typography 하위 메뉴 접기" : "Typography 하위 메뉴 펼치기"}
+                  aria-expanded={typeMenuExpanded}
+                  onClick={() => setTypeMenuExpanded((open) => !open)}
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                >
+                  <NavIcon
+                    className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${typeMenuExpanded ? "rotate-180" : ""}`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </NavIcon>
+                </button>
+              </div>
+              {typeMenuExpanded && (
+                <NavSubTree
+                  ariaLabel="Typography 하위 메뉴"
+                  itemClassName={navSubItemClass}
+                  items={[
+                    {
+                      label: "Font Family",
+                      active: activeTab === "type" && activeTypeTab === "font-family",
+                      onClick: () => selectTypeSection("font-family"),
+                    },
+                    {
+                      label: "Typography",
+                      active: activeTab === "type" && activeTypeTab === "typography",
+                      onClick: () => selectTypeSection("typography"),
+                    },
+                  ]}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <div className={navParentGroupClass(activeTab === "spacing")}>
+                <button
+                  ref={spacingTabRef}
+                  type="button"
+                  role="tab"
+                  id="tab-spacing"
+                  aria-selected={activeTab === "spacing"}
+                  aria-controls="panel-spacing"
+                  tabIndex={activeTab === "spacing" ? 0 : -1}
+                  onClick={() => {
+                    setActiveTab("spacing");
+                    setSpacingMenuExpanded(true);
+                  }}
+                  className={navParentButtonClass(activeTab === "spacing")}
+                >
+                  {navIconSpacing}
+                  Spacing & Size
+                </button>
+                <button
+                  type="button"
+                  aria-label={spacingMenuExpanded ? "Spacing & Size 하위 메뉴 접기" : "Spacing & Size 하위 메뉴 펼치기"}
+                  aria-expanded={spacingMenuExpanded}
+                  onClick={() => setSpacingMenuExpanded((open) => !open)}
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                >
+                  <NavIcon
+                    className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${spacingMenuExpanded ? "rotate-180" : ""}`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </NavIcon>
+                </button>
+              </div>
+              {spacingMenuExpanded && (
+                <NavSubTree
+                  ariaLabel="Spacing & Size 하위 메뉴"
+                  itemClassName={navSubItemClass}
+                  items={[
+                    {
+                      label: "Spacing",
+                      active: activeTab === "spacing" && activeSpacingTab === "spacing",
+                      onClick: () => selectSpacingSection("spacing"),
+                    },
+                    {
+                      label: "Radius",
+                      active: activeTab === "spacing" && activeSpacingTab === "radius",
+                      onClick: () => selectSpacingSection("radius"),
+                    },
+                    {
+                      label: "Fixed Size",
+                      active: activeTab === "spacing" && activeSpacingTab === "fixed-size",
+                      onClick: () => selectSpacingSection("fixed-size"),
+                    },
+                  ]}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <div className={navParentGroupClass(activeTab === "grid")}>
+                <button
+                  ref={gridTabRef}
+                  type="button"
+                  role="tab"
+                  id="tab-grid"
+                  aria-selected={activeTab === "grid"}
+                  aria-controls="panel-grid"
+                  tabIndex={activeTab === "grid" ? 0 : -1}
+                  onClick={() => {
+                    setActiveTab("grid");
+                    setGridMenuExpanded(true);
+                  }}
+                  className={navParentButtonClass(activeTab === "grid")}
+                >
+                  {navIconGrid}
+                  Grid
+                </button>
+                <button
+                  type="button"
+                  aria-label={gridMenuExpanded ? "Grid 하위 메뉴 접기" : "Grid 하위 메뉴 펼치기"}
+                  aria-expanded={gridMenuExpanded}
+                  onClick={() => setGridMenuExpanded((open) => !open)}
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                >
+                  <NavIcon
+                    className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${gridMenuExpanded ? "rotate-180" : ""}`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </NavIcon>
+                </button>
+              </div>
+              {gridMenuExpanded && (
+                <NavSubTree
+                  ariaLabel="Grid 하위 메뉴"
+                  itemClassName={navSubItemClass}
+                  items={[
+                    {
+                      label: "Columns",
+                      active: activeTab === "grid" && activeGridTab === "columns",
+                      onClick: () => selectGridSection("columns"),
+                    },
+                    {
+                      label: "Gap",
+                      active: activeTab === "grid" && activeGridTab === "gap",
+                      onClick: () => selectGridSection("gap"),
+                    },
+                  ]}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="mt-5 border-t border-border pt-5">
+            <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Layout</p>
+            <a
+              id="nav-layout-breakpoint"
+              href="/guide/responsive"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={navExternalLinkClass}
+            >
+              {navIconLayout}
+              Layout & Breakpoint
+              <ExternalLinkIcon className="ml-auto size-icon-xs shrink-0" />
+              <span className="sr-only">(새 창에서 열림)</span>
+            </a>
+          </div>
+        </nav>
+
+        <main
+          id="main-content"
+          className={`${layoutSidenavContentClass} py-6 md:py-8 lg:py-10`}
+        >
+        {/* ── Tab Panel 1: Color ── */}
+        <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"} className={layoutPageColSpanFull}>
+
+        <h2 className="text-heading-lg font-bold mb-2">Color</h2>
+        <p className="text-body-sm text-text-muted mb-6">
+          원본 팔레트·대비 검증과 시맨틱 색상 토큰을 확인합니다.
         </p>
 
-        {/* ── Tabs ── */}
         <div
           role="tablist"
-          aria-label="디자인 토큰 카테고리"
-          onKeyDown={handleTabKeyDown}
-          className="flex gap-2 mb-10 border-b border-border"
+          aria-label="색상 카테고리"
+          onKeyDown={handleColorTabKeyDown}
+          className="mb-10 flex gap-1 border-b border-border"
         >
           <button
-            ref={colorTabRef}
+            ref={rawColorTabRef}
             type="button"
             role="tab"
-            id="tab-color"
-            aria-selected={activeTab === "color"}
-            aria-controls="panel-color"
-            tabIndex={activeTab === "color" ? 0 : -1}
-            onClick={() => setActiveTab("color")}
-            style={tabStyle(activeTab === "color")}
+            id="tab-color-raw"
+            aria-selected={activeColorTab === "raw"}
+            aria-controls="panel-color-raw"
+            tabIndex={activeColorTab === "raw" ? 0 : -1}
+            onClick={() => selectColorSection("raw")}
+            className={contentSubTabClass(activeColorTab === "raw")}
           >
-            Color
+            Raw Color
           </button>
           <button
-            ref={typeTabRef}
+            ref={semanticColorTabRef}
             type="button"
             role="tab"
-            id="tab-type"
-            aria-selected={activeTab === "type"}
-            aria-controls="panel-type"
-            tabIndex={activeTab === "type" ? 0 : -1}
-            onClick={() => setActiveTab("type")}
-            style={tabStyle(activeTab === "type")}
+            id="tab-color-semantic"
+            aria-selected={activeColorTab === "semantic"}
+            aria-controls="panel-color-semantic"
+            tabIndex={activeColorTab === "semantic" ? 0 : -1}
+            onClick={() => selectColorSection("semantic")}
+            className={contentSubTabClass(activeColorTab === "semantic")}
           >
-            Typography
+            Semantic Color
           </button>
-          <button
-            ref={spacingTabRef}
-            type="button"
-            role="tab"
-            id="tab-spacing"
-            aria-selected={activeTab === "spacing"}
-            aria-controls="panel-spacing"
-            tabIndex={activeTab === "spacing" ? 0 : -1}
-            onClick={() => setActiveTab("spacing")}
-            style={tabStyle(activeTab === "spacing")}
-          >
-            Spacing & Size
-          </button>
-          <button
-            ref={gridTabRef}
-            type="button"
-            role="tab"
-            id="tab-grid"
-            aria-selected={activeTab === "grid"}
-            aria-controls="panel-grid"
-            tabIndex={activeTab === "grid" ? 0 : -1}
-            onClick={() => setActiveTab("grid")}
-            style={tabStyle(activeTab === "grid")}
-          >
-            Grid
-          </button>
-          <a
-            href="/guide/responsive"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 no-underline shrink-0"
-            style={{
-              padding: "10px 20px",
-              marginBottom: "-1px",
-              borderBottom: "2px solid transparent",
-              color: "var(--ds-accent)",
-              fontFamily: "var(--font-family-base)",
-              fontSize: "var(--font-size-label-lg)",
-              fontWeight: 600,
-            }}
-          >
-            Layout & Breakpoint
-            <span aria-hidden="true">↗</span>
-            <span className="sr-only">(새 창에서 열림)</span>
-          </a>
         </div>
 
-        {/* ── Tab Panel 1: Color ── */}
-        <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"}>
-
-        {/* ===== 그룹: Raw Color ===== */}
-        <h2 className="text-heading-lg font-bold mb-2">Raw Color</h2>
+        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"}>
         <p className="text-body-sm text-text-muted mb-12">
           가공 전 원본 팔레트(raw)와 대비 검증 도구입니다.
         </p>
@@ -938,8 +1399,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ===== 그룹: Semantic Color ===== */}
-        <h2 className="text-heading-lg font-bold mb-2 mt-16 pt-16 border-t border-border">Semantic Color</h2>
+        </div>{/* /panel-color-raw */}
+
+        <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"}>
         <p className="text-body-sm text-text-muted mb-12">
           raw를 용도·모드(라이트/다크)에 맞게 매핑한 의미 기반 토큰입니다.
         </p>
@@ -1018,17 +1480,67 @@ export default function Home() {
           </div>
         </section>
 
+        </div>{/* /panel-color-semantic */}
+
         </div>{/* /panel-color */}
 
         {/* ── Tab Panel: Spacing & Size ── */}
-        <div role="tabpanel" id="panel-spacing" aria-labelledby="tab-spacing" hidden={activeTab !== "spacing"}>
+        <div role="tabpanel" id="panel-spacing" aria-labelledby="tab-spacing" hidden={activeTab !== "spacing"} className={layoutPageColSpanFull}>
           <h2 className="text-heading-lg font-bold mb-2">Spacing & Size</h2>
-          <p className="text-body-sm text-text-muted mb-12">
+          <p className="text-body-sm text-text-muted mb-6">
             여백·모서리·반복 크기 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
           </p>
 
-          <section aria-labelledby="section-spacing" className="mb-16">
-            <h3 id="section-spacing" className="text-heading-md font-bold mb-2">Spacing</h3>
+          <div
+            role="tablist"
+            aria-label="Spacing & Size 카테고리"
+            onKeyDown={handleSpacingTabKeyDown}
+            className="mb-10 flex gap-1 border-b border-border"
+          >
+            <button
+              ref={spacingMeasureTabRef}
+              type="button"
+              role="tab"
+              id="tab-spacing-measure"
+              aria-selected={activeSpacingTab === "spacing"}
+              aria-controls="panel-spacing-measure"
+              tabIndex={activeSpacingTab === "spacing" ? 0 : -1}
+              onClick={() => selectSpacingSection("spacing")}
+              className={contentSubTabClass(activeSpacingTab === "spacing")}
+            >
+              Spacing
+            </button>
+            <button
+              ref={radiusTabRef}
+              type="button"
+              role="tab"
+              id="tab-spacing-radius"
+              aria-selected={activeSpacingTab === "radius"}
+              aria-controls="panel-spacing-radius"
+              tabIndex={activeSpacingTab === "radius" ? 0 : -1}
+              onClick={() => selectSpacingSection("radius")}
+              className={contentSubTabClass(activeSpacingTab === "radius")}
+            >
+              Radius
+            </button>
+            <button
+              ref={fixedSizeTabRef}
+              type="button"
+              role="tab"
+              id="tab-spacing-fixed-size"
+              aria-selected={activeSpacingTab === "fixed-size"}
+              aria-controls="panel-spacing-fixed-size"
+              tabIndex={activeSpacingTab === "fixed-size" ? 0 : -1}
+              onClick={() => selectSpacingSection("fixed-size")}
+              className={contentSubTabClass(activeSpacingTab === "fixed-size")}
+            >
+              Fixed Size
+            </button>
+          </div>
+
+          <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"}>
+          <section aria-labelledby="section-spacing" className="mb-0">
+            <h3 id="section-spacing" className="sr-only">Spacing</h3>
             <p className="text-body-sm text-text-muted mb-6">
               margin, padding, gap의 기준 스케일입니다. `--space-*` 원본 토큰이 `--spacing-*`로 노출됩니다.
             </p>
@@ -1059,8 +1571,11 @@ export default function Home() {
             </div>
           </section>
 
-          <section aria-labelledby="section-radius" className="mb-16">
-            <h3 id="section-radius" className="text-heading-md font-bold mb-2">Radius</h3>
+          </div>{/* /panel-spacing-measure */}
+
+          <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"}>
+          <section aria-labelledby="section-radius" className="mb-0">
+            <h3 id="section-radius" className="sr-only">Radius</h3>
             <p className="text-body-sm text-text-muted mb-6">
               원본은 `--shape-radius-*`, 유틸리티 노출은 `--radius-*`로 분리해 이름 충돌을 피합니다.
             </p>
@@ -1084,8 +1599,11 @@ export default function Home() {
             </div>
           </section>
 
-          <section aria-labelledby="section-fixed-size" className="mb-16">
-            <h3 id="section-fixed-size" className="text-heading-md font-bold mb-2">Fixed Size</h3>
+          </div>{/* /panel-spacing-radius */}
+
+          <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"}>
+          <section aria-labelledby="section-fixed-size" className="mb-0">
+            <h3 id="section-fixed-size" className="sr-only">Fixed Size</h3>
             <p className="text-body-sm text-text-muted mb-6">
               아이콘과 컨트롤처럼 반복되는 고정 크기입니다. `--size-*`를 spacing namespace에 연결해 `size-*`, `h-*` 계열로 사용할 수 있습니다.
             </p>
@@ -1163,84 +1681,153 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          </div>{/* /panel-spacing-fixed-size */}
+
         </div>{/* /panel-spacing */}
 
         {/* ── Tab Panel: Grid ── */}
-        <div role="tabpanel" id="panel-grid" aria-labelledby="tab-grid" hidden={activeTab !== "grid"}>
+        <div role="tabpanel" id="panel-grid" aria-labelledby="tab-grid" hidden={activeTab !== "grid"} className={layoutPageColSpanFull}>
           <h2 className="text-heading-lg font-bold mb-2">Grid</h2>
-          <p className="text-body-sm text-text-muted mb-12">
-            열 분할·간격(gap) 토큰입니다. 페이지·사이드메뉴 shell 레이아웃과 breakpoint 검증은{" "}
+          <p className="text-body-sm text-text-muted mb-6">
+            열 분할·간격(gap) 토큰입니다. 페이지·사이드메뉴 shell 레이아웃과 breakpoint 검증은 사이드메뉴{" "}
             <a
-              href="/guide/responsive"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent font-semibold no-underline hover:underline"
+              href="#nav-layout-breakpoint"
+              className="font-semibold text-accent no-underline hover:underline"
             >
               Layout & Breakpoint
-              <span aria-hidden="true"> ↗</span>
-              <span className="sr-only"> (새 창에서 열림)</span>
             </a>
             {" "}가이드에서 확인합니다.
           </p>
 
-          <section aria-labelledby="section-grid" className="mb-16">
-            <h3 id="section-grid" className="text-heading-md font-bold mb-2">Grid</h3>
+          <div
+            role="tablist"
+            aria-label="Grid 카테고리"
+            onKeyDown={handleGridTabKeyDown}
+            className="mb-10 flex gap-1 border-b border-border"
+          >
+            <button
+              ref={gridColumnsTabRef}
+              type="button"
+              role="tab"
+              id="tab-grid-columns"
+              aria-selected={activeGridTab === "columns"}
+              aria-controls="panel-grid-columns"
+              tabIndex={activeGridTab === "columns" ? 0 : -1}
+              onClick={() => selectGridSection("columns")}
+              className={contentSubTabClass(activeGridTab === "columns")}
+            >
+              Columns
+            </button>
+            <button
+              ref={gridGapTabRef}
+              type="button"
+              role="tab"
+              id="tab-grid-gap"
+              aria-selected={activeGridTab === "gap"}
+              aria-controls="panel-grid-gap"
+              tabIndex={activeGridTab === "gap" ? 0 : -1}
+              onClick={() => selectGridSection("gap")}
+              className={contentSubTabClass(activeGridTab === "gap")}
+            >
+              Gap
+            </button>
+          </div>
+
+          <div role="tabpanel" id="panel-grid-columns" aria-labelledby="tab-grid-columns" hidden={activeGridTab !== "columns"}>
+          <section aria-labelledby="section-grid-columns" className="mb-0">
+            <h3 id="section-grid-columns" className="sr-only">Columns</h3>
             <p className="text-body-sm text-text-muted mb-6">
-              Tailwind `grid-cols-*`·`gap-*`와 spacing 토큰으로 열 수·칼럼 간 가터를 관리합니다.
+              Tailwind 기본 `grid-cols-*` 열 분할. 12열 그리드는 `col-span-*`와 조합해 페이지 레이아웃을 구성합니다.
             </p>
-
-            <div className="flex flex-col gap-10">
-              <div>
-                <h4 className="text-label-xl font-semibold mb-1">Columns</h4>
-                <p className="text-caption text-text-muted mb-4">
-                  Tailwind 기본 `grid-cols-*` 열 분할. 12열 그리드는 `col-span-*`와 조합해 페이지 레이아웃을 구성합니다.
-                </p>
-                <div role="list" className="grid grid-cols-2 gap-4">
-                  {gridColumnTokens.map(({ name, cols, utility, desc }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
-                      <p className="m-0 text-label-sm font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-3 text-caption text-text-muted">{desc}</p>
-                      <GridColumnPreview cols={cols} utility={utility} label={`${name} ${cols}열 그리드 견본`} />
-                      <p className="mt-2 mb-0 text-caption text-text-muted font-mono">{utility}</p>
-                    </div>
-                  ))}
+            <div role="list" className="grid grid-cols-2 gap-4">
+              {gridColumnTokens.map(({ name, cols, utility, desc }) => (
+                <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                  <p className="m-0 text-label-sm font-semibold">{name}</p>
+                  <p className="mt-0.5 mb-3 text-caption text-text-muted">{desc}</p>
+                  <GridColumnPreview cols={cols} utility={utility} label={`${name} ${cols}열 그리드 견본`} />
+                  <p className="mt-2 mb-0 text-caption text-text-muted font-mono">{utility}</p>
                 </div>
-              </div>
-
-              <div>
-                <h4 className="text-label-xl font-semibold mb-1">Gap</h4>
-                <p className="text-caption text-text-muted mb-4">
-                  그리드 간격(gap)은 item 사이 margin 역할입니다. 진한 초록은 gap, 점선/옅은 영역은 미리보기용 padding입니다.
-                </p>
-                <div role="list" className="flex flex-col gap-4">
-                  {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
-                      <div className="flex items-baseline justify-between gap-4 mb-3">
-                        <span className="text-label-sm font-semibold">{name}</span>
-                        <span className="text-caption text-text-muted font-mono">
-                          <span className="font-semibold text-foreground">{px}</span>
-                          <span> · {rem} · {utility}</span>
-                        </span>
-                      </div>
-                      <GridGapPreview
-                        utility={utility}
-                        label={`${name} ${px}, ${rem} — 초록 gap 영역과 grid item 견본`}
-                      />
-                      <p className="mt-2 mb-0 text-caption text-text-muted">{desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </section>
+          </div>{/* /panel-grid-columns */}
+
+          <div role="tabpanel" id="panel-grid-gap" aria-labelledby="tab-grid-gap" hidden={activeGridTab !== "gap"}>
+          <section aria-labelledby="section-grid-gap" className="mb-0">
+            <h3 id="section-grid-gap" className="sr-only">Gap</h3>
+            <p className="text-body-sm text-text-muted mb-6">
+              그리드 간격(gap)은 item 사이 margin 역할입니다. 진한 초록은 gap, 점선/옅은 영역은 미리보기용 padding입니다.
+            </p>
+            <div role="list" className="flex flex-col gap-4">
+              {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
+                <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                  <div className="flex items-baseline justify-between gap-4 mb-3">
+                    <span className="text-label-sm font-semibold">{name}</span>
+                    <span className="text-caption text-text-muted font-mono">
+                      <span className="font-semibold text-foreground">{px}</span>
+                      <span> · {rem} · {utility}</span>
+                    </span>
+                  </div>
+                  <GridGapPreview
+                    utility={utility}
+                    label={`${name} ${px}, ${rem} — 초록 gap 영역과 grid item 견본`}
+                  />
+                  <p className="mt-2 mb-0 text-caption text-text-muted">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+          </div>{/* /panel-grid-gap */}
+
         </div>{/* /panel-grid */}
 
         {/* ── Tab Panel 3: Typography ── */}
-        <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"}>
+        <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"} className={layoutPageColSpanFull}>
 
+        <h2 className="text-heading-lg font-bold mb-2">Typography</h2>
+        <p className="text-body-sm text-text-muted mb-6">
+          폰트 패밀리·폴백 체인과 타이포그래피 토큰을 확인합니다.
+        </p>
+
+        <div
+          role="tablist"
+          aria-label="타이포그래피 카테고리"
+          onKeyDown={handleTypeTabKeyDown}
+          className="mb-10 flex gap-1 border-b border-border"
+        >
+          <button
+            ref={fontFamilyTabRef}
+            type="button"
+            role="tab"
+            id="tab-type-font-family"
+            aria-selected={activeTypeTab === "font-family"}
+            aria-controls="panel-type-font-family"
+            tabIndex={activeTypeTab === "font-family" ? 0 : -1}
+            onClick={() => selectTypeSection("font-family")}
+            className={contentSubTabClass(activeTypeTab === "font-family")}
+          >
+            Font Family
+          </button>
+          <button
+            ref={typographyTabRef}
+            type="button"
+            role="tab"
+            id="tab-type-typography"
+            aria-selected={activeTypeTab === "typography"}
+            aria-controls="panel-type-typography"
+            tabIndex={activeTypeTab === "typography" ? 0 : -1}
+            onClick={() => selectTypeSection("typography")}
+            className={contentSubTabClass(activeTypeTab === "typography")}
+          >
+            Typography
+          </button>
+        </div>
+
+        <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"}>
         {/* ── Font Family ── */}
         <section aria-labelledby="section-font" className="mb-0">
-          <h2 id="section-font" className="text-heading-lg font-bold mb-2">Font Family</h2>
+          <h3 id="section-font" className="sr-only">Font Family</h3>
           <p className="text-body-sm text-text-muted mb-8">
             기본은 Pretendard GOV, 미로드 시 Noto Sans KR 폴백입니다. 둘 다 자체 호스팅(런타임 외부 요청 0)이며 최종 폴백은 시스템 sans-serif입니다.
           </p>
@@ -1447,9 +2034,15 @@ export default function Home() {
           </div>
         </section>
 
+        </div>{/* /panel-type-font-family */}
+
+        <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"}>
         {/* ── Typography ── */}
-        <section aria-labelledby="section-typography" className="mt-16 pt-16 border-t border-border">
-          <h2 id="section-typography" className="text-heading-lg font-bold mb-8">Typography</h2>
+        <section aria-labelledby="section-typography" className="mb-0">
+          <p className="text-body-sm text-text-muted mb-8">
+            개별 유틸리티(`text-*`·`font-*`·`leading-base`)와 묶음 유틸리티(`typo-*`)로 타이포 스케일을 적용합니다.
+          </p>
+          <h3 id="section-typography" className="sr-only">Typography 토큰</h3>
           <dl className="flex flex-col gap-4 m-0">
             {typographyTokens.map(({ label, var: cssVar, weight, typoClass }) => (
               <div key={cssVar} className="flex items-baseline gap-4 border-b border-neutral-200 pb-3">
@@ -1469,7 +2062,12 @@ export default function Home() {
           </dl>
         </section>
 
+        </div>{/* /panel-type-typography */}
+
         </div>{/* /panel-type */}
+
+        </main>
+      </div>
 
         {/* 모드 토글 — DOM 마지막에 두어 콘텐츠 뒤에 포커스. fixed라 시각 위치는 우하단 고정 */}
         <button
@@ -1477,13 +2075,10 @@ export default function Home() {
           onClick={() => setIsDark(!isDark)}
           aria-pressed={isDark}
           aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-          className="fixed bottom-6 right-6 z-50 py-2.5 px-5 rounded-full border border-border cursor-pointer text-label-md font-semibold text-foreground shadow-[0_4px_16px_var(--ds-shadow)]"
-          style={{ background: isDark ? "var(--ds-neutral-800)" : "var(--ds-neutral-100)" }}
+          className="fixed bottom-6 right-6 z-50 inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 bg-accent text-on-accent shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150"
         >
-          <span aria-hidden="true">{isDark ? "🌙" : "☀️"}</span>
-          <span className="ml-1.5">{isDark ? "Dark" : "Light"}</span>
+          {isDark ? themeIconSun : themeIconMoon}
         </button>
-      </main>
     </>
   );
 }

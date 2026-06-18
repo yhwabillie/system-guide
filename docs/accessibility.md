@@ -191,6 +191,40 @@
 </button>
 ```
 
+### 외부 링크(새 창) 표시
+```tsx
+<a href="https://example.com" target="_blank" rel="noopener noreferrer" className="text-accent">
+  레이블
+  <ExternalLinkIcon aria-hidden="true" className="size-icon-xs shrink-0" />
+  <span className="sr-only">(새 창에서 열림)</span>
+</a>
+```
+
+- **유니코드 기호(`↗` 등)를 장식으로 쓰지 않는다** — `aria-hidden`이어도 WAVE가 텍스트 노드로 색상 대비(1.3.3)를 검사해 오류가 날 수 있다.
+- 외부 링크·새 창 표시는 **SVG 라인 아이콘**(`stroke="currentColor"`, `aria-hidden="true"`)으로 하고, 링크 본문과 **같은 색**(`currentColor` 상속, `--color-accent` 등 대비 충족 토큰)을 쓴다.
+- 장식 아이콘에 `opacity-70`·`text-text-muted`처럼 **대비를 깎는 조합을 붙이지 않는다** — 정보 전달은 `.sr-only` 문구가 담당한다.
+
+### 중복 링크(Redundant link) 방지
+- **동일 `href`(같은 URL)로 가는 `<a>`를 한 화면에 두 개 이상 두지 않는다** — WAVE Redundant link, 스크린리더에서 같은 목적지가 반복 낭독된다.
+- 사이드 nav·헤더 등 **전역 네비에 이미 있는 가이드 링크**는 본문에서 같은 URL `<a>`로 반복하지 않는다.
+- 본문에서 위치만 안내할 때는 **페이지 내 앵커**(`href="#nav-…"`)로 canonical 링크 요소로 이동시키거나, 링크 없이 텍스트로 안내한다.
+
+```tsx
+{/* ✅ canonical — 사이드 nav 한 곳만 */}
+<a id="nav-layout-breakpoint" href="/guide/responsive" target="_blank" rel="noopener noreferrer">
+  Layout & Breakpoint
+  <ExternalLinkIcon className="size-icon-xs shrink-0" />
+  <span className="sr-only">(새 창에서 열림)</span>
+</a>
+
+{/* ✅ 본문 — 같은 URL <a> 반복 금지, 앵커로 canonical 링크 위치 안내 */}
+<p>
+  breakpoint 검증은 사이드메뉴{" "}
+  <a href="#nav-layout-breakpoint" className="font-semibold text-accent">Layout & Breakpoint</a>
+  {" "}가이드에서 확인합니다.
+</p>
+```
+
 ---
 
 ## CSS 코딩 규칙
@@ -231,6 +265,8 @@
 - `tabindex` 양수값 사용 금지 (`tabindex="1"` 등)
 - `div`, `span`에 클릭 이벤트만 추가하는 패턴 금지
 - 레이아웃 목적 `<table>` 사용 금지
+- 외부 링크·장식 표시에 유니코드 `↗`·이모지 텍스트 + `opacity-*` / `text-text-muted` 조합 금지 (WAVE 대비 오류) → SVG + `currentColor` + `.sr-only`
+- 동일 URL을 가리키는 `<a>`를 한 화면에 중복 배치 금지 (WAVE Redundant link) → nav canonical 1개 + 본문은 `#id` 앵커 또는 텍스트 안내
 
 ---
 
