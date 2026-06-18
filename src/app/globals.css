@@ -151,9 +151,9 @@
   --layout-header-padding-sm: var(--layout-screen-margin-sm);
   --layout-header-padding-md: var(--layout-screen-margin-md);
 
-  /* 가이드 콘텐츠 서브탭 패널 인셋 — 60px(상하) × 30px(좌우) */
-  --layout-guide-tabpanel-py: 3.75rem;
-  --layout-guide-tabpanel-px: 1.875rem;
+  /* 가이드 콘텐츠 서브탭 패널 인셋 — 80px(상하·좌우) */
+  --layout-guide-tabpanel-py: 5rem;
+  --layout-guide-tabpanel-px: 5rem;
 
   /* ============================================================
      TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
@@ -478,6 +478,7 @@
   --text-guide-selected-md: var(--font-size-guide-selected-md);
   --text-guide-selected-sm: var(--font-size-guide-selected-sm);
   --text-guide-content-title: var(--font-size-guide-content-title);
+  --text-guide-tab-title: var(--font-size-guide-tab-title);
 
   --leading-base: var(--font-line);
   --tracking-normal: var(--font-tracking);
@@ -665,6 +666,40 @@
 @utility layout-guide-tabpanel {
   padding-block: var(--layout-guide-tabpanel-py);
   padding-inline: var(--layout-guide-tabpanel-px);
+}
+
+/* 가이드 outline 서브탭 — 가로 스크롤·그라데이션 마스크 (Tabs outline variant 참고) */
+@utility guide-tabs-list-area {
+  width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--size-control-md),
+    black calc(100% - var(--size-control-md)),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--size-control-md),
+    black calc(100% - var(--size-control-md)),
+    transparent
+  );
+}
+
+@utility guide-tabs-scroll-btn {
+  flex: 0 0 auto;
+}
+
+@utility guide-tabs-scroll-btn-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  cursor: default;
 }
 
 /* 부모 p-6 md:p-10 padding 상쇄 — layout-page 등을 viewport 폭과 맞출 때 사용 */

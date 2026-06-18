@@ -37,7 +37,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - 그라데이션은 `--ds-gradient-*` → `@theme` `--background-image-gradient-*` → `bg-gradient-accent` 등으로 노출합니다.
 - 반응형 container·grid·tier 계산과 권장 class 조합은 [`src/lib/layout-tokens.ts`](src/lib/layout-tokens.ts)에 일원화합니다. 페이지 콘텐츠 레이아웃 shorthand는 [`src/app/globals.css`](src/app/globals.css) `@utility layout-page`(container + 최소 스크린 마진 + 4→8→12열 grid)입니다. 자식 영역은 `col-span-*`를 tier별 열 수에 맞게 조합합니다(`layoutPageColSpanFull` / `Main` / `Aside` export). 패딩 있는 래퍼 안에서 viewport 폭 맞출 때는 `@utility layout-bleed`를 사용합니다. `layout-page`에 `p-0`·`px-*`를 추가하면 스크린 마진이 사라집니다. container·margin·스크린 마진 실측은 [`/guide/responsive`](src/app/guide/responsive/page.tsx)에서 확인합니다.
 - 사이드메뉴 프리셋은 `@utility layout-sidenav` + `layout-sidenav-menu` + `layout-sidenav-content` 조합입니다. `layout-sidenav` shell에는 gap 없음 — 콘텐츠 좌우 스크린 마진·container 상한은 `layout-sidenav-content`가 담당합니다(`layout-page`와 동일). 넓은 menu는 `layout-sidenav-wide`입니다.
-- 가이드 메인 콘텐츠 **서브탭 패널** 인셋은 `--layout-guide-tabpanel-py`·`--layout-guide-tabpanel-px`(60px×30px) 원본 → `@utility layout-guide-tabpanel`로 적용합니다. `className`만 사용하고 인라인 `style` padding은 금지합니다.
+- 가이드 메인 콘텐츠 **서브탭 패널** 인셋은 `--layout-guide-tabpanel-py`·`--layout-guide-tabpanel-px`(80px) 원본 → `@utility layout-guide-tabpanel`로 적용합니다. `className`만 사용하고 인라인 `style` padding은 금지합니다.
 - 모든 크기 값은 rem 기반입니다. 새 px 값이 필요하면 토큰/헬퍼에서 rem으로 환산하고, 인라인 고정 px를 추가하지 않습니다.
 
 ## 스타일 적용 (className 우선)

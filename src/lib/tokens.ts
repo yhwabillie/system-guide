@@ -39,6 +39,8 @@ export const fontSizePx = {
   "guide-selected-sm": 14,
   /** 가이드 콘텐츠 상위 타이틀(ContentTitleBlock h2) — ~60px */
   "guide-content-title": 60,
+  /** 가이드 서브탭 타이틀(ContentOutlineTabList) */
+  "guide-tab-title": 22,
 } as const;
 
 /**

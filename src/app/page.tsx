@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, createContext, useContext, useCallback } from "react";
+import { useState, useEffect, useRef, createContext, useContext, useCallback, useId } from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
 import {
   guideHeaderPaddingClass,
@@ -268,6 +268,35 @@ const semanticGradientCatalog = {
   ),
   tokens: gradientTokens,
 };
+
+type TocSection = { id: string; label: string };
+
+const colorRawTocSections: TocSection[] = [
+  { id: "section-color", label: "Color Palette" },
+  { id: "section-contrast", label: "Contrast Checker" },
+];
+
+const semanticTocSections: TocSection[] = [
+  ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title })),
+  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title },
+  { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title },
+];
+
+const fontFamilyTocSections: TocSection[] = [
+  { id: "section-font-family", label: "Font Family" },
+  { id: "section-font-stack", label: "Font Stack" },
+];
+
+const typographyTocSections: TocSection[] = [
+  { id: "section-typography-scale", label: "Type Scale" },
+  { id: "section-typography-example", label: "Example of Use" },
+];
+
+const iconsTocSections: TocSection[] = [
+  { id: "section-outline-icon", label: "Outline Icon" },
+  { id: "section-icon-source", label: "Source" },
+  { id: "section-outline-icons", label: "Sizes" },
+];
 
 function probeSemanticUtilityColor(probe: HTMLDivElement, utility: string, readAs: SemanticColorReadMode): string {
   if (readAs === "border") {
@@ -655,7 +684,7 @@ function ContentTitleBlock({
   className?: string;
 }) {
   return (
-    <header className={["mb-10", className].filter(Boolean).join(" ")}>
+    <header className={["mb-20", className].filter(Boolean).join(" ")}>
       <p className="m-0 text-label-md font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
       <h2
         id={titleId}
@@ -669,6 +698,8 @@ function ContentTitleBlock({
     </header>
   );
 }
+
+const guideSectionAnchorClass = "scroll-mt-[calc(3.75rem+1.5rem)]";
 
 /** 탭 패널 1단 — 주요 섹션 */
 function ContentSectionTitle({
@@ -699,6 +730,7 @@ function ContentSectionTitle({
         id={id}
         className={[
           "m-0 text-heading-sm font-bold leading-base text-foreground",
+          guideSectionAnchorClass,
           titleMargin,
           className,
         ]
@@ -709,6 +741,125 @@ function ContentSectionTitle({
       </h3>
       {description ? <TabDescriptionCallout>{description}</TabDescriptionCallout> : null}
     </>
+  );
+}
+
+function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
+  const headingId = useId();
+  const listId = useId();
+  const [collapsed, setCollapsed] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(sections[0]?.id ?? null);
+  const sectionsKey = sections.map((s) => s.id).join("|");
+
+  useEffect(() => {
+    setCollapsed(false);
+    setActiveId(sections[0]?.id ?? null);
+  }, [sectionsKey, sections]);
+
+  useEffect(() => {
+    if (sections.length < 3) return;
+
+    const headerOffset = 72;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) {
+          setActiveId(visible[0].target.id);
+        }
+      },
+      { rootMargin: `-${headerOffset}px 0px -55% 0px`, threshold: [0, 1] },
+    );
+
+    for (const { id } of sections) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+
+    return () => observer.disconnect();
+  }, [sectionsKey, sections]);
+
+  const scrollToSection = useCallback((id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveId(id);
+  }, []);
+
+  if (sections.length < 3) return null;
+
+  return (
+    <nav
+      aria-labelledby={headingId}
+      className="sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
+    >
+      <div className="overflow-hidden rounded-md border border-border bg-surface-subtle">
+        <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3.5">
+          <h2 id={headingId} className="m-0 text-label-md font-bold text-foreground">
+            목차
+          </h2>
+          <button
+            type="button"
+            onClick={() => setCollapsed((prev) => !prev)}
+            aria-expanded={!collapsed}
+            aria-controls={listId}
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1 text-caption font-medium text-text-muted transition-colors hover:text-foreground"
+          >
+            {collapsed ? "펼치기" : "접기"}
+            <NavIcon
+              className={["size-icon-xs shrink-0 transition-transform duration-200", collapsed ? "rotate-180" : ""]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <polyline points="18 15 12 9 6 15" />
+            </NavIcon>
+          </button>
+        </div>
+        {!collapsed ? (
+          <ul id={listId} className="m-0 flex list-none flex-col gap-0.5 py-2">
+            {sections.map(({ id, label }) => {
+              const isActive = activeId === id;
+              return (
+                <li key={id}>
+                  <a
+                    href={`#${id}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      scrollToSection(id);
+                    }}
+                    aria-current={isActive ? "location" : undefined}
+                    className={[
+                      "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
+                      isActive
+                        ? "bg-neutral-100 font-bold text-foreground"
+                        : "font-normal text-text-muted hover:text-foreground",
+                    ].join(" ")}
+                  >
+                    {label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+      </div>
+    </nav>
+  );
+}
+
+function GuideContentLayout({
+  sections,
+  children,
+}: {
+  sections: TocSection[];
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-8 xl:gap-10">
+      <div className="min-w-0 flex-1">{children}</div>
+      <ContentTableOfContents sections={sections} />
+    </div>
   );
 }
 
@@ -730,6 +881,7 @@ function ContentSubsectionTitle({
       id={id}
       className={[
         "m-0 mb-6 text-heading-md font-bold text-accent",
+        guideSectionAnchorClass,
         spaced ? "mt-20" : "",
         className,
       ]
@@ -750,9 +902,152 @@ function ContentGroupTitle({ children, className = "" }: { children: React.React
   );
 }
 
-/** 콘텐츠 영역 서브탭 — 탭 패널 상위 네비게이션 */
-const contentSubTabListClass = "mt-6 flex gap-1 border-b border-border";
+/** 콘텐츠 영역 서브탭 — outline variant (react-ts-scss-vite-pnpm-template Tabs 구조 참고) */
 const contentSubTabPanelClass = "layout-guide-tabpanel";
+
+type ContentOutlineTabDef = {
+  value: string;
+  tabId: string;
+  panelId: string;
+  label: string;
+  ref?: React.RefObject<HTMLButtonElement | null>;
+};
+
+const contentOutlineSubTabClass = (active: boolean) =>
+  [
+    "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-colors duration-200",
+    active
+      ? "z-[1] -mb-0.5 border-accent border-b-0 bg-background font-bold text-accent after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
+      : "border-transparent bg-surface-subtle font-medium text-foreground hover:bg-neutral-100",
+  ].join(" ");
+
+const guideTabScrollBtnClass =
+  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-accent bg-background text-accent transition-opacity duration-150 hover:bg-surface-subtle focus-visible:opacity-100 focus-visible:visible";
+
+const GUIDE_TAB_SCROLL_AMOUNT = 200;
+
+function ContentOutlineTabList({
+  ariaLabel,
+  tabs,
+  activeValue,
+  onSelect,
+  onKeyDown,
+}: {
+  ariaLabel: string;
+  tabs: ContentOutlineTabDef[];
+  activeValue: string;
+  onSelect: (value: string) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+}) {
+  const tabListRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = tabListRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setShowLeftArrow(scrollLeft > 1);
+    setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+  }, []);
+
+  const scrollToTab = useCallback((tabId: string, immediate = false) => {
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) {
+      targetTab.scrollIntoView({
+        behavior: immediate ? "auto" : "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const activeTab = tabs.find((tab) => tab.value === activeValue);
+    if (activeTab) scrollToTab(activeTab.tabId);
+  }, [activeValue, tabs, scrollToTab]);
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [checkScroll, tabs]);
+
+  const handleScroll = (direction: "left" | "right") => {
+    tabListRef.current?.scrollBy({
+      left: direction === "left" ? -GUIDE_TAB_SCROLL_AMOUNT : GUIDE_TAB_SCROLL_AMOUNT,
+      behavior: "smooth",
+    });
+    window.setTimeout(checkScroll, 350);
+  };
+
+  return (
+    <div className="mt-0 w-full">
+      <div className="relative flex w-full items-center overflow-hidden">
+        <button
+          type="button"
+          aria-label="이전 탭 보기"
+          aria-disabled={!showLeftArrow}
+          onClick={() => showLeftArrow && handleScroll("left")}
+          className={[guideTabScrollBtnClass, !showLeftArrow ? "guide-tabs-scroll-btn-hidden" : ""].filter(Boolean).join(" ")}
+        >
+          <NavIcon className="size-icon-xs shrink-0">
+            <polyline points="15 18 9 12 15 6" />
+          </NavIcon>
+        </button>
+
+        <div
+          ref={tabListRef}
+          onScroll={checkScroll}
+          className="guide-tabs-list-area min-w-0 flex-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div
+            role="tablist"
+            aria-label={ariaLabel}
+            onKeyDown={onKeyDown}
+            className="flex w-max min-w-full border-b-2 border-accent px-control-md"
+          >
+            {tabs.map((tab) => {
+              const active = activeValue === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  ref={tab.ref}
+                  type="button"
+                  role="tab"
+                  id={tab.tabId}
+                  aria-selected={active}
+                  aria-controls={tab.panelId}
+                  tabIndex={active ? 0 : -1}
+                  onClick={() => {
+                    onSelect(tab.value);
+                    scrollToTab(tab.tabId, true);
+                  }}
+                  onFocus={() => scrollToTab(tab.tabId)}
+                  className={contentOutlineSubTabClass(active)}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          aria-label="다음 탭 보기"
+          aria-disabled={!showRightArrow}
+          onClick={() => showRightArrow && handleScroll("right")}
+          className={[guideTabScrollBtnClass, !showRightArrow ? "guide-tabs-scroll-btn-hidden" : ""].filter(Boolean).join(" ")}
+        >
+          <NavIcon className="size-icon-xs shrink-0">
+            <polyline points="9 18 15 12 9 6" />
+          </NavIcon>
+        </button>
+      </div>
+    </div>
+  );
+}
 
 const guideHeaderHeightClass = "h-[3.75rem]";
 const guideHeaderOffsetClass = "top-[3.75rem]";
@@ -1947,14 +2242,6 @@ export default function Home() {
     setGridMenuExpanded(true);
   }
 
-  const contentSubTabClass = (active: boolean) =>
-    [
-      "cursor-pointer border-0 bg-transparent font-sans text-heading-md leading-base transition-colors duration-150",
-      "border-b-2 -mb-px py-3 px-5",
-      active
-        ? "border-accent font-bold text-foreground"
-        : "border-transparent font-medium text-text-muted hover:text-foreground",
-    ].join(" ");
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
   const [resolved, setResolved] = useState<Record<string, string>>({});
   const [semanticResolved, setSemanticResolved] = useState<Record<string, string>>({});
@@ -2303,46 +2590,23 @@ export default function Home() {
         <ContentTitleBlock
           title="Color"
           titleId="content-color"
-          className="mb-0"
         />
 
-        <div
-          role="tablist"
-          aria-label="색상 카테고리"
+        <ContentOutlineTabList
+          ariaLabel="색상 카테고리"
+          activeValue={activeColorTab}
+          onSelect={(value) => selectColorSection(value as "raw" | "semantic")}
           onKeyDown={handleColorTabKeyDown}
-          className={contentSubTabListClass}
-        >
-          <button
-            ref={rawColorTabRef}
-            type="button"
-            role="tab"
-            id="tab-color-raw"
-            aria-selected={activeColorTab === "raw"}
-            aria-controls="panel-color-raw"
-            tabIndex={activeColorTab === "raw" ? 0 : -1}
-            onClick={() => selectColorSection("raw")}
-            className={contentSubTabClass(activeColorTab === "raw")}
-          >
-            Raw Color
-          </button>
-          <button
-            ref={semanticColorTabRef}
-            type="button"
-            role="tab"
-            id="tab-color-semantic"
-            aria-selected={activeColorTab === "semantic"}
-            aria-controls="panel-color-semantic"
-            tabIndex={activeColorTab === "semantic" ? 0 : -1}
-            onClick={() => selectColorSection("semantic")}
-            className={contentSubTabClass(activeColorTab === "semantic")}
-          >
-            Semantic Color
-          </button>
-        </div>
+          tabs={[
+            { value: "raw", tabId: "tab-color-raw", panelId: "panel-color-raw", label: "Raw Color", ref: rawColorTabRef },
+            { value: "semantic", tabId: "tab-color-semantic", panelId: "panel-color-semantic", label: "Semantic Color", ref: semanticColorTabRef },
+          ]}
+        />
 
         </ContentIntroShell>
 
         <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"} className={contentSubTabPanelClass}>
+        <GuideContentLayout sections={colorRawTocSections}>
         <section aria-labelledby="section-color" className="mb-24">
           <ContentSectionTitle
             id="section-color"
@@ -2657,9 +2921,11 @@ export default function Home() {
           </div>
         </section>
 
+        </GuideContentLayout>
         </div>{/* /panel-color-raw */}
 
         <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"} className={contentSubTabPanelClass}>
+        <GuideContentLayout sections={semanticTocSections}>
           {semanticColorCatalog.map((category, index) => (
             <SemanticColorCategorySection
               key={category.id}
@@ -2712,6 +2978,7 @@ export default function Home() {
               ))}
             </SemanticColorGroupGrid>
           </SemanticColorCategorySection>
+        </GuideContentLayout>
         </div>{/* /panel-color-semantic */}
 
         </div>{/* /panel-color */}
@@ -2722,55 +2989,19 @@ export default function Home() {
           <ContentTitleBlock
             title="Spacing & Size"
             titleId="content-spacing"
-            className="mb-0"
           />
 
-          <div
-            role="tablist"
-            aria-label="Spacing & Size 카테고리"
+          <ContentOutlineTabList
+            ariaLabel="Spacing & Size 카테고리"
+            activeValue={activeSpacingTab}
+            onSelect={(value) => selectSpacingSection(value as "spacing" | "radius" | "fixed-size")}
             onKeyDown={handleSpacingTabKeyDown}
-            className={contentSubTabListClass}
-          >
-            <button
-              ref={spacingMeasureTabRef}
-              type="button"
-              role="tab"
-              id="tab-spacing-measure"
-              aria-selected={activeSpacingTab === "spacing"}
-              aria-controls="panel-spacing-measure"
-              tabIndex={activeSpacingTab === "spacing" ? 0 : -1}
-              onClick={() => selectSpacingSection("spacing")}
-              className={contentSubTabClass(activeSpacingTab === "spacing")}
-            >
-              Spacing
-            </button>
-            <button
-              ref={radiusTabRef}
-              type="button"
-              role="tab"
-              id="tab-spacing-radius"
-              aria-selected={activeSpacingTab === "radius"}
-              aria-controls="panel-spacing-radius"
-              tabIndex={activeSpacingTab === "radius" ? 0 : -1}
-              onClick={() => selectSpacingSection("radius")}
-              className={contentSubTabClass(activeSpacingTab === "radius")}
-            >
-              Radius
-            </button>
-            <button
-              ref={fixedSizeTabRef}
-              type="button"
-              role="tab"
-              id="tab-spacing-fixed-size"
-              aria-selected={activeSpacingTab === "fixed-size"}
-              aria-controls="panel-spacing-fixed-size"
-              tabIndex={activeSpacingTab === "fixed-size" ? 0 : -1}
-              onClick={() => selectSpacingSection("fixed-size")}
-              className={contentSubTabClass(activeSpacingTab === "fixed-size")}
-            >
-              Fixed Size
-            </button>
-          </div>
+            tabs={[
+              { value: "spacing", tabId: "tab-spacing-measure", panelId: "panel-spacing-measure", label: "Spacing", ref: spacingMeasureTabRef },
+              { value: "radius", tabId: "tab-spacing-radius", panelId: "panel-spacing-radius", label: "Radius", ref: radiusTabRef },
+              { value: "fixed-size", tabId: "tab-spacing-fixed-size", panelId: "panel-spacing-fixed-size", label: "Fixed Size", ref: fixedSizeTabRef },
+            ]}
+          />
 
           </ContentIntroShell>
 
@@ -2945,42 +3176,18 @@ export default function Home() {
           <ContentTitleBlock
             title="Grid"
             titleId="content-grid"
-            className="mb-0"
           />
 
-          <div
-            role="tablist"
-            aria-label="Grid 카테고리"
+          <ContentOutlineTabList
+            ariaLabel="Grid 카테고리"
+            activeValue={activeGridTab}
+            onSelect={(value) => selectGridSection(value as "columns" | "gap")}
             onKeyDown={handleGridTabKeyDown}
-            className={contentSubTabListClass}
-          >
-            <button
-              ref={gridColumnsTabRef}
-              type="button"
-              role="tab"
-              id="tab-grid-columns"
-              aria-selected={activeGridTab === "columns"}
-              aria-controls="panel-grid-columns"
-              tabIndex={activeGridTab === "columns" ? 0 : -1}
-              onClick={() => selectGridSection("columns")}
-              className={contentSubTabClass(activeGridTab === "columns")}
-            >
-              Columns
-            </button>
-            <button
-              ref={gridGapTabRef}
-              type="button"
-              role="tab"
-              id="tab-grid-gap"
-              aria-selected={activeGridTab === "gap"}
-              aria-controls="panel-grid-gap"
-              tabIndex={activeGridTab === "gap" ? 0 : -1}
-              onClick={() => selectGridSection("gap")}
-              className={contentSubTabClass(activeGridTab === "gap")}
-            >
-              Gap
-            </button>
-          </div>
+            tabs={[
+              { value: "columns", tabId: "tab-grid-columns", panelId: "panel-grid-columns", label: "Columns", ref: gridColumnsTabRef },
+              { value: "gap", tabId: "tab-grid-gap", panelId: "panel-grid-gap", label: "Gap", ref: gridGapTabRef },
+            ]}
+          />
 
           </ContentIntroShell>
 
@@ -3038,46 +3245,23 @@ export default function Home() {
         <ContentTitleBlock
           title="Font & Type"
           titleId="content-type"
-          className="mb-0"
         />
 
-        <div
-          role="tablist"
-          aria-label="Font & Type 카테고리"
+        <ContentOutlineTabList
+          ariaLabel="Font & Type 카테고리"
+          activeValue={activeTypeTab}
+          onSelect={(value) => selectTypeSection(value as "font-family" | "typography")}
           onKeyDown={handleTypeTabKeyDown}
-          className={contentSubTabListClass}
-        >
-          <button
-            ref={fontFamilyTabRef}
-            type="button"
-            role="tab"
-            id="tab-type-font-family"
-            aria-selected={activeTypeTab === "font-family"}
-            aria-controls="panel-type-font-family"
-            tabIndex={activeTypeTab === "font-family" ? 0 : -1}
-            onClick={() => selectTypeSection("font-family")}
-            className={contentSubTabClass(activeTypeTab === "font-family")}
-          >
-            Font Family
-          </button>
-          <button
-            ref={typographyTabRef}
-            type="button"
-            role="tab"
-            id="tab-type-typography"
-            aria-selected={activeTypeTab === "typography"}
-            aria-controls="panel-type-typography"
-            tabIndex={activeTypeTab === "typography" ? 0 : -1}
-            onClick={() => selectTypeSection("typography")}
-            className={contentSubTabClass(activeTypeTab === "typography")}
-          >
-            Type Scale
-          </button>
-        </div>
+          tabs={[
+            { value: "font-family", tabId: "tab-type-font-family", panelId: "panel-type-font-family", label: "Font Family", ref: fontFamilyTabRef },
+            { value: "typography", tabId: "tab-type-typography", panelId: "panel-type-typography", label: "Type Scale", ref: typographyTabRef },
+          ]}
+        />
 
         </ContentIntroShell>
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
+        <GuideContentLayout sections={fontFamilyTocSections}>
         <section aria-labelledby="section-font-family" className="mb-0">
           <FontStackCuration />
 
@@ -3269,9 +3453,11 @@ export default function Home() {
           </div>
         </section>
 
+        </GuideContentLayout>
         </div>{/* /panel-type-font-family */}
 
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
+        <GuideContentLayout sections={typographyTocSections}>
         <section aria-labelledby="section-typography-scale" className="mb-0">
           <ContentSectionTitle
             id="section-typography-scale"
@@ -3288,6 +3474,7 @@ export default function Home() {
           <TypographyExampleOfUse />
         </section>
 
+        </GuideContentLayout>
         </div>{/* /panel-type-typography */}
 
         </div>{/* /panel-type */}
@@ -3298,10 +3485,13 @@ export default function Home() {
           <ContentTitleBlock
             title="Icons"
             titleId="content-icons"
-            className="mb-0"
           />
           </ContentIntroShell>
-          <IconSourceCuration />
+          <div className={contentSubTabPanelClass}>
+            <GuideContentLayout sections={iconsTocSections}>
+              <IconSourceCuration />
+            </GuideContentLayout>
+          </div>
         </div>{/* /panel-icons */}
 
         </main>
