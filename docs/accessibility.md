@@ -107,6 +107,7 @@
 - [ ] **[3.1.2] 외국어 표시** — 본문 내 외국어 구간에 `lang` 속성 지정 (`<span lang="en">`)
 - [ ] **[3.1.3] 텍스트 크기 조절** — 브라우저 200% 확대 시 가로 스크롤 없이 정상 표시
 - [ ] **[3.1.3] rem 단위 사용** — `px` 대신 `rem` 사용으로 사용자 기본 폰트 크기 존중
+- [x] **[1.4.12 / 텍스트 간격] line-height 1.5 통일** — 전역 `--font-line`(=`tokens.ts` `FONT_LINE`)만 사용. `body`·`typo-*`·`leading-*` 일괄 적용. 계층별·컴포넌트별 행간 분기 금지
 - [x] **[3.1.4] 텍스트를 이미지로 사용 금지** — 로고 제외, 모든 텍스트는 실제 텍스트로
 
 ### 지침 3.2 예측 가능성
@@ -227,6 +228,46 @@
 
 ---
 
+## 타이포그래피 코딩 규칙 (line-height)
+
+행간은 **역할·컴포넌트와 무관하게 `1.5` 단일 값**만 사용합니다. WCAG **1.4.12(텍스트 간격)** 및 KWCAG 가독성(3.1) 대응입니다.
+
+| 계층 | SSOT | 전역 적용 |
+|------|------|-----------|
+| JS | `tokens.ts` → `FONT_LINE` (`1.5`) | 타이포 표 행간 px 계산 등 |
+| CSS 변수 | `fontSizeCssVars()` → `:root --font-line` | `layout.tsx` `<style>` 주입 |
+| 기본 상속 | `body { line-height: var(--font-line) }` | 명시 클래스 없는 텍스트 |
+| Tailwind | `@theme --leading-*` → `var(--font-line)` | `leading-none`·`leading-tight` 포함 전부 1.5 |
+| Shorthand | `--typography-*` / `typo-*` | font shorthand에 `var(--font-line)` 포함 |
+
+```tsx
+/* ✅ 기본 — body 상속 또는 typo-* / text-* 조합 */
+<p className="typo-body-md">본문</p>
+<p className="text-heading-md font-bold font-sans">제목</p>
+
+/* ✅ 인라인이 불가피할 때 — CSS 변수만 */
+<span style={{ fontSize: pxToRem(24), lineHeight: "var(--font-line)" }} />
+
+/* ✅ JS 행간 px — FONT_LINE import */
+import { FONT_LINE, fontSizePx } from "@/lib/tokens";
+const lineHeightPx = Math.round(fontSizePx["body-md"] * FONT_LINE);
+
+/* ❌ leading-none / leading-tight 로 줄이기 시도 */
+<span className="text-caption leading-none">...</span>
+
+/* ❌ 인라인 리터럴·고정 px */
+<span style={{ lineHeight: 1.25 }} />
+<span style={{ lineHeight: "24px" }} />
+
+/* ❌ 로컬 상수·계층별 토큰 */
+const FONT_LINE = 1.25;
+/* globals.css */ /* --font-line-tight: 1.25; */
+```
+
+값을 바꿀 때는 **`src/lib/tokens.ts`의 `FONT_LINE`만** 수정합니다. `globals.css`·컴포넌트·`@theme`는 `--font-line`을 참조하므로 연쇄 반영됩니다.
+
+---
+
 ## CSS 코딩 규칙
 
 ```css
@@ -267,6 +308,7 @@
 **금지 패턴**
 - `outline: none` / `outline: 0` 단독 사용 금지
 - `px` 단위 폰트 크기 사용 금지 → `rem` 사용
+- **`line-height` 1.5 이외 값 금지** — 프로젝트 행간은 **전역 `1.5` 단일 토큰**(`tokens.ts` `FONT_LINE` → CSS `--font-line`)만 사용한다. `leading-none`·`leading-tight`·`line-height: 1`·`1.25`·고정 `px` 행간, 역할별 `--font-line-*` 토큰 신설, `globals.css`에 `--font-line` 숫자 직접 정의 모두 금지. 변경이 필요하면 **`FONT_LINE` 한 곳만** 수정하고 `body`·`@theme --leading-*`·`--typography-*` 연쇄를 따른다. 인라인은 `lineHeight: "var(--font-line)"`만 허용
 - **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
 - **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-50)·`gray-100` 위 `text-muted`(gray-400)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-600`~`text-gray-700`, 배경은 `bg-gray-100` 등으로 조합 검증

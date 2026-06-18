@@ -92,8 +92,12 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - **장식 색상 스와치** — `role="img"`+`aria-label` 대신 `aria-hidden="true"`; 인접 텍스트로 토큰·hex 전달. 대비 매트릭스·**대비 미리보기 견본** 등 시각 보조도 동일.
 - **`text-muted` on `surface-subtle`/`gray-100` 금지** — gray-400 계열은 밝은 회색 배경에서 대비 부족. `text-gray-600` 이상 사용.
 - weight 원본은 `--typography-weight-*`, Tailwind 유틸리티 노출은 `@theme`의 `--font-weight-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
-- line-height·letter-spacing도 토큰: `--font-line`, `--font-tracking`.
-- line-height는 **단일 토큰 `--font-line: 1.5`** (WCAG 1.4.12 충족, 전 역할 공통).
+- **line-height는 프로젝트 전역 `1.5` 단일 값** — 역할·컴포넌트별로 나누지 않는다. WCAG/KWCAG **1.4.12(텍스트 간격)**·가독성(3.1) 충족 목적.
+  - **SSOT** = [`src/lib/tokens.ts`](src/lib/tokens.ts) `FONT_LINE`(현재 `1.5`) → `fontSizeCssVars()`가 `:root`에 `--font-line` 주입 → `globals.css`·컴포넌트·JS 계산이 동일 값 참조.
+  - **전역 적용(한 곳에서 일괄)** — `body { line-height: var(--font-line) }`; `@theme`의 **모든** `--leading-*`(`none`·`tight`·`snug`·`normal`·`relaxed`·`loose`·`base`)를 `var(--font-line)`에 매핑; `--typography-*`·`typo-*` shorthand도 `var(--font-line)` 포함.
+  - **금지** — `leading-none`·`leading-tight` 등으로 행간을 줄이려는 시도(테마가 1.5로 통일되어 있어도 **새 `--leading-*` 추가·인라인 덮어쓰기 금지**); 인라인 `lineHeight: 1`·`1.25`·`"24px"` 등 리터럴; `:root`·컴포넌트에 `--font-line-tight` 같은 계층별 토큰 신설; `globals.css`에 `--font-line` 숫자 직접 정의(`tokens.ts`만 수정).
+  - **인라인 예외** — 런타임 동적 미리보기 등 불가피할 때만 `lineHeight: "var(--font-line)"` 사용. px·단위 없는 배수 리터럴 금지.
+  - **JS 계산**(타이포 표 행간 px 등) — `FONT_LINE` import. 로컬 `const FONT_LINE = …` 중복 정의 금지.
 - letter-spacing은 계층을 나누지 않고 **단일 기본값 `--font-tracking: 0`**만 사용합니다.
 - 숫자 정렬이 필요한 대비율·통계·표에는 `numeric-tabular` 유틸리티(`--font-numeric-tabular`)를 사용합니다.
 - 가짜 굵기 합성을 막기 위해 전역 `font-synthesis-weight: none`을 유지합니다.

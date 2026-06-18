@@ -256,8 +256,7 @@
   --typography-weight-semibold: 600;
   --typography-weight-bold: 700;
 
-  /* Line height — 단일 토큰. WCAG 1.4.12 충족 위해 1.5 */
-  --font-line: 1.5;
+  /* Line height — 단일 토큰. 값은 src/lib/tokens.ts FONT_LINE → layout <style> 로 :root 주입 */
 
   /* Letter spacing — 프로젝트 기본값 하나만 사용 */
   --font-tracking: 0;
@@ -582,6 +581,12 @@
   --text-guide-content-title: var(--font-size-guide-content-title);
   --text-guide-tab-title: var(--font-size-guide-tab-title);
 
+  --leading-none: var(--font-line);
+  --leading-tight: var(--font-line);
+  --leading-snug: var(--font-line);
+  --leading-normal: var(--font-line);
+  --leading-relaxed: var(--font-line);
+  --leading-loose: var(--font-line);
   --leading-base: var(--font-line);
   --tracking-normal: var(--font-tracking);
   --font-weight-regular: var(--typography-weight-regular);
@@ -846,6 +851,7 @@ body {
   color: var(--ds-foreground);
   font-family: var(--font-family-base);
   font-synthesis-weight: none;
+  line-height: var(--font-line);
 }
 
 img {

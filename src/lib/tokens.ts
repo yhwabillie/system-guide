@@ -10,6 +10,9 @@
  */
 export const REM_BASE = 16;
 
+/** Line height 단일 값 — CSS `--font-line` 과 동기화 (WCAG 1.4.12) */
+export const FONT_LINE = 1.5;
+
 /**
  * px → rem 변환. 작업자는 px로 작성(코드에서 크기 인지), 출력은 rem(반응형/접근성).
  * @example pxToRem(14) // "0.875rem" (= 14px)
@@ -44,11 +47,12 @@ export const fontSizePx = {
 } as const;
 
 /**
- * fontSizePx 로부터 `:root` 에 주입할 `--font-size-*` 선언 문자열을 생성(rem 환산).
- * layout.tsx 의 <style> 로 SSR 주입 → CSS·JS가 같은 px 정의를 공유.
+ * fontSizePx·FONT_LINE 로부터 `:root` 에 주입할 `--font-size-*`·`--font-line` 선언 문자열을 생성(rem 환산).
+ * layout.tsx 의 <style> 로 SSR 주입 → CSS·JS가 같은 정의를 공유.
  */
 export function fontSizeCssVars(): string {
-  return Object.entries(fontSizePx)
+  const sizes = Object.entries(fontSizePx)
     .map(([name, px]) => `--font-size-${name}:${pxToRem(px)}`)
     .join(";");
+  return `${sizes};--font-line:${FONT_LINE}`;
 }

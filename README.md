@@ -97,6 +97,8 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 
 `typo-*` 유틸리티는 `--typography-*` 토큰을 사용해 `font-family`, `font-size`, `font-weight`, `line-height`를 적용하고, 유틸리티에서 `letter-spacing`까지 함께 적용합니다.
 
+**line-height는 전 프로젝트 `1.5`로 통일**합니다. SSOT는 [`src/lib/tokens.ts`](src/lib/tokens.ts)의 `FONT_LINE`이며, `layout.tsx`가 `:root`에 `--font-line`을 주입합니다. `body` 기본 행간·`@theme`의 모든 `leading-*` 유틸리티·`typo-*` shorthand가 같은 토큰을 참조하므로 컴포넌트마다 `leading-base`를 붙이지 않아도 1.5가 적용됩니다. `leading-none`·`leading-tight`·인라인 `lineHeight: 1` 등으로 줄이지 않습니다. 값 변경은 `FONT_LINE`만 수정하세요. 상세·금지 패턴은 [`AGENTS.md`](AGENTS.md)·[`docs/accessibility.md`](docs/accessibility.md) 참조.
+
 `letter-spacing`은 계층을 나누지 않고 기본값 하나(`--font-tracking: 0`)만 사용합니다. 숫자 자리 폭 정렬이 필요한 대비율·통계·표에는 `numeric-tabular` 유틸리티를 사용합니다.
 
 ```tsx
@@ -105,23 +107,23 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 
 전역 `font-synthesis-weight: none`으로 브라우저의 가짜 굵기 합성을 막고, 실제 폰트 weight만 사용합니다.
 
-| Token | Size | Weight | Utility |
-|------|------|--------|---------|
-| Display LG | 40px | 700 | `typo-display-lg` |
-| Display MD | 32px | 700 | `typo-display-md` |
-| Display SM | 28px | 700 | `typo-display-sm` |
-| Heading LG | 32px | 700 | `typo-heading-lg` |
-| Guide Content Title | 60px | 700 | `typo-guide-content-title` |
-| Heading MD | 24px | 700 | `typo-heading-md` |
-| Heading SM | 20px | 700 | `typo-heading-sm` |
-| Body LG | 18px | 400 | `typo-body-lg` |
-| Body MD | 16px | 400 | `typo-body-md` |
-| Body SM | 14px | 400 | `typo-body-sm` |
-| Label XL | 18px | 600 | `typo-label-xl` |
-| Label LG | 16px | 600 | `typo-label-lg` |
-| Label MD | 14px | 600 | `typo-label-md` |
-| Label SM | 12px | 600 | `typo-label-sm` |
-| Caption | 12px | 400 | `typo-caption` |
+| Token | Size | Weight | Line height | Utility |
+|------|------|--------|-------------|---------|
+| Display LG | 40px | 700 | 1.5 | `typo-display-lg` |
+| Display MD | 32px | 700 | 1.5 | `typo-display-md` |
+| Display SM | 28px | 700 | 1.5 | `typo-display-sm` |
+| Heading LG | 32px | 700 | 1.5 | `typo-heading-lg` |
+| Guide Content Title | 60px | 700 | 1.5 | `typo-guide-content-title` |
+| Heading MD | 24px | 700 | 1.5 | `typo-heading-md` |
+| Heading SM | 20px | 700 | 1.5 | `typo-heading-sm` |
+| Body LG | 18px | 400 | 1.5 | `typo-body-lg` |
+| Body MD | 16px | 400 | 1.5 | `typo-body-md` |
+| Body SM | 14px | 400 | 1.5 | `typo-body-sm` |
+| Label XL | 18px | 600 | 1.5 | `typo-label-xl` |
+| Label LG | 16px | 600 | 1.5 | `typo-label-lg` |
+| Label MD | 14px | 600 | 1.5 | `typo-label-md` |
+| Label SM | 12px | 600 | 1.5 | `typo-label-sm` |
+| Caption | 12px | 400 | 1.5 | `typo-caption` |
 
 ## Getting Started
 

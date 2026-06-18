@@ -43,7 +43,7 @@ export default function RootLayout({
       className={`${pretendardGov.variable} ${notoSansKR.variable} h-full antialiased`}
     >
       <head>
-        {/* 타이포 스케일 단일 소스(tokens.ts)에서 생성한 --font-size-* 주입 */}
+        {/* 타이포 스케일·행간 단일 소스(tokens.ts)에서 생성한 --font-size-*·--font-line 주입 */}
         <style dangerouslySetInnerHTML={{ __html: `:root{${fontSizeCssVars()}}` }} />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>

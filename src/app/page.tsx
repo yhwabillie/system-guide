@@ -8,7 +8,7 @@ import {
   layoutSidenavContentClass,
   layoutSidenavMenuClass,
 } from "@/lib/layout-tokens";
-import { fontSizePx, pxToRem } from "@/lib/tokens";
+import { FONT_LINE, fontSizePx, pxToRem } from "@/lib/tokens";
 import { primitiveColors } from "@/lib/raw-color-palettes";
 
 const scales = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
@@ -1256,8 +1256,6 @@ const typographyTokens = [
   { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold", typoClass: "typo-label-sm" },
   { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular", typoClass: "typo-caption" },
 ];
-
-const FONT_LINE = 1.5;
 
 const typographyWeightLabel: Record<string, string> = {
   "--font-weight-regular": "Regular",
