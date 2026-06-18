@@ -1843,25 +1843,28 @@ export default function Home() {
             Color Palette
           </ContentSectionTitle>
 
-          {/* 선택 모드 안내 */}
+          {/* 선택 모드 안내 — 중립 정보 스타일(빨강/초록 의미색 미사용으로 에러·성공 오인 방지) */}
           {selecting && (
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 py-2.5 px-4 rounded-lg text-label-md font-semibold flex items-center justify-between"
-              style={{
-                background: selecting === "bg" ? "var(--ds-red-100)" : "var(--ds-green-100)",
-                color: selecting === "bg" ? "var(--ds-red-600)" : "var(--ds-green-600)",
-              }}
+              className="mb-3 py-2.5 px-4 rounded-lg text-label-md font-semibold flex items-center justify-between bg-surface-subtle text-foreground border border-neutral-200"
             >
-              <span>
-                {selecting === "bg" ? "배경색으로 사용할 컬러를 클릭하세요" : "텍스트색으로 사용할 컬러를 클릭하세요"}
+              <span className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ background: selecting === "bg" ? bgColor.hex : textColor.hex, border: "1px solid var(--ds-border-overlay)" }}
+                />
+                <span>
+                  <strong className="font-bold">{selecting === "bg" ? "배경색" : "텍스트색"}</strong>으로 사용할 컬러를 클릭하세요
+                </span>
               </span>
               <button
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                className="bg-transparent border-0 cursor-pointer font-bold text-body-md leading-none px-1"
+                className="bg-transparent border-0 cursor-pointer font-bold text-body-md leading-none px-1 text-text-muted"
               >
                 ✕
               </button>
