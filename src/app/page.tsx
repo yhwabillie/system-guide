@@ -10,6 +10,11 @@ import {
 } from "@/lib/layout-tokens";
 import { FONT_LINE, fontSizePx, pxToRem } from "@/lib/tokens";
 import { RAW_COLOR_SCALE_UNITS, primitiveColors } from "@/lib/raw-color-palettes";
+import {
+  applyColorModeClass,
+  readStoredColorMode,
+  writeStoredColorMode,
+} from "@/lib/theme-preference";
 
 
 // 표면 앵커 — 중립 램프 밖 순백/심흑(모드 무관 고정)
@@ -2316,6 +2321,7 @@ function NavSubTree({
 
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
+  const themeHydratedRef = useRef(false);
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#1E2124", label: "Gray 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
@@ -2510,7 +2516,21 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark);
+    if (!themeHydratedRef.current) {
+      themeHydratedRef.current = true;
+      const stored = readStoredColorMode();
+      if (stored === "dark" && !isDark) {
+        setIsDark(true);
+        return;
+      }
+      if (stored === "light" && isDark) {
+        setIsDark(false);
+        return;
+      }
+    }
+
+    applyColorModeClass(isDark ? "dark" : "light");
+    writeStoredColorMode(isDark ? "dark" : "light");
 
     if (isDark) {
       setBgColor({ hex: "#0a0a0a", label: "Black" });

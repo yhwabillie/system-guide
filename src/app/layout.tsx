@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { fontSizeCssVars } from "@/lib/tokens";
+import { THEME_STORAGE_KEY } from "@/lib/theme-preference";
 import "./globals.css";
 
 // 기본 폰트 — Pretendard GOV (자체 호스팅, variable woff2)
@@ -40,9 +41,16 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
+      suppressHydrationWarning
       className={`${pretendardGov.variable} ${notoSansKR.variable} h-full antialiased`}
     >
       <head>
+        {/* 저장된 라이트/다크 모드 — React 하이드레이션 전 적용(새로고침 FOUC 방지) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var m=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(m==="dark")document.documentElement.classList.add("dark");else if(m==="light")document.documentElement.classList.remove("dark");}catch(e){}})();`,
+          }}
+        />
         {/* 타이포 스케일·행간 단일 소스(tokens.ts)에서 생성한 --font-size-*·--font-line 주입 */}
         <style dangerouslySetInnerHTML={{ __html: `:root{${fontSizeCssVars()}}` }} />
       </head>
