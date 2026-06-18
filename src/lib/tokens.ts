@@ -37,6 +37,8 @@ export const fontSizePx = {
   "guide-selected-lg": 18,
   "guide-selected-md": 16,
   "guide-selected-sm": 14,
+  /** 가이드 콘텐츠 상위 타이틀(ContentTitleBlock h2) — ~60px */
+  "guide-content-title": 60,
 } as const;
 
 /**

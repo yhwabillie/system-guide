@@ -228,6 +228,7 @@
   --typography-guide-selected-lg: var(--typography-weight-semibold) var(--font-size-guide-selected-lg) / var(--font-line) var(--font-family-base);
   --typography-guide-selected-md: var(--typography-weight-semibold) var(--font-size-guide-selected-md) / var(--font-line) var(--font-family-base);
   --typography-guide-selected-sm: var(--typography-weight-semibold) var(--font-size-guide-selected-sm) / var(--font-line) var(--font-family-base);
+  --typography-guide-content-title: var(--typography-weight-bold) var(--font-size-guide-content-title) / var(--font-line) var(--font-family-base);
 
   /* ============================================================
      TIER 2-b — SEMANTIC PURPOSE (용도 기반)
@@ -283,6 +284,11 @@
   --ds-guide-level-warn-fg: var(--raw-brown-900);
   --ds-guide-level-fail-bg: var(--raw-red-500);
   --ds-guide-level-fail-fg: var(--raw-white);
+  --ds-guide-callout-bg: var(--ds-green-50);
+  --ds-guide-callout-accent: var(--ds-green-500);
+  --ds-guide-intro-bg: var(--ds-neutral-100);
+  --ds-guide-intro-eyebrow: var(--ds-neutral-600);
+  --ds-guide-intro-body: var(--ds-neutral-700);
 }
 
 /* ============================================================
@@ -397,6 +403,11 @@
   --color-guide-level-warn-fg: var(--ds-guide-level-warn-fg);
   --color-guide-level-fail-bg: var(--ds-guide-level-fail-bg);
   --color-guide-level-fail-fg: var(--ds-guide-level-fail-fg);
+  --color-guide-callout-bg: var(--ds-guide-callout-bg);
+  --color-guide-callout-accent: var(--ds-guide-callout-accent);
+  --color-guide-intro-bg: var(--ds-guide-intro-bg);
+  --color-guide-intro-eyebrow: var(--ds-guide-intro-eyebrow);
+  --color-guide-intro-body: var(--ds-guide-intro-body);
 
   --spacing-0: var(--space-0);
   --spacing-1: var(--space-1);
@@ -460,6 +471,7 @@
   --text-guide-selected-lg: var(--font-size-guide-selected-lg);
   --text-guide-selected-md: var(--font-size-guide-selected-md);
   --text-guide-selected-sm: var(--font-size-guide-selected-sm);
+  --text-guide-content-title: var(--font-size-guide-content-title);
 
   --leading-base: var(--font-line);
   --tracking-normal: var(--font-tracking);
@@ -554,6 +566,11 @@
 
 @utility typo-guide-selected-sm {
   font: var(--typography-guide-selected-sm);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-guide-content-title {
+  font: var(--typography-guide-content-title);
   letter-spacing: var(--font-tracking);
 }
 

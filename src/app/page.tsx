@@ -222,8 +222,44 @@ function TokenChip({
   );
 }
 
+function TabDescriptionCallout({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={[
+        "mb-24 border-l-4 border-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-foreground [&_strong]:font-bold",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** 타이틀·탭·설명 묶음 — 카드/패딩 없이 세로 간격만 유지 */
+function ContentIntroShell({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      {children}
+    </div>
+  );
+}
+
 function ContentTitleBlock({
-  eyebrow,
+  eyebrow = "Tokens",
   title,
   description,
   titleId,
@@ -231,33 +267,90 @@ function ContentTitleBlock({
 }: {
   eyebrow?: string;
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   titleId?: string;
   className?: string;
 }) {
   return (
     <header className={["mb-10", className].filter(Boolean).join(" ")}>
-      {eyebrow ? (
-        <p className="m-0 text-caption font-semibold uppercase tracking-normal text-text-muted">{eyebrow}</p>
-      ) : null}
+      <p className="m-0 text-label-md font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
       <h2
         id={titleId}
-        className={`m-0 font-bold text-foreground ${eyebrow ? "mt-2" : ""} text-display-sm`}
+        className="m-0 mt-2 font-bold tracking-normal text-foreground typo-guide-content-title"
       >
         {title}
       </h2>
       {description ? (
-        <p className="m-0 mt-4 max-w-3xl text-body-lg text-text-muted">{description}</p>
+        <TabDescriptionCallout className="mt-4">{description}</TabDescriptionCallout>
       ) : null}
     </header>
   );
 }
 
-function ContentSectionTitle({ id, children }: { id?: string; children: React.ReactNode }) {
+/** 탭 패널 1단 — 주요 섹션 (콜아웃 아래) */
+function ContentSectionTitle({
+  id,
+  children,
+  className = "",
+  lead = false,
+}: {
+  id?: string;
+  children: React.ReactNode;
+  className?: string;
+  /** 탭 콘텐츠 첫 섹션이면 true — 상단 여백 생략 */
+  lead?: boolean;
+}) {
   return (
-    <h3 id={id} className="m-0 mb-4 text-heading-md font-bold text-accent">
+    <h3
+      id={id}
+      className={[
+        "m-0 text-heading-lg font-bold leading-base text-foreground",
+        lead ? "mb-10" : "mt-24 mb-10",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {children}
     </h3>
+  );
+}
+
+/** 탭 패널 2단 — 섹션 내 하위 블록 */
+function ContentSubsectionTitle({
+  id,
+  children,
+  className = "",
+  spaced = false,
+}: {
+  id?: string;
+  children: React.ReactNode;
+  className?: string;
+  /** 이전 블록과 큰 간격이 필요할 때 */
+  spaced?: boolean;
+}) {
+  return (
+    <h4
+      id={id}
+      className={[
+        "m-0 mb-6 text-heading-md font-bold text-accent",
+        spaced ? "mt-20" : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {children}
+    </h4>
+  );
+}
+
+/** 탭 패널 3단 — 표·그룹 라벨 (h3 섹션 직속) */
+function ContentGroupTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <h4 className={["m-0 mb-4 text-heading-sm font-bold text-foreground", className].filter(Boolean).join(" ")}>
+      {children}
+    </h4>
   );
 }
 
@@ -375,16 +468,15 @@ function FontTokenGuide() {
 function FontStackCuration() {
   return (
     <>
-      <ContentTitleBlock
-        eyebrow="Typography"
-        title="Font Family"
-        titleId="content-font-family"
-        description="Pretendard GOV를 기본으로 하는 폴백 체인입니다. font-sans 유틸리티로 --font-family-base 토큰을 적용합니다."
-      />
+      <ContentSectionTitle id="section-font-family" lead>
+        Font Family
+      </ContentSectionTitle>
 
       <FontTokenGuide />
 
-      <ContentSectionTitle id="section-font-stack">Font Stack</ContentSectionTitle>
+      <ContentSubsectionTitle id="section-font-stack" spaced>
+        Font Stack
+      </ContentSubsectionTitle>
       <ol className="m-0 flex list-none flex-col p-0">
         {fontStack.map(({ order, name, family, role, source, desc, emphasis }, index) => (
           <li key={order}>
@@ -549,8 +641,8 @@ function TypographyScaleTable() {
 
 function TypographyExampleOfUse() {
   return (
-    <section aria-labelledby="section-typography-example" className="mt-12">
-      <ContentSectionTitle id="section-typography-example">Example of Use</ContentSectionTitle>
+    <section aria-labelledby="section-typography-example" className="mt-24">
+      <ContentSubsectionTitle id="section-typography-example">Example of Use</ContentSubsectionTitle>
       <div className="rounded-xl border border-neutral-200 p-6">
         <div className="flex flex-col gap-5">
           {typographyExamples.map(({ chip, className, text, ariaLabel }) => (
@@ -675,7 +767,6 @@ const iconSource = {
   name: "Feather Icons",
   style: "Outline",
   sourceUrl: "https://feathericons.com/",
-  desc: "stroke 기반 24×24 라인 아이콘. 글리프 path는 프로젝트에 인라인 SVG로 포함하며, 외부 CDN·아이콘 폰트·스프라이트는 사용하지 않습니다.",
   specs: [
     { label: "viewBox", value: "0 0 24 24" },
     { label: "stroke-width", value: "1.75" },
@@ -782,15 +873,16 @@ function OutlineIconMatrix() {
 function IconSourceCuration() {
   return (
     <>
-      <ContentTitleBlock
-        eyebrow="Icons"
-        title="Outline Icon"
-        titleId="content-outline-icon"
-        description={iconSource.desc}
-      />
+      <ContentSectionTitle id="section-outline-icon" lead>
+        Outline Icon
+      </ContentSectionTitle>
+      <TabDescriptionCallout>
+        <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
+        <strong>외부 CDN·아이콘 폰트·스프라이트</strong>는 사용하지 않습니다.
+      </TabDescriptionCallout>
 
-      <section aria-labelledby="section-icon-source" className="mb-12">
-        <ContentSectionTitle id="section-icon-source">Source</ContentSectionTitle>
+      <section aria-labelledby="section-icon-source" className="mb-20">
+        <ContentSubsectionTitle id="section-icon-source">Source</ContentSubsectionTitle>
         <div className="flex gap-4">
           <span
             aria-hidden="true"
@@ -827,7 +919,9 @@ function IconSourceCuration() {
       </section>
 
       <section aria-labelledby="section-outline-icons" className="mb-0">
-        <ContentSectionTitle id="section-outline-icons">Sizes</ContentSectionTitle>
+        <ContentSubsectionTitle id="section-outline-icons" spaced>
+          Sizes
+        </ContentSubsectionTitle>
         <OutlineIconMatrix />
       </section>
     </>
@@ -865,6 +959,25 @@ function LevelBadge({ level }: { level: ContrastLevel }) {
       fontSize: pxToRem(11), fontWeight: "var(--font-weight-bold)", letterSpacing: "var(--font-tracking)",
     }}>
       {s.label}
+    </span>
+  );
+}
+
+function ContrastCriterionStatus({ passed }: { passed: boolean }) {
+  return (
+    <span
+      role="img"
+      aria-label={passed ? "통과" : "실패"}
+      className="inline-flex items-center"
+    >
+      <NavIcon
+        innerMarkup={
+          passed
+            ? '<polyline points="20 6 9 17 4 12" />'
+            : '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />'
+        }
+        className={`size-icon-xs shrink-0 ${passed ? "text-accent" : "text-accent-danger"}`}
+      />
     </span>
   );
 }
@@ -1304,7 +1417,7 @@ export default function Home() {
       "border-b-2 -mb-px py-2.5 px-4",
       active
         ? "border-accent font-bold text-foreground"
-        : "border-transparent font-medium text-text-muted hover:text-foreground",
+        : "border-transparent font-medium text-neutral-600 hover:text-foreground",
     ].join(" ");
   // 현재 모드(.dark)에서 실제로 계산된 시맨틱 스케일(--color-*) 색을 읽어 둠 → 칩 선택/대비 계산에 사용
   const [resolved, setResolved] = useState<Record<string, string>>({});
@@ -1443,11 +1556,11 @@ export default function Home() {
                   className={navParentButtonClass(activeTab === "type")}
                 >
                   {navIconType}
-                  Typography
+                  Font & Type
                 </button>
                 <button
                   type="button"
-                  aria-label={typeMenuExpanded ? "Typography 하위 메뉴 접기" : "Typography 하위 메뉴 펼치기"}
+                  aria-label={typeMenuExpanded ? "Font & Type 하위 메뉴 접기" : "Font & Type 하위 메뉴 펼치기"}
                   aria-expanded={typeMenuExpanded}
                   onClick={() => setTypeMenuExpanded((open) => !open)}
                   className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
@@ -1461,7 +1574,7 @@ export default function Home() {
               </div>
               {typeMenuExpanded && (
                 <NavSubTree
-                  ariaLabel="Typography 하위 메뉴"
+                  ariaLabel="Font & Type 하위 메뉴"
                   itemClassName={navSubItemClass}
                   items={[
                     {
@@ -1470,7 +1583,7 @@ export default function Home() {
                       onClick: () => selectTypeSection("font-family"),
                     },
                     {
-                      label: "Typography",
+                      label: "Type Scale",
                       active: activeTab === "type" && activeTypeTab === "typography",
                       onClick: () => selectTypeSection("typography"),
                     },
@@ -1628,21 +1741,23 @@ export default function Home() {
 
         <main
           id="main-content"
-          className={`${layoutSidenavContentClass} py-6 md:py-8 lg:py-10`}
+          className={`${layoutSidenavContentClass} pt-10 pb-6 md:pt-12 md:pb-8 lg:pt-16 lg:pb-10`}
         >
         {/* ── Tab Panel 1: Color ── */}
         <div role="tabpanel" id="panel-color" aria-labelledby="tab-color" hidden={activeTab !== "color"} className={layoutPageColSpanFull}>
 
-        <h2 className="text-heading-lg font-bold mb-2">Color</h2>
-        <p className="text-body-sm text-text-muted mb-6">
-          원본 팔레트·대비 검증과 시맨틱 색상 토큰을 확인합니다.
-        </p>
+        <ContentIntroShell>
+        <ContentTitleBlock
+          title="Color"
+          titleId="content-color"
+          className="mb-0"
+        />
 
         <div
           role="tablist"
           aria-label="색상 카테고리"
           onKeyDown={handleColorTabKeyDown}
-          className="mb-10 flex gap-1 border-b border-border"
+          className="mt-6 mb-4 flex gap-1 border-b border-border"
         >
           <button
             ref={rawColorTabRef}
@@ -1672,14 +1787,24 @@ export default function Home() {
           </button>
         </div>
 
-        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"}>
-        <p className="text-body-sm text-text-muted mb-12">
-          가공 전 원본 팔레트(raw)와 대비 검증 도구입니다.
-        </p>
+        <TabDescriptionCallout>
+          {activeColorTab === "raw" ? (
+            <>
+              가공 전 <strong>원본 팔레트(raw)</strong>와 <strong>대비 검증</strong> 도구입니다.
+            </>
+          ) : (
+            <>
+              <strong>raw</strong>를 용도·모드(<strong>라이트/다크</strong>)에 맞게 매핑한 <strong>의미 기반 토큰</strong>입니다.
+            </>
+          )}
+        </TabDescriptionCallout>
+        </ContentIntroShell>
 
-        {/* ── Color Palette ── */}
-        <section aria-labelledby="section-color" className="mb-16">
-          <h3 id="section-color" className="text-heading-md font-bold mb-2">Color Palette</h3>
+        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"}>
+        <section aria-labelledby="section-color" className="mb-24">
+          <ContentSectionTitle id="section-color" lead>
+            Color Palette
+          </ContentSectionTitle>
 
           {/* 선택 모드 안내 */}
           {selecting && (
@@ -1791,14 +1916,6 @@ export default function Home() {
               return (
                 <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
                   <span className="text-label-sm font-semibold">{label}</span>
-                  {/* 스케일 무관 표시용 dim 영역(칩 우측 컬럼 전체) — 배경만 dim, 텍스트는 가독 대비 유지 */}
-                  <span
-                    aria-hidden="true"
-                    className="row-start-1 self-stretch rounded-md flex items-center pl-2.5 text-caption text-neutral-600 bg-border-overlay"
-                    style={{ gridColumn: "3 / -1" }}
-                  >
-                    스케일 해당 없음 (단일 값)
-                  </span>
                   {isInteractive ? (
                     <button
                       type="button"
@@ -1829,10 +1946,10 @@ export default function Home() {
         </section>
 
         {/* ── Contrast Checker ── */}
-        <section aria-labelledby="section-contrast" className="mb-16">
-          <h3 id="section-contrast" className="text-heading-md font-bold mb-6">
+        <section aria-labelledby="section-contrast" className="mb-24">
+          <ContentSectionTitle id="section-contrast">
             Contrast Checker
-          </h3>
+          </ContentSectionTitle>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             {/* BG 선택 */}
@@ -2030,12 +2147,12 @@ export default function Home() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
                     <span className="text-caption text-neutral-400 numeric-tabular">4.5:1</span>
-                    <span role="img" aria-label={ratio >= 4.5 ? "통과" : "실패"}>{ratio >= 4.5 ? "✅" : "❌"}</span>
+                    <ContrastCriterionStatus passed={ratio >= 4.5} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AAA</span>
                     <span className="text-caption text-neutral-400 numeric-tabular">7:1</span>
-                    <span role="img" aria-label={ratio >= 7 ? "통과" : "실패"}>{ratio >= 7 ? "✅" : "❌"}</span>
+                    <ContrastCriterionStatus passed={ratio >= 7} />
                   </div>
                 </div>
               </div>
@@ -2048,12 +2165,12 @@ export default function Home() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
                     <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
-                    <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
+                    <ContrastCriterionStatus passed={ratio >= 3} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AAA</span>
                     <span className="text-caption text-neutral-400 numeric-tabular">4.5:1</span>
-                    <span role="img" aria-label={ratio >= 4.5 ? "통과" : "실패"}>{ratio >= 4.5 ? "✅" : "❌"}</span>
+                    <ContrastCriterionStatus passed={ratio >= 4.5} />
                   </div>
                 </div>
               </div>
@@ -2064,7 +2181,7 @@ export default function Home() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
                     <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
-                    <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
+                    <ContrastCriterionStatus passed={ratio >= 3} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AAA</span>
@@ -2080,7 +2197,7 @@ export default function Home() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AA</span>
                     <span className="text-caption text-neutral-400 numeric-tabular">3:1</span>
-                    <span role="img" aria-label={ratio >= 3 ? "통과" : "실패"}>{ratio >= 3 ? "✅" : "❌"}</span>
+                    <ContrastCriterionStatus passed={ratio >= 3} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-caption text-neutral-500 w-8">AAA</span>
@@ -2094,9 +2211,9 @@ export default function Home() {
 
           {/* 전체 팔레트 대비 매트릭스 */}
           <div className="mt-8">
-            <h4 className="text-heading-sm font-bold mb-4">
+            <ContentGroupTitle>
               현재 배경색 기준 — 전체 팔레트 대비율
-            </h4>
+            </ContentGroupTitle>
             <div role="group" aria-label="전체 팔레트 대비율 매트릭스" className="flex flex-col gap-1.5">
               <div aria-hidden="true" className="grid gap-1" style={{ gridTemplateColumns: "80px repeat(10, 1fr)" }}>
                 <span className="text-caption text-neutral-400" />
@@ -2143,13 +2260,11 @@ export default function Home() {
         </div>{/* /panel-color-raw */}
 
         <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"}>
-        <p className="text-body-sm text-text-muted mb-12">
-          raw를 용도·모드(라이트/다크)에 맞게 매핑한 의미 기반 토큰입니다.
-        </p>
-
         {/* ── Overlay (반투명, 모드 인지) ── */}
-        <section aria-labelledby="section-alpha" className="mb-16">
-          <h3 id="section-alpha" className="text-heading-md font-bold mb-2">Overlay</h3>
+        <section aria-labelledby="section-alpha" className="mb-24">
+          <ContentSectionTitle id="section-alpha" lead>
+            Overlay
+          </ContentSectionTitle>
           <p className="text-body-sm text-text-muted mb-6">
             오버레이용 반투명 시맨틱 토큰. 라이트=검정α / 다크=흰색α로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
           </p>
@@ -2179,8 +2294,10 @@ export default function Home() {
         </section>
 
         {/* ── Gradient (시맨틱 그라데이션) ── */}
-        <section aria-labelledby="section-gradient" className="mb-16">
-          <h3 id="section-gradient" className="text-heading-md font-bold mb-2">Gradient</h3>
+        <section aria-labelledby="section-gradient" className="mb-24">
+          <ContentSectionTitle id="section-gradient">
+            Gradient
+          </ContentSectionTitle>
           <p className="text-body-sm text-text-muted mb-6">
             용도 기반 그라데이션 토큰입니다. `--ds-gradient-*` 원본이 `--background-image-gradient-*`로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
           </p>
@@ -2227,16 +2344,18 @@ export default function Home() {
 
         {/* ── Tab Panel: Spacing & Size ── */}
         <div role="tabpanel" id="panel-spacing" aria-labelledby="tab-spacing" hidden={activeTab !== "spacing"} className={layoutPageColSpanFull}>
-          <h2 className="text-heading-lg font-bold mb-2">Spacing & Size</h2>
-          <p className="text-body-sm text-text-muted mb-6">
-            여백·모서리·반복 크기 토큰입니다. 모든 값은 rem 기반이며 `@theme`를 통해 Tailwind 유틸리티로 노출됩니다.
-          </p>
+          <ContentIntroShell>
+          <ContentTitleBlock
+            title="Spacing & Size"
+            titleId="content-spacing"
+            className="mb-0"
+          />
 
           <div
             role="tablist"
             aria-label="Spacing & Size 카테고리"
             onKeyDown={handleSpacingTabKeyDown}
-            className="mb-10 flex gap-1 border-b border-border"
+            className="mt-6 mb-4 flex gap-1 border-b border-border"
           >
             <button
               ref={spacingMeasureTabRef}
@@ -2279,12 +2398,28 @@ export default function Home() {
             </button>
           </div>
 
+          <TabDescriptionCallout>
+            {activeSpacingTab === "spacing" ? (
+              <>
+                <strong>margin</strong>, <strong>padding</strong>, <strong>gap</strong>의 기준 스케일입니다.{" "}
+                <strong>--space-*</strong> 원본 토큰이 <strong>--spacing-*</strong>로 노출됩니다.
+              </>
+            ) : activeSpacingTab === "radius" ? (
+              <>
+                원본은 <strong>--shape-radius-*</strong>, 유틸리티 노출은 <strong>--radius-*</strong>로 분리해 이름 충돌을 피합니다.
+              </>
+            ) : (
+              <>
+                아이콘과 컨트롤처럼 반복되는 <strong>고정 크기</strong>입니다. <strong>--size-*</strong>를 spacing namespace에 연결해{" "}
+                <strong>size-*</strong>, <strong>h-*</strong> 계열로 사용할 수 있습니다.
+              </>
+            )}
+          </TabDescriptionCallout>
+          </ContentIntroShell>
+
           <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"}>
           <section aria-labelledby="section-spacing" className="mb-0">
             <h3 id="section-spacing" className="sr-only">Spacing</h3>
-            <p className="text-body-sm text-text-muted mb-6">
-              margin, padding, gap의 기준 스케일입니다. `--space-*` 원본 토큰이 `--spacing-*`로 노출됩니다.
-            </p>
             <div role="list" className="flex flex-col gap-2">
               <div
                 aria-hidden="true"
@@ -2317,9 +2452,6 @@ export default function Home() {
           <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"}>
           <section aria-labelledby="section-radius" className="mb-0">
             <h3 id="section-radius" className="sr-only">Radius</h3>
-            <p className="text-body-sm text-text-muted mb-6">
-              원본은 `--shape-radius-*`, 유틸리티 노출은 `--radius-*`로 분리해 이름 충돌을 피합니다.
-            </p>
             <div role="list" className="grid grid-cols-2 gap-4">
               {radiusTokens.map(({ name, px, rem, utility }) => (
                 <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-border">
@@ -2345,12 +2477,9 @@ export default function Home() {
           <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"}>
           <section aria-labelledby="section-fixed-size" className="mb-0">
             <h3 id="section-fixed-size" className="sr-only">Fixed Size</h3>
-            <p className="text-body-sm text-text-muted mb-6">
-              아이콘과 컨트롤처럼 반복되는 고정 크기입니다. `--size-*`를 spacing namespace에 연결해 `size-*`, `h-*` 계열로 사용할 수 있습니다.
-            </p>
             <div className="flex flex-col gap-10">
               <div>
-                <h4 className="text-label-xl font-semibold mb-1">Icon Size</h4>
+                <ContentGroupTitle className="mb-1">Icon Size</ContentGroupTitle>
                 <p className="text-caption text-text-muted mb-4">
                   아이콘 자체의 정사각 영역입니다. `icon-md` 24px를 일반 UI 기본값으로 사용합니다.
                 </p>
@@ -2386,7 +2515,7 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="text-label-xl font-semibold mb-1">Control Height</h4>
+                <ContentGroupTitle className="mb-1">Control Height</ContentGroupTitle>
                 <p className="text-caption text-text-muted mb-4">
                   버튼·입력창처럼 인터랙티브 요소의 높이 기준입니다. 폭은 콘텐츠와 padding 조합으로 결정합니다.
                 </p>
@@ -2429,23 +2558,18 @@ export default function Home() {
 
         {/* ── Tab Panel: Grid ── */}
         <div role="tabpanel" id="panel-grid" aria-labelledby="tab-grid" hidden={activeTab !== "grid"} className={layoutPageColSpanFull}>
-          <h2 className="text-heading-lg font-bold mb-2">Grid</h2>
-          <p className="text-body-sm text-text-muted mb-6">
-            열 분할·간격(gap) 토큰입니다. 페이지·사이드메뉴 shell 레이아웃과 breakpoint 검증은 사이드메뉴{" "}
-            <a
-              href="#nav-layout-breakpoint"
-              className="font-semibold text-accent no-underline hover:underline"
-            >
-              Layout & Breakpoint
-            </a>
-            {" "}가이드에서 확인합니다.
-          </p>
+          <ContentIntroShell>
+          <ContentTitleBlock
+            title="Grid"
+            titleId="content-grid"
+            className="mb-0"
+          />
 
           <div
             role="tablist"
             aria-label="Grid 카테고리"
             onKeyDown={handleGridTabKeyDown}
-            className="mb-10 flex gap-1 border-b border-border"
+            className="mt-6 mb-4 flex gap-1 border-b border-border"
           >
             <button
               ref={gridColumnsTabRef}
@@ -2475,12 +2599,30 @@ export default function Home() {
             </button>
           </div>
 
+          <TabDescriptionCallout>
+            {activeGridTab === "columns" ? (
+              <>
+                Tailwind 기본 <strong>grid-cols-*</strong> 열 분할. <strong>12열</strong> 그리드는 <strong>col-span-*</strong>와 조합해 페이지 레이아웃을 구성합니다.{" "}
+                <strong>shell·breakpoint</strong> 검증은 사이드메뉴{" "}
+                <a
+                  href="#nav-layout-breakpoint"
+                  className="font-semibold text-accent no-underline hover:underline"
+                >
+                  Layout & Breakpoint
+                </a>
+                {" "}가이드를 참고하세요.
+              </>
+            ) : (
+              <>
+                <strong>그리드 간격(gap)</strong>은 item 사이 margin 역할입니다. <strong>gap-*</strong>는 좌우·상하에 동일하게 적용되며, 아래 스케일에서 크기별 견본을 한눈에 비교할 수 있습니다.
+              </>
+            )}
+          </TabDescriptionCallout>
+          </ContentIntroShell>
+
           <div role="tabpanel" id="panel-grid-columns" aria-labelledby="tab-grid-columns" hidden={activeGridTab !== "columns"}>
           <section aria-labelledby="section-grid-columns" className="mb-0">
             <h3 id="section-grid-columns" className="sr-only">Columns</h3>
-            <p className="text-body-sm text-text-muted mb-6">
-              Tailwind 기본 `grid-cols-*` 열 분할. 12열 그리드는 `col-span-*`와 조합해 페이지 레이아웃을 구성합니다.
-            </p>
             <div role="list" className="grid grid-cols-2 gap-4">
               {gridColumnTokens.map(({ name, cols, utility, desc }) => (
                 <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
@@ -2496,23 +2638,27 @@ export default function Home() {
           <div role="tabpanel" id="panel-grid-gap" aria-labelledby="tab-grid-gap" hidden={activeGridTab !== "gap"}>
           <section aria-labelledby="section-grid-gap" className="mb-0">
             <h3 id="section-grid-gap" className="sr-only">Gap</h3>
-            <p className="text-body-sm text-text-muted mb-6">
-              그리드 간격(gap)은 item 사이 margin 역할입니다. `gap-*`는 좌우·상하에 동일하게 적용되며, 아래 스케일에서 크기별 견본을 한눈에 비교할 수 있습니다.
-            </p>
             <GridGapCuration />
           </section>
           </div>{/* /panel-grid-gap */}
 
         </div>{/* /panel-grid */}
 
-        {/* ── Tab Panel 3: Typography ── */}
+        {/* ── Tab Panel: Font & Type ── */}
         <div role="tabpanel" id="panel-type" aria-labelledby="tab-type" hidden={activeTab !== "type"} className={layoutPageColSpanFull}>
+
+        <ContentIntroShell>
+        <ContentTitleBlock
+          title="Font & Type"
+          titleId="content-type"
+          className="mb-0"
+        />
 
         <div
           role="tablist"
-          aria-label="타이포그래피 카테고리"
+          aria-label="Font & Type 카테고리"
           onKeyDown={handleTypeTabKeyDown}
-          className="mb-10 flex gap-1 border-b border-border"
+          className="mt-6 mb-4 flex gap-1 border-b border-border"
         >
           <button
             ref={fontFamilyTabRef}
@@ -2538,18 +2684,31 @@ export default function Home() {
             onClick={() => selectTypeSection("typography")}
             className={contentSubTabClass(activeTypeTab === "typography")}
           >
-            Typography
+            Type Scale
           </button>
         </div>
 
+        <TabDescriptionCallout>
+          {activeTypeTab === "font-family" ? (
+            <>
+              <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. <strong>font-sans</strong> 유틸리티로 <strong>--font-family-base</strong> 토큰을 적용합니다.
+            </>
+          ) : (
+            <>
+              역할별 타이포 스케일과 <strong>typo-*</strong> 묶음 유틸리티를 확인합니다.
+            </>
+          )}
+        </TabDescriptionCallout>
+        </ContentIntroShell>
+
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"}>
-        <section aria-labelledby="content-font-family" className="mb-0">
+        <section aria-labelledby="section-font-family" className="mb-0">
           <FontStackCuration />
 
           {/* Pretendard GOV */}
           <div className="rounded-2xl border border-neutral-200 overflow-hidden">
             <div className="py-3 px-10 bg-neutral-50 border-b border-neutral-200">
-              <h3 className="m-0 text-label-xl font-semibold text-foreground">Pretendard GOV</h3>
+              <h4 className="m-0 text-label-xl font-semibold text-foreground">Pretendard GOV</h4>
               <p className="m-0 mt-1 text-caption text-text-muted">기본 폰트 · 1순위</p>
             </div>
             <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
@@ -2629,7 +2788,7 @@ export default function Home() {
           {/* Noto Sans KR */}
           <div className="mt-8 rounded-2xl border border-neutral-200 overflow-hidden">
             <div className="py-3 px-10 bg-neutral-50 border-b border-neutral-200">
-              <h3 className="m-0 text-label-xl font-semibold text-foreground">Noto Sans KR</h3>
+              <h4 className="m-0 text-label-xl font-semibold text-foreground">Noto Sans KR</h4>
               <p className="m-0 mt-1 text-caption text-text-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
             </div>
             <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
@@ -2737,13 +2896,10 @@ export default function Home() {
         </div>{/* /panel-type-font-family */}
 
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"}>
-        <section aria-labelledby="content-typography" className="mb-0">
-          <ContentTitleBlock
-            eyebrow="Typography"
-            title="Typography"
-            titleId="content-typography"
-            description="역할별 타이포 스케일과 typo-* 묶음 유틸리티를 확인합니다."
-          />
+        <section aria-labelledby="section-typography-scale" className="mb-0">
+          <ContentSectionTitle id="section-typography-scale" lead>
+            Type Scale
+          </ContentSectionTitle>
           <TypographyScaleTable />
           <TypographyExampleOfUse />
         </section>
@@ -2754,6 +2910,18 @@ export default function Home() {
 
         {/* ── Tab Panel: Icons ── */}
         <div role="tabpanel" id="panel-icons" aria-labelledby="tab-icons" hidden={activeTab !== "icons"} className={layoutPageColSpanFull}>
+          <ContentIntroShell>
+          <ContentTitleBlock
+            title="Icons"
+            titleId="content-icons"
+            description={
+              <>
+                <strong>stroke</strong> 기반 라인 아이콘과 <strong>size-icon-*</strong> 크기 토큰을 확인합니다.
+              </>
+            }
+            className="mb-0"
+          />
+          </ContentIntroShell>
           <IconSourceCuration />
         </div>{/* /panel-icons */}
 
