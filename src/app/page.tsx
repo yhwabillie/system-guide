@@ -915,9 +915,9 @@ type ContentOutlineTabDef = {
 
 const contentOutlineSubTabClass = (active: boolean) =>
   [
-    "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-colors duration-200",
+    "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-0 border-b-0 border-t-2 border-l-2 border-r-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-[color,background-color] duration-200",
     active
-      ? "z-[1] -mb-0.5 border-accent border-b-0 bg-background font-bold text-accent after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
+      ? "z-[1] -mb-0.5 border-accent bg-background font-bold text-accent after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
       : "border-transparent bg-surface-subtle font-medium text-foreground hover:bg-neutral-100",
   ].join(" ");
 
