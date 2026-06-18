@@ -22,7 +22,7 @@
 :root {
   /* KRDS 표준형 hue 팔레트 + Violet — src/lib/raw-color-palettes.ts 와 동기화 */
   /* Red */
-  --raw-red-0: #ffffff;
+  --raw-red-0: #fffdfd;
   --raw-red-5: #fdefec;
   --raw-red-10: #fcdfd9;
   --raw-red-20: #f7afa1;
@@ -34,10 +34,10 @@
   --raw-red-80: #5c180a;
   --raw-red-90: #390d05;
   --raw-red-95: #1c0602;
-  --raw-red-100: #000000;
+  --raw-red-100: #030100;
 
   /* Rose */
-  --raw-rose-0: #ffffff;
+  --raw-rose-0: #fffdfe;
   --raw-rose-5: #fbeff0;
   --raw-rose-10: #f5d6d9;
   --raw-rose-20: #ebadb2;
@@ -49,10 +49,10 @@
   --raw-rose-80: #521419;
   --raw-rose-90: #310c0f;
   --raw-rose-95: #180608;
-  --raw-rose-100: #000000;
+  --raw-rose-100: #030101;
 
   /* Orange */
-  --raw-orange-0: #ffffff;
+  --raw-orange-0: #fffefb;
   --raw-orange-5: #fff3db;
   --raw-orange-10: #ffe0a3;
   --raw-orange-20: #ffc95c;
@@ -64,10 +64,10 @@
   --raw-orange-80: #422c00;
   --raw-orange-90: #2e1f00;
   --raw-orange-95: #171000;
-  --raw-orange-100: #000000;
+  --raw-orange-100: #020200;
 
   /* Green */
-  --raw-green-0: #ffffff;
+  --raw-green-0: #fdfefd;
   --raw-green-5: #eaf6ec;
   --raw-green-10: #d8eedd;
   --raw-green-20: #a9dab4;
@@ -79,10 +79,10 @@
   --raw-green-80: #1f4727;
   --raw-green-90: #122b18;
   --raw-green-95: #09160c;
-  --raw-green-100: #000000;
+  --raw-green-100: #010201;
 
   /* Cyan */
-  --raw-cyan-0: #ffffff;
+  --raw-cyan-0: #fdfeff;
   --raw-cyan-5: #e7f4fe;
   --raw-cyan-10: #d3ebfd;
   --raw-cyan-20: #9ed2fa;
@@ -94,10 +94,10 @@
   --raw-cyan-80: #053961;
   --raw-cyan-90: #03253f;
   --raw-cyan-95: #021220;
-  --raw-cyan-100: #000000;
+  --raw-cyan-100: #000203;
 
   /* Blue */
-  --raw-blue-0: #ffffff;
+  --raw-blue-0: #fdfeff;
   --raw-blue-5: #ecf2fe;
   --raw-blue-10: #d8e5fd;
   --raw-blue-20: #b1cefb;
@@ -109,10 +109,10 @@
   --raw-blue-80: #052561;
   --raw-blue-90: #03163a;
   --raw-blue-95: #020b1d;
-  --raw-blue-100: #000000;
+  --raw-blue-100: #000103;
 
   /* Violet — 보라 hue(#5B4CF0=50). 스케일 0·5·10·…·100 */
-  --raw-violet-0: #ffffff;
+  --raw-violet-0: #fdfdff;
   --raw-violet-5: #efedfe;
   --raw-violet-10: #dedbfc;
   --raw-violet-20: #bdb7f9;
@@ -124,10 +124,10 @@
   --raw-violet-80: #241e60;
   --raw-violet-90: #120f30;
   --raw-violet-95: #090818;
-  --raw-violet-100: #000000;
+  --raw-violet-100: #010102;
 
   /* Navy */
-  --raw-navy-0: #ffffff;
+  --raw-navy-0: #fdfefe;
   --raw-navy-5: #eef2f7;
   --raw-navy-10: #d6e0eb;
   --raw-navy-20: #bacbde;
@@ -139,10 +139,10 @@
   --raw-navy-80: #052b57;
   --raw-navy-90: #031f3f;
   --raw-navy-95: #021020;
-  --raw-navy-100: #000000;
+  --raw-navy-100: #000203;
 
   /* Gray */
-  --raw-gray-0: #ffffff;
+  --raw-gray-0: #fefefe;
   --raw-gray-5: #f4f5f6;
   --raw-gray-10: #e6e8ea;
   --raw-gray-20: #cdd1d5;
@@ -154,7 +154,7 @@
   --raw-gray-80: #33363d;
   --raw-gray-90: #1e2124;
   --raw-gray-95: #0f1012;
-  --raw-gray-100: #000000;
+  --raw-gray-100: #020202;
 
   /* Surface anchors — 중립 램프 밖 순백/심흑(페이지 표면용) */
   --raw-white: #ffffff;
@@ -372,8 +372,12 @@
   --ds-border-strong: var(--ds-gray-30);
   /* 어느 배경에도 보이는 반투명 선/오버레이 — 라이트=검정α, 다크=흰색α(.dark) */
   --ds-border-overlay: var(--raw-black-a10);
+  /* Brand purpose — 라이트 기준 violet 스케일 큐레이션(.dark 용도 재매핑·대비 검증: docs/accessibility.md) */
+  --ds-border-brand: var(--ds-violet-40);
   --ds-surface-subtle: var(--ds-gray-5);
+  --ds-surface-brand: var(--ds-violet-5);
   --ds-text-muted: var(--ds-gray-40);
+  --ds-text-brand: var(--ds-violet-50);
 
   /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-30(.dark) */
   --ds-utility-focus-ring: var(--raw-utility-focus-ring);
@@ -394,14 +398,15 @@
   --ds-overlay-strong: var(--raw-black-a20);
 
   /* 그라데이션 — 시맨틱 스케일·용도 토큰을 참조해 모드 자동 대응 */
-  --ds-gradient-accent: linear-gradient(135deg, var(--ds-blue-400), var(--ds-blue-600));
-  --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-blue-50), var(--ds-blue-100));
+  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-40), var(--ds-violet-60));
+  --ds-gradient-accent: var(--ds-gradient-brand);
+  --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-violet-5), var(--ds-violet-10));
   --ds-gradient-surface-fade-down: linear-gradient(180deg, var(--ds-background), transparent);
   --ds-gradient-surface-fade-up: linear-gradient(0deg, var(--ds-background), transparent);
   --ds-gradient-overlay-fade-up: linear-gradient(0deg, var(--ds-overlay-strong), transparent);
 
-  /* 강조(선택) — base(500) 스케일은 라이트/다크 모두 가시성이 좋음 */
-  --ds-accent: var(--ds-blue-500);
+  /* 강조(선택) — 브랜드 violet-50 base */
+  --ds-accent: var(--ds-violet-50);
   --ds-accent-danger: var(--ds-red-50);
   --ds-on-accent: var(--raw-white);
 
@@ -514,6 +519,15 @@
   --ds-gray-90: var(--raw-gray-10);   --ds-gray-95: var(--raw-gray-5);
   --ds-gray-100: var(--raw-gray-0);
 
+  /* Brand purpose — 다크 배경(#0a0a0a) 대비 WCAG AA(본문 4.5:1·UI 3:1) 검증 후 매핑. docs/accessibility.md 참고 */
+  --ds-text-muted: var(--ds-gray-60);
+  --ds-text-brand: var(--ds-violet-70);
+  --ds-surface-brand: var(--ds-violet-10);
+  --ds-border-brand: var(--ds-violet-60);
+  --ds-accent: var(--ds-violet-50);
+  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-50), var(--ds-violet-70));
+  --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-violet-10), var(--ds-violet-20));
+
 }
 
 /* ============================================================
@@ -603,12 +617,15 @@
 
   --color-line: var(--ds-border);
   --color-line-strong: var(--ds-border-strong);
+  --color-line-brand: var(--ds-border-brand);
   --color-line-overlay: var(--ds-border-overlay);
   --color-utility-focus-ring: var(--ds-utility-focus-ring);
   --color-utility-scroll-thumb: var(--ds-utility-scroll-thumb);
   --color-utility-scroll-track: var(--ds-utility-scroll-track);
   --color-surface-subtle: var(--ds-surface-subtle);
+  --color-surface-brand: var(--ds-surface-brand);
   --color-muted: var(--ds-text-muted);
+  --color-brand: var(--ds-text-brand);
   --color-accent: var(--ds-accent);
   --color-accent-danger: var(--ds-accent-danger);
   --color-on-accent: var(--ds-on-accent);
@@ -616,6 +633,7 @@
   --color-overlay: var(--ds-overlay);
   --color-overlay-strong: var(--ds-overlay-strong);
 
+  --background-image-gradient-brand: var(--ds-gradient-brand);
   --background-image-gradient-accent: var(--ds-gradient-accent);
   --background-image-gradient-accent-subtle: var(--ds-gradient-accent-subtle);
   --background-image-gradient-surface-fade-down: var(--ds-gradient-surface-fade-down);

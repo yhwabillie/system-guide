@@ -25,16 +25,44 @@ export function invertRawScaleUnit(unit: number): number {
 }
 
 
+/** 스케일 0·100 — 순백/순흑에 family 틴트를 소량만 섞는 비율(0=88% white, 100=88% black) */
+const RAW_ANCHOR_TINT_RATIO = 0.1;
+
+function hexToRgb(hex: string): [number, number, number] {
+  return [
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16),
+  ];
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  const fmt = (n: number) => n.toString(16).padStart(2, "0");
+  return `#${fmt(r)}${fmt(g)}${fmt(b)}`.toUpperCase();
+}
+
+function blendChannel(anchor: number, channel: number, ratio: number): number {
+  return Math.round(anchor + (channel - anchor) * ratio);
+}
+
+/** 스케일 0 — #FFFFFF에 스케일 5 hue를 아주 소량(기본 10%)만 혼합 */
+function lightestTintFrom5(hex5: string, ratio = RAW_ANCHOR_TINT_RATIO): string {
+  const [r, g, b] = hexToRgb(hex5);
+  return rgbToHex(blendChannel(255, r, ratio), blendChannel(255, g, ratio), blendChannel(255, b, ratio));
+}
+
+/** 스케일 100 — #000000에 스케일 95 hue를 아주 소량(기본 10%)만 혼합 */
+function darkestTintFrom95(hex95: string, ratio = RAW_ANCHOR_TINT_RATIO): string {
+  const [r, g, b] = hexToRgb(hex95);
+  return rgbToHex(blendChannel(0, r, ratio), blendChannel(0, g, ratio), blendChannel(0, b, ratio));
+}
+
 function rampEndpoints(steps: Record<number, string>): Record<number, string> {
   const hex90 = steps[90];
-  const [r, g, b] = [
-    parseInt(hex90.slice(1, 3), 16),
-    parseInt(hex90.slice(3, 5), 16),
-    parseInt(hex90.slice(5, 7), 16),
-  ];
+  const [r, g, b] = hexToRgb(hex90);
   const mid = (n: number) => Math.round(n / 2).toString(16).padStart(2, "0");
   const hex95 = `#${mid(r)}${mid(g)}${mid(b)}`.toUpperCase();
-  return { 0: "#FFFFFF", ...steps, 95: hex95, 100: "#000000" };
+  return { 0: lightestTintFrom5(steps[5]), ...steps, 95: hex95, 100: darkestTintFrom95(hex95) };
 }
 
 function paletteFromSteps(steps: Record<number, string>): PrimitiveColorFamily["swatches"] {
@@ -147,8 +175,7 @@ export const primitiveColors: PrimitiveColorFamily[] = [
   {
     family: "Violet",
     name: "violet",
-    swatches: paletteFromSteps({
-      0: "#ffffff",
+    swatches: paletteFromSteps(rampEndpoints({
       5: "#efedfe",
       10: "#dedbfc",
       20: "#bdb7f9",
@@ -159,9 +186,7 @@ export const primitiveColors: PrimitiveColorFamily[] = [
       70: "#372e90",
       80: "#241e60",
       90: "#120f30",
-      95: "#090818",
-      100: "#000000",
-    }),
+    })),
   },
   {
     family: "Navy",

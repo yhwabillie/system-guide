@@ -50,6 +50,7 @@
 - [ ] **[1.3.2] 명확한 지시사항** — "빨간색 버튼을 클릭", "왼쪽 메뉴" 등 감각적 표현만 사용 금지
 - [x] **[1.3.3] 텍스트 명도 대비** — 일반 텍스트 **4.5:1 이상**, 큰 텍스트(18px+ / bold 14px+) **3:1 이상**
 - [x] **[1.3.3] UI 컴포넌트 대비** — 버튼 테두리·입력 필드 경계 등 **3:1 이상**
+- [x] **[1.3.3] 다크 모드 시맨틱 대비** — `.dark`에서 `--ds-*` 용도 토큰을 바꿀 때 **라이트·다크 모두** 배경(`--ds-background`·`--ds-surface-*`) 대비를 검증한다. 스케일 50 앵커만 고정하면 다크에서 텍스트 대비가 4.5:1 미만이 될 수 있음 → 아래 **시맨틱 색상·다크 모드 대비** 절차 준수
 - [ ] **[1.3.3] placeholder 대비** — **4.5:1 이상** (한국 기준 강화)
 - [ ] **[1.3.4] 자동 재생 금지** — 3초 이상 자동 재생 콘텐츠는 정지·일시정지·음소거 수단 제공
 - [x] **[1.3.5] 콘텐츠 간의 구분** — 인접 콘텐츠 간 시각적 구분 (여백·선·배경색 등)
@@ -311,6 +312,9 @@ const FONT_LINE = 1.25;
 - **`line-height` 1.5 이외 값 금지** — 프로젝트 행간은 **전역 `1.5` 단일 토큰**(`tokens.ts` `FONT_LINE` → CSS `--font-line`)만 사용한다. `leading-none`·`leading-tight`·`line-height: 1`·`1.25`·고정 `px` 행간, 역할별 `--font-line-*` 토큰 신설, `globals.css`에 `--font-line` 숫자 직접 정의 모두 금지. 변경이 필요하면 **`FONT_LINE` 한 곳만** 수정하고 `body`·`@theme --leading-*`·`--typography-*` 연쇄를 따른다. 인라인은 `lineHeight: "var(--font-line)"`만 허용
 - **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
+- **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-line-overlay`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`
+- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 중립 `text-foreground`·`ring-foreground`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이. 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
+- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`text-muted` 금지**(다크 accent ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`text-foreground` 사용. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `bg-surface-brand` + `text-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수)
 - **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `text-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
 - **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
 - `user-scalable=no` meta viewport 금지
@@ -319,6 +323,53 @@ const FONT_LINE = 1.25;
 - 레이아웃 목적 `<table>` 사용 금지
 - 외부 링크·장식 표시에 유니코드 `↗`·이모지 텍스트 + `opacity-*` / `text-muted` 조합 금지 (WAVE 대비 오류) → SVG + `currentColor` + `.sr-only`
 - 동일 URL을 가리키는 `<a>`를 한 화면에 중복 배치 금지 (WAVE Redundant link) → nav canonical 1개 + 본문은 `#id` 앵커 또는 텍스트 안내
+
+---
+
+## 시맨틱 색상·다크 모드 대비 (필수)
+
+> **라이트만 맞추고 다크를 방치하면 WAVE Contrast Error가 난다.** 시맨틱 용도 토큰(`--ds-text-brand`·`--ds-surface-brand`·`--ds-border-brand`·`--ds-accent` 등)을 추가·변경할 때 **반드시 양 모드**를 검증한다.
+
+### 검증 기준
+
+| 용도 | 전경 | 배경(기본) | 최소 비율 |
+|------|------|------------|-----------|
+| 본문·링크·활성 라벨 (`text-brand`·`text-foreground` 등) | 토큰 전경색 | `--ds-background` 또는 실제 깔리는 surface | **4.5:1** |
+| 큰 텍스트·굵은 라벨(18px+ / bold 14px+) | 동일 | 동일 | **3:1** |
+| 테두리·아이콘·채움 블록 (`border-line-brand`·`bg-accent` 단독 노출) | 토큰 색 | 인접 `--ds-background` | **3:1** |
+| 채움 버튼 (`bg-accent` + `text-on-accent`) | `--ds-on-accent` | `--ds-accent` | **4.5:1** |
+
+### 배경 기준값
+
+| 모드 | 페이지 배경 | 서브tle surface |
+|------|-------------|-----------------|
+| 라이트 | `#FFFFFF` (`--raw-white`) | `gray-5` (`--ds-surface-subtle`) |
+| 다크 | `#0A0A0A` (`--raw-black`) | `gray-5` 반사 (`--ds-surface-subtle` → `--raw-gray-95`) |
+
+### Brand(violet) 큐레이션 — 현재 SSOT (`globals.css`)
+
+라이트(`:root`)와 다크(`.dark` 용도 재매핑) **둘 다** 아래 조합을 만족해야 한다.
+
+| 토큰 | 라이트 `--ds-*` | 다크 `--ds-*` | 검증 조합(예) |
+|------|-----------------|---------------|---------------|
+| `text-brand` | `violet-50` | `violet-70` | on `background` ≥ 4.5:1 · on `surface-brand` ≥ 4.5:1 |
+| `surface-brand` | `violet-5` | `violet-10` | `text-brand` on surface ≥ 4.5:1 |
+| `border-brand` | `violet-40` | `violet-60` | on `background` ≥ 3:1 |
+| `accent`(채움) | `violet-50` | `violet-50` | `on-accent`(white) on accent ≥ 4.5:1 · accent on `background` ≥ 3:1 |
+
+**금지·주의**
+- 다크에서 `text-brand`·`accent`를 **스케일 50만** 쓰면 `#5B4CF0` on `#0A0A0A` ≈ **3.5:1** → 본문 4.5:1 **미달**
+- 라이트 `border-brand`에 `violet-30` 이하 → white 대비 **3:1 미달**
+- 용도 토큰은 `.dark`에서 **스케일 반사만** 믿지 말고, 위 표처럼 **대비 계산 후** `--ds-violet-*` 단계를 다시 고른다
+
+### 작업 절차 (토큰 변경 시)
+
+1. `src/lib/contrast.ts`의 `contrastRatio` 또는 [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)로 **라이트·다크** 전경/배경 쌍을 계산
+2. `globals.css` `:root`·`.dark` 용도 블록 갱신
+3. 가이드 Semantic Color 스와치 `rawVar` / `rawVarDark`·실제 computed hex가 모드 전환 시 바뀌는지 확인
+4. WAVE / Lighthouse로 **다크 모드 토글 후** Contrast Error 0 재확인
+
+구현 SSOT: `src/app/globals.css` Brand purpose 주석 블록 · 가이드 `src/app/page.tsx` `semanticColorCatalog`
 
 ---
 
@@ -334,7 +385,7 @@ const FONT_LINE = 1.25;
 | Green | 500 이상 | 400 이상 |
 | Neutral | 600 이상 | 500 이상 |
 
-> 다크모드(`#0a0a0a` 기준): 반전 매핑 적용이므로 동일 스케일 기준 유지
+> 다크모드(`#0a0a0a` 기준): 팔레트 스케일 반사(`u ↔ 100−u`)만으로는 **용도 토큰 대비가 보장되지 않는다**. brand·accent 등은 `.dark`에서 별도 재매핑 + [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 절차로 검증한다.
 
 ---
 
@@ -394,7 +445,7 @@ const FONT_LINE = 1.25;
 - [ ] NVDA 주요 플로우 수동 테스트
 - [ ] 모바일 TalkBack 테스트
 - [ ] 브라우저 200% 줌 레이아웃 확인
-- [ ] 라이트모드 / 다크모드 대비율 확인
+- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `text-brand`/`border-brand`/`bg-accent`+`on-accent`/`surface-brand` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수
 - [ ] 키보드 트랩 없음 확인
 - [ ] 자동 재생 콘텐츠 정지 버튼 확인
 - [ ] 모든 페이지 `<title>` 고유값 확인

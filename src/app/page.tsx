@@ -47,12 +47,26 @@ const overlayTokens = [
 ];
 
 const gradientTokens = [
-  { label: "gradient-accent", utility: "bg-gradient-accent", dsVar: "--ds-gradient-accent", desc: "브랜드 강조 — violet 40 → 60 (135°)" },
-  { label: "gradient-accent-subtle", utility: "bg-gradient-accent-subtle", dsVar: "--ds-gradient-accent-subtle", desc: "은은한 강조 배경 — violet 5 → 10 (↓)" },
-  { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", dsVar: "--ds-gradient-surface-fade-down", desc: "표면 하단 페이드 — background → transparent (↓)" },
-  { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", dsVar: "--ds-gradient-surface-fade-up", desc: "표면 상단 페이드 — background → transparent (↑)" },
-  { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", dsVar: "--ds-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
+  { label: "gradient-brand", utility: "bg-gradient-brand", dsVar: "--ds-gradient-brand", rawVar: "--raw-violet-40 → --raw-violet-60", rawVarDark: "--raw-violet-50 → --raw-violet-30", desc: "브랜드 강조 — violet 40 → 60 (135°)" },
+  { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", dsVar: "--ds-gradient-surface-fade-down", rawVar: "--ds-background → transparent", desc: "표면 하단 페이드 — background → transparent (↓)" },
+  { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", dsVar: "--ds-gradient-surface-fade-up", rawVar: "--ds-background → transparent", desc: "표면 상단 페이드 — background → transparent (↑)" },
+  { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", dsVar: "--ds-gradient-overlay-fade-up", rawVar: "--ds-overlay-strong → transparent", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
 ];
+
+type SemanticGradientTokenDef = {
+  label: string;
+  utility: string;
+  dsVar: string;
+  rawVar: string;
+  rawVarDark?: string;
+  desc: string;
+};
+
+type SemanticGradientGroupDef = {
+  id: string;
+  label: string;
+  gradients: SemanticGradientTokenDef[];
+};
 
 type SemanticColorReadMode = "text" | "bg" | "border" | "outline";
 
@@ -63,6 +77,8 @@ type SemanticColorTokenDef = {
   readAs: SemanticColorReadMode;
   /** 라이트 모드 기준 TIER 1 raw 변수 — 스와치 카드 2행 표시용 */
   rawVar: string;
+  /** 다크 모드 기준 raw(또는 ds→raw 반사 결과) — brand 등 용도 재매핑 토큰용 */
+  rawVarDark?: string;
 };
 
 type SemanticColorGroupDef = {
@@ -98,6 +114,13 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
           { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text", rawVar: "--raw-red-50" },
         ],
       },
+      {
+        id: "brand",
+        label: "brand",
+        tokens: [
+          { token: "brand", utility: "text-brand", cssVar: "--color-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
+        ],
+      },
     ],
   },
   {
@@ -121,6 +144,13 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         label: "subtle",
         tokens: [
           { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-5" },
+        ],
+      },
+      {
+        id: "brand",
+        label: "brand",
+        tokens: [
+          { token: "surface-brand", utility: "bg-surface-brand", cssVar: "--color-surface-brand", readAs: "bg", rawVar: "--raw-violet-5", rawVarDark: "--raw-violet-90" },
         ],
       },
     ],
@@ -155,6 +185,13 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
           { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border", rawVar: "--raw-black-a10" },
         ],
       },
+      {
+        id: "brand",
+        label: "brand",
+        tokens: [
+          { token: "line-brand", utility: "border-line-brand", cssVar: "--color-line-brand", readAs: "border", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-40" },
+        ],
+      },
     ],
   },
   {
@@ -170,7 +207,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg", rawVar: "--raw-violet-50" },
+          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-50" },
         ],
       },
       {
@@ -264,7 +301,23 @@ const semanticGradientCatalog = {
       용도 기반 그라데이션 토큰입니다. <strong>--ds-gradient-*</strong> 원본이 <strong>bg-gradient-*</strong>로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
     </>
   ),
-  tokens: gradientTokens,
+  groups: [
+    {
+      id: "brand",
+      label: "brand",
+      gradients: [gradientTokens[0]],
+    },
+    {
+      id: "surface",
+      label: "surface",
+      gradients: [gradientTokens[1], gradientTokens[2]],
+    },
+    {
+      id: "overlay",
+      label: "overlay",
+      gradients: [gradientTokens[3]],
+    },
+  ] satisfies SemanticGradientGroupDef[],
 };
 
 type TocSection = { id: string; label: string };
@@ -453,10 +506,12 @@ function SemanticOverlaySwatchCard({
 function SemanticGradientSwatchCard({
   utility,
   dsVar,
+  rawVar,
   desc,
 }: {
   utility: string;
   dsVar: string;
+  rawVar: string;
   desc: string;
 }) {
   const isFade = dsVar.includes("fade");
@@ -471,7 +526,7 @@ function SemanticGradientSwatchCard({
       ) : (
         <div aria-hidden="true" className={`h-24 w-full border-b border-line ${utility}`} />
       )}
-      <SwatchCardMeta utility={utility} sourceVar={dsVar} value={desc} />
+      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={desc} />
     </div>
   );
 }
@@ -936,12 +991,12 @@ const contentOutlineSubTabClass = (active: boolean) =>
   [
     "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-0 border-b-0 border-t-2 border-l-2 border-r-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-[color,background-color] duration-200",
     active
-      ? "z-[1] -mb-0.5 border-accent bg-background font-bold text-accent after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
-      : "border-transparent bg-surface-subtle font-medium text-foreground hover:bg-gray-10",
+      ? "z-[1] -mb-0.5 border-foreground bg-background font-bold text-foreground after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
+      : "border-transparent bg-surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:text-foreground",
   ].join(" ");
 
 const guideTabScrollBtnClass =
-  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-accent bg-background text-accent transition-opacity duration-150 hover:bg-surface-subtle focus-visible:opacity-100 focus-visible:visible";
+  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-line bg-background text-gray-60 transition-opacity duration-150 hover:bg-surface-subtle hover:text-foreground focus-visible:opacity-100 focus-visible:visible";
 
 const GUIDE_TAB_SCROLL_AMOUNT = 200;
 
@@ -1032,7 +1087,7 @@ function ContentOutlineTabList({
             role="tablist"
             aria-label={ariaLabel}
             onKeyDown={onKeyDown}
-            className="flex w-max min-w-full border-b-2 border-accent px-control-md"
+            className="flex w-max min-w-full border-b-2 border-foreground px-control-md"
           >
             {tabs.map((tab) => {
               const active = activeValue === tab.value;
@@ -1080,14 +1135,14 @@ const guideHeaderHeightClass = "h-[3.75rem]";
 const guideHeaderOffsetClass = "top-[3.75rem]";
 const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 const guideHeaderIconButtonClass =
-  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle text-foreground transition-colors duration-150 hover:bg-green-5 hover:text-accent";
+  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle text-foreground transition-colors duration-150 hover:bg-gray-10 hover:text-foreground";
 
 function GuideLogoMark() {
   return (
     <svg
       aria-hidden="true"
       viewBox="0 0 32 20"
-      className="size-icon-sm shrink-0 text-accent"
+      className="size-icon-sm shrink-0 text-foreground"
       fill="currentColor"
     >
       <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
@@ -1806,20 +1861,39 @@ const contrastPickPaletteIcon =
 const contrastPickChevronIcon = '<polyline points="9 18 15 12 9 6" />';
 const contrastPickCloseIcon = '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />';
 
-/** 팔레트 스와치 — 선택 시 accent ring(피커 버튼과 동일), 비선택은 얇은 line 보더 */
-function contrastSwatchClass(isBg: boolean, isText: boolean, isInteractive: boolean, extra = ""): string {
+/** raw 팔레트 견본 — 체커보드 위에 raw 고정색(모드 무관). ds 반사색·페이지 배경과의 WAVE 비텍스트 대비 오검 방지 */
+function rawPaletteSwatchClass(isBg: boolean, isText: boolean, isInteractive: boolean, extra = "") {
   const isSelected = isBg || isText;
   return [
-    "h-10 rounded-md relative",
+    "h-10 rounded-md relative overflow-hidden isolate",
     extra,
     isInteractive ? "cursor-pointer border-0 p-0 transition-[opacity,box-shadow,transform] duration-150" : "",
     isSelected
-      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-accent ring-offset-2 ring-offset-background"
-      : "border border-line-overlay",
-    isInteractive && !isSelected ? "opacity-75 hover:opacity-100 hover:scale-[1.02]" : "",
+      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-foreground ring-offset-2 ring-offset-background"
+      : "",
+    isInteractive && !isSelected ? "opacity-90 hover:opacity-100 hover:scale-[1.02]" : "",
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+function RawPaletteSwatchFill({ cssVar, checker }: { cssVar: string; checker: React.CSSProperties }) {
+  return (
+    <>
+      <div aria-hidden="true" className="absolute inset-0" style={checker} />
+      <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: cssVar }} />
+    </>
+  );
+}
+
+/** Contrast Checker 피커 — hex 고정색을 체커보드 위에 표시(어두운 견본·페이지 배경과의 WAVE 비텍스트 오검 방지) */
+function ContrastSwatchFill({ hex, checker }: { hex: string; checker: React.CSSProperties }) {
+  return (
+    <>
+      <div aria-hidden="true" className="absolute inset-0" style={checker} />
+      <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: hex }} />
+    </>
+  );
 }
 
 /** BG·TXT 역할 배지 — 스와치 명도와 무관하게 background+테두리로 대비 확보 */
@@ -1828,8 +1902,8 @@ function ContrastSwatchRoleMarker({ role }: { role: "BG" | "TXT" }) {
     <span
       aria-hidden="true"
       className={[
-        "absolute top-1 left-1 rounded border-2 bg-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
-        role === "BG" ? "border-accent text-accent" : "border-foreground text-foreground",
+        "absolute top-1 left-1 z-[1] rounded border-2 bg-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
+        "border-foreground text-foreground",
       ].join(" ")}
     >
       {role}
@@ -1841,19 +1915,23 @@ function ContrastColorPickButton({
   labelId,
   labelText,
   valueId,
+  actionId,
   swatchHex,
   colorLabel,
   colorHex,
   isSelecting,
+  checker,
   onToggle,
 }: {
   labelId: string;
   labelText: string;
   valueId: string;
+  actionId: string;
   swatchHex: string;
   colorLabel: string;
   colorHex: string;
   isSelecting: boolean;
+  checker: React.CSSProperties;
   onToggle: () => void;
 }) {
   return (
@@ -1864,39 +1942,35 @@ function ContrastColorPickButton({
       <button
         type="button"
         onClick={onToggle}
-        aria-label={
-          isSelecting
-            ? `${labelText} 선택 취소 — 현재 ${colorLabel} ${colorHex}`
-            : `${labelText} — 팔레트에서 색 고르기, 현재 ${colorLabel} ${colorHex}`
-        }
+        aria-labelledby={`${labelId} ${valueId} ${actionId}`}
         aria-expanded={isSelecting}
-        aria-describedby={valueId}
         className={[
           "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
           isSelecting
-            ? "bg-gray-10 shadow-sm ring-2 ring-accent"
+            ? "bg-gray-10 shadow-sm ring-2 ring-foreground"
             : "bg-surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-line",
         ].join(" ")}
       >
         <span
           aria-hidden="true"
           className={[
-            "block size-8 shrink-0 rounded-md border border-line-overlay transition-transform duration-150",
-            isSelecting ? "scale-105 ring-2 ring-accent ring-offset-1" : "group-hover:scale-105",
+            "relative block size-8 shrink-0 overflow-hidden isolate rounded-md border border-line transition-transform duration-150",
+            isSelecting ? "scale-105 ring-2 ring-foreground ring-offset-1 ring-offset-background" : "group-hover:scale-105",
           ].join(" ")}
-          style={{ background: swatchHex }}
-        />
+        >
+          <ContrastSwatchFill hex={swatchHex} checker={checker} />
+        </span>
         <span className="flex min-w-0 flex-col text-left">
-          <span className="text-label-md font-semibold">{colorLabel}</span>
-          <span id={valueId} className="text-caption text-gray-60 font-mono numeric-tabular">{colorHex}</span>
+          <span className="text-label-md font-semibold text-foreground">{colorLabel}</span>
+          <span id={valueId} className="text-caption text-gray-70 font-mono numeric-tabular">{colorHex}</span>
         </span>
         <span
-          aria-hidden="true"
+          id={actionId}
           className={[
             "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
             isSelecting
-              ? "border-accent bg-background text-accent"
-              : "border-line bg-background text-accent group-hover:border-accent",
+              ? "border-foreground bg-gray-10 text-foreground"
+              : "border-line-strong bg-background text-foreground group-hover:border-foreground",
           ].join(" ")}
         >
           {isSelecting ? (
@@ -2229,7 +2303,7 @@ function NavSubTree({
           >
             <span>{item.label}</span>
             {item.active && (
-              <NavIcon className="size-icon-xs shrink-0 opacity-50">
+              <NavIcon className="size-icon-xs shrink-0 text-brand">
                 <path d="M9 6l6 6-6 6" />
               </NavIcon>
             )}
@@ -2366,26 +2440,32 @@ export default function Home() {
     }
   }
 
+  const navSectionEyebrowClass =
+    "mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-gray-60";
+
+  const navExpandToggleClass =
+    "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:text-foreground";
+
   const navExternalLinkClass =
-    "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-accent no-underline transition-colors duration-150 hover:bg-gray-10";
+    "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-foreground no-underline transition-colors duration-150 hover:bg-gray-10";
 
   const navSubItemClass = (active: boolean) =>
     [
       "flex w-full items-center justify-between gap-2 text-left rounded-lg border-0 cursor-pointer font-sans text-label-sm leading-base",
       "py-2 px-3 transition-colors duration-150",
       active
-        ? "bg-gray-5 text-foreground font-semibold"
+        ? "bg-surface-brand text-brand font-semibold"
         : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:text-foreground",
     ].join(" ");
 
   const navParentGroupClass = (active: boolean) =>
-    ["flex items-center rounded-xl", active ? "bg-green-5" : "bg-transparent"].join(" ");
+    ["flex items-center rounded-xl", active ? "bg-gray-5" : "bg-transparent"].join(" ");
 
   const navParentButtonClass = (active: boolean) =>
     [
       "flex min-w-0 flex-1 items-center gap-3 border-0 bg-transparent text-left font-sans text-label-md leading-base",
       "cursor-pointer py-2.5 pl-3.5 pr-1 transition-colors duration-150",
-      active ? "font-semibold text-green-60" : "font-medium text-gray-60 hover:text-foreground",
+      active ? "font-semibold text-foreground" : "font-medium text-gray-60 hover:text-foreground",
     ].join(" ");
 
   function selectColorSection(sub: "raw" | "semantic") {
@@ -2431,6 +2511,14 @@ export default function Home() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
+
+    if (isDark) {
+      setBgColor({ hex: "#0a0a0a", label: "Black" });
+      setTextColor({ hex: "#e6e8ea", label: "Gray 10" });
+    } else {
+      setBgColor({ hex: "#ffffff", label: "White" });
+      setTextColor({ hex: "#1e2124", label: "Gray 90" });
+    }
 
     const frameId = requestAnimationFrame(() => {
       const cs = getComputedStyle(document.documentElement);
@@ -2507,7 +2595,7 @@ export default function Home() {
           aria-label="디자인 토큰 가이드"
           className={`${layoutSidenavMenuClass} flex flex-col border-b border-line bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
         >
-          <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Tokens</p>
+          <p className={navSectionEyebrowClass}>Tokens</p>
           <div
             role="tablist"
             aria-label="디자인 토큰 카테고리"
@@ -2539,7 +2627,7 @@ export default function Home() {
                   aria-label={colorMenuExpanded ? "Color 하위 메뉴 접기" : "Color 하위 메뉴 펼치기"}
                   aria-expanded={colorMenuExpanded}
                   onClick={() => setColorMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
+                  className={navExpandToggleClass}
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${colorMenuExpanded ? "rotate-180" : ""}`}
@@ -2591,7 +2679,7 @@ export default function Home() {
                   aria-label={typeMenuExpanded ? "Font & Type 하위 메뉴 접기" : "Font & Type 하위 메뉴 펼치기"}
                   aria-expanded={typeMenuExpanded}
                   onClick={() => setTypeMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
+                  className={navExpandToggleClass}
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${typeMenuExpanded ? "rotate-180" : ""}`}
@@ -2643,7 +2731,7 @@ export default function Home() {
                   aria-label={spacingMenuExpanded ? "Spacing & Size 하위 메뉴 접기" : "Spacing & Size 하위 메뉴 펼치기"}
                   aria-expanded={spacingMenuExpanded}
                   onClick={() => setSpacingMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
+                  className={navExpandToggleClass}
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${spacingMenuExpanded ? "rotate-180" : ""}`}
@@ -2700,7 +2788,7 @@ export default function Home() {
                   aria-label={gridMenuExpanded ? "Grid 하위 메뉴 접기" : "Grid 하위 메뉴 펼치기"}
                   aria-expanded={gridMenuExpanded}
                   onClick={() => setGridMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
+                  className={navExpandToggleClass}
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${gridMenuExpanded ? "rotate-180" : ""}`}
@@ -2730,7 +2818,7 @@ export default function Home() {
             </div>
 
             <div className="mt-5 border-t border-line pt-5">
-              <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Assets</p>
+              <p className={navSectionEyebrowClass}>Assets</p>
               <div className="flex flex-col gap-0.5">
                 <div className={navParentGroupClass(activeTab === "icons")}>
                   <button
@@ -2755,7 +2843,7 @@ export default function Home() {
                     aria-label={iconsMenuExpanded ? "Icons 하위 메뉴 접기" : "Icons 하위 메뉴 펼치기"}
                     aria-expanded={iconsMenuExpanded}
                     onClick={() => setIconsMenuExpanded((open) => !open)}
-                    className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-gray-10 hover:text-foreground"
+                    className={navExpandToggleClass}
                   >
                     <NavIcon
                       className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${iconsMenuExpanded ? "rotate-180" : ""}`}
@@ -2787,7 +2875,7 @@ export default function Home() {
           </div>
 
           <div className="mt-5 border-t border-line pt-5">
-            <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Layout</p>
+            <p className={navSectionEyebrowClass}>Layout</p>
             <a
               id="nav-layout-breakpoint"
               href="/guide/responsive"
@@ -2837,7 +2925,7 @@ export default function Home() {
             lead
             description={
               <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray) 순으로 배열하고, 스케일 단위 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. KRDS 표준형 family는 5~90 단계를 그대로 쓰고, <strong>Violet</strong>(<code className="font-mono text-caption">#5B4CF0</code>=<strong>50</strong> base)는 0(white)~100(black) 전 구간 스케일입니다. surface·base·text 등 역할은 Semantic Color 탭에서 매핑합니다.
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray) 순으로 배열하고, 스케일 단위 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. KRDS 표준형 family는 5~90 단계를 그대로 쓰고, <strong>Violet</strong>(<code className="font-mono text-caption">#5B4CF0</code>=<strong>50</strong> base)는 0~100 전 구간 스케일입니다. 스케일 <strong>0</strong>·<strong>100</strong>은 순백/순흑이 아니라 각 family <strong>5</strong>·<strong>95</strong> hue를 앵커에 10%만 혼합한 가장 밝/어두운 틴트입니다. surface·base·text 등 역할은 Semantic Color 탭에서 매핑합니다.
               </>
             }
           >
@@ -2849,14 +2937,18 @@ export default function Home() {
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 flex items-center justify-between rounded-lg border border-accent bg-surface-subtle py-2.5 px-4 text-label-md font-semibold text-foreground ring-2 ring-accent"
+              className="mb-3 flex items-center justify-between rounded-lg border border-line-strong bg-surface-subtle py-2.5 px-4 text-label-md font-semibold text-foreground ring-2 ring-foreground"
             >
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="inline-block size-2.5 shrink-0 rounded-full ring-2 ring-accent ring-offset-1"
-                  style={{ background: selecting === "bg" ? bgColor.hex : textColor.hex, border: "1px solid var(--ds-border-overlay)" }}
-                />
+                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground ring-offset-1 ring-offset-background"
+                >
+                  <ContrastSwatchFill
+                    hex={selecting === "bg" ? bgColor.hex : textColor.hex}
+                    checker={isDark ? checkerDark : checkerLight}
+                  />
+                </span>
                 <span>
                   <strong className="font-bold">{selecting === "bg" ? "배경색" : "텍스트색"}</strong>으로 사용할 컬러를 팔레트에서 클릭하세요
                 </span>
@@ -2875,17 +2967,18 @@ export default function Home() {
           <div role="group" aria-label="색상 팔레트" className="flex flex-col gap-2">
             {/* 스케일 헤더 */}
             <div aria-hidden="true" className="grid gap-1 mb-1" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-              <span className="text-caption text-gray-50">Family</span>
+              <span className="text-caption text-gray-60">Family</span>
               {RAW_COLOR_SCALE_UNITS.map((s) => (
-                <span key={s} className="text-caption text-gray-50 text-center">{s}</span>
+                <span key={s} className="text-caption text-gray-60 text-center">{s}</span>
               ))}
             </div>
 
             {primitiveColors.map(({ family, name, swatches }) => {
               const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
+              const rawChecker = isDark ? checkerDark : checkerLight;
               return (
               <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                <span className="text-label-sm font-semibold">{family}</span>
+                <span className="text-label-sm font-semibold text-foreground">{family}</span>
                 {RAW_COLOR_SCALE_UNITS.map((unit) => {
                   const sw = swatchByScale[unit];
                   if (!sw) {
@@ -2893,10 +2986,10 @@ export default function Home() {
                   }
                   const { scale, hex } = sw;
                   const label = `${family} ${scale}`;
-                  const cssVar = `var(--ds-${name}-${scale})`;
-                  const currentHex = hexOf(name, scale, hex);
-                  const isBg = bgColor.hex === currentHex;
-                  const isText = textColor.hex === currentHex;
+                  const rawCssVar = `var(--raw-${name}-${scale})`;
+                  const currentHex = hex.toUpperCase();
+                  const isBg = bgColor.hex.toLowerCase() === currentHex.toLowerCase();
+                  const isText = textColor.hex.toLowerCase() === currentHex.toLowerCase();
                   const isInteractive = !!selecting;
                   const labelText = isInteractive
                     ? `${label} (${currentHex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`
@@ -2908,9 +3001,9 @@ export default function Home() {
                       onClick={() => handleSwatchClick(currentHex, label)}
                       aria-label={labelText}
                       aria-pressed={isBg || isText}
-                      className={contrastSwatchClass(isBg, isText, true)}
-                      style={{ backgroundColor: cssVar }}
+                      className={rawPaletteSwatchClass(isBg, isText, true)}
                     >
+                      <RawPaletteSwatchFill cssVar={rawCssVar} checker={rawChecker} />
                       {isBg && <ContrastSwatchRoleMarker role="BG" />}
                       {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </button>
@@ -2918,9 +3011,9 @@ export default function Home() {
                     <div
                       key={scale}
                       aria-hidden="true"
-                      className={contrastSwatchClass(isBg, isText, false)}
-                      style={{ backgroundColor: cssVar }}
+                      className={rawPaletteSwatchClass(isBg, isText, false)}
                     >
+                      <RawPaletteSwatchFill cssVar={rawCssVar} checker={rawChecker} />
                       {isBg && <ContrastSwatchRoleMarker role="BG" />}
                       {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </div>
@@ -2934,30 +3027,31 @@ export default function Home() {
 
             {/* Surface 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
             {surfaceAnchors.map(({ label, hex, cssVar }) => {
-              const isBg = bgColor.hex === hex;
-              const isText = textColor.hex === hex;
+              const isBg = bgColor.hex.toLowerCase() === hex.toLowerCase();
+              const isText = textColor.hex.toLowerCase() === hex.toLowerCase();
               const isInteractive = !!selecting;
+              const rawChecker = isDark ? checkerDark : checkerLight;
               return (
                 <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold">{label}</span>
+                  <span className="text-label-sm font-semibold text-foreground">{label}</span>
                   {isInteractive ? (
                     <button
                       type="button"
                       onClick={() => handleSwatchClick(hex, label)}
                       aria-label={`${label} (${hex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`}
                       aria-pressed={isBg || isText}
-                      className={contrastSwatchClass(isBg, isText, true, "col-start-2")}
-                      style={{ backgroundColor: cssVar }}
+                      className={rawPaletteSwatchClass(isBg, isText, true, "col-start-2")}
                     >
+                      <RawPaletteSwatchFill cssVar={cssVar} checker={rawChecker} />
                       {isBg && <ContrastSwatchRoleMarker role="BG" />}
                       {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </button>
                   ) : (
                     <div
                       aria-hidden="true"
-                      className={contrastSwatchClass(isBg, isText, false, "col-start-2")}
-                      style={{ backgroundColor: cssVar }}
+                      className={rawPaletteSwatchClass(isBg, isText, false, "col-start-2")}
                     >
+                      <RawPaletteSwatchFill cssVar={cssVar} checker={rawChecker} />
                       {isBg && <ContrastSwatchRoleMarker role="BG" />}
                       {isText && <ContrastSwatchRoleMarker role="TXT" />}
                     </div>
@@ -2986,20 +3080,24 @@ export default function Home() {
               labelId="label-bg"
               labelText="Background"
               valueId="bg-color-value"
+              actionId="bg-color-action"
               swatchHex={bgColor.hex}
               colorLabel={bgColor.label}
               colorHex={bgColor.hex}
               isSelecting={selecting === "bg"}
+              checker={isDark ? checkerDark : checkerLight}
               onToggle={() => setSelecting(selecting === "bg" ? null : "bg")}
             />
             <ContrastColorPickButton
               labelId="label-text"
               labelText="Text"
               valueId="text-color-value"
+              actionId="text-color-action"
               swatchHex={textColor.hex}
               colorLabel={textColor.label}
               colorHex={textColor.hex}
               isSelecting={selecting === "text"}
+              checker={isDark ? checkerDark : checkerLight}
               onToggle={() => setSelecting(selecting === "text" ? null : "text")}
             />
           </div>
@@ -3086,16 +3184,16 @@ export default function Home() {
             </ContentGroupTitle>
             <div role="group" aria-label="전체 팔레트 대비율 매트릭스" className="flex flex-col gap-1.5">
               <div aria-hidden="true" className="grid gap-1" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                <span className="text-caption text-gray-50" />
+                <span className="text-caption text-gray-60" />
                 {RAW_COLOR_SCALE_UNITS.map((s) => (
-                  <span key={s} className="text-caption text-gray-50 text-center">{s}</span>
+                  <span key={s} className="text-caption text-gray-60 text-center">{s}</span>
                 ))}
               </div>
               {primitiveColors.map(({ family, name, swatches }) => {
                 const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
                 return (
                 <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold">{family}</span>
+                  <span className="text-label-sm font-semibold text-foreground">{family}</span>
                   {RAW_COLOR_SCALE_UNITS.map((unit) => {
                     const sw = swatchByScale[unit];
                     if (!sw) {
@@ -3124,7 +3222,7 @@ export default function Home() {
               {(Object.entries(levelStyle) as [ContrastLevel, typeof levelStyle[ContrastLevel]][]).map(([lv, s]) => (
                 <div key={lv} role="listitem" className="flex items-center gap-1.5">
                   <div aria-hidden="true" className="w-3 h-3 rounded-[3px]" style={{ background: s.bg }} />
-                  <span className="text-caption text-gray-50">
+                  <span className="text-caption text-gray-60">
                     {lv === "AAA" ? "AAA 7:1+" : lv === "AA" ? "AA 4.5:1+" : lv === "AA Large" ? "AA Large 3:1+" : "Fail"}
                   </span>
                 </div>
@@ -3152,7 +3250,7 @@ export default function Home() {
                     <SemanticColorSwatchCard
                       key={token.cssVar}
                       utility={token.utility}
-                      rawVar={token.rawVar}
+                      rawVar={isDark && token.rawVarDark ? token.rawVarDark : token.rawVar}
                       color={semanticResolved[token.cssVar] ?? "—"}
                     />
                   ))}
@@ -3184,11 +3282,19 @@ export default function Home() {
             title={semanticGradientCatalog.title}
             description={semanticGradientCatalog.description}
           >
-            <SemanticColorGroupGrid label="gradient">
-              {semanticGradientCatalog.tokens.map(({ utility, dsVar, desc }) => (
-                <SemanticGradientSwatchCard key={dsVar} utility={utility} dsVar={dsVar} desc={desc} />
-              ))}
-            </SemanticColorGroupGrid>
+            {semanticGradientCatalog.groups.map((group) => (
+              <SemanticColorGroupGrid key={group.id} label={group.label}>
+                {group.gradients.map(({ utility, dsVar, rawVar, rawVarDark, desc }) => (
+                  <SemanticGradientSwatchCard
+                    key={dsVar}
+                    utility={utility}
+                    dsVar={dsVar}
+                    rawVar={isDark && rawVarDark ? rawVarDark : rawVar}
+                    desc={desc}
+                  />
+                ))}
+              </SemanticColorGroupGrid>
+            ))}
           </SemanticColorCategorySection>
 
           <SemanticColorCategorySection
@@ -3202,7 +3308,7 @@ export default function Home() {
                   <SemanticColorSwatchCard
                     key={token.cssVar}
                     utility={token.utility}
-                    rawVar={token.rawVar}
+                    rawVar={isDark && token.rawVarDark ? token.rawVarDark : token.rawVar}
                     color={semanticResolved[token.cssVar] ?? "—"}
                   />
                 ))}
