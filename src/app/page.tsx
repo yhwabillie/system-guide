@@ -1744,6 +1744,9 @@ const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: stri
   Fail:       { bg: "var(--ds-guide-level-fail-bg)", color: "var(--ds-guide-level-fail-fg)", label: "Fail" },
 };
 
+/** 명암비 결과 카드 — 숫자·기준 박스 배경 통일 */
+const contrastResultSurfaceClass = "rounded-xl bg-gray-50";
+
 function LevelBadge({ level }: { level: ContrastLevel }) {
   const s = levelStyle[level];
   return (
@@ -1901,7 +1904,7 @@ function ContrastColorPickButton({
 /** 명암비 결과 카드의 단일 기준 박스 — 원형 배지 + 등급 + 임계 대비율. */
 function ContrastCriterionBox({ grade, threshold, passed }: { grade: string; threshold: string; passed: boolean }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-gray-100 py-2.5 px-3">
+    <div className={`flex items-center gap-2 py-2.5 px-3 ${contrastResultSurfaceClass}`}>
       <ContrastCircle passed={passed} />
       <span className="text-label-md font-bold text-foreground">{grade}</span>
       <span className="ml-auto text-caption text-gray-700 numeric-tabular">{threshold}</span>
@@ -3028,7 +3031,7 @@ export default function Home() {
                   <p className="text-label-md font-bold m-0">명암비</p>
                   <LevelBadge level={level} />
                 </div>
-                <output className="block rounded-xl bg-gray-100 py-5 text-center text-foreground">
+                <output className={`block py-5 text-center text-foreground ${contrastResultSurfaceClass}`}>
                   <span className="font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
                     {ratio}<span className="font-normal text-gray-600" style={{ fontSize: pxToRem(18) }}> : 1</span>
                   </span>
