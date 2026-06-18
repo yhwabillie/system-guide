@@ -1,10 +1,10 @@
 import { pxToRem } from "./tokens";
 
 /** Tailwind 원시 breakpoint 이름(인프라 — 홈 Layout 탭 문서용) */
-export type BreakpointName = "base" | "sm" | "md" | "lg" | "xl" | "2xl";
+export type BreakpointName = "base" | "sm" | "md" | "lg" | "xl";
 
 /** 반응형 그리드 시스템 tier(디자인 표 기준) */
-export type GridTier = "small" | "medium" | "large" | "xlarge" | "xxlarge";
+export type GridTier = "small" | "medium" | "large" | "xlarge";
 
 /** 가이드 미리보기 grid 트랙 — px 계산값을 rem으로 출력(프로젝트 REM_BASE 기준). */
 export function gridTrackColumnsRem(...tracksPx: number[]): string {
@@ -21,7 +21,6 @@ export const breakpointDefinitions = [
   { name: "md" as const, minPx: 768, px: "768px", rem: "48rem", prefix: "md:", desc: "태블릿" },
   { name: "lg" as const, minPx: 1024, px: "1024px", rem: "64rem", prefix: "lg:", desc: "데스크톱" },
   { name: "xl" as const, minPx: 1280, px: "1280px", rem: "80rem", prefix: "xl:", desc: "와이드 데스크톱" },
-  { name: "2xl" as const, minPx: 1440, px: "1440px", rem: "90rem", prefix: "2xl:", desc: "초와이드 데스크톱" },
 ];
 
 /** 가이드 표용 — base 제외 */
@@ -39,11 +38,9 @@ export const gridSystemTiers = [
   { name: "medium" as const, minPx: 768, viewport: "768px–", prefix: "md:", cols: 8, gapPx: 16, screenMarginPx: 24, desc: "태블릿" },
   { name: "large" as const, minPx: 1024, viewport: "1024px–", prefix: "lg:", cols: 12, gapPx: 24, screenMarginPx: 24, desc: "데스크톱" },
   { name: "xlarge" as const, minPx: 1280, viewport: "1280px–", prefix: "xl:", cols: 12, gapPx: 24, screenMarginPx: 24, desc: "와이드 데스크톱" },
-  { name: "xxlarge" as const, minPx: 1440, viewport: "1440px–", prefix: "2xl:", cols: 12, gapPx: 24, screenMarginPx: 24, desc: "초와이드 데스크톱" },
 ];
 
 export function getGridTier(width: number): GridTier {
-  if (width >= 1440) return "xxlarge";
   if (width >= 1280) return "xlarge";
   if (width >= 1024) return "large";
   if (width >= 768) return "medium";
@@ -123,11 +120,11 @@ export function getGridColWidthPx(contentPx: number, cols: number, gapPx: number
 
 /** tier에서 적용되는 container max-width(px). large 이상은 1280px 상한, 미만은 viewport 전폭. */
 export function getContainerMaxPx(tier: GridTier): number | null {
-  return tier === "large" || tier === "xlarge" || tier === "xxlarge" ? containerMaxPx : null;
+  return tier === "large" || tier === "xlarge" ? containerMaxPx : null;
 }
 
 export function getActiveContainerToken(tier: GridTier) {
-  return tier === "large" || tier === "xlarge" || tier === "xxlarge"
+  return tier === "large" || tier === "xlarge"
     ? containerTokens[3]
     : { name: "full", cssVar: null, px: "100%", rem: "100%", utility: "max-w-full" };
 }
@@ -164,7 +161,7 @@ export function getContainerLayoutMetrics(viewportWidth: number, tier: GridTier)
 export const sidenavMenuPx = 16 * 16;
 
 export function isSidenavSidebarLayout(tier: GridTier): boolean {
-  return tier === "large" || tier === "xlarge" || tier === "xxlarge";
+  return tier === "large" || tier === "xlarge";
 }
 
 /** layout-sidenav 콘텐츠 열 기준 container·margin·screen-margin·grid 메트릭 */

@@ -139,7 +139,6 @@
   --layout-breakpoint-md: 48rem;
   --layout-breakpoint-lg: 64rem;
   --layout-breakpoint-xl: 80rem;
-  --layout-breakpoint-2xl: 90rem;
 
   --layout-grid-sidebar: 16rem minmax(0, 1fr);
   --layout-grid-sidebar-wide: 20rem minmax(0, 1fr);
@@ -437,7 +436,6 @@
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
-  --breakpoint-2xl: 90rem;
 
   --text-display-lg: var(--font-size-display-lg);
   --text-display-md: var(--font-size-display-md);

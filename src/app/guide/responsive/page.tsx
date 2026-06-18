@@ -740,7 +740,7 @@ export default function ResponsiveGuidePage() {
             <tbody>
               {gridSystemTiers.map((t) => {
                 const isActive = t.name === tier;
-                const sidebar = t.name === "large" || t.name === "xlarge" || t.name === "xxlarge";
+                const sidebar = t.name === "large" || t.name === "xlarge";
                 return (
                   <tr
                     key={t.name}
