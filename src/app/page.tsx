@@ -129,7 +129,7 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "muted",
         label: "muted",
         tokens: [
-          { token: "text-muted", utility: "text-text-muted", cssVar: "--color-text-muted", readAs: "text" },
+          { token: "muted", utility: "text-muted", cssVar: "--color-muted", readAs: "text" },
         ],
       },
       {
@@ -187,21 +187,21 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "default",
         label: "default",
         tokens: [
-          { token: "border", utility: "border-border", cssVar: "--color-border", readAs: "border" },
+          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border" },
         ],
       },
       {
         id: "strong",
         label: "strong",
         tokens: [
-          { token: "border-strong", utility: "border-border-strong", cssVar: "--color-border-strong", readAs: "border" },
+          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border" },
         ],
       },
       {
         id: "overlay",
         label: "overlay",
         tokens: [
-          { token: "border-overlay", utility: "border-border-overlay", cssVar: "--color-border-overlay", readAs: "border" },
+          { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border" },
         ],
       },
     ],
@@ -372,20 +372,20 @@ function SemanticColorSwatchCard({
   const hexLabel = cssColorToHex(color);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
       <div
         role="img"
         aria-label={`${token} 색상 견본 ${hexLabel}`}
         className={[
           "h-24 w-full",
-          needsBorder ? "border-b border-border" : "",
+          needsBorder ? "border-b border-line" : "",
         ].join(" ")}
         style={{ backgroundColor: color }}
       />
       <div className="p-4">
         <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
-        <p className="m-0 mt-1 text-caption text-text-muted">{utility}</p>
-        <p className="m-0 mt-0.5 font-mono text-caption text-text-muted numeric-tabular">{hexLabel}</p>
+        <p className="m-0 mt-1 text-caption text-muted">{utility}</p>
+        <p className="m-0 mt-0.5 font-mono text-caption text-muted numeric-tabular">{hexLabel}</p>
       </div>
     </div>
   );
@@ -405,19 +405,19 @@ function SemanticOverlaySwatchCard({
   isDark: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
       <div
         role="img"
         aria-label={`${token} — 체크무늬 위 반투명 견본`}
-        className="h-24 w-full overflow-hidden border-b border-border"
+        className="h-24 w-full overflow-hidden border-b border-line"
         style={isDark ? checkerDark : checkerLight}
       >
         <div className="size-full" style={{ background: `var(${cssVar})` }} />
       </div>
       <div className="p-4">
         <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
-        <p className="m-0 mt-1 text-caption text-text-muted font-mono">{utility}</p>
-        <p className="m-0 mt-0.5 font-mono text-caption text-text-muted">{valueLabel}</p>
+        <p className="m-0 mt-1 text-caption text-muted font-mono">{utility}</p>
+        <p className="m-0 mt-0.5 font-mono text-caption text-muted">{valueLabel}</p>
       </div>
     </div>
   );
@@ -436,22 +436,22 @@ function SemanticGradientSwatchCard({
   const underlayStyle = token.includes("overlay") ? checkerLight : { background: "var(--ds-green-100)" };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
       {isFade ? (
-        <div className="h-24 w-full overflow-hidden border-b border-border" style={underlayStyle}>
+        <div className="h-24 w-full overflow-hidden border-b border-line" style={underlayStyle}>
           <div role="img" aria-label={`${token} — ${desc}`} className={`size-full ${utility}`} />
         </div>
       ) : (
         <div
           role="img"
           aria-label={`${token} — ${desc}`}
-          className={`h-24 w-full border-b border-border ${utility}`}
+          className={`h-24 w-full border-b border-line ${utility}`}
         />
       )}
       <div className="p-4">
         <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
-        <p className="m-0 mt-1 font-mono text-caption text-text-muted">{utility}</p>
-        <p className="m-0 mt-0.5 text-caption text-text-muted">{desc}</p>
+        <p className="m-0 mt-1 font-mono text-caption text-muted">{utility}</p>
+        <p className="m-0 mt-0.5 text-caption text-muted">{desc}</p>
       </div>
     </div>
   );
@@ -466,7 +466,7 @@ function SemanticColorGroupGrid({
 }) {
   return (
     <div className="mb-8 last:mb-0">
-      <h4 className="m-0 mb-3 text-label-md font-semibold lowercase text-text-muted">{label}</h4>
+      <h4 className="m-0 mb-3 text-label-md font-semibold lowercase text-muted">{label}</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>
     </div>
   );
@@ -519,8 +519,8 @@ const fontStack = [
 
 const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
   primary: "bg-accent text-on-accent",
-  fallback: "bg-neutral-100 text-foreground ring-1 ring-border",
-  system: "bg-transparent text-text-muted ring-1 ring-dashed ring-border",
+  fallback: "bg-neutral-100 text-foreground ring-1 ring-line",
+  system: "bg-transparent text-muted ring-1 ring-dashed ring-line",
 };
 
 const TOAST_DURATION_MS = 2500;
@@ -560,7 +560,7 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-border bg-background px-4 py-3 text-label-sm font-medium text-foreground shadow-[0_6px_24px_var(--ds-shadow)]"
+          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line bg-background px-4 py-3 text-label-sm font-medium text-foreground shadow-[0_6px_24px_var(--ds-shadow)]"
         >
           {toast.message}
         </div>
@@ -794,8 +794,8 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
       aria-labelledby={headingId}
       className="sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
-      <div className="overflow-hidden rounded-md border border-border bg-surface-subtle">
-        <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3.5">
+      <div className="overflow-hidden rounded-md border border-line bg-surface-subtle">
+        <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3.5">
           <h2 id={headingId} className="m-0 text-label-md font-bold text-foreground">
             목차
           </h2>
@@ -804,7 +804,7 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
             onClick={() => setCollapsed((prev) => !prev)}
             aria-expanded={!collapsed}
             aria-controls={listId}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1 text-caption font-medium text-text-muted transition-colors hover:text-foreground"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-background px-2.5 py-1 text-caption font-medium text-muted transition-colors hover:text-foreground"
           >
             {collapsed ? "펼치기" : "접기"}
             <NavIcon
@@ -833,7 +833,7 @@ function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
                       "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
                       isActive
                         ? "bg-neutral-100 font-bold text-foreground"
-                        : "font-normal text-text-muted hover:text-foreground",
+                        : "font-normal text-muted hover:text-foreground",
                     ].join(" ")}
                   >
                     {label}
@@ -1078,7 +1078,7 @@ function GuideSiteHeader({
 }) {
   return (
     <header
-      className={`sticky z-40 border-b border-border bg-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
+      className={`sticky z-40 border-b border-line bg-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
     >
       <div className={`grid w-full ${guideHeaderHeightClass} grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6`}>
         <div className="flex items-center gap-1 justify-self-start">
@@ -1127,7 +1127,7 @@ function GuideSiteHeader({
             <span className="sr-only">가이드 검색</span>
             <NavIcon
               aria-hidden="true"
-              className="pointer-events-none absolute left-3 size-icon-xs shrink-0 text-text-muted"
+              className="pointer-events-none absolute left-3 size-icon-xs shrink-0 text-muted"
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -1136,7 +1136,7 @@ function GuideSiteHeader({
               type="search"
               name="guide-search"
               placeholder="가이드 검색..."
-              className="h-control-sm w-[12.5rem] rounded-full border border-border bg-surface-subtle pl-9 pr-4 text-label-sm text-foreground outline-none placeholder:text-text-muted focus-visible:border-accent md:w-[15rem]"
+              className="h-control-sm w-[12.5rem] rounded-full border border-line bg-surface-subtle pl-9 pr-4 text-label-sm text-foreground outline-none placeholder:text-muted focus-visible:border-accent md:w-[15rem]"
             />
           </label>
         </div>
@@ -1147,7 +1147,7 @@ function GuideSiteHeader({
 
 function FontTokenGuide() {
   return (
-    <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-border pb-6">
+    <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-line pb-6">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <p className="m-0 text-caption font-semibold uppercase tracking-normal text-foreground">
           Tailwind utility class
@@ -1192,7 +1192,7 @@ function FontStackCuration() {
                   {order}
                 </span>
                 {index < fontStack.length - 1 && (
-                  <span aria-hidden="true" className="my-1 w-px flex-1 min-h-4 bg-border" />
+                  <span aria-hidden="true" className="my-1 w-px flex-1 min-h-4 bg-line" />
                 )}
               </div>
               <div className={`min-w-0 flex-1 ${index < fontStack.length - 1 ? "pb-5" : ""}`}>
@@ -1206,17 +1206,17 @@ function FontStackCuration() {
                     {name}
                   </span>
                   <span
-                    className={`text-caption font-semibold ${emphasis === "primary" ? "text-accent" : "text-text-muted"}`}
+                    className={`text-caption font-semibold ${emphasis === "primary" ? "text-accent" : "text-muted"}`}
                   >
                     {role}
                   </span>
                 </div>
-                <p className="m-0 mt-1 text-caption text-text-muted">{desc}</p>
-                <p className="m-0 mt-0.5 font-mono text-caption text-text-muted">{source}</p>
+                <p className="m-0 mt-1 text-caption text-muted">{desc}</p>
+                <p className="m-0 mt-0.5 font-mono text-caption text-muted">{source}</p>
               </div>
             </div>
             {index < fontStack.length - 1 && (
-              <p className="mb-1 mt-0 flex items-center gap-4 pl-0 text-caption text-text-muted" aria-hidden="true">
+              <p className="mb-1 mt-0 flex items-center gap-4 pl-0 text-caption text-muted" aria-hidden="true">
                 <span className="flex w-8 shrink-0 justify-center">↓</span>
                 <span>미로드 시</span>
               </p>
@@ -1291,19 +1291,19 @@ function TypographyScaleTable() {
         <caption className="sr-only">타이포그래피 스케일 — 계층, 굵기, 크기, 행간, Tailwind utility class</caption>
         <thead>
           <tr className="border-b border-neutral-200 bg-neutral-50">
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
               Hierarchy
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
               Weight
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
               Size
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
               Line Height
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
               Tailwind utility class
             </th>
           </tr>
@@ -1357,7 +1357,7 @@ function TypographyExampleOfUse() {
               </div>
               <span
                 aria-hidden="true"
-                className="hidden h-px w-full border-t border-dashed border-border sm:block"
+                className="hidden h-px w-full border-t border-dashed border-line sm:block"
               />
               <TokenChip>{chip}</TokenChip>
             </div>
@@ -1521,7 +1521,7 @@ function IconCopyCell({
           type="button"
           onClick={() => void handleCopy()}
           aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
-          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-border bg-background px-1.5 text-caption font-semibold uppercase leading-none text-text-muted opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:text-foreground focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line bg-background px-1.5 text-caption font-semibold uppercase leading-none text-muted opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:text-foreground focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
         >
           copy
         </button>
@@ -1532,11 +1532,11 @@ function IconCopyCell({
 
 function OutlineIconMatrix() {
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
+    <div className="overflow-x-auto rounded-xl border border-line">
       <table className="w-full min-w-[44rem] border-collapse text-left">
         <caption className="sr-only">Outline Icon — Tailwind utility class 크기별 배리에이션</caption>
         <thead>
-          <tr className="border-b border-border bg-neutral-50">
+          <tr className="border-b border-line bg-neutral-50">
             <th scope="col" className="px-4 py-3">
               <span className="sr-only">Icon</span>
             </th>
@@ -1551,9 +1551,9 @@ function OutlineIconMatrix() {
         </thead>
         <tbody>
           {projectIconCatalog.map(({ id, label, innerMarkup }) => (
-            <tr key={id} className="border-b border-border last:border-b-0">
+            <tr key={id} className="border-b border-line last:border-b-0">
               <th scope="row" className="px-4 py-4 align-middle">
-                <span className="font-mono text-caption text-text-muted">{id}</span>
+                <span className="font-mono text-caption text-muted">{id}</span>
                 <span className="sr-only">{label}</span>
               </th>
               {iconSizeTokens.map((token) => (
@@ -1603,7 +1603,7 @@ function IconSourceCuration() {
               <span className="text-label-lg font-bold text-foreground">{iconSource.name}</span>
               <span className="text-caption font-semibold text-accent">{iconSource.style}</span>
             </div>
-            <p className="m-0 mt-0.5 font-mono text-caption text-text-muted">
+            <p className="m-0 mt-0.5 font-mono text-caption text-muted">
               <a
                 href={iconSource.sourceUrl}
                 className="text-accent underline-offset-2 hover:underline"
@@ -1617,7 +1617,7 @@ function IconSourceCuration() {
             <dl className="m-0 mt-3 grid gap-2 sm:grid-cols-2">
               {iconSource.specs.map(({ label, value }) => (
                 <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                  <dt className="m-0 font-mono text-caption text-text-muted">{label}</dt>
+                  <dt className="m-0 font-mono text-caption text-muted">{label}</dt>
                   <dd className="m-0 font-mono text-caption text-foreground">{value}</dd>
                 </div>
               ))}
@@ -1735,20 +1735,20 @@ function ContrastColorPickButton({
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
           isSelecting
             ? "bg-neutral-100 shadow-sm ring-2 ring-accent"
-            : "bg-surface-subtle hover:bg-neutral-100 hover:shadow-sm hover:ring-1 hover:ring-border",
+            : "bg-surface-subtle hover:bg-neutral-100 hover:shadow-sm hover:ring-1 hover:ring-line",
         ].join(" ")}
       >
         <span
           aria-hidden="true"
           className={[
-            "block size-8 shrink-0 rounded-md border border-border-overlay transition-transform duration-150",
+            "block size-8 shrink-0 rounded-md border border-line-overlay transition-transform duration-150",
             isSelecting ? "scale-105 ring-2 ring-accent ring-offset-1" : "group-hover:scale-105",
           ].join(" ")}
           style={{ background: swatchHex }}
         />
         <span className="flex min-w-0 flex-col text-left">
           <span className="text-label-md font-semibold">{colorLabel}</span>
-          <span id={valueId} className="text-caption text-text-muted font-mono">{colorHex}</span>
+          <span id={valueId} className="text-caption text-muted font-mono">{colorHex}</span>
         </span>
         <span
           aria-hidden="true"
@@ -1756,7 +1756,7 @@ function ContrastColorPickButton({
             "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
             isSelecting
               ? "border-accent bg-background text-accent"
-              : "border-border bg-background text-accent group-hover:border-accent",
+              : "border-line bg-background text-accent group-hover:border-accent",
           ].join(" ")}
         >
           {isSelecting ? (
@@ -1787,7 +1787,7 @@ function ContrastCriterionBox({ grade, threshold, passed }: { grade: string; thr
     >
       <ContrastCircle passed={passed} />
       <span className="text-label-md font-bold">{grade}</span>
-      <span className="ml-auto text-caption text-text-muted numeric-tabular">{threshold}</span>
+      <span className="ml-auto text-caption text-muted numeric-tabular">{threshold}</span>
     </div>
   );
 }
@@ -1804,7 +1804,7 @@ function ContrastCategory({
 }) {
   return (
     <div>
-      <p className="text-label-sm font-semibold text-text-muted mb-2">{title}</p>
+      <p className="text-label-sm font-semibold text-muted mb-2">{title}</p>
       <div className="grid grid-cols-2 gap-2">
         <ContrastCriterionBox grade="AA" threshold={aa.threshold} passed={aa.passed} />
         <ContrastCriterionBox grade="AAA" threshold={aaa.threshold} passed={aaa.passed} />
@@ -1817,7 +1817,7 @@ function TokenValue({ px, rem }: { px: string; rem: string }) {
   return (
     <span className="flex flex-col leading-base font-mono">
       <span className="text-label-sm font-semibold numeric-tabular text-foreground">{px}</span>
-      <span className="text-caption text-text-muted numeric-tabular">{rem}</span>
+      <span className="text-caption text-muted numeric-tabular">{rem}</span>
     </span>
   );
 }
@@ -1832,7 +1832,7 @@ function MeasureBar({
   height?: string;
 }) {
   return (
-    <div className="h-9 bg-surface-subtle border border-border flex items-center px-3">
+    <div className="h-9 bg-surface-subtle border border-line flex items-center px-3">
       <span
         role="img"
         aria-label={label}
@@ -1882,7 +1882,7 @@ function GridGapPreview({ utility, label }: { utility: string; label: string }) 
 
 function GridGapCuration() {
   return (
-    <div className="rounded-xl border border-border p-6">
+    <div className="rounded-xl border border-line p-6">
       <div
         role="list"
         aria-label="gap 크기 배리에이션"
@@ -1896,21 +1896,21 @@ function GridGapCuration() {
               label={`${name} ${px}, ${rem} — 좌우·상하 gap과 grid item 견본`}
             />
             <span className="font-mono text-caption font-semibold text-foreground">{name}</span>
-            <span className="text-center text-caption text-text-muted">{desc}</span>
+            <span className="text-center text-caption text-muted">{desc}</span>
           </div>
         ))}
       </div>
-      <p className="mt-6 mb-3 text-caption text-text-muted">
+      <p className="mt-6 mb-3 text-caption text-muted">
         Linear: 16px → 24px → 32px (+8px) — <span className="font-mono">gap-*</span>는{" "}
         <span className="font-mono">space-*</span> 토큰과 1:1 대응합니다.
       </p>
-      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-text-muted">
+      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-muted">
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden="true" className="inline-block size-2 bg-red-200" />
           붉은색 = gap
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block size-2 bg-background border border-border" />
+          <span aria-hidden="true" className="inline-block size-2 bg-background border border-line" />
           밝은 블록 = grid item
         </span>
       </p>
@@ -2063,13 +2063,13 @@ function NavSubTree({
     <ul
       role="group"
       aria-label={ariaLabel}
-      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-border py-1 pl-4 pr-1"
+      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-line py-1 pl-4 pr-1"
     >
       {items.map((item) => (
         <li key={item.label} className="relative">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -left-4 top-1/2 h-px w-4 -translate-y-1/2 bg-border"
+            className="pointer-events-none absolute -left-4 top-1/2 h-px w-4 -translate-y-1/2 bg-line"
           />
           <button
             type="button"
@@ -2205,7 +2205,7 @@ export default function Home() {
       "py-2 px-3 transition-colors duration-150",
       active
         ? "bg-neutral-100 text-foreground font-semibold"
-        : "bg-transparent text-text-muted font-medium hover:bg-neutral-100 hover:text-foreground",
+        : "bg-transparent text-muted font-medium hover:bg-neutral-100 hover:text-foreground",
     ].join(" ");
 
   const navParentGroupClass = (active: boolean) =>
@@ -2215,7 +2215,7 @@ export default function Home() {
     [
       "flex min-w-0 flex-1 items-center gap-3 border-0 bg-transparent text-left font-sans text-label-md leading-base",
       "cursor-pointer py-2.5 pl-3.5 pr-1 transition-colors duration-150",
-      active ? "font-semibold text-green-600" : "font-medium text-text-muted hover:text-foreground",
+      active ? "font-semibold text-green-600" : "font-medium text-muted hover:text-foreground",
     ].join(" ");
 
   function selectColorSection(sub: "raw" | "semantic") {
@@ -2317,7 +2317,7 @@ export default function Home() {
           id="guide-sidenav"
           hidden={!isSidenavOpen}
           aria-label="디자인 토큰 가이드"
-          className={`${layoutSidenavMenuClass} flex flex-col border-b border-border bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
+          className={`${layoutSidenavMenuClass} flex flex-col border-b border-line bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
         >
           <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Tokens</p>
           <div
@@ -2351,7 +2351,7 @@ export default function Home() {
                   aria-label={colorMenuExpanded ? "Color 하위 메뉴 접기" : "Color 하위 메뉴 펼치기"}
                   aria-expanded={colorMenuExpanded}
                   onClick={() => setColorMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${colorMenuExpanded ? "rotate-180" : ""}`}
@@ -2403,7 +2403,7 @@ export default function Home() {
                   aria-label={typeMenuExpanded ? "Font & Type 하위 메뉴 접기" : "Font & Type 하위 메뉴 펼치기"}
                   aria-expanded={typeMenuExpanded}
                   onClick={() => setTypeMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${typeMenuExpanded ? "rotate-180" : ""}`}
@@ -2455,7 +2455,7 @@ export default function Home() {
                   aria-label={spacingMenuExpanded ? "Spacing & Size 하위 메뉴 접기" : "Spacing & Size 하위 메뉴 펼치기"}
                   aria-expanded={spacingMenuExpanded}
                   onClick={() => setSpacingMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${spacingMenuExpanded ? "rotate-180" : ""}`}
@@ -2512,7 +2512,7 @@ export default function Home() {
                   aria-label={gridMenuExpanded ? "Grid 하위 메뉴 접기" : "Grid 하위 메뉴 펼치기"}
                   aria-expanded={gridMenuExpanded}
                   onClick={() => setGridMenuExpanded((open) => !open)}
-                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
+                  className="mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-muted transition-colors duration-150 hover:bg-neutral-100 hover:text-foreground"
                 >
                   <NavIcon
                     className={`size-icon-xs shrink-0 transition-transform duration-200 ease-out ${gridMenuExpanded ? "rotate-180" : ""}`}
@@ -2541,7 +2541,7 @@ export default function Home() {
               )}
             </div>
 
-            <div className="mt-5 border-t border-border pt-5">
+            <div className="mt-5 border-t border-line pt-5">
               <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Assets</p>
               <div className={navParentGroupClass(activeTab === "icons")}>
                 <button
@@ -2562,7 +2562,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-5 border-t border-border pt-5">
+          <div className="mt-5 border-t border-line pt-5">
             <p className="mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-accent">Layout</p>
             <a
               id="nav-layout-breakpoint"
@@ -2641,7 +2641,7 @@ export default function Home() {
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-text-muted transition-colors hover:bg-neutral-100 hover:text-foreground"
+                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-muted transition-colors hover:bg-neutral-100 hover:text-foreground"
               >
                 <NavIcon innerMarkup={contrastPickCloseIcon} className="size-icon-xs shrink-0" />
               </button>
@@ -2714,7 +2714,7 @@ export default function Home() {
             ))}
 
             {/* 스케일 팔레트와 구분 — 앵커는 스케일(50~900)과 무관 */}
-            <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-border" />
+            <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-line" />
 
             {/* Surface 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
             {surfaceAnchors.map(({ label, hex, cssVar }) => {
@@ -2850,7 +2850,7 @@ export default function Home() {
                 </div>
                 <output className="block rounded-xl bg-surface-subtle py-5 text-center">
                   <span role="img" aria-label={`대비율 ${ratio} 대 1`} className="font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
-                    {ratio}<span aria-hidden="true" className="font-normal text-text-muted" style={{ fontSize: pxToRem(18) }}> : 1</span>
+                    {ratio}<span aria-hidden="true" className="font-normal text-muted" style={{ fontSize: pxToRem(18) }}> : 1</span>
                   </span>
                 </output>
               </div>
@@ -3025,10 +3025,10 @@ export default function Home() {
                 className="grid gap-4 items-center pb-1"
                 style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
               >
-                <span className="text-caption text-text-muted">Token</span>
-                <span className="text-caption text-text-muted">Preview</span>
-                <span className="text-caption text-text-muted">Size</span>
-                <span className="text-caption text-text-muted">Utility</span>
+                <span className="text-caption text-muted">Token</span>
+                <span className="text-caption text-muted">Preview</span>
+                <span className="text-caption text-muted">Size</span>
+                <span className="text-caption text-muted">Utility</span>
               </div>
               {spacingTokens.map(({ name, cssVar, px, rem, utility }) => (
                 <div
@@ -3040,7 +3040,7 @@ export default function Home() {
                   <span className="text-label-sm font-semibold">{name}</span>
                   <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 여백 길이 견본`} />
                   <TokenValue px={px} rem={rem} />
-                  <span className="text-caption text-text-muted font-mono">{utility}</span>
+                  <span className="text-caption text-muted font-mono">{utility}</span>
                 </div>
               ))}
             </div>
@@ -3063,15 +3063,15 @@ export default function Home() {
             </ContentSectionTitle>
             <div role="list" className="grid grid-cols-2 gap-4">
               {radiusTokens.map(({ name, px, rem, utility }) => (
-                <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-border">
+                <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-line">
                   <div
                     role="img"
                     aria-label={`${name} ${px}, ${rem} 모서리 견본`}
-                    className={`w-24 h-14 bg-accent border border-border-overlay ${utility}`}
+                    className={`w-24 h-14 bg-accent border border-line-overlay ${utility}`}
                   />
                   <div>
                     <p className="m-0 text-label-sm font-semibold">{name}</p>
-                    <p className="m-0 text-caption text-text-muted font-mono">
+                    <p className="m-0 text-caption text-muted font-mono">
                       <span className="font-semibold text-foreground">{px}</span>
                       <span> · {rem} · {utility}</span>
                     </p>
@@ -3102,16 +3102,16 @@ export default function Home() {
                 <ContentGroupTitle>Icon Size</ContentGroupTitle>
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
                       <p className="m-0 text-label-sm font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-4 text-caption text-text-muted font-mono">
+                      <p className="mt-0.5 mb-4 text-caption text-muted font-mono">
                         <span className="font-semibold text-foreground">{px}</span>
                         <span> · {rem} · {utility}</span>
                       </p>
                       <div className="flex flex-col gap-2">
                         <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 아이콘 길이 견본`} height={pxToRem(10)} />
                         <div className="flex items-center gap-3">
-                          <span aria-hidden="true" className="text-caption text-text-muted" style={{ width: pxToRem(56) }}>
+                          <span aria-hidden="true" className="text-caption text-muted" style={{ width: pxToRem(56) }}>
                             square
                           </span>
                           <span
@@ -3135,16 +3135,16 @@ export default function Home() {
                 <ContentGroupTitle>Control Height</ContentGroupTitle>
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
                       <p className="m-0 text-label-sm font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-4 text-caption text-text-muted font-mono">
+                      <p className="mt-0.5 mb-4 text-caption text-muted font-mono">
                         <span className="font-semibold text-foreground">{px}</span>
                         <span> · {rem} · {utility}</span>
                       </p>
                       <div className="flex flex-col gap-2">
                         <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 컨트롤 높이 견본`} height={pxToRem(10)} />
                         <div className="flex items-center gap-3">
-                          <span aria-hidden="true" className="text-caption text-text-muted" style={{ width: pxToRem(56) }}>
+                          <span aria-hidden="true" className="text-caption text-muted" style={{ width: pxToRem(56) }}>
                             height
                           </span>
                           <span
@@ -3209,9 +3209,9 @@ export default function Home() {
             </ContentSectionTitle>
             <div role="list" className="grid grid-cols-2 gap-4">
               {gridColumnTokens.map(({ name, cols, utility, desc }) => (
-                <div key={name} role="listitem" className="p-4 rounded-xl border border-border">
+                <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
                   <p className="m-0 text-label-sm font-semibold">{name}</p>
-                  <p className="mt-0.5 mb-3 text-caption text-text-muted">{desc}</p>
+                  <p className="mt-0.5 mb-3 text-caption text-muted">{desc}</p>
                   <GridColumnPreview cols={cols} utility={utility} label={`${name} ${cols}열 그리드 견본`} />
                 </div>
               ))}
@@ -3269,7 +3269,7 @@ export default function Home() {
           <div className="rounded-2xl border border-neutral-200 overflow-hidden">
             <div className="py-3 px-10 bg-neutral-50 border-b border-neutral-200">
               <h4 className="m-0 text-label-xl font-semibold text-foreground">Pretendard GOV</h4>
-              <p className="m-0 mt-1 text-caption text-text-muted">기본 폰트 · 1순위</p>
+              <p className="m-0 mt-1 text-caption text-muted">기본 폰트 · 1순위</p>
             </div>
             <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
               <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>Pretendard GOV</span>
@@ -3349,7 +3349,7 @@ export default function Home() {
           <div className="mt-8 rounded-2xl border border-neutral-200 overflow-hidden">
             <div className="py-3 px-10 bg-neutral-50 border-b border-neutral-200">
               <h4 className="m-0 text-label-xl font-semibold text-foreground">Noto Sans KR</h4>
-              <p className="m-0 mt-1 text-caption text-text-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
+              <p className="m-0 mt-1 text-caption text-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
             </div>
             <div className="py-12 px-10 bg-neutral-50 border-b border-neutral-200 flex flex-col gap-1">
               <span role="img" aria-label="Noto Sans KR 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-noto), sans-serif" }}>Noto Sans KR</span>
@@ -3446,7 +3446,7 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <p className="m-0 text-caption text-text-muted">
+              <p className="m-0 text-caption text-muted">
                 타이포 토큰의 <span className="font-mono">font-medium(500)</span>·<span className="font-mono">font-semibold(600)</span>도 self-host 파일로 제공합니다. Pretendard는 variable(100–900), Noto는 동일 구간을 static weight로 대응합니다.
               </p>
             </div>

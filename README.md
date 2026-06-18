@@ -71,6 +71,8 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 
 흐름은 `--raw-green-500` → `--ds-green-500` → `--color-green-500` → `bg-green-500`처럼 이어집니다. `.dark`에서는 `--ds-*`만 재매핑하므로 Tailwind 유틸리티도 같은 클래스명으로 다크 모드 값을 사용합니다.
 
+`--color-*` 슬러그에는 `text`·`bg`·`border` 접두를 넣지 않습니다. 유틸리티가 `{접두}-{슬러그}`로 조합되므로 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생깁니다. 예: `--color-muted` → `text-muted`, `--color-line` → `border-line`. 자세한 규칙은 [`AGENTS.md`](AGENTS.md) 참조.
+
 큐레이션 가이드 화면에서만 쓰는 표시/검증용 토큰은 `guide-*` 접두로 구분합니다. 예: `--color-guide-level-*`(대비 등급), `--color-guide-callout-*`(탭 설명 콜아웃 배경·accent), `--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).
 
 레이아웃 토큰은 source token과 Tailwind 노출 token을 분리합니다. 여백은 `--space-*` → `--spacing-*`, radius는 `--shape-radius-*` → `--radius-*`, 콘텐츠 폭은 `--layout-container-*` → `--container-*`(`layout-page`·`layout-sidenav-content`에서 참조), gutter는 `--layout-gutter-*` → `--spacing-gutter-*` 흐름입니다. 사이드메뉴 shell 트랙은 `--layout-grid-sidebar`·`--layout-grid-sidebar-wide`를 `layout-sidenav`·`layout-sidenav-wide`에서 참조합니다. breakpoint는 `--layout-breakpoint-*`(:root 문서용)와 `@theme` `--breakpoint-*`(리터럴 rem)를 동기화합니다. 반복 크기인 `--size-icon-*`, `--size-control-*`는 spacing namespace에 연결해 `size-icon-md`, `h-control-md`처럼 사용할 수 있습니다. 아이콘은 `xs 16px`, `sm 20px`, `md 24px`, `lg 32px`, `xl 40px`를 기본 배리에이션으로 둡니다.

@@ -348,6 +348,8 @@
    @theme — 디자인 토큰을 Tailwind 유틸리티로 노출(브리지)
    --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
    이름으로 사용한다: --color-green-500 → bg/text/border-green-500.
+   슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
+   예: --color-muted → text-muted · --color-line → border-line.
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
    생성 유틸 예: bg-neutral-200 / text-green-500 / text-body-md / leading-base ...
    ============================================================ */
@@ -381,11 +383,11 @@
   --color-neutral-600: var(--ds-neutral-600);   --color-neutral-700: var(--ds-neutral-700);
   --color-neutral-800: var(--ds-neutral-800);   --color-neutral-900: var(--ds-neutral-900);
 
-  --color-border: var(--ds-border);
-  --color-border-strong: var(--ds-border-strong);
-  --color-border-overlay: var(--ds-border-overlay);
+  --color-line: var(--ds-border);
+  --color-line-strong: var(--ds-border-strong);
+  --color-line-overlay: var(--ds-border-overlay);
   --color-surface-subtle: var(--ds-surface-subtle);
-  --color-text-muted: var(--ds-text-muted);
+  --color-muted: var(--ds-text-muted);
   --color-accent: var(--ds-accent);
   --color-accent-danger: var(--ds-accent-danger);
   --color-on-accent: var(--ds-on-accent);
