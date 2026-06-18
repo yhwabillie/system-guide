@@ -21,17 +21,38 @@ const surfaceAnchors = [
 
 // 시맨틱 오버레이 — 모드 인지 반투명(라이트=검정α / 다크=흰색α)
 const overlayTokens = [
-  { label: "overlay-subtle", cssVar: "--color-overlay-subtle", light: "rgba(0, 0, 0, 0.05)", dark: "rgba(255, 255, 255, 0.05)" },
-  { label: "overlay", cssVar: "--color-overlay", light: "rgba(0, 0, 0, 0.10)", dark: "rgba(255, 255, 255, 0.10)" },
-  { label: "overlay-strong", cssVar: "--color-overlay-strong", light: "rgba(0, 0, 0, 0.20)", dark: "rgba(255, 255, 255, 0.20)" },
+  {
+    label: "overlay-subtle",
+    cssVar: "--color-overlay-subtle",
+    rawVarLight: "--raw-black-a5",
+    rawVarDark: "--raw-white-a5",
+    light: "rgba(0, 0, 0, 0.05)",
+    dark: "rgba(255, 255, 255, 0.05)",
+  },
+  {
+    label: "overlay",
+    cssVar: "--color-overlay",
+    rawVarLight: "--raw-black-a10",
+    rawVarDark: "--raw-white-a10",
+    light: "rgba(0, 0, 0, 0.10)",
+    dark: "rgba(255, 255, 255, 0.10)",
+  },
+  {
+    label: "overlay-strong",
+    cssVar: "--color-overlay-strong",
+    rawVarLight: "--raw-black-a20",
+    rawVarDark: "--raw-white-a20",
+    light: "rgba(0, 0, 0, 0.20)",
+    dark: "rgba(255, 255, 255, 0.20)",
+  },
 ];
 
 const gradientTokens = [
-  { label: "gradient-accent", utility: "bg-gradient-accent", desc: "브랜드 강조 — green 400 → 600 (135°)" },
-  { label: "gradient-accent-subtle", utility: "bg-gradient-accent-subtle", desc: "은은한 강조 배경 — green 50 → 100 (↓)" },
-  { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", desc: "표면 하단 페이드 — background → transparent (↓)" },
-  { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", desc: "표면 상단 페이드 — background → transparent (↑)" },
-  { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
+  { label: "gradient-accent", utility: "bg-gradient-accent", dsVar: "--ds-gradient-accent", desc: "브랜드 강조 — blue 400 → 600 (135°)" },
+  { label: "gradient-accent-subtle", utility: "bg-gradient-accent-subtle", dsVar: "--ds-gradient-accent-subtle", desc: "은은한 강조 배경 — blue 50 → 100 (↓)" },
+  { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", dsVar: "--ds-gradient-surface-fade-down", desc: "표면 하단 페이드 — background → transparent (↓)" },
+  { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", dsVar: "--ds-gradient-surface-fade-up", desc: "표면 상단 페이드 — background → transparent (↑)" },
+  { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", dsVar: "--ds-gradient-overlay-fade-up", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
 ];
 
 type SemanticColorReadMode = "text" | "bg" | "border" | "outline";
@@ -41,6 +62,8 @@ type SemanticColorTokenDef = {
   utility: string;
   cssVar: string;
   readAs: SemanticColorReadMode;
+  /** 라이트 모드 기준 TIER 1 raw 변수 — 스와치 카드 2행 표시용 */
+  rawVar: string;
 };
 
 type SemanticColorGroupDef = {
@@ -66,29 +89,29 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "primary",
         label: "primary",
         tokens: [
-          { token: "foreground", utility: "text-foreground", cssVar: "--color-foreground", readAs: "text" },
+          { token: "foreground", utility: "text-foreground", cssVar: "--color-foreground", readAs: "text", rawVar: "--raw-gray-900" },
         ],
       },
       {
         id: "muted",
         label: "muted",
         tokens: [
-          { token: "muted", utility: "text-muted", cssVar: "--color-muted", readAs: "text" },
+          { token: "muted", utility: "text-muted", cssVar: "--color-muted", readAs: "text", rawVar: "--raw-gray-400" },
         ],
       },
       {
         id: "accent",
         label: "accent",
         tokens: [
-          { token: "accent", utility: "text-accent", cssVar: "--color-accent", readAs: "text" },
-          { token: "on-accent", utility: "text-on-accent", cssVar: "--color-on-accent", readAs: "text" },
+          { token: "accent", utility: "text-accent", cssVar: "--color-accent", readAs: "text", rawVar: "--raw-blue-500" },
+          { token: "on-accent", utility: "text-on-accent", cssVar: "--color-on-accent", readAs: "text", rawVar: "--raw-white" },
         ],
       },
       {
         id: "danger",
         label: "danger",
         tokens: [
-          { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text" },
+          { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text", rawVar: "--raw-red-500" },
         ],
       },
     ],
@@ -106,14 +129,14 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "base",
         label: "base",
         tokens: [
-          { token: "background", utility: "bg-background", cssVar: "--color-background", readAs: "bg" },
+          { token: "background", utility: "bg-background", cssVar: "--color-background", readAs: "bg", rawVar: "--raw-white" },
         ],
       },
       {
         id: "subtle",
         label: "subtle",
         tokens: [
-          { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg" },
+          { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-50" },
         ],
       },
     ],
@@ -131,21 +154,21 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "default",
         label: "default",
         tokens: [
-          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border" },
+          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border", rawVar: "--raw-gray-200" },
         ],
       },
       {
         id: "strong",
         label: "strong",
         tokens: [
-          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border" },
+          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border", rawVar: "--raw-gray-300" },
         ],
       },
       {
         id: "overlay",
         label: "overlay",
         tokens: [
-          { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border" },
+          { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border", rawVar: "--raw-black-a10" },
         ],
       },
     ],
@@ -163,21 +186,21 @@ const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg" },
+          { token: "accent", utility: "bg-accent", cssVar: "--color-accent", readAs: "bg", rawVar: "--raw-blue-500" },
         ],
       },
       {
         id: "on-brand",
         label: "on-brand",
         tokens: [
-          { token: "on-accent", utility: "bg-on-accent", cssVar: "--color-on-accent", readAs: "bg" },
+          { token: "on-accent", utility: "bg-on-accent", cssVar: "--color-on-accent", readAs: "bg", rawVar: "--raw-white" },
         ],
       },
       {
         id: "danger",
         label: "danger",
         tokens: [
-          { token: "accent-danger", utility: "bg-accent-danger", cssVar: "--color-accent-danger", readAs: "bg" },
+          { token: "accent-danger", utility: "bg-accent-danger", cssVar: "--color-accent-danger", readAs: "bg", rawVar: "--raw-red-500" },
         ],
       },
     ],
@@ -202,6 +225,7 @@ const semanticUtilityCatalog: SemanticColorCategoryDef = {
           utility: "outline-utility-focus-ring",
           cssVar: "--color-utility-focus-ring",
           readAs: "outline",
+          rawVar: "--raw-utility-focus-ring",
         },
       ],
     },
@@ -214,12 +238,14 @@ const semanticUtilityCatalog: SemanticColorCategoryDef = {
           utility: "bg-utility-scroll-thumb",
           cssVar: "--color-utility-scroll-thumb",
           readAs: "bg",
+          rawVar: "--raw-gray-300",
         },
         {
           token: "utility-scroll-track",
           utility: "bg-utility-scroll-track",
           cssVar: "--color-utility-scroll-track",
           readAs: "bg",
+          rawVar: "--raw-gray-100",
         },
       ],
     },
@@ -234,11 +260,13 @@ const semanticOverlayCatalog = {
       오버레이용 반투명 시맨틱 토큰. 라이트=<strong>검정α</strong> / 다크=<strong>흰색α</strong>로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
     </>
   ),
-  groups: overlayTokens.map(({ label, cssVar, light, dark }) => ({
+  groups: overlayTokens.map(({ label, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
     id: label,
     label,
     cssVar,
     utility: `bg-${label}`,
+    rawVarLight,
+    rawVarDark,
     light,
     dark,
   })),
@@ -366,13 +394,31 @@ function semanticSwatchNeedsBorder(color: string): boolean {
   return false;
 }
 
-function SemanticColorSwatchCard({
-  token,
+function SwatchCardMeta({
   utility,
+  sourceVar,
+  value,
+}: {
+  utility: string;
+  sourceVar: string;
+  value: string;
+}) {
+  return (
+    <div className="p-4">
+      <p className="m-0 font-mono text-label-md font-bold text-foreground">{utility}</p>
+      <p className="m-0 mt-1 font-mono text-caption text-gray-600">{sourceVar}</p>
+      <p className="m-0 mt-0.5 font-mono text-caption text-gray-600 numeric-tabular">{value}</p>
+    </div>
+  );
+}
+
+function SemanticColorSwatchCard({
+  utility,
+  rawVar,
   color,
 }: {
-  token: string;
   utility: string;
+  rawVar: string;
   color: string;
 }) {
   const needsBorder = semanticSwatchNeedsBorder(color);
@@ -388,24 +434,20 @@ function SemanticColorSwatchCard({
         ].join(" ")}
         style={{ backgroundColor: color }}
       />
-      <div className="p-4">
-        <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
-        <p className="m-0 mt-1 text-caption text-gray-600">{utility}</p>
-        <p className="m-0 mt-0.5 font-mono text-caption text-gray-600 numeric-tabular">{hexLabel}</p>
-      </div>
+      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={hexLabel} />
     </div>
   );
 }
 
 function SemanticOverlaySwatchCard({
-  token,
   utility,
+  rawVar,
   cssVar,
   valueLabel,
   isDark,
 }: {
-  token: string;
   utility: string;
+  rawVar: string;
   cssVar: string;
   valueLabel: string;
   isDark: boolean;
@@ -419,26 +461,22 @@ function SemanticOverlaySwatchCard({
       >
         <div className="size-full" style={{ background: `var(${cssVar})` }} />
       </div>
-      <div className="p-4">
-        <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
-        <p className="m-0 mt-1 text-caption text-gray-600 font-mono">{utility}</p>
-        <p className="m-0 mt-0.5 font-mono text-caption text-gray-600">{valueLabel}</p>
-      </div>
+      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={valueLabel} />
     </div>
   );
 }
 
 function SemanticGradientSwatchCard({
-  token,
   utility,
+  dsVar,
   desc,
 }: {
-  token: string;
   utility: string;
+  dsVar: string;
   desc: string;
 }) {
-  const isFade = token.includes("fade");
-  const underlayStyle = token.includes("overlay") ? checkerLight : { background: "var(--ds-green-100)" };
+  const isFade = dsVar.includes("fade");
+  const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-blue-100)" };
 
   return (
     <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
@@ -449,11 +487,7 @@ function SemanticGradientSwatchCard({
       ) : (
         <div aria-hidden="true" className={`h-24 w-full border-b border-line ${utility}`} />
       )}
-      <div className="p-4">
-        <p className="m-0 text-label-md font-bold text-foreground">{token}</p>
-        <p className="m-0 mt-1 font-mono text-caption text-gray-600">{utility}</p>
-        <p className="m-0 mt-0.5 text-caption text-gray-600">{desc}</p>
-      </div>
+      <SwatchCardMeta utility={utility} sourceVar={dsVar} value={desc} />
     </div>
   );
 }
@@ -3119,8 +3153,8 @@ export default function Home() {
                   {group.tokens.map((token) => (
                     <SemanticColorSwatchCard
                       key={token.cssVar}
-                      token={token.token}
                       utility={token.utility}
+                      rawVar={token.rawVar}
                       color={semanticResolved[token.cssVar] ?? "—"}
                     />
                   ))}
@@ -3137,8 +3171,8 @@ export default function Home() {
             {semanticOverlayCatalog.groups.map((group) => (
               <SemanticColorGroupGrid key={group.id} label={group.label}>
                 <SemanticOverlaySwatchCard
-                  token={group.label}
                   utility={group.utility}
+                  rawVar={isDark ? group.rawVarDark : group.rawVarLight}
                   cssVar={group.cssVar}
                   valueLabel={isDark ? group.dark : group.light}
                   isDark={isDark}
@@ -3153,8 +3187,8 @@ export default function Home() {
             description={semanticGradientCatalog.description}
           >
             <SemanticColorGroupGrid label="gradient">
-              {semanticGradientCatalog.tokens.map(({ label, utility, desc }) => (
-                <SemanticGradientSwatchCard key={label} token={label} utility={utility} desc={desc} />
+              {semanticGradientCatalog.tokens.map(({ utility, dsVar, desc }) => (
+                <SemanticGradientSwatchCard key={dsVar} utility={utility} dsVar={dsVar} desc={desc} />
               ))}
             </SemanticColorGroupGrid>
           </SemanticColorCategorySection>
@@ -3169,8 +3203,8 @@ export default function Home() {
                 {group.tokens.map((token) => (
                   <SemanticColorSwatchCard
                     key={token.cssVar}
-                    token={token.token}
                     utility={token.utility}
+                    rawVar={token.rawVar}
                     color={semanticResolved[token.cssVar] ?? "—"}
                   />
                 ))}

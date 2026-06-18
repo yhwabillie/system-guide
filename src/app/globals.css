@@ -131,6 +131,9 @@
   --raw-white-a10: rgba(255, 255, 255, 0.10);
   --raw-white-a20: rgba(255, 255, 255, 0.20);
 
+  /* Utility raw — hue 팔레트 밖 단일 목적 색. src/lib/raw-color-palettes.ts rawUtilityColors 와 동기화 */
+  --raw-utility-focus-ring: #00cbde;
+
   /* ============================================================
      SIZE FOUNDATIONS — 모드 무관 레이아웃 스케일
      spacing은 margin/padding/gap의 기준, radius/size/container는 목적별로 분리.
@@ -309,8 +312,8 @@
   --ds-surface-subtle: var(--ds-gray-50);
   --ds-text-muted: var(--ds-gray-400);
 
-  /* Utility — 포커스 링(outline) 색. 라이트=blue-500(KRDS) · 다크=orange-300(.dark) */
-  --ds-utility-focus-ring: var(--raw-blue-500);
+  /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-300(.dark) */
+  --ds-utility-focus-ring: var(--raw-utility-focus-ring);
   --outline-focus-width: 0.15625rem; /* 2.5px */
   --outline-focus-offset: 0.125rem; /* 2px — tab 제외 기본 offset */
   --outline-focus-tab-offset: -0.125rem; /* -2px — tab·TOC 등 인셋 outline */

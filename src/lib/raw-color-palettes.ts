@@ -163,3 +163,12 @@ export const primitiveColors: PrimitiveColorFamily[] = [
     }),
   },
 ];
+
+/**
+ * Utility 전용 raw hex — hue 팔레트(KRDS) 밖 단일 목적 색.
+ * globals.css `--raw-utility-*` 와 동기화 유지.
+ */
+export const rawUtilityColors = {
+  /** 포커스 링(outline) — 라이트 모드 */
+  focusRing: "#00CBDE",
+} as const;

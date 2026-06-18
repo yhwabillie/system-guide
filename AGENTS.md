@@ -25,7 +25,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
   - 올바른 예: `--color-muted` → `text-muted` · `--color-line` → `border-line` · `--color-background` → `bg-background`
   - 금지 예: `--color-text-muted` → `text-text-muted` · `--color-border` → `border-border`
   - TIER 2 `--ds-*` 용도명(`--ds-text-muted`·`--ds-border`·`--ds-utility-focus-ring`)은 내부 의미용으로 유지 가능. TIER 3 노출명만 슬러그 규칙을 따른다.
-  - 포커스 링 색은 TIER 2 `--ds-utility-focus-ring` → TIER 3 `--color-utility-focus-ring` → 유틸 `outline-utility-focus-ring`. 라이트 `--raw-cyan-500` · 다크 `--raw-orange-500`. **utility** 접두 + **focus-ring** 기능명으로 관리한다(`ring` 단독 슬러그 금지).
+  - 포커스 링 색은 TIER 1 `--raw-utility-focus-ring`(#00cbde) → TIER 2 `--ds-utility-focus-ring` → TIER 3 `--color-utility-focus-ring` → 유틸 `outline-utility-focus-ring`. 라이트 `--raw-utility-focus-ring` · 다크 `--raw-orange-300`. **utility** 접두 + **focus-ring** 기능명으로 관리한다(`ring` 단독 슬러그 금지). SSOT hex는 [`src/lib/raw-color-palettes.ts`](src/lib/raw-color-palettes.ts) `rawUtilityColors.focusRing`.
   - 스크롤바 색은 TIER 2 `--ds-utility-scroll-thumb`·`--ds-utility-scroll-track` → TIER 3 `--color-utility-scroll-*` → `bg-utility-scroll-thumb`·`bg-utility-scroll-track`. `::-webkit-scrollbar` pseudo는 `--ds-utility-scroll-*`를 직접 참조한다.
 - 큐레이션 가이드 화면 전용 표시/검증 토큰은 `guide-*` 접두를 붙입니다. 예: `--ds-guide-level-*`, `--color-guide-level-*`, `--ds-guide-callout-*`·`--color-guide-callout-*`(탭 설명 콜아웃), `--ds-guide-intro-*`·`--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).
 
