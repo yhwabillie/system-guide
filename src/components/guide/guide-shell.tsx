@@ -228,7 +228,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 expandLabel="Color"
                 subItems={[
                   { label: "Raw Color", href: guideColorTabHref("raw"), active: isColor && tab !== "semantic" },
-                  { label: "Semantic Color", href: guideColorTabHref("semantic"), active: isColor && tab === "semantic" },
+                  { label: "Semantic Color & Effect", href: guideColorTabHref("semantic"), active: isColor && tab === "semantic" },
                 ]}
               />
               <GuideNavCategory

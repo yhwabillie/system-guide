@@ -227,7 +227,7 @@
   </div>
   <ul id={listId} aria-labelledby={labelId}>
     <li><Link href="/guide/color" aria-current="page">Raw Color</Link></li>
-    <li><Link href="/guide/color?tab=semantic">Semantic Color</Link></li>
+    <li><Link href="/guide/color?tab=semantic">Semantic Color & Effect</Link></li>
   </ul>
 </div>
 
@@ -460,7 +460,7 @@ const FONT_LINE = 1.25;
 
 1. `src/lib/contrast.ts`의 `contrastRatio` 또는 [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)로 **라이트·다크** 전경/배경 쌍을 계산
 2. `globals.css` `:root`·`.dark` 용도 블록 갱신
-3. 가이드 Semantic Color 스와치 `rawVar` / `rawVarDark`·실제 computed hex가 모드 전환 시 바뀌는지 확인
+3. 가이드 Semantic Color & Effect 스와치 `rawVar` / `rawVarDark`·실제 computed hex가 모드 전환 시 바뀌는지 확인
 4. WAVE / Lighthouse로 **다크 모드 토글 후** Contrast Error 0 재확인
 
 구현 SSOT: `src/app/globals.css` `:root`·`.dark` 용도 블록 · 가이드 `src/components/guide/shared.tsx` `semanticColorCatalog`

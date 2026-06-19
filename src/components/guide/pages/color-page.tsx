@@ -136,7 +136,7 @@ export function GuideColorPage() {
           onKeyDown={handleColorTabKeyDown}
           tabs={[
             { value: "raw", tabId: "tab-color-raw", panelId: "panel-color-raw", label: "Raw Color", ref: rawColorTabRef },
-            { value: "semantic", tabId: "tab-color-semantic", panelId: "panel-color-semantic", label: "Semantic Color", ref: semanticColorTabRef },
+            { value: "semantic", tabId: "tab-color-semantic", panelId: "panel-color-semantic", label: "Semantic Color & Effect", ref: semanticColorTabRef },
           ]}
         />
 
@@ -150,7 +150,7 @@ export function GuideColorPage() {
             lead
             description={
               <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. 색상 family와 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 스케일을 확인합니다. <strong>50</strong>은 기준색, <strong>0</strong>·<strong>100</strong>은 White/Black 앵커에 가까운 틴트입니다. background·surface·foreground 같은 역할은 Semantic Color에서 매핑합니다.
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. 색상 family와 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 스케일을 확인합니다. <strong>50</strong>은 기준색, <strong>0</strong>·<strong>100</strong>은 White/Black 앵커에 가까운 틴트입니다. background·surface·foreground 같은 역할은 Semantic Color & Effect에서 매핑합니다.
               </>
             }
           >
