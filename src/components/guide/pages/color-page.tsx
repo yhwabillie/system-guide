@@ -467,7 +467,7 @@ export function GuideColorPage() {
             lead
             description={
               <>
-                화면을 구성하는 기본 색상 토큰입니다. <strong>Background</strong>는 최하위 배경, <strong>Surface</strong>는 컴포넌트 면, <strong>Foreground</strong>는 텍스트·아이콘, <strong>Border</strong>는 경계선에 사용합니다.
+                화면을 구성하는 기본 색상 토큰입니다. <strong>Background</strong>·<strong>Surface</strong>·<strong>Foreground</strong>·<strong>Border</strong>와 focus-ring·scroll 같은 <strong>Utility</strong> 색상을 함께 관리합니다.
               </>
             }
           >
@@ -492,6 +492,24 @@ export function GuideColorPage() {
                 ))}
               </SemanticColorCategorySection>
             ))}
+            <SemanticColorCategorySection
+              id={semanticUtilityCatalog.id}
+              title={semanticUtilityCatalog.title}
+              description={semanticUtilityCatalog.description}
+            >
+              {semanticUtilityCatalog.groups.map((group) => (
+                <SemanticColorGroupGrid key={group.id} label={group.label}>
+                  {group.tokens.map((token) => (
+                    <SemanticColorSwatchCard
+                      key={token.cssVar}
+                      utility={token.utility}
+                      rawVar={isDark && token.rawVarDark ? token.rawVarDark : token.rawVar}
+                      color={semanticResolved[token.cssVar] ?? "—"}
+                    />
+                  ))}
+                </SemanticColorGroupGrid>
+              ))}
+            </SemanticColorCategorySection>
           </SemanticTokenFamilySection>
 
           <SemanticTokenFamilySection
@@ -578,24 +596,6 @@ export function GuideColorPage() {
               </div>
             </SemanticColorCategorySection>
 
-            <SemanticColorCategorySection
-              id={semanticUtilityCatalog.id}
-              title={semanticUtilityCatalog.title}
-              description={semanticUtilityCatalog.description}
-            >
-              {semanticUtilityCatalog.groups.map((group) => (
-                <SemanticColorGroupGrid key={group.id} label={group.label}>
-                  {group.tokens.map((token) => (
-                    <SemanticColorSwatchCard
-                      key={token.cssVar}
-                      utility={token.utility}
-                      rawVar={isDark && token.rawVarDark ? token.rawVarDark : token.rawVar}
-                      color={semanticResolved[token.cssVar] ?? "—"}
-                    />
-                  ))}
-                </SemanticColorGroupGrid>
-              ))}
-            </SemanticColorCategorySection>
           </SemanticTokenFamilySection>
         </GuideContentLayout>
         </div>{/* /panel-color-semantic */}

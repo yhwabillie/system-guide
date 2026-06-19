@@ -398,12 +398,12 @@ export const colorRawTocSections: TocSection[] = [
 export const semanticTocSections: TocSection[] = [
   { id: "semantic-color-tokens", label: "Color Tokens", level: 1 },
   ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title, level: 2 as const })),
+  { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title, level: 2 },
   { id: "semantic-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
   { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
   { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
   { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
-  { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title, level: 2 },
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
@@ -1041,9 +1041,9 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
             return (
               <li
                 key={group.id}
-                className="relative pb-5 pl-6 last:pb-0 before:absolute before:left-[0.21875rem] before:top-2 before:bottom-0 before:border-l before:border-default"
+                className="relative pb-5 pl-6 last:pb-0 before:absolute before:left-[0.21875rem] before:top-2 before:bottom-0 before:border-l before:border-strong"
               >
-                <span aria-hidden="true" className="absolute left-0 top-1.5 size-2 rounded-full border border-default bg-background" />
+                <span aria-hidden="true" className="absolute left-0 top-1.5 size-2 rounded-full border border-strong bg-background" />
                 <a
                   href={`#${group.id}`}
                   onClick={(event) => {
@@ -1053,7 +1053,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                   aria-current={activeId === group.id ? "location" : undefined}
                   className={[
                     "block py-0.5 text-caption font-bold uppercase tracking-[0.18em] no-underline transition-colors",
-                    groupActive ? "foreground-brand" : "text-gray-40 hover:foreground-brand",
+                    groupActive ? "foreground-brand" : "foreground-subtle hover:foreground-brand",
                   ].join(" ")}
                 >
                   {group.label}
