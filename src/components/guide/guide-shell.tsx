@@ -48,7 +48,7 @@ const navSubItemClass = (active: boolean) =>
     "flex w-full items-center justify-between gap-2 text-left rounded-lg font-sans text-label-sm leading-base no-underline",
     "py-2 px-3 transition-colors duration-150",
     active
-      ? "surface-brand-subtle foreground-brand-strong font-semibold"
+      ? "surface-brand-faint foreground-brand-strong font-semibold"
       : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:foreground-default",
   ].join(" ");
 

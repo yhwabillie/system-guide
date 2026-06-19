@@ -387,7 +387,8 @@
   --ds-surface-default: var(--ds-gray-0);
   --ds-surface-subtle: var(--ds-gray-5);
   --ds-surface-strong: var(--ds-gray-10);
-  --ds-surface-brand-subtle: var(--ds-violet-5);
+  --ds-surface-brand-faint: var(--ds-violet-5);
+  --ds-surface-brand-subtle: var(--ds-violet-10);
   --ds-surface-brand: var(--ds-violet-50);
   --ds-surface-brand-strong: var(--ds-violet-60);
   --ds-surface-negative: var(--ds-red-5);
@@ -564,7 +565,8 @@
   --ds-surface-default: var(--ds-gray-5);
   --ds-surface-subtle: var(--ds-gray-10);
   --ds-surface-strong: var(--ds-gray-20);
-  --ds-surface-brand-subtle: var(--ds-violet-20);
+  --ds-surface-brand-faint: var(--ds-violet-20);
+  --ds-surface-brand-subtle: var(--ds-violet-30);
   --ds-surface-brand: var(--ds-violet-70);
   --ds-surface-brand-strong: var(--ds-violet-80);
   --ds-surface-negative: var(--ds-red-20);
@@ -572,7 +574,7 @@
   --ds-surface-positive: var(--ds-green-20);
   --ds-surface-info: var(--ds-blue-20);
   --ds-surface-disabled: var(--ds-gray-10);
-  --ds-border-brand: var(--ds-violet-60);
+  --ds-border-brand: var(--ds-violet-70);
   /* 상태 경계 — 전경 status(negative·attention·positive·info)와 동일하게 다크 재매핑(50→70=raw 30). UI 3:1 충족, 텍스트·경계 색 일치.
      disabled 은 neutral gray 라 :root 의 gray-10 스케일 반사(→raw 90)로 양 모드 처리되므로 별도 .dark 불필요. */
   --ds-border-negative: var(--ds-red-70);
@@ -688,6 +690,7 @@
   --color-surface-default: var(--ds-surface-default);
   --color-surface-subtle: var(--ds-surface-subtle);
   --color-surface-strong: var(--ds-surface-strong);
+  --color-surface-brand-faint: var(--ds-surface-brand-faint);
   --color-surface-brand-subtle: var(--ds-surface-brand-subtle);
   --color-surface-brand: var(--ds-surface-brand);
   --color-surface-brand-strong: var(--ds-surface-brand-strong);
@@ -830,6 +833,7 @@
 @utility surface-default { background-color: var(--color-surface-default); }
 @utility surface-subtle { background-color: var(--color-surface-subtle); }
 @utility surface-strong { background-color: var(--color-surface-strong); }
+@utility surface-brand-faint { background-color: var(--color-surface-brand-faint); }
 @utility surface-brand-subtle { background-color: var(--color-surface-brand-subtle); }
 @utility surface-brand { background-color: var(--color-surface-brand); }
 @utility surface-brand-strong { background-color: var(--color-surface-brand-strong); }

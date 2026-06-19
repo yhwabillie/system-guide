@@ -338,7 +338,7 @@ const FONT_LINE = 1.25;
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
 - **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-subtle`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
 - **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 브랜드 전경은 `foreground-brand`·중립은 `foreground-default`·`ring-foreground-default`·`border-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
-- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`foreground-muted` 금지**(다크에서 accent 채움색 ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`foreground-default` 사용. 링크·브랜드 강조 텍스트는 `foreground-brand`. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `surface-brand-subtle` + `foreground-brand-strong`(아이콘도 동일 색상, 대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
+- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`foreground-muted` 금지**(다크에서 accent 채움색 ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`foreground-default` 사용. 링크·브랜드 강조 텍스트는 `foreground-brand`. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `surface-brand-faint` + `foreground-brand-strong`(아이콘도 동일 색상, 대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
 - **`foreground-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `foreground-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
 - **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
 - `user-scalable=no` meta viewport 금지
@@ -397,7 +397,7 @@ const FONT_LINE = 1.25;
 
 **자동 반사로 충분한 예** — `foreground-default`·`foreground-subtle`·`foreground-disabled`(gray 스케일 참조), `default`·`strong`(border gray 참조), `background`(`bg-background`, `--ds-background`만 `.dark`에서 black)
 
-**명시적 `.dark` 재매핑이 필요한 예** — `foreground-brand`·`foreground-brand-subtle`·`foreground-brand-strong`·`foreground-muted`·`foreground-inverse`·`foreground-required/negative/attention/positive/info`·`surface-default/subtle/strong`·`surface-brand-subtle/brand/brand-strong`·`surface-negative/attention/positive/info/disabled`·`border-negative/attention/positive/info/brand`·`border-subtle`·`utility-focus-ring`
+**명시적 `.dark` 재매핑이 필요한 예** — `foreground-brand`·`foreground-brand-subtle`·`foreground-brand-strong`·`foreground-muted`·`foreground-inverse`·`foreground-required/negative/attention/positive/info`·`surface-default/subtle/strong`·`surface-brand-faint/subtle/brand/brand-strong`·`surface-negative/attention/positive/info/disabled`·`border-negative/attention/positive/info/brand`·`border-subtle`·`utility-focus-ring`
 
 ### 검증 기준
 
@@ -428,7 +428,8 @@ const FONT_LINE = 1.25;
 | `foreground-brand` | `violet-50` | `violet-70` | on `bg-background` ≥ 4.5:1 |
 | `foreground-brand-subtle` | `violet-40` | `violet-50` | on `bg-background` — 라이트 ~3.8:1 · 다크 ~3.5:1(UI). **본문 단독 4.5:1 미달** — 보조 브랜드·eyebrow 캡션 |
 | `foreground-brand-strong` | `violet-60` | `violet-80` | on `bg-background` — 라이트 7.7:1 · 다크 ~10.7:1 · 헤더·강조 제목 |
-| `surface-brand-subtle` | `violet-5` | `violet-20`→raw `violet-80` | 활성 서브메뉴용 옅은 브랜드 표면. `foreground-brand-strong` on surface ≥ 4.5:1 |
+| `surface-brand-faint` | `violet-5` | `violet-20`→raw `violet-80` | 가장 옅은 브랜드 표면. 본문 전경 조합은 별도 대비 검증 |
+| `surface-brand-subtle` | `violet-10` | `violet-30`→raw `violet-70` | 활성 서브메뉴용 옅은 브랜드 표면. `foreground-brand-strong` on surface ≥ 4.5:1 |
 | `surface-brand` | `violet-50` | `violet-70`→raw `violet-30` | `foreground-inverse` on surface ≥ 4.5:1 |
 | `surface-brand-strong` | `violet-60` | `violet-80`→raw `violet-20` | `foreground-inverse` on surface ≥ 4.5:1 |
 | `surface-negative` | `red-5` | `red-20`→raw `red-80` | 상태 컴포넌트의 옅은 면. `surface-disabled`와 가까운 밝기 기준, 본문 전경 조합은 별도 대비 검증 |
@@ -436,7 +437,7 @@ const FONT_LINE = 1.25;
 | `surface-positive` | `green-5` | `green-20`→raw `green-80` | 상태 컴포넌트의 옅은 면. `surface-disabled`와 가까운 밝기 기준, 본문 전경 조합은 별도 대비 검증 |
 | `surface-info` | `blue-5` | `blue-20`→raw `blue-80` | 상태 컴포넌트의 옅은 면. `surface-disabled`와 가까운 밝기 기준, 본문 전경 조합은 별도 대비 검증 |
 | `surface-disabled` | `gray-5` | `gray-10`→raw `gray-90` | `foreground-disabled`와 함께 비활성 컴포넌트 표면 전용. 의도적 저대비(WCAG 1.4.3 비활성 예외) |
-| `border-brand` | `violet-40` | `violet-60` | on `bg-background` ≥ 3:1 |
+| `border-brand` | `violet-40` | `violet-70`→raw `violet-30` | on `bg-background` ≥ 3:1 |
 | `border-negative` | `red-50` | `red-70` | `foreground-negative`와 동일 색. required 제외 status border/foreground 쌍 |
 | `border-attention` | `orange-50` | `orange-70` | `foreground-attention`과 동일 색 |
 | `border-positive` | `green-50` | `green-70` | `foreground-positive`와 동일 색 |
@@ -538,7 +539,7 @@ const FONT_LINE = 1.25;
 - [ ] NVDA 주요 플로우 수동 테스트
 - [ ] 모바일 TalkBack 테스트
 - [ ] 브라우저 200% 줌 레이아웃 확인
-- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `foreground-default`/`foreground-subtle`/`foreground-muted`/`foreground-brand`/`foreground-brand-strong`/`foreground-required`/`foreground-negative`/`foreground-attention`/`foreground-positive`/`foreground-info`/`border-{negative,attention,positive,info,brand}`/`bg-accent`+`on-accent`/`surface-brand-subtle`+`foreground-brand-strong` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수. `surface-{negative,attention,positive,info}` 위 본문 텍스트는 실제 조합별로 추가 검증
+- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `foreground-default`/`foreground-subtle`/`foreground-muted`/`foreground-brand`/`foreground-brand-strong`/`foreground-required`/`foreground-negative`/`foreground-attention`/`foreground-positive`/`foreground-info`/`border-{negative,attention,positive,info,brand}`/`bg-accent`+`on-accent`/`surface-brand-faint`+`foreground-brand-strong` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수. `surface-{negative,attention,positive,info}` 위 본문 텍스트는 실제 조합별로 추가 검증
 - [ ] 새 시맨틱 토큰 추가 시 `globals.css` **`:root` + `.dark`**·가이드 **`rawVar` + `rawVarDark`** 동시 반영 여부
 - [ ] 키보드 트랩 없음 확인
 - [ ] 자동 재생 콘텐츠 정지 버튼 확인

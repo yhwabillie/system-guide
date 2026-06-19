@@ -180,7 +180,8 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "surface-brand-subtle", utility: "surface-brand-subtle", cssVar: "--color-surface-brand-subtle", readAs: "bg", rawVar: "--raw-violet-5", rawVarDark: "--raw-violet-80" },
+          { token: "surface-brand-faint", utility: "surface-brand-faint", cssVar: "--color-surface-brand-faint", readAs: "bg", rawVar: "--raw-violet-5", rawVarDark: "--raw-violet-80" },
+          { token: "surface-brand-subtle", utility: "surface-brand-subtle", cssVar: "--color-surface-brand-subtle", readAs: "bg", rawVar: "--raw-violet-10", rawVarDark: "--raw-violet-70" },
           { token: "surface-brand", utility: "surface-brand", cssVar: "--color-surface-brand", readAs: "bg", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
           { token: "surface-brand-strong", utility: "surface-brand-strong", cssVar: "--color-surface-brand-strong", readAs: "bg", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
         ],
@@ -220,7 +221,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "brand", utility: "border-brand", cssVar: "--color-brand", readAs: "border", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-40" },
+          { token: "brand", utility: "border-brand", cssVar: "--color-brand", readAs: "border", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-30" },
         ],
       },
       {
