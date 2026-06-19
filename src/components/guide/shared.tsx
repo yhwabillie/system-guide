@@ -103,29 +103,32 @@ export type SemanticColorCategoryDef = {
 
 export const semanticColorCatalog: SemanticColorCategoryDef[] = [
   {
-    id: "semantic-text",
-    title: "Text",
-    description: <>기본 본문, 캡션, 버튼 등 UI 전반의 텍스트에 사용되는 색상입니다.</>,
+    id: "semantic-foreground",
+    title: "Foreground",
+    description: <>본문·캡션·버튼 등 텍스트와 아이콘을 아우르는 <strong>전경(foreground)</strong> 색상입니다. <strong>text-</strong> 접두 없이 <strong>foreground-*</strong> 유틸리티로 적용합니다(아이콘 포함).</>,
     groups: [
       {
-        id: "primary",
-        label: "primary",
+        id: "emphasis",
+        label: "emphasis",
         tokens: [
-          { token: "foreground", utility: "text-foreground", cssVar: "--color-foreground", readAs: "text", rawVar: "--raw-gray-90" },
+          { token: "foreground-primary", utility: "foreground-primary", cssVar: "--color-foreground-primary", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
+          { token: "foreground-secondary", utility: "foreground-secondary", cssVar: "--color-foreground-secondary", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
         ],
       },
       {
-        id: "danger",
-        label: "danger",
+        id: "status",
+        label: "status",
         tokens: [
-          { token: "accent-danger", utility: "text-accent-danger", cssVar: "--color-accent-danger", readAs: "text", rawVar: "--raw-red-50" },
+          { token: "foreground-danger", utility: "foreground-danger", cssVar: "--color-foreground-danger", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
+          { token: "foreground-success", utility: "foreground-success", cssVar: "--color-foreground-success", readAs: "text", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
+          { token: "foreground-disabled", utility: "foreground-disabled", cssVar: "--color-foreground-disabled", readAs: "text", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
         ],
       },
       {
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "brand", utility: "text-brand", cssVar: "--color-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
+          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
         ],
       },
     ],
@@ -206,7 +209,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Accent",
     description: (
       <>
-        CTA·선택·강조 상태 등 <strong>브랜드·위험</strong> 의미의 채움 색입니다. 버튼·배지에 <strong>bg-*</strong>로 적용합니다.
+        CTA·선택·강조 상태 등 <strong>브랜드·성공·위험</strong> 의미의 채움 색입니다. 버튼·배지에 <strong>bg-*</strong>로 적용합니다.
       </>
     ),
     groups: [
@@ -222,6 +225,13 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         label: "on-brand",
         tokens: [
           { token: "on-accent", utility: "bg-on-accent", cssVar: "--color-on-accent", readAs: "bg", rawVar: "--raw-white" },
+        ],
+      },
+      {
+        id: "success",
+        label: "success",
+        tokens: [
+          { token: "accent-success", utility: "bg-accent-success", cssVar: "--color-accent-success", readAs: "bg", rawVar: "--raw-green-50" },
         ],
       },
       {
@@ -369,20 +379,31 @@ export function probeSemanticUtilityColor(
   readAs: SemanticColorReadMode,
   cssVar?: string,
 ): string {
+  probe.className = "";
+  probe.style.color = "";
+  probe.style.backgroundColor = "";
+  probe.style.border = "";
+
   if (readAs === "border") {
     probe.className = `box-border size-8 border bg-transparent ${utility}`;
-    probe.style.backgroundColor = "";
     return getComputedStyle(probe).borderTopColor;
   }
-  if (readAs === "outline" && cssVar) {
+
+  if (cssVar && (readAs === "text" || readAs === "bg" || readAs === "outline")) {
     probe.className = "box-border size-8";
+    if (readAs === "text") {
+      probe.style.color = `var(${cssVar})`;
+      const color = getComputedStyle(probe).color;
+      probe.style.color = "";
+      return color;
+    }
     probe.style.backgroundColor = `var(${cssVar})`;
     const color = getComputedStyle(probe).backgroundColor;
     probe.style.backgroundColor = "";
     return color;
   }
+
   probe.className = utility;
-  probe.style.backgroundColor = "";
   const cs = getComputedStyle(probe);
   return readAs === "bg" ? cs.backgroundColor : cs.color;
 }
@@ -449,7 +470,7 @@ export function SwatchCardMeta({
 }) {
   return (
     <div className="p-4">
-      <p className="m-0 font-mono text-label-md font-bold text-foreground">{utility}</p>
+      <p className="m-0 font-mono text-label-md font-bold foreground-primary">{utility}</p>
       <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
       <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
     </div>
@@ -600,8 +621,8 @@ export const fontStack = [
 
 export const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
   primary: "bg-accent text-on-accent",
-  fallback: "bg-gray-10 text-foreground ring-1 ring-line",
-  system: "bg-transparent text-muted ring-1 ring-dashed ring-line",
+  fallback: "bg-gray-10 foreground-primary ring-1 ring-line",
+  system: "bg-transparent foreground-muted ring-1 ring-dashed ring-line",
 };
 
 export const TOAST_DURATION_MS = 2500;
@@ -641,7 +662,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line bg-background px-4 py-3 text-label-sm font-medium text-foreground shadow-[0_6px_24px_var(--ds-shadow)]"
+          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line bg-background px-4 py-3 text-label-sm font-medium foreground-primary shadow-[0_6px_24px_var(--ds-shadow)]"
         >
           {toast.message}
         </div>
@@ -725,7 +746,7 @@ export function TabDescriptionCallout({
     <div
       className={[
         margin,
-        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:text-foreground [&_a]:font-semibold [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
+        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:foreground-primary [&_a]:font-semibold [&_a]:foreground-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
         className,
       ]
         .filter(Boolean)
@@ -769,7 +790,7 @@ export function ContentTitleBlock({
       <p className="m-0 text-label-md font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
       <h2
         id={titleId}
-        className="m-0 mt-2 font-bold tracking-normal text-foreground typo-guide-content-title"
+        className="m-0 mt-2 font-bold tracking-normal foreground-primary typo-guide-content-title"
       >
         {title}
       </h2>
@@ -810,7 +831,7 @@ export function ContentSectionTitle({
       <h3
         id={id}
         className={[
-          "m-0 text-heading-sm font-bold leading-base text-foreground",
+          "m-0 text-heading-sm font-bold leading-base foreground-primary",
           guideSectionAnchorClass,
           titleMargin,
           className,
@@ -877,7 +898,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
     >
       <div className="overflow-hidden rounded-md border border-line bg-background">
         <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3.5">
-          <h2 id={headingId} className="m-0 text-label-md font-bold text-foreground">
+          <h2 id={headingId} className="m-0 text-label-md font-bold foreground-primary">
             목차
           </h2>
           <button
@@ -885,7 +906,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
             onClick={() => setCollapsed((prev) => !prev)}
             aria-expanded={!collapsed}
             aria-controls={listId}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:text-foreground"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:foreground-primary"
           >
             {collapsed ? "펼치기" : "접기"}
             <NavIcon
@@ -913,8 +934,8 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                     className={[
                       "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
                       isActive
-                        ? "bg-gray-5 font-bold text-foreground"
-                        : "font-normal text-gray-60 hover:bg-gray-5 hover:text-foreground",
+                        ? "bg-gray-5 font-bold foreground-primary"
+                        : "font-normal text-gray-60 hover:bg-gray-5 hover:foreground-primary",
                     ].join(" ")}
                   >
                     {label}
@@ -977,7 +998,7 @@ export function ContentSubsectionTitle({
 /** 탭 패널 3단 — 표·그룹 라벨 (h3 섹션 직속) */
 export function ContentGroupTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <h4 className={["m-0 mb-4 text-heading-sm font-bold text-foreground", className].filter(Boolean).join(" ")}>
+    <h4 className={["m-0 mb-4 text-heading-sm font-bold foreground-primary", className].filter(Boolean).join(" ")}>
       {children}
     </h4>
   );
@@ -998,12 +1019,12 @@ export const contentOutlineSubTabClass = (active: boolean) =>
   [
     "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-0 border-b-0 border-t-2 border-l-2 border-r-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-[color,background-color] duration-200",
     active
-      ? "z-[1] -mb-0.5 border-foreground bg-background font-bold text-foreground after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
-      : "border-transparent bg-surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:text-foreground",
+      ? "z-[1] -mb-0.5 border-foreground-primary bg-background font-bold foreground-primary after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
+      : "border-transparent bg-surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:foreground-primary",
   ].join(" ");
 
 export const guideTabScrollBtnClass =
-  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-line bg-background text-gray-60 transition-opacity duration-150 hover:bg-surface-subtle hover:text-foreground focus-visible:opacity-100 focus-visible:visible";
+  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-line bg-background text-gray-60 transition-opacity duration-150 hover:bg-surface-subtle hover:foreground-primary focus-visible:opacity-100 focus-visible:visible";
 
 export const GUIDE_TAB_SCROLL_AMOUNT = 200;
 
@@ -1094,7 +1115,7 @@ export function ContentOutlineTabList({
             role="tablist"
             aria-label={ariaLabel}
             onKeyDown={onKeyDown}
-            className="flex w-max min-w-full border-b-2 border-foreground px-control-md"
+            className="flex w-max min-w-full border-b-2 border-foreground-primary px-control-md"
           >
             {tabs.map((tab) => {
               const active = activeValue === tab.value;
@@ -1142,14 +1163,14 @@ export const guideHeaderHeightClass = "h-[3.75rem]";
 export const guideHeaderOffsetClass = "top-[3.75rem]";
 export const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 export const guideHeaderIconButtonClass =
-  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle text-foreground transition-colors duration-150 hover:bg-gray-10 hover:text-foreground";
+  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle foreground-primary transition-colors duration-150 hover:bg-gray-10 hover:foreground-primary";
 
 export function GuideLogoMark() {
   return (
     <svg
       aria-hidden="true"
       viewBox="0 0 32 20"
-      className="size-icon-sm shrink-0 text-foreground"
+      className="size-icon-sm shrink-0 foreground-primary"
       fill="currentColor"
     >
       <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
@@ -1208,7 +1229,7 @@ export function GuideSiteHeader({
 
         <div className="flex min-w-0 items-center justify-center gap-2 justify-self-center">
           <GuideLogoMark />
-          <h1 className="truncate text-label-lg font-bold text-foreground">디자인 시스템 가이드</h1>
+          <h1 className="truncate text-label-lg font-bold foreground-primary">디자인 시스템 가이드</h1>
         </div>
 
         <div className="flex items-center justify-self-end">
@@ -1216,7 +1237,7 @@ export function GuideSiteHeader({
             <span className="sr-only">가이드 검색</span>
             <NavIcon
               aria-hidden="true"
-              className="pointer-events-none absolute left-3 size-icon-xs shrink-0 text-muted"
+              className="pointer-events-none absolute left-3 size-icon-xs shrink-0 foreground-muted"
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -1225,7 +1246,7 @@ export function GuideSiteHeader({
               type="search"
               name="guide-search"
               placeholder="가이드 검색..."
-              className="h-control-sm w-[12.5rem] rounded-full border border-line bg-surface-subtle pl-9 pr-4 text-label-sm text-foreground placeholder:text-muted md:w-[15rem]"
+              className="h-control-sm w-[12.5rem] rounded-full border border-line bg-surface-subtle pl-9 pr-4 text-label-sm foreground-primary placeholder:foreground-muted md:w-[15rem]"
             />
           </label>
         </div>
@@ -1238,7 +1259,7 @@ export function FontTokenGuide() {
   return (
     <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-line pb-6">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <p className="m-0 text-caption font-semibold uppercase tracking-normal text-foreground">
+        <p className="m-0 text-caption font-semibold uppercase tracking-normal foreground-primary">
           Tailwind utility class
         </p>
         <TokenChip size="lg" copyValue="font-sans">
@@ -1295,17 +1316,17 @@ export function FontStackCuration() {
                     {name}
                   </span>
                   <span
-                    className={`text-caption font-semibold ${emphasis === "primary" ? "text-accent" : "text-muted"}`}
+                    className={`text-caption font-semibold ${emphasis === "primary" ? "text-accent" : "foreground-muted"}`}
                   >
                     {role}
                   </span>
                 </div>
-                <p className="m-0 mt-1 text-caption text-muted">{desc}</p>
-                <p className="m-0 mt-0.5 font-mono text-caption text-muted">{source}</p>
+                <p className="m-0 mt-1 text-caption foreground-muted">{desc}</p>
+                <p className="m-0 mt-0.5 font-mono text-caption foreground-muted">{source}</p>
               </div>
             </div>
             {index < fontStack.length - 1 && (
-              <p className="mb-1 mt-0 flex items-center gap-4 pl-0 text-caption text-muted" aria-hidden="true">
+              <p className="mb-1 mt-0 flex items-center gap-4 pl-0 text-caption foreground-muted" aria-hidden="true">
                 <span className="flex w-8 shrink-0 justify-center">↓</span>
                 <span>미로드 시</span>
               </p>
@@ -1378,19 +1399,19 @@ export function TypographyScaleTable() {
         <caption className="sr-only">타이포그래피 스케일 — 계층, 굵기, 크기, 행간, Tailwind utility class</caption>
         <thead>
           <tr className="border-b border-gray-20 bg-gray-5">
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
               Hierarchy
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
               Weight
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
               Size
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
               Line Height
             </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal text-muted">
+            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
               Tailwind utility class
             </th>
           </tr>
@@ -1408,13 +1429,13 @@ export function TypographyScaleTable() {
                     {label}
                   </span>
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm text-foreground">
+                <td className="px-4 py-4 align-middle text-label-sm foreground-primary">
                   {typographyWeightLabel[weight] ?? weight}
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular text-foreground">
+                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-primary">
                   {sizePx}
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular text-foreground">
+                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-primary">
                   {lineHeightPx}
                 </td>
                 <td className="px-4 py-4 align-middle">
@@ -1538,6 +1559,11 @@ export const outlineIconCatalog: readonly IconCatalogEntry[] = [
     innerMarkup: '<line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />',
   },
   {
+    id: "check",
+    label: "확인",
+    innerMarkup: '<polyline points="20 6 9 17 4 12" />',
+  },
+  {
     id: "close",
     label: "닫기",
     innerMarkup: '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />',
@@ -1562,6 +1588,11 @@ export const outlineIconCatalog: readonly IconCatalogEntry[] = [
 ] as const;
 
 export const filledIconCatalog: readonly IconCatalogEntry[] = [];
+
+/** id로 outline 아이콘을 조회 — 큐레이션 카탈로그를 컴포넌트 소비의 SSOT로 사용. */
+export const outlineIconById = Object.fromEntries(
+  outlineIconCatalog.map((icon) => [icon.id, icon]),
+) as Record<string, IconCatalogEntry>;
 
 const iconSourceByStyle = {
   outline: {
@@ -1589,9 +1620,9 @@ const iconSourceByStyle = {
 
 export function buildIconSvgMarkup(style: IconStyle, utility: string, innerMarkup: string) {
   if (style === "filled") {
-    return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="${utility} shrink-0 text-foreground">\n  ${innerMarkup}\n</svg>`;
+    return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="${utility} shrink-0 foreground-primary">\n  ${innerMarkup}\n</svg>`;
   }
-  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="${utility} shrink-0 text-foreground">\n  ${innerMarkup}\n</svg>`;
+  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="${utility} shrink-0 foreground-primary">\n  ${innerMarkup}\n</svg>`;
 }
 
 export function ProjectIconGlyph({
@@ -1603,7 +1634,7 @@ export function ProjectIconGlyph({
   className?: string;
   style?: IconStyle;
 }) {
-  const resolvedClassName = className ?? "size-icon-md shrink-0 text-foreground";
+  const resolvedClassName = className ?? "size-icon-md shrink-0 foreground-primary";
 
   if (style === "filled") {
     return (
@@ -1647,12 +1678,12 @@ export function IconCopyCell({
   return (
     <td className="px-3 py-2 text-center align-middle">
       <div className="group relative flex min-h-[4.5rem] items-center justify-center">
-        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 text-foreground`} style={style} />
+        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 foreground-primary`} style={style} />
         <button
           type="button"
           onClick={() => void handleCopy()}
           aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
-          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line bg-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:text-foreground focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line bg-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:foreground-primary focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
         >
           copy
         </button>
@@ -1685,7 +1716,7 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
             </th>
             {iconSizeTokens.map((token) => (
               <th key={token.name} scope="col" className="px-3 py-3 text-center align-middle">
-                <span className="font-mono text-label-sm font-semibold text-foreground">
+                <span className="font-mono text-label-sm font-semibold foreground-primary">
                   {token.utility} ({token.px})
                 </span>
               </th>
@@ -1758,7 +1789,7 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-label-lg font-bold text-foreground">{source.name}</span>
+              <span className="text-label-lg font-bold foreground-primary">{source.name}</span>
               <span className="text-caption font-semibold text-accent">{source.style}</span>
             </div>
             <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">
@@ -1782,7 +1813,7 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
               {source.specs.map(({ label, value }) => (
                 <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <dt className="m-0 font-mono text-caption text-gray-60">{label}</dt>
-                  <dd className="m-0 font-mono text-caption text-foreground">{value}</dd>
+                  <dd className="m-0 font-mono text-caption foreground-primary">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -1843,20 +1874,16 @@ export function LevelBadge({ level }: { level: ContrastLevel }) {
   );
 }
 
-/** 원형 통과/실패 배지 — accent(통과)·danger(실패) 채움 + 흰색 체크/엑스. */
+/** 원형 통과/실패 배지 — success(통과)·danger(실패) 채움 + 흰색 체크/엑스. */
 export function ContrastCircle({ passed }: { passed: boolean }) {
   return (
     <span
       aria-hidden="true"
       className="inline-flex items-center justify-center rounded-full shrink-0 size-icon-md"
-      style={{ background: passed ? "var(--ds-accent)" : "var(--ds-accent-danger)" }}
+      style={{ background: passed ? "var(--ds-accent-success)" : "var(--ds-accent-danger)" }}
     >
       <NavIcon
-        innerMarkup={
-          passed
-            ? '<polyline points="20 6 9 17 4 12" />'
-            : '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />'
-        }
+        innerMarkup={(passed ? outlineIconById.check : outlineIconById.close).innerMarkup}
         className="size-icon-xs text-on-accent"
       />
     </span>
@@ -1876,7 +1903,7 @@ export function rawPaletteSwatchClass(isBg: boolean, isText: boolean, isInteract
     extra,
     isInteractive ? "cursor-pointer border-0 p-0 transition-[opacity,box-shadow,transform] duration-150" : "",
     isSelected
-      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-foreground ring-offset-2 ring-offset-background"
+      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-foreground-primary ring-offset-2 ring-offset-background"
       : "",
     isInteractive && !isSelected ? "opacity-90 hover:opacity-100 hover:scale-[1.02]" : "",
   ]
@@ -1910,7 +1937,7 @@ export function ContrastSwatchRoleMarker({ role }: { role: "BG" | "TXT" }) {
       aria-hidden="true"
       className={[
         "absolute top-1 left-1 z-[1] rounded border-2 bg-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
-        "border-foreground text-foreground",
+        "border-foreground-primary foreground-primary",
       ].join(" ")}
     >
       {role}
@@ -1943,7 +1970,7 @@ export function ContrastColorPickButton({
 }) {
   return (
     <div>
-      <p id={labelId} className="mb-1.5 text-label-sm font-semibold text-foreground">
+      <p id={labelId} className="mb-1.5 text-label-sm font-semibold foreground-primary">
         {labelText}
       </p>
       <button
@@ -1954,7 +1981,7 @@ export function ContrastColorPickButton({
         className={[
           "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
           isSelecting
-            ? "bg-gray-10 shadow-sm ring-2 ring-foreground"
+            ? "bg-gray-10 shadow-sm ring-2 ring-foreground-primary"
             : "bg-surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-line",
         ].join(" ")}
       >
@@ -1962,13 +1989,13 @@ export function ContrastColorPickButton({
           aria-hidden="true"
           className={[
             "relative block size-8 shrink-0 overflow-hidden isolate rounded-md border border-line transition-transform duration-150",
-            isSelecting ? "scale-105 ring-2 ring-foreground ring-offset-1 ring-offset-background" : "group-hover:scale-105",
+            isSelecting ? "scale-105 ring-2 ring-foreground-primary ring-offset-1 ring-offset-background" : "group-hover:scale-105",
           ].join(" ")}
         >
           <ContrastSwatchFill hex={swatchHex} checker={checker} />
         </span>
         <span className="flex min-w-0 flex-col text-left">
-          <span className="text-label-md font-semibold text-foreground">{colorLabel}</span>
+          <span className="text-label-md font-semibold foreground-primary">{colorLabel}</span>
           <span id={valueId} className="text-caption text-gray-70 font-mono numeric-tabular">{colorHex}</span>
         </span>
         <span
@@ -1976,8 +2003,8 @@ export function ContrastColorPickButton({
           className={[
             "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
             isSelecting
-              ? "border-foreground bg-gray-10 text-foreground"
-              : "border-line-strong bg-background text-foreground group-hover:border-foreground",
+              ? "border-foreground-primary bg-gray-10 foreground-primary"
+              : "border-line-strong bg-background foreground-primary group-hover:border-foreground-primary",
           ].join(" ")}
         >
           {isSelecting ? (
@@ -2003,7 +2030,7 @@ export function ContrastCriterionBox({ grade, threshold, passed }: { grade: stri
   return (
     <div className={`flex items-center gap-2 py-2.5 px-3 ${contrastResultSurfaceClass}`}>
       <ContrastCircle passed={passed} />
-      <span className="text-label-md font-bold text-foreground">{grade}</span>
+      <span className="text-label-md font-bold foreground-primary">{grade}</span>
       <span className="ml-auto text-caption text-gray-70 numeric-tabular">{threshold}</span>
     </div>
   );
@@ -2033,8 +2060,8 @@ export function ContrastCategory({
 export function TokenValue({ px, rem }: { px: string; rem: string }) {
   return (
     <span className="flex flex-col leading-base font-mono">
-      <span className="text-label-sm font-semibold numeric-tabular text-foreground">{px}</span>
-      <span className="text-caption text-muted numeric-tabular">{rem}</span>
+      <span className="text-label-sm font-semibold numeric-tabular foreground-primary">{px}</span>
+      <span className="text-caption foreground-muted numeric-tabular">{rem}</span>
     </span>
   );
 }
@@ -2107,21 +2134,21 @@ export function GridGapCuration() {
       >
         {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
           <div key={name} role="listitem" className="flex min-w-[5rem] flex-1 flex-col items-center gap-2">
-            <span className="text-label-sm font-semibold numeric-tabular text-foreground">{px}</span>
+            <span className="text-label-sm font-semibold numeric-tabular foreground-primary">{px}</span>
             <GridGapPreview
               utility={utility}
               label={`${name} ${px}, ${rem} — 좌우·상하 gap과 grid item 견본`}
             />
-            <span className="font-mono text-caption font-semibold text-foreground">{name}</span>
-            <span className="text-center text-caption text-muted">{desc}</span>
+            <span className="font-mono text-caption font-semibold foreground-primary">{name}</span>
+            <span className="text-center text-caption foreground-muted">{desc}</span>
           </div>
         ))}
       </div>
-      <p className="mt-6 mb-3 text-caption text-muted">
+      <p className="mt-6 mb-3 text-caption foreground-muted">
         Linear: 16px → 24px → 32px (+8px) — <span className="font-mono">gap-*</span>는{" "}
         <span className="font-mono">space-*</span> 토큰과 1:1 대응합니다.
       </p>
-      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-muted">
+      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption foreground-muted">
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden="true" className="inline-block size-2 bg-red-20" />
           붉은색 = gap
@@ -2271,7 +2298,7 @@ export const guideFabButtonClass =
   "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150";
 
 export const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
-export const guideFabSurfaceClass = `${guideFabButtonClass} bg-background text-foreground ring-1 ring-line`;
+export const guideFabSurfaceClass = `${guideFabButtonClass} bg-background foreground-primary ring-1 ring-line`;
 
 export const GUIDE_SCROLL_TOP_THRESHOLD = 240;
 
@@ -2310,7 +2337,7 @@ export function NavSubTree({
           >
             <span>{item.label}</span>
             {item.active && (
-              <NavIcon className="size-icon-xs shrink-0 text-brand">
+              <NavIcon className="size-icon-xs shrink-0 foreground-brand">
                 <path d="M9 6l6 6-6 6" />
               </NavIcon>
             )}

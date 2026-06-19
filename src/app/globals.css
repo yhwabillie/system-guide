@@ -376,8 +376,16 @@
   --ds-border-brand: var(--ds-violet-40);
   --ds-surface-subtle: var(--ds-gray-5);
   --ds-surface-brand: var(--ds-violet-5);
-  --ds-text-muted: var(--ds-gray-40);
-  --ds-text-brand: var(--ds-violet-50);
+  /* 강조(emphasis) 위계 — primary(=--ds-foreground, gray-90) 메인 타이틀/본문 · secondary(gray-70) 서브타이틀 · muted(gray-40) 보조.
+     secondary 는 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1. */
+  --ds-foreground-secondary: var(--ds-gray-70);
+  --ds-foreground-muted: var(--ds-gray-40);
+  --ds-foreground-brand: var(--ds-violet-50);
+  /* 상태(status) 전경 — danger·success 는 흰 배경 4.5:1(red-50 4.56:1·green-50 4.58:1), 채움(--ds-accent-*)과 분리해 .dark에서 본문 대비로 재매핑.
+     disabled 는 비활성 의미라 의도적 저대비(WCAG 1.4.3 비활성 예외) — gray 스케일 참조라 .dark 자동 반사(gray-30↔gray-70). */
+  --ds-foreground-danger: var(--ds-red-50);
+  --ds-foreground-success: var(--ds-green-50);
+  --ds-foreground-disabled: var(--ds-gray-30);
 
   /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-30(.dark) */
   --ds-utility-focus-ring: var(--raw-utility-focus-ring);
@@ -408,6 +416,7 @@
   /* 강조(선택) — 브랜드 violet-50 base */
   --ds-accent: var(--ds-violet-50);
   --ds-accent-danger: var(--ds-red-50);
+  --ds-accent-success: var(--ds-green-50);
   --ds-on-accent: var(--raw-white);
 
   /* Guide-only: 대비 체커 등급 — AA는 green-30+90, AA Large는 orange-20+90, AAA는 60+white, Fail은 70+white */
@@ -520,8 +529,11 @@
   --ds-gray-100: var(--raw-gray-0);
 
   /* Brand purpose — 다크 배경(#0a0a0a) 대비 WCAG AA(본문 4.5:1·UI 3:1) 검증 후 매핑. docs/accessibility.md 참고 */
-  --ds-text-muted: var(--ds-gray-60);
-  --ds-text-brand: var(--ds-violet-70);
+  --ds-foreground-muted: var(--ds-gray-60);
+  --ds-foreground-brand: var(--ds-violet-70);
+  /* 상태 전경 — 채움 50 고정은 #0a0a0a에서 ~4.3:1로 미달. 70(→raw 30)으로 올려 본문 4.5:1 충족(red-30 8.1:1·green-30 9.9:1) */
+  --ds-foreground-danger: var(--ds-red-70);
+  --ds-foreground-success: var(--ds-green-70);
   --ds-surface-brand: var(--ds-violet-10);
   --ds-border-brand: var(--ds-violet-60);
   --ds-accent: var(--ds-violet-50);
@@ -535,13 +547,14 @@
    --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
    이름으로 사용한다: --color-green-50 → bg/text/border-green-50.
    슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
-   예: --color-muted → text-muted · --color-line → border-line.
+   예: --color-surface-subtle → bg-surface-subtle · --color-line → border-line.
+   (전경 색은 예외: 아이콘 포함 위해 prefix 없는 @utility foreground-* 로 노출 — 아래 참고)
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
    생성 유틸 예: bg-gray-20 / text-green-50 / text-body-md / leading-base ...
    ============================================================ */
 @theme inline {
   --color-background: var(--ds-background);
-  --color-foreground: var(--ds-foreground);
+  --color-foreground-primary: var(--ds-foreground);
 
   --color-red-0: var(--ds-red-0);   --color-red-5: var(--ds-red-5);
   --color-red-10: var(--ds-red-10);   --color-red-20: var(--ds-red-20);
@@ -624,10 +637,15 @@
   --color-utility-scroll-track: var(--ds-utility-scroll-track);
   --color-surface-subtle: var(--ds-surface-subtle);
   --color-surface-brand: var(--ds-surface-brand);
-  --color-muted: var(--ds-text-muted);
-  --color-brand: var(--ds-text-brand);
+  --color-foreground-secondary: var(--ds-foreground-secondary);
+  --color-foreground-muted: var(--ds-foreground-muted);
+  --color-foreground-brand: var(--ds-foreground-brand);
+  --color-foreground-danger: var(--ds-foreground-danger);
+  --color-foreground-success: var(--ds-foreground-success);
+  --color-foreground-disabled: var(--ds-foreground-disabled);
   --color-accent: var(--ds-accent);
   --color-accent-danger: var(--ds-accent-danger);
+  --color-accent-success: var(--ds-accent-success);
   --color-on-accent: var(--ds-on-accent);
   --color-overlay-subtle: var(--ds-overlay-subtle);
   --color-overlay: var(--ds-overlay);
@@ -736,6 +754,17 @@
 
   --font-sans: var(--font-family-base);
 }
+
+/* Foreground(전경) 색 — 텍스트·아이콘 공통. `text-` 접두는 아이콘을 포함하지 못하므로
+   prefix 없는 `foreground-*` 로 통일하고 `color`(아이콘은 currentColor 상속)로 적용한다.
+   border/ring 등 다른 속성은 TIER 3 `--color-foreground-primary`(@theme)에서 그대로 노출. */
+@utility foreground-primary { color: var(--color-foreground-primary); }
+@utility foreground-secondary { color: var(--color-foreground-secondary); }
+@utility foreground-muted { color: var(--color-foreground-muted); }
+@utility foreground-brand { color: var(--color-foreground-brand); }
+@utility foreground-danger { color: var(--color-foreground-danger); }
+@utility foreground-success { color: var(--color-foreground-success); }
+@utility foreground-disabled { color: var(--color-foreground-disabled); }
 
 /* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
 @utility typo-display-lg {

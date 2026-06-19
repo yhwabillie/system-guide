@@ -20,14 +20,17 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 ```
 
 - 다크 모드 값은 `.dark`에서 **시맨틱 스케일만 재매핑**(raw 반사). raw는 절대 모드별로 재정의하지 않습니다.
-- **다크 모드 시맨틱 대비 필수** — 용도 토큰(`--ds-text-brand`·`--ds-accent` 등)은 스케일 50 고정·반사만으로는 WCAG 4.5:1/3:1이 깨질 수 있다. `.dark`에서 **대비 계산 후** violet 스케일 단계를 재선택한다. 검증 표·절차: [`docs/accessibility.md`](docs/accessibility.md) 「시맨틱 색상·다크 모드 대비」.
+- **다크 모드 시맨틱 대비 필수** — 용도 토큰(`--ds-foreground-brand`·`--ds-accent` 등)은 스케일 50 고정·반사만으로는 WCAG 4.5:1/3:1이 깨질 수 있다. `.dark`에서 **대비 계산 후** violet 스케일 단계를 재선택한다. 검증 표·절차: [`docs/accessibility.md`](docs/accessibility.md) 「시맨틱 색상·다크 모드 대비」.
 - 새 색이 필요하면: raw에 추가 → `--ds-*`에 매핑 → `@theme inline`의 `--color-*`로 노출 → 컴포넌트에서 사용.
 - **TIER 1 `--raw-*` 팔레트 family는 hue·색상명만 사용** — `red`·`blue`·`violet`·`gray` 등 스펙트럼/색상 기준 네이밍. `brand`·`primary`·`accent`·`danger`·`success`·`warning` 등 **역할·기능·의미 이름 금지**. 브랜드 보라(#5B4CF0)는 `--raw-violet-50`으로 정의하고, 강조 역할은 TIER 2 `--ds-accent: var(--ds-violet-50)`처럼 시맨틱에서 참조한다. 팔레트 스케일 family의 TIER 2(`--ds-violet-*`)·TIER 3(`--color-violet-*`)도 동일하게 hue명만 쓴다.
 - **Raw 스케일 단위** — `0 · 5 · 10 · 20 · 30 · 40 · 50 · 60 · 70 · 80 · 90 · 95 · 100`(첨부 가이드·KRDS 5~90과 동일 축). 예전 Tailwind식 `50~900` 배수 명명 금지. KRDS family는 5~90, Violet은 0~100 전 구간. `50`이 base(앵커), `5`≈surface, `60`≈text 용도 참고. SSOT: [`src/lib/raw-color-palettes.ts`](src/lib/raw-color-palettes.ts) `RAW_COLOR_SCALE_UNITS`.
 - **TIER 3 `--color-*` 슬러그에는 Tailwind 유틸 접두(`text`·`bg`·`border`)를 넣지 않는다.** 유틸리티는 `{접두}-{슬러그}`로 조합되므로, 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생긴다.
-  - 올바른 예: `--color-muted` → `text-muted` · `--color-line` → `border-line` · `--color-background` → `bg-background`
+  - 올바른 예: `--color-surface-subtle` → `bg-surface-subtle` · `--color-line` → `border-line` · `--color-background` → `bg-background`
   - 금지 예: `--color-text-muted` → `text-text-muted` · `--color-border` → `border-border`
-  - TIER 2 `--ds-*` 용도명(`--ds-text-muted`·`--ds-border`·`--ds-utility-focus-ring`)은 내부 의미용으로 유지 가능. TIER 3 노출명만 슬러그 규칙을 따른다.
+  - TIER 2 `--ds-*` 용도명(`--ds-border`·`--ds-utility-focus-ring` 등)은 내부 의미용으로 유지 가능. TIER 3 노출명만 슬러그 규칙을 따른다.
+  - **전경(foreground) 패밀리** — 텍스트·아이콘 공통 전경색은 `text-`/`icon-` 접두로 한정하지 않는다(`text-`는 아이콘을 포함 못 함). prefix 없는 **`foreground-*` @utility로 통일**하고 `color`로 적용한다(아이콘은 `currentColor` 상속). 체인: TIER 2 `--ds-foreground`(=primary base)·`--ds-foreground-{secondary,muted,brand,danger,success,disabled}` → TIER 3 `--color-foreground-{primary,secondary,muted,brand,danger,success,disabled}`(@theme) → `@utility foreground-{primary,secondary,muted,brand,danger,success,disabled}`(globals.css) → 유틸 `foreground-primary`·`foreground-secondary`·`foreground-muted`·`foreground-brand`·`foreground-danger`·`foreground-success`·`foreground-disabled`. border/ring 등 다른 속성은 TIER 3 `--color-foreground-primary`에서 `border-foreground-primary`·`ring-foreground-primary`로 그대로 노출. 큐레이션: 시맨틱 컬러 `Foreground` 카테고리(`emphasis`=primary·secondary / `status`=danger·success·disabled / `brand` 그룹).
+    - **강조(emphasis) 그룹** — 중립 텍스트 위계. `primary`(gray-90, 메인 타이틀/본문) → `secondary`(gray-70, 서브타이틀) → (보조) `muted`(gray-40). secondary 는 gray 스케일 참조라 `.dark` 자동 반사(gray-70↔gray-30)로 양 모드 본문 대비 충족(라이트 8.8:1·다크 10:1).
+    - **상태(status) 그룹** — `danger`(red-50)·`success`(green-50)는 본문 대비 충족(`.dark` 재매핑), `disabled`(gray-30, .dark gray-70 자동 반사)는 비활성 의미라 **의도적 저대비**(WCAG 1.4.3 비활성 컴포넌트 예외). disabled 는 실제 비활성 요소에만 쓰고 일반 본문/캡션에 쓰지 않는다.
   - 포커스 링 색은 TIER 1 `--raw-utility-focus-ring`(#00cbde) → TIER 2 `--ds-utility-focus-ring` → TIER 3 `--color-utility-focus-ring` → 유틸 `outline-utility-focus-ring`. 라이트 `--raw-utility-focus-ring` · 다크 `--raw-orange-30`. **utility** 접두 + **focus-ring** 기능명으로 관리한다(`ring` 단독 슬러그 금지). SSOT hex는 [`src/lib/raw-color-palettes.ts`](src/lib/raw-color-palettes.ts) `rawUtilityColors.focusRing`.
   - 스크롤바 색은 TIER 2 `--ds-utility-scroll-thumb`·`--ds-utility-scroll-track` → TIER 3 `--color-utility-scroll-*` → `bg-utility-scroll-thumb`·`bg-utility-scroll-track`. `::-webkit-scrollbar` pseudo는 `--ds-utility-scroll-*`를 직접 참조한다.
 - 큐레이션 가이드 화면 전용 표시/검증 토큰은 `guide-*` 접두를 붙입니다. 예: `--ds-guide-level-*`, `--color-guide-level-*`, `--ds-guide-callout-*`·`--color-guide-callout-*`(탭 설명 콜아웃), `--ds-guide-intro-*`·`--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).
@@ -93,7 +96,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 - **모든 px 크기는 rem으로**(반응형·접근성 3.1.3). 인라인은 `pxToRem()`, 토큰은 tokens.ts에서. globals.css에 `--font-size-*` 직접 정의 금지(거기 두지 않음).
 - **렌더되는 글리프 최소 크기 = `caption`(12px)** — `text-caption` 미만(`pxToRem(10)` 등) 인라인 `font-size` 금지. WAVE Very small text 방지. 상세·금지 예시는 [`docs/accessibility.md`](docs/accessibility.md) 금지 패턴 참조.
 - **장식 색상 스와치** — `role="img"`+`aria-label` 대신 `aria-hidden="true"`; 인접 텍스트로 토큰·hex 전달. Raw 팔레트는 `--raw-*`+체커보드(`docs/accessibility.md` Raw Color 팔레트 견본). **`span`/`button` 안 `div` 금지** — 겹침 레이어는 `span`+`absolute inset-0 block`(`RawPaletteSwatchFill`·`ContrastSwatchFill`). 대비 매트릭스·**대비 미리보기 견본** 등 시각 보조도 동일.
-- **`text-muted` on `surface-subtle`/`gray-10` 금지** — gray-40 계열은 밝은 회색 배경에서 대비 부족. `text-gray-60` 이상 사용.
+- **`foreground-muted` on `surface-subtle`/`gray-10` 금지** — gray-40 계열은 밝은 회색 배경에서 대비 부족. `text-gray-60` 이상 사용.
 - weight 원본은 `--typography-weight-*`, Tailwind 유틸리티 노출은 `@theme`의 `--font-weight-*`로 분리합니다. 같은 이름을 `:root`와 `@theme`에 중복 정의하지 않습니다.
 - **line-height는 프로젝트 전역 `1.5` 단일 값** — 역할·컴포넌트별로 나누지 않는다. WCAG/KWCAG **1.4.12(텍스트 간격)**·가독성(3.1) 충족 목적.
   - **SSOT** = [`src/lib/tokens.ts`](src/lib/tokens.ts) `FONT_LINE`(현재 `1.5`) → `fontSizeCssVars()`가 `:root`에 `--font-line` 주입 → `globals.css`·컴포넌트·JS 계산이 동일 값 참조.

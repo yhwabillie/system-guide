@@ -75,7 +75,7 @@ export function GuideGridPage() {
               {gridColumnTokens.map(({ name, cols, utility, desc }) => (
                 <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
                   <p className="m-0 text-label-sm font-semibold">{name}</p>
-                  <p className="mt-0.5 mb-3 text-caption text-muted">{desc}</p>
+                  <p className="mt-0.5 mb-3 text-caption foreground-muted">{desc}</p>
                   <GridColumnPreview cols={cols} utility={utility} label={`${name} ${cols}열 그리드 견본`} />
                 </div>
               ))}

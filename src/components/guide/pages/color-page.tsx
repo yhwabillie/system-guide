@@ -157,12 +157,12 @@ export function GuideColorPage() {
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 flex items-center justify-between rounded-lg border border-line-strong bg-surface-subtle py-2.5 px-4 text-label-md font-semibold text-foreground ring-2 ring-foreground"
+              className="mb-3 flex items-center justify-between rounded-lg border border-line-strong bg-surface-subtle py-2.5 px-4 text-label-md font-semibold foreground-primary ring-2 ring-foreground-primary"
             >
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground ring-offset-1 ring-offset-background"
+                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground-primary ring-offset-1 ring-offset-background"
                 >
                   <ContrastSwatchFill
                     hex={selecting === "bg" ? bgColor.hex : textColor.hex}
@@ -177,7 +177,7 @@ export function GuideColorPage() {
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-muted transition-colors hover:bg-gray-10 hover:text-foreground"
+                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent foreground-muted transition-colors hover:bg-gray-10 hover:foreground-primary"
               >
                 <NavIcon innerMarkup={contrastPickCloseIcon} className="size-icon-xs shrink-0" />
               </button>
@@ -198,7 +198,7 @@ export function GuideColorPage() {
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
               <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                <span className="text-label-sm font-semibold text-foreground">{family}</span>
+                <span className="text-label-sm font-semibold foreground-primary">{family}</span>
                 {RAW_COLOR_SCALE_UNITS.map((unit) => {
                   const sw = swatchByScale[unit];
                   if (!sw) {
@@ -253,7 +253,7 @@ export function GuideColorPage() {
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
                 <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold text-foreground">{label}</span>
+                  <span className="text-label-sm font-semibold foreground-primary">{label}</span>
                   {isInteractive ? (
                     <button
                       type="button"
@@ -372,7 +372,7 @@ export function GuideColorPage() {
                   <p className="text-label-md font-bold m-0">명암비</p>
                   <LevelBadge level={level} />
                 </div>
-                <output className={`block py-5 text-center text-foreground ${contrastResultSurfaceClass}`}>
+                <output className={`block py-5 text-center foreground-primary ${contrastResultSurfaceClass}`}>
                   <span className="font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
                     {ratio}<span className="font-normal text-gray-60" style={{ fontSize: pxToRem(18) }}> : 1</span>
                   </span>
@@ -413,7 +413,7 @@ export function GuideColorPage() {
                 const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
                 return (
                 <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold text-foreground">{family}</span>
+                  <span className="text-label-sm font-semibold foreground-primary">{family}</span>
                   {RAW_COLOR_SCALE_UNITS.map((unit) => {
                     const sw = swatchByScale[unit];
                     if (!sw) {

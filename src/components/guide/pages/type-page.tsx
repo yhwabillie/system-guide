@@ -66,8 +66,8 @@ export function GuideTypePage() {
           {/* Pretendard GOV */}
           <div className="rounded-2xl border border-gray-20 overflow-hidden">
             <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
-              <h4 className="m-0 text-label-xl font-semibold text-foreground">Pretendard GOV</h4>
-              <p className="m-0 mt-1 text-caption text-muted">기본 폰트 · 1순위</p>
+              <h4 className="m-0 text-label-xl font-semibold foreground-primary">Pretendard GOV</h4>
+              <p className="m-0 mt-1 text-caption foreground-muted">기본 폰트 · 1순위</p>
             </div>
             <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
               <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>Pretendard GOV</span>
@@ -146,8 +146,8 @@ export function GuideTypePage() {
           {/* Noto Sans KR */}
           <div className="mt-8 rounded-2xl border border-gray-20 overflow-hidden">
             <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
-              <h4 className="m-0 text-label-xl font-semibold text-foreground">Noto Sans KR</h4>
-              <p className="m-0 mt-1 text-caption text-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
+              <h4 className="m-0 text-label-xl font-semibold foreground-primary">Noto Sans KR</h4>
+              <p className="m-0 mt-1 text-caption foreground-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
             </div>
             <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
               <span role="img" aria-label="Noto Sans KR 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-noto), sans-serif" }}>Noto Sans KR</span>
@@ -244,7 +244,7 @@ export function GuideTypePage() {
                   </div>
                 ))}
               </div>
-              <p className="m-0 text-caption text-muted">
+              <p className="m-0 text-caption foreground-muted">
                 타이포 토큰의 <span className="font-mono">font-medium(500)</span>·<span className="font-mono">font-semibold(600)</span>도 self-host 파일로 제공합니다. Pretendard는 variable(100–900), Noto는 동일 구간을 static weight로 대응합니다.
               </p>
             </div>

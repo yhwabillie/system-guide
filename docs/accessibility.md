@@ -204,7 +204,7 @@
 
 - **유니코드 기호(`↗` 등)를 장식으로 쓰지 않는다** — `aria-hidden`이어도 WAVE가 텍스트 노드로 색상 대비(1.3.3)를 검사해 오류가 날 수 있다.
 - 외부 링크·새 창 표시는 **SVG 라인 아이콘**(`stroke="currentColor"`, `aria-hidden="true"`)으로 하고, 링크 본문과 **같은 색**(`currentColor` 상속, `--color-accent` 등 대비 충족 토큰)을 쓴다.
-- 장식 아이콘에 `opacity-70`·`text-muted`처럼 **대비를 깎는 조합을 붙이지 않는다** — 정보 전달은 `.sr-only` 문구가 담당한다.
+- 장식 아이콘에 `opacity-70`·`foreground-muted`처럼 **대비를 깎는 조합을 붙이지 않는다** — 정보 전달은 `.sr-only` 문구가 담당한다.
 
 ### 중복 링크(Redundant link) 방지
 - **동일 `href`(같은 URL)로 가는 `<a>`를 한 화면에 두 개 이상 두지 않는다** — WAVE Redundant link, 스크린리더에서 같은 목적지가 반복 낭독된다.
@@ -337,15 +337,15 @@ const FONT_LINE = 1.25;
 - **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
 - **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-line-overlay`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
-- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 중립 `text-foreground`·`ring-foreground`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
-- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`text-muted` 금지**(다크 accent ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`text-foreground` 사용. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `bg-surface-brand` + `text-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
-- **`text-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `text-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
+- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 중립 `foreground-primary`·`ring-foreground-primary`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
+- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`foreground-muted` 금지**(다크 accent ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`foreground-primary` 사용. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `bg-surface-brand` + `foreground-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
+- **`foreground-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `foreground-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
 - **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
 - `user-scalable=no` meta viewport 금지
 - `tabindex` 양수값 사용 금지 (`tabindex="1"` 등)
 - `div`, `span`에 클릭 이벤트만 추가하는 패턴 금지
 - 레이아웃 목적 `<table>` 사용 금지
-- 외부 링크·장식 표시에 유니코드 `↗`·이모지 텍스트 + `opacity-*` / `text-muted` 조합 금지 (WAVE 대비 오류) → SVG + `currentColor` + `.sr-only`
+- 외부 링크·장식 표시에 유니코드 `↗`·이모지 텍스트 + `opacity-*` / `foreground-muted` 조합 금지 (WAVE 대비 오류) → SVG + `currentColor` + `.sr-only`
 - 동일 URL을 가리키는 `<a>`를 한 화면에 중복 배치 금지 (WAVE Redundant link) → nav canonical 1개 + 본문은 `#id` 앵커 또는 텍스트 안내
 
 ### W3C Validator 마크업
@@ -374,13 +374,13 @@ const FONT_LINE = 1.25;
 
 ## 시맨틱 색상·다크 모드 대비 (필수)
 
-> **라이트만 맞추고 다크를 방치하면 WAVE Contrast Error가 난다.** 시맨틱 용도 토큰(`--ds-text-brand`·`--ds-surface-brand`·`--ds-border-brand`·`--ds-accent` 등)을 추가·변경할 때 **반드시 양 모드**를 검증한다.
+> **라이트만 맞추고 다크를 방치하면 WAVE Contrast Error가 난다.** 시맨틱 용도 토큰(`--ds-foreground-brand`·`--ds-surface-brand`·`--ds-border-brand`·`--ds-accent` 등)을 추가·변경할 때 **반드시 양 모드**를 검증한다.
 
 ### 검증 기준
 
 | 용도 | 전경 | 배경(기본) | 최소 비율 |
 |------|------|------------|-----------|
-| 본문·링크·활성 라벨 (`text-brand`·`text-foreground` 등) | 토큰 전경색 | `--ds-background` 또는 실제 깔리는 surface | **4.5:1** |
+| 본문·링크·활성 라벨 (`foreground-brand`·`foreground-primary` 등) | 토큰 전경색 | `--ds-background` 또는 실제 깔리는 surface | **4.5:1** |
 | 큰 텍스트·굵은 라벨(18px+ / bold 14px+) | 동일 | 동일 | **3:1** |
 | 테두리·아이콘·채움 블록 (`border-line-brand`·`bg-accent` 단독 노출) | 토큰 색 | 인접 `--ds-background` | **3:1** |
 | 채움 버튼 (`bg-accent` + `text-on-accent`) | `--ds-on-accent` | `--ds-accent` | **4.5:1** |
@@ -392,21 +392,25 @@ const FONT_LINE = 1.25;
 | 라이트 | `#FFFFFF` (`--raw-white`) | `gray-5` (`--ds-surface-subtle`) |
 | 다크 | `#0A0A0A` (`--raw-black`) | `gray-5` 반사 (`--ds-surface-subtle` → `--raw-gray-95`) |
 
-### Brand(violet) 큐레이션 — 현재 SSOT (`globals.css`)
+### Brand(violet)·상태(status) 큐레이션 — 현재 SSOT (`globals.css`)
 
 라이트(`:root`)와 다크(`.dark` 용도 재매핑) **둘 다** 아래 조합을 만족해야 한다.
 
 | 토큰 | 라이트 `--ds-*` | 다크 `--ds-*` | 검증 조합(예) |
 |------|-----------------|---------------|---------------|
-| `text-brand` | `violet-50` | `violet-70` | on `background` ≥ 4.5:1 · on `surface-brand` ≥ 4.5:1 |
-| `surface-brand` | `violet-5` | `violet-10` | `text-brand` on surface ≥ 4.5:1 |
+| `foreground-brand` | `violet-50` | `violet-70` | on `background` ≥ 4.5:1 · on `surface-brand` ≥ 4.5:1 |
+| `surface-brand` | `violet-5` | `violet-10` | `foreground-brand` on surface ≥ 4.5:1 |
 | `border-brand` | `violet-40` | `violet-60` | on `background` ≥ 3:1 |
 | `accent`(채움) | `violet-50` | `violet-50` | `on-accent`(white) on accent ≥ 4.5:1 · accent on `background` ≥ 3:1 |
+| `foreground-danger` | `red-50` | `red-70` | on `background` — 라이트 4.56:1 · 다크 8.06:1 |
+| `foreground-success` | `green-50` | `green-70` | on `background` — 라이트 4.57:1 · 다크 9.94:1 |
+| `accent-danger`·`accent-success`(채움) | `red-50`·`green-50` | `red-50`·`green-50` | `on-accent`(white) on 채움 ≥ 4.5:1 |
 
 **금지·주의**
-- 다크에서 `text-brand`·`accent`를 **스케일 50만** 쓰면 `#5B4CF0` on `#0A0A0A` ≈ **3.5:1** → 본문 4.5:1 **미달**
+- 다크에서 `foreground-brand`·`accent`를 **스케일 50만** 쓰면 `#5B4CF0` on `#0A0A0A` ≈ **3.5:1** → 본문 4.5:1 **미달**
+- **상태 텍스트(`foreground-danger`·`foreground-success`)는 채움 토큰(`--ds-accent-danger`·`--ds-accent-success`)을 재사용하지 않는다.** 채움은 50 고정(반사 50↔50)이라 다크에서 `#de3412`·`#228738` on `#0A0A0A` ≈ **4.3:1**로 본문 4.5:1 **미달** → 텍스트는 별도 `--ds-foreground-danger`·`--ds-foreground-success` 토큰으로 분리하고 `.dark`에서 `red-70`·`green-70`(→raw 30)으로 올린다
 - 라이트 `border-brand`에 `violet-30` 이하 → white 대비 **3:1 미달**
-- 용도 토큰은 `.dark`에서 **스케일 반사만** 믿지 말고, 위 표처럼 **대비 계산 후** `--ds-violet-*` 단계를 다시 고른다
+- 용도 토큰은 `.dark`에서 **스케일 반사만** 믿지 말고, 위 표처럼 **대비 계산 후** `--ds-violet-*`·`--ds-red-*`·`--ds-green-*` 단계를 다시 고른다
 
 ### 작업 절차 (토큰 변경 시)
 
@@ -491,7 +495,7 @@ const FONT_LINE = 1.25;
 - [ ] NVDA 주요 플로우 수동 테스트
 - [ ] 모바일 TalkBack 테스트
 - [ ] 브라우저 200% 줌 레이아웃 확인
-- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `text-brand`/`border-brand`/`bg-accent`+`on-accent`/`surface-brand` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수
+- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `foreground-brand`/`foreground-danger`/`foreground-success`/`border-brand`/`bg-accent`+`on-accent`/`surface-brand` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수
 - [ ] 키보드 트랩 없음 확인
 - [ ] 자동 재생 콘텐츠 정지 버튼 확인
 - [ ] 모든 페이지 `<title>` 고유값 확인

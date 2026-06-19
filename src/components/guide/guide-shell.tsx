@@ -38,18 +38,18 @@ const navSectionEyebrowClass =
   "mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-gray-60";
 
 const navExpandToggleClass =
-  "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:text-foreground";
+  "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:foreground-primary";
 
 const navExternalLinkClass =
-  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold text-foreground no-underline transition-colors duration-150 hover:bg-gray-10";
+  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold foreground-primary no-underline transition-colors duration-150 hover:bg-gray-10";
 
 const navSubItemClass = (active: boolean) =>
   [
     "flex w-full items-center justify-between gap-2 text-left rounded-lg font-sans text-label-sm leading-base no-underline",
     "py-2 px-3 transition-colors duration-150",
     active
-      ? "bg-surface-brand text-brand font-semibold"
-      : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:text-foreground",
+      ? "bg-surface-brand foreground-brand font-semibold"
+      : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:foreground-primary",
   ].join(" ");
 
 const navParentGroupClass = (active: boolean) =>
@@ -59,7 +59,7 @@ const navParentLinkClass = (active: boolean) =>
   [
     "flex min-w-0 flex-1 items-center gap-3 text-left font-sans text-label-md leading-base no-underline",
     "py-2.5 pl-3.5 pr-1 transition-colors duration-150",
-    active ? "font-semibold text-foreground" : "font-medium text-gray-60 hover:text-foreground",
+    active ? "font-semibold foreground-primary" : "font-medium text-gray-60 hover:foreground-primary",
   ].join(" ");
 
 function GuideNavSubLinks({
@@ -90,7 +90,7 @@ function GuideNavSubLinks({
           >
             <span>{item.label}</span>
             {item.active ? (
-              <NavIcon className="size-icon-xs shrink-0 text-brand">
+              <NavIcon className="size-icon-xs shrink-0 foreground-brand">
                 <path d="M9 6l6 6-6 6" />
               </NavIcon>
             ) : null}
@@ -204,7 +204,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
         본문 바로가기
       </a>
 
-      <div className="min-h-screen font-sans bg-background text-foreground transition-colors duration-300">
+      <div className="min-h-screen font-sans bg-background foreground-primary transition-colors duration-300">
         <GuideSiteHeader
           isSidenavOpen={isSidenavOpen}
           onToggleSidenav={() => setIsSidenavOpen((open) => !open)}

@@ -82,10 +82,10 @@ export function GuideSpacingPage() {
                 className="grid gap-4 items-center pb-1"
                 style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
               >
-                <span className="text-caption text-muted">Token</span>
-                <span className="text-caption text-muted">Preview</span>
-                <span className="text-caption text-muted">Size</span>
-                <span className="text-caption text-muted">Utility</span>
+                <span className="text-caption foreground-muted">Token</span>
+                <span className="text-caption foreground-muted">Preview</span>
+                <span className="text-caption foreground-muted">Size</span>
+                <span className="text-caption foreground-muted">Utility</span>
               </div>
               {spacingTokens.map(({ name, cssVar, px, rem, utility }) => (
                 <div
@@ -97,7 +97,7 @@ export function GuideSpacingPage() {
                   <span className="text-label-sm font-semibold">{name}</span>
                   <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 여백 길이 견본`} />
                   <TokenValue px={px} rem={rem} />
-                  <span className="text-caption text-muted font-mono">{utility}</span>
+                  <span className="text-caption foreground-muted font-mono">{utility}</span>
                 </div>
               ))}
             </div>
@@ -128,8 +128,8 @@ export function GuideSpacingPage() {
                   />
                   <div>
                     <p className="m-0 text-label-sm font-semibold">{name}</p>
-                    <p className="m-0 text-caption text-muted font-mono">
-                      <span className="font-semibold text-foreground">{px}</span>
+                    <p className="m-0 text-caption foreground-muted font-mono">
+                      <span className="font-semibold foreground-primary">{px}</span>
                       <span> · {rem} · {utility}</span>
                     </p>
                   </div>
@@ -161,14 +161,14 @@ export function GuideSpacingPage() {
                   {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
                     <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
                       <p className="m-0 text-label-sm font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-4 text-caption text-muted font-mono">
-                        <span className="font-semibold text-foreground">{px}</span>
+                      <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
+                        <span className="font-semibold foreground-primary">{px}</span>
                         <span> · {rem} · {utility}</span>
                       </p>
                       <div className="flex flex-col gap-2">
                         <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 아이콘 길이 견본`} height={pxToRem(10)} />
                         <div className="flex items-center gap-3">
-                          <span aria-hidden="true" className="text-caption text-muted" style={{ width: pxToRem(56) }}>
+                          <span aria-hidden="true" className="text-caption foreground-muted" style={{ width: pxToRem(56) }}>
                             square
                           </span>
                           <span
@@ -194,14 +194,14 @@ export function GuideSpacingPage() {
                   {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
                     <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
                       <p className="m-0 text-label-sm font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-4 text-caption text-muted font-mono">
-                        <span className="font-semibold text-foreground">{px}</span>
+                      <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
+                        <span className="font-semibold foreground-primary">{px}</span>
                         <span> · {rem} · {utility}</span>
                       </p>
                       <div className="flex flex-col gap-2">
                         <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 컨트롤 높이 견본`} height={pxToRem(10)} />
                         <div className="flex items-center gap-3">
-                          <span aria-hidden="true" className="text-caption text-muted" style={{ width: pxToRem(56) }}>
+                          <span aria-hidden="true" className="text-caption foreground-muted" style={{ width: pxToRem(56) }}>
                             height
                           </span>
                           <span
