@@ -111,8 +111,9 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
           { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
+          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
+          { token: "foreground-brand-strong", utility: "foreground-brand-strong", cssVar: "--color-foreground-brand-strong", readAs: "text", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
         ],
       },
       {
@@ -1172,7 +1173,7 @@ export function GuideLogoMark() {
     <svg
       aria-hidden="true"
       viewBox="0 0 32 20"
-      className="size-icon-sm shrink-0 foreground-primary"
+      className="size-icon-sm shrink-0 foreground-brand-strong"
       fill="currentColor"
     >
       <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
@@ -1231,7 +1232,7 @@ export function GuideSiteHeader({
 
         <div className="flex min-w-0 items-center justify-center gap-2 justify-self-center">
           <GuideLogoMark />
-          <h1 className="truncate text-label-lg font-bold foreground-primary">디자인 시스템 가이드</h1>
+          <h1 className="truncate text-label-lg font-bold foreground-brand-strong">디자인 시스템 가이드</h1>
         </div>
 
         <div className="flex items-center justify-self-end">

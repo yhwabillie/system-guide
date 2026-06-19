@@ -397,7 +397,7 @@ const FONT_LINE = 1.25;
 
 **자동 반사로 충분한 예** — `foreground-primary`·`foreground-secondary`·`foreground-disabled`(gray 스케일 참조), `line`·`line-strong`(border gray 참조), `background`(`--ds-background`만 `.dark`에서 black)
 
-**명시적 `.dark` 재매핑이 필요한 예** — `foreground-brand`·`foreground-brand-subtle`·`foreground-muted`·`foreground-required/negative/attention/positive/info`·`surface-brand`·`border-brand`·`border-overlay`·`utility-focus-ring`
+**명시적 `.dark` 재매핑이 필요한 예** — `foreground-brand`·`foreground-brand-subtle`·`foreground-brand-strong`·`foreground-muted`·`foreground-required/negative/attention/positive/info`·`surface-brand`·`border-brand`·`border-overlay`·`utility-focus-ring`
 
 ### 검증 기준
 
@@ -426,6 +426,7 @@ const FONT_LINE = 1.25;
 | `foreground-muted` | `gray-40` | `gray-60` (용도 재매핑) | on `background` — 다크 본문용. **`#0a0a0a` 단독 배경·nav 라벨에는 사용 금지** |
 | `foreground-brand` | `violet-50` | `violet-70` | on `background` ≥ 4.5:1 · on `surface-brand` ≥ 4.5:1 |
 | `foreground-brand-subtle` | `violet-40` | `violet-50` | on `background` — 라이트 ~3.8:1 · 다크 ~3.5:1(UI). **본문 단독 4.5:1 미달** — 보조 브랜드·eyebrow·`surface-brand` 위 캡션 |
+| `foreground-brand-strong` | `violet-60` | `violet-80` | on `background` — 라이트 7.7:1 · 다크 ~10.7:1 · 헤더·강조 제목 |
 | `surface-brand` | `violet-5` | `violet-10` | `foreground-brand` on surface ≥ 4.5:1 |
 | `border-brand` | `violet-40` | `violet-60` | on `background` ≥ 3:1 |
 | `accent`(채움) | `violet-50` | `violet-50` | `on-accent`(white) on accent ≥ 4.5:1 · accent on `background` ≥ 3:1 |

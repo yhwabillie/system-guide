@@ -384,6 +384,8 @@
   --ds-foreground-brand: var(--ds-violet-50);
   /* brand-subtle — brand(violet-50)보다 옅은 보조 브랜드 전경. 라이트 violet-40(white ~3.8:1) · 본문 4.5:1 미달 가능 → 캡션·eyebrow·surface-brand 위 보조 라벨. */
   --ds-foreground-brand-subtle: var(--ds-violet-40);
+  /* brand-strong — brand보다 진한(라이트 밝기↓) 강조 브랜드 전경. 라이트 violet-60(white 7.7:1) · 제목·로고 등. */
+  --ds-foreground-brand-strong: var(--ds-violet-60);
   /* 상태(status) 전경 — negative·attention·positive·info·required 는 흰 배경 4.5:1 이상(orange-50 4.65:1·blue-50 4.55:1 등).
      required(필수 *)는 negative 와 동일 red 스케일이나 검증 오류(negative)와 의미 분리.
      채움(--ds-accent-*)과 분리해 .dark에서 본문 대비로 재매핑(70→raw 30).
@@ -541,6 +543,8 @@
   --ds-foreground-brand: var(--ds-violet-70);
   /* brand-subtle — 다크에서 brand(violet-70→raw30)보다 옅게 violet-50(#5B4CF0, ~3.5:1 UI). 본문 단독 4.5:1 미달 — 보조 브랜드 텍스트만. */
   --ds-foreground-brand-subtle: var(--ds-violet-50);
+  /* brand-strong — 다크에서 brand보다 선명(violet-80→raw20, black ~10.7:1) · 헤더·강조 제목. */
+  --ds-foreground-brand-strong: var(--ds-violet-80);
   /* 상태 전경 — 채움 50 고정은 #0a0a0a에서 ~4.3:1로 미달. 70(→raw 30)으로 올려 본문 4.5:1 충족 */
   --ds-foreground-required: var(--ds-red-70);
   --ds-foreground-negative: var(--ds-red-70);
@@ -654,6 +658,7 @@
   --color-foreground-muted: var(--ds-foreground-muted);
   --color-foreground-brand: var(--ds-foreground-brand);
   --color-foreground-brand-subtle: var(--ds-foreground-brand-subtle);
+  --color-foreground-brand-strong: var(--ds-foreground-brand-strong);
   --color-foreground-required: var(--ds-foreground-required);
   --color-foreground-negative: var(--ds-foreground-negative);
   --color-foreground-attention: var(--ds-foreground-attention);
@@ -780,6 +785,7 @@
 @utility foreground-muted { color: var(--color-foreground-muted); }
 @utility foreground-brand { color: var(--color-foreground-brand); }
 @utility foreground-brand-subtle { color: var(--color-foreground-brand-subtle); }
+@utility foreground-brand-strong { color: var(--color-foreground-brand-strong); }
 @utility foreground-required { color: var(--color-foreground-required); }
 @utility foreground-negative { color: var(--color-foreground-negative); }
 @utility foreground-attention { color: var(--color-foreground-attention); }
