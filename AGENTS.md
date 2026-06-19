@@ -20,11 +20,14 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 ```
 
 - 다크 모드 값은 `.dark`에서 **시맨틱 스케일(`--ds-{family}-{scale}`) 재매핑** 또는 **용도 토큰(`--ds-foreground-*`·`--ds-surface-*` 등) 명시적 재매핑**으로 처리한다. **raw(`--raw-*`)는 모드별로 재정의하지 않는다.**
-- **시맨틱 색상 토큰은 라이트·다크를 한 세트로 정의한다** — `:root`만 추가하고 `.dark`를 비우면 WAVE Contrast Error가 난다. 아래 절차·검증 표를 **항상** 따른다: [`docs/accessibility.md`](docs/accessibility.md) 「시맨틱 색상·다크 모드 대비」.
+- **🚨 raw 가 아닌 모든 시맨틱 색 토큰은 라이트·다크 두 모드의 값을 반드시 함께 정의한다 (예외 없음).** `:root`에 `--ds-*`를 추가했으면 그 토큰의 **다크 값이 무엇인지 항상 명시적으로 결정·검증**해야 한다 — `:root`만 추가하고 다크를 확인하지 않는 것은 **미완성**이며 WAVE Contrast Error의 원인이다. 다크 값을 주는 방법은 둘 중 하나:
+  - (a) **mode-aware 스케일 참조** `var(--ds-{family}-{scale})` — `.dark`의 스케일 반사로 양 모드가 모두 올바르면 이것으로 충분(예: neutral gray `--ds-border-disabled: var(--ds-gray-10)` → 라이트 raw-gray-10·다크 raw-gray-90). **단 "반사로 충분한지"는 추측이 아니라 양 모드 렌더로 검증**한다.
+  - (b) **`.dark` 명시 재매핑** — 반사만으로 색·대비가 맞지 않으면(raw 직접 참조, status·brand 처럼 모드별 스케일 단계가 달라야 하는 경우) `.dark`에 해당 토큰을 **반드시 추가**한다. 예: `--ds-border-danger` 라이트 red-50 → `.dark` red-70(=raw-30).
+  - 절차·검증 표: [`docs/accessibility.md`](docs/accessibility.md) 「시맨틱 색상·다크 모드 대비」.
 - 새 시맨틱 색 추가 **체크리스트** (순서 고정):
   1. TIER 1 `--raw-*`에 팔레트 값이 없으면 추가 (모드 무관·한 번만).
   2. TIER 2 `:root`에 `--ds-*` 용도 토큰 정의.
-  3. **`.dark` 블록** — gray 스케일 **자동 반사만**으로 4.5:1/3:1이 보장되면 생략 가능. brand·status 전경·`foreground-muted`·overlay·focus-ring 등 **반사만으로 부족한 토큰은 용도 재매핑을 반드시 추가**.
+  3. **`.dark` 블록 — 다크 값을 반드시 결정한다.** neutral gray 스케일 참조처럼 반사로 양 모드가 보장되는 경우만 별도 `.dark` 줄 없이 통과(반드시 다크 렌더로 검증). brand·status(전경·경계)·`foreground-muted`·overlay·focus-ring·raw 직접 참조 등 **반사만으로 부족한 토큰은 `.dark` 용도 재매핑을 반드시 추가**한다. "일단 `:root`만 추가" 금지.
   4. TIER 3 `@theme inline` `--color-*` · `@utility` 노출.
   5. 가이드 `semanticColorCatalog`(`src/components/guide/shared.tsx`)에 `rawVar`·`rawVarDark` **둘 다** 기재.
   6. `docs/accessibility.md` 대비 표·PR 체크리스트 갱신 후 라이트·다크 WAVE 재검증.
@@ -41,7 +44,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
     - **중립(neutral) 그룹** — gray 계열 텍스트 위계(현업에서 emphasis보다 neutral이 흔함 — emphasis는 보통 굵기·강조색 의미). `default`(gray-90, 메인 타이틀/본문) → `subtle`(gray-70, 서브타이틀) → `muted`(gray-40, 캡션·메타·placeholder). subtle·muted 는 gray 스케일 참조. subtle 은 `.dark` 자동 반사(gray-70↔gray-30)로 양 모드 본문 대비 충족(라이트 8.8:1·다크 10:1). muted 는 `.dark`에서 gray-60으로 재매핑.
     - **상태(status) 그룹** — `required`(필수 입력 `*`, red-50·negative 와 동일 스케일·의미 분리) · `negative`·`attention`·`positive`·`info`는 본문 대비 4.5:1 충족(`.dark`에서 70→raw 30 재매핑). `disabled`(gray-30, .dark gray-70 자동 반사)는 비활성 의미라 **의도적 저대비**(WCAG 1.4.3 비활성 컴포넌트 예외). disabled 는 실제 비활성 요소에만 쓰고 일반 본문/캡션에 쓰지 않는다. **필수 `*`는 `foreground-required`만** — 검증 오류 문구는 `foreground-negative`.
   - **표면(surface) 패밀리** — 시맨틱 배경 표면은 `bg-*` 대신 **`surface-*` @utility**로 통일(`background-color`). 체인: TIER 2 `--ds-background`·`--ds-surface-{subtle,brand}` → TIER 3 `--color-surface-default`·`--color-surface-*`(@theme) → `@utility surface-{default,subtle,brand}`(globals.css). palette 조합용 `bg-gray-*` 등은 예외. 큐레이션: 시맨틱 컬러 `Surface` 카테고리(`brand` / `neutral`=default·subtle 그룹).
-  - **경계(border) 패밀리** — 구조 경계선은 `border-default`·`border-strong`·`border-brand`·`border-subtle` 유틸리티. TIER 2 `--ds-border`·`--ds-border-strong`·`--ds-border-brand`·`--ds-border-subtle` → TIER 3 `--color-default`·`--color-strong`·`--color-brand`·`--color-subtle`(@theme). 포커스 링은 border가 아닌 **Utility `outline-utility-focus-ring`**. 큐레이션: `Border` 카테고리(`brand` / `neutral`=default·strong·subtle 그룹).
+  - **경계(border) 패밀리** — 구조 경계선은 `border-default`·`border-strong`·`border-brand`·`border-subtle`, 상태 경계선은 `border-danger`·`border-attention`·`border-success`·`border-disabled` 유틸리티. TIER 2 `--ds-border`·`--ds-border-strong`·`--ds-border-brand`·`--ds-border-subtle`·`--ds-border-{danger,attention,success,disabled}` → TIER 3 `--color-default`·`--color-strong`·`--color-brand`·`--color-subtle`·`--color-{danger,attention,success,disabled}`(@theme). 포커스 링은 border가 아닌 **Utility `outline-utility-focus-ring`**. 큐레이션: `Border` 카테고리(`brand` / `neutral`=default·strong·subtle / `status`=danger·attention·success·disabled 그룹). 상태 경계는 UI 3:1만 필요하지만 전경 status 와 색을 맞추려 danger·attention·success 는 **라이트 50·다크 `.dark`에서 70(→raw 30) 재매핑**(텍스트·경계 동일 색)·disabled 은 비활성 저대비(gray-10, .dark gray-90 자동 반사).
   - 포커스 링 색은 TIER 1 `--raw-utility-focus-ring`(#00cbde) → TIER 2 `--ds-utility-focus-ring` → TIER 3 `--color-utility-focus-ring` → 유틸 `outline-utility-focus-ring`. 라이트 `--raw-utility-focus-ring` · 다크 `--raw-orange-30`. **utility** 접두 + **focus-ring** 기능명으로 관리한다(`ring` 단독 슬러그 금지). SSOT hex는 [`src/lib/raw-color-palettes.ts`](src/lib/raw-color-palettes.ts) `rawUtilityColors.focusRing`.
   - 스크롤바 색은 TIER 2 `--ds-utility-scroll-thumb`·`--ds-utility-scroll-track` → TIER 3 `--color-utility-scroll-*` → `bg-utility-scroll-thumb`·`bg-utility-scroll-track`. `::-webkit-scrollbar` pseudo는 `--ds-utility-scroll-*`를 직접 참조한다.
 - 큐레이션 가이드 화면 전용 표시/검증 토큰은 `guide-*` 접두를 붙입니다. 예: `--ds-guide-level-*`, `--color-guide-level-*`, `--ds-guide-callout-*`·`--color-guide-callout-*`(탭 설명 콜아웃), `--ds-guide-intro-*`·`--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).

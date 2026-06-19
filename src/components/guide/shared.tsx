@@ -111,8 +111,8 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
           { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
+          { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
           { token: "foreground-brand-strong", utility: "foreground-brand-strong", cssVar: "--color-foreground-brand-strong", readAs: "text", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
         ],
       },
@@ -186,8 +186,18 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         label: "neutral",
         tokens: [
           { token: "default", utility: "border-default", cssVar: "--color-default", readAs: "border", rawVar: "--raw-gray-20", rawVarDark: "--raw-gray-80" },
-          { token: "strong", utility: "border-strong", cssVar: "--color-strong", readAs: "border", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
           { token: "subtle", utility: "border-subtle", cssVar: "--color-subtle", readAs: "border", rawVar: "--raw-black-a10", rawVarDark: "--raw-white-a10" },
+          { token: "strong", utility: "border-strong", cssVar: "--color-strong", readAs: "border", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
+        ],
+      },
+      {
+        id: "status",
+        label: "status",
+        tokens: [
+          { token: "danger", utility: "border-danger", cssVar: "--color-danger", readAs: "border", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
+          { token: "attention", utility: "border-attention", cssVar: "--color-attention", readAs: "border", rawVar: "--raw-orange-50", rawVarDark: "--raw-orange-30" },
+          { token: "success", utility: "border-success", cssVar: "--color-success", readAs: "border", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
+          { token: "disabled", utility: "border-disabled", cssVar: "--color-disabled", readAs: "border", rawVar: "--raw-gray-10", rawVarDark: "--raw-gray-90" },
         ],
       },
     ],

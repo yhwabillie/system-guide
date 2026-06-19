@@ -374,6 +374,12 @@
   --ds-border-subtle: var(--raw-black-a10);
   /* Brand purpose — 라이트 기준 violet 스케일 큐레이션(.dark 용도 재매핑·대비 검증: docs/accessibility.md) */
   --ds-border-brand: var(--ds-violet-40);
+  /* 상태(status) 경계 — danger·attention·success 는 라이트 50, 다크는 .dark 에서 70(→raw 30)으로 재매핑(전경 status 와 색 일치). UI 3:1 충족.
+     disabled 은 비활성 경계라 의도적 저대비(gray-10, .dark gray-90 자동 반사 — WCAG 1.4.3 비활성 예외). */
+  --ds-border-danger: var(--ds-red-50);
+  --ds-border-attention: var(--ds-orange-50);
+  --ds-border-success: var(--ds-green-50);
+  --ds-border-disabled: var(--ds-gray-10);
   --ds-surface-subtle: var(--ds-gray-5);
   --ds-surface-brand: var(--ds-violet-5);
   /* 중립(neutral) 텍스트 위계 — default(=--ds-foreground, gray-90) 메인 타이틀/본문 · subtle(gray-70) 서브타이틀 · muted(gray-40) 보조.
@@ -553,6 +559,11 @@
   --ds-foreground-info: var(--ds-blue-70);
   --ds-surface-brand: var(--ds-violet-10);
   --ds-border-brand: var(--ds-violet-60);
+  /* 상태 경계 — 전경 status(negative·attention·positive)와 동일하게 다크 재매핑(50→70=raw 30). UI 3:1 충족, 텍스트·경계 색 일치.
+     disabled 은 neutral gray 라 :root 의 gray-10 스케일 반사(→raw 90)로 양 모드 처리되므로 별도 .dark 불필요. */
+  --ds-border-danger: var(--ds-red-70);
+  --ds-border-attention: var(--ds-orange-70);
+  --ds-border-success: var(--ds-green-70);
   --ds-accent: var(--ds-violet-50);
   --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-50), var(--ds-violet-70));
   --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-violet-10), var(--ds-violet-20));
@@ -649,6 +660,10 @@
   --color-strong: var(--ds-border-strong);
   --color-brand: var(--ds-border-brand);
   --color-subtle: var(--ds-border-subtle);
+  --color-danger: var(--ds-border-danger);
+  --color-attention: var(--ds-border-attention);
+  --color-success: var(--ds-border-success);
+  --color-disabled: var(--ds-border-disabled);
   --color-utility-focus-ring: var(--ds-utility-focus-ring);
   --color-utility-scroll-thumb: var(--ds-utility-scroll-thumb);
   --color-utility-scroll-track: var(--ds-utility-scroll-track);
