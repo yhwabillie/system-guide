@@ -112,44 +112,6 @@ export type SemanticColorCategoryDef = {
 
 export const semanticColorCatalog: SemanticColorCategoryDef[] = [
   {
-    id: "semantic-foreground",
-    title: "Foreground",
-    description: <>텍스트와 아이콘에 쓰는 <strong>전경(foreground)</strong> 색상입니다. 아이콘은 currentColor를 상속하므로 <strong>foreground-*</strong> 유틸리티로 함께 적용합니다.</>,
-    groups: [
-      {
-        id: "brand",
-        label: "brand",
-        tokens: [
-          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
-          { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
-          { token: "foreground-brand-strong", utility: "foreground-brand-strong", cssVar: "--color-foreground-brand-strong", readAs: "text", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
-        ],
-      },
-      {
-        id: "neutral",
-        label: "neutral",
-        tokens: [
-          { token: "foreground-default", utility: "foreground-default", cssVar: "--color-foreground-default", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
-          { token: "foreground-subtle", utility: "foreground-subtle", cssVar: "--color-foreground-subtle", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
-          { token: "foreground-muted", utility: "foreground-muted", cssVar: "--color-foreground-muted", readAs: "text", rawVar: "--raw-gray-40", rawVarDark: "--raw-gray-60" },
-          { token: "foreground-inverse", utility: "foreground-inverse", cssVar: "--color-foreground-inverse", readAs: "text", rawVar: "--raw-white", rawVarDark: "--raw-black" },
-        ],
-      },
-      {
-        id: "status",
-        label: "status",
-        tokens: [
-          { token: "foreground-required", utility: "foreground-required", cssVar: "--color-foreground-required", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
-          { token: "foreground-negative", utility: "foreground-negative", cssVar: "--color-foreground-negative", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
-          { token: "foreground-attention", utility: "foreground-attention", cssVar: "--color-foreground-attention", readAs: "text", rawVar: "--raw-orange-50", rawVarDark: "--raw-orange-30" },
-          { token: "foreground-positive", utility: "foreground-positive", cssVar: "--color-foreground-positive", readAs: "text", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
-          { token: "foreground-info", utility: "foreground-info", cssVar: "--color-foreground-info", readAs: "text", rawVar: "--raw-blue-50", rawVarDark: "--raw-blue-30" },
-          { token: "foreground-disabled", utility: "foreground-disabled", cssVar: "--color-foreground-disabled", readAs: "text", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
-        ],
-      },
-    ],
-  },
-  {
     id: "semantic-background",
     title: "Background",
     description: (
@@ -204,6 +166,44 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
           { token: "surface-positive", utility: "surface-positive", cssVar: "--color-surface-positive", readAs: "bg", rawVar: "--raw-green-5", rawVarDark: "--raw-green-80" },
           { token: "surface-info", utility: "surface-info", cssVar: "--color-surface-info", readAs: "bg", rawVar: "--raw-blue-5", rawVarDark: "--raw-blue-80" },
           { token: "surface-disabled", utility: "surface-disabled", cssVar: "--color-surface-disabled", readAs: "bg", rawVar: "--raw-gray-5", rawVarDark: "--raw-gray-90" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "semantic-foreground",
+    title: "Foreground",
+    description: <>텍스트와 아이콘에 쓰는 <strong>전경(foreground)</strong> 색상입니다. 아이콘은 currentColor를 상속하므로 <strong>foreground-*</strong> 유틸리티로 함께 적용합니다.</>,
+    groups: [
+      {
+        id: "brand",
+        label: "brand",
+        tokens: [
+          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
+          { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
+          { token: "foreground-brand-strong", utility: "foreground-brand-strong", cssVar: "--color-foreground-brand-strong", readAs: "text", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
+        ],
+      },
+      {
+        id: "neutral",
+        label: "neutral",
+        tokens: [
+          { token: "foreground-default", utility: "foreground-default", cssVar: "--color-foreground-default", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
+          { token: "foreground-subtle", utility: "foreground-subtle", cssVar: "--color-foreground-subtle", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
+          { token: "foreground-muted", utility: "foreground-muted", cssVar: "--color-foreground-muted", readAs: "text", rawVar: "--raw-gray-40", rawVarDark: "--raw-gray-60" },
+          { token: "foreground-inverse", utility: "foreground-inverse", cssVar: "--color-foreground-inverse", readAs: "text", rawVar: "--raw-white", rawVarDark: "--raw-black" },
+        ],
+      },
+      {
+        id: "status",
+        label: "status",
+        tokens: [
+          { token: "foreground-required", utility: "foreground-required", cssVar: "--color-foreground-required", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
+          { token: "foreground-negative", utility: "foreground-negative", cssVar: "--color-foreground-negative", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
+          { token: "foreground-attention", utility: "foreground-attention", cssVar: "--color-foreground-attention", readAs: "text", rawVar: "--raw-orange-50", rawVarDark: "--raw-orange-30" },
+          { token: "foreground-positive", utility: "foreground-positive", cssVar: "--color-foreground-positive", readAs: "text", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
+          { token: "foreground-info", utility: "foreground-info", cssVar: "--color-foreground-info", readAs: "text", rawVar: "--raw-blue-50", rawVarDark: "--raw-blue-30" },
+          { token: "foreground-disabled", utility: "foreground-disabled", cssVar: "--color-foreground-disabled", readAs: "text", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
         ],
       },
     ],
@@ -333,7 +333,50 @@ export const semanticGradientCatalog = {
   ] satisfies SemanticGradientGroupDef[],
 };
 
-export type TocSection = { id: string; label: string };
+export type SemanticEffectTokenDef = {
+  id: string;
+  utility: string;
+  sourceVar: string;
+  value: string;
+};
+
+export const semanticShadowCatalog = {
+  id: "semantic-shadow",
+  title: "Shadow",
+  description: (
+    <>
+      컴포넌트가 배경 위에 떠 있는 깊이를 표현하는 <strong>그림자(shadow)</strong> 토큰입니다. 기본 elevation에는 <strong>shadow-default</strong>를 사용합니다.
+    </>
+  ),
+  tokens: [
+    {
+      id: "shadow-default",
+      utility: "shadow-default",
+      sourceVar: "--ds-effect-shadow-default",
+      value: "0 0.25rem 1rem var(--ds-shadow)",
+    },
+  ] satisfies SemanticEffectTokenDef[],
+};
+
+export const semanticBlurCatalog = {
+  id: "semantic-blur",
+  title: "Blur",
+  description: (
+    <>
+      배경 콘텐츠를 흐리게 처리하는 <strong>블러(blur)</strong> 효과 토큰입니다. 반투명 레이어나 오버레이와 함께 쓸 때 <strong>blur-default</strong>를 사용합니다.
+    </>
+  ),
+  tokens: [
+    {
+      id: "blur-default",
+      utility: "blur-default",
+      sourceVar: "--ds-effect-blur-default",
+      value: "blur(0.75rem)",
+    },
+  ] satisfies SemanticEffectTokenDef[],
+};
+
+export type TocSection = { id: string; label: string; level?: 1 | 2 };
 
 export const colorRawTocSections: TocSection[] = [
   { id: "section-color", label: "Color Palette" },
@@ -341,10 +384,14 @@ export const colorRawTocSections: TocSection[] = [
 ];
 
 export const semanticTocSections: TocSection[] = [
-  ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title })),
-  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title },
-  { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title },
-  { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title },
+  { id: "semantic-color-tokens", label: "Color Tokens", level: 1 },
+  ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title, level: 2 as const })),
+  { id: "semantic-effect-tokens", label: "Effect Tokens", level: 1 },
+  { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
+  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
+  { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
+  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
+  { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title, level: 2 },
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
@@ -555,6 +602,31 @@ export function SemanticGradientSwatchCard({
   );
 }
 
+export function SemanticShadowSwatchCard({ utility, sourceVar, value }: SemanticEffectTokenDef) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+      <div className="flex h-24 w-full items-center justify-center border-b border-default surface-subtle">
+        <div aria-hidden="true" className={`h-14 w-24 rounded-lg surface-default ${utility}`} />
+      </div>
+      <SwatchCardMeta utility={utility} sourceVar={sourceVar} value={value} />
+    </div>
+  );
+}
+
+export function SemanticBlurSwatchCard({ utility, sourceVar, value }: SemanticEffectTokenDef) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+      <div className="flex h-24 w-full items-center justify-center overflow-hidden border-b border-default surface-subtle">
+        <div aria-hidden="true" className="relative h-16 w-32 overflow-hidden rounded-lg border border-default" style={checkerLight}>
+          <div className="absolute inset-2 rounded-md gradient-brand opacity-75" />
+          <div className={`absolute inset-4 rounded-md border border-subtle overlay-subtle ${utility}`} />
+        </div>
+      </div>
+      <SwatchCardMeta utility={utility} sourceVar={sourceVar} value={value} />
+    </div>
+  );
+}
+
 export function SemanticColorGroupGrid({
   label,
   children,
@@ -574,6 +646,34 @@ export function SemanticColorCategorySection({
   id,
   title,
   description,
+  children,
+}: {
+  id: string;
+  title: string;
+  description: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section aria-labelledby={id} className="mb-20 last:mb-0">
+      <h4
+        id={id}
+        className={[
+          "m-0 mb-4 text-heading-sm font-bold leading-base foreground-default",
+          guideSectionAnchorClass,
+        ].join(" ")}
+      >
+        {title}
+      </h4>
+      <TabDescriptionCallout>{description}</TabDescriptionCallout>
+      {children}
+    </section>
+  );
+}
+
+export function SemanticTokenFamilySection({
+  id,
+  title,
+  description,
   lead = false,
   children,
 }: {
@@ -584,10 +684,21 @@ export function SemanticColorCategorySection({
   children: React.ReactNode;
 }) {
   return (
-    <section aria-labelledby={id} className="mb-24 last:mb-0">
-      <ContentSectionTitle id={id} lead={lead} description={description}>
-        {title}
-      </ContentSectionTitle>
+    <section aria-labelledby={id} className="mb-28 last:mb-0">
+      <header className={lead ? "mb-12" : "mt-40 mb-12"}>
+        <h3
+          id={id}
+          className={[
+            "m-0 text-heading-lg font-bold leading-base foreground-brand",
+            guideSectionAnchorClass,
+          ].join(" ")}
+        >
+          {title}
+        </h3>
+        <p className="m-0 mt-3 max-w-3xl text-body-md leading-base foreground-subtle">
+          {description}
+        </p>
+      </header>
       {children}
     </section>
   );
@@ -887,6 +998,83 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
 
   if (sections.length < 3) return null;
 
+  const hasHierarchy = sections.some((section) => section.level === 2);
+  const groupedSections = hasHierarchy
+    ? sections.reduce<Array<TocSection & { children: TocSection[] }>>((groups, section) => {
+        if ((section.level ?? 1) === 1 || groups.length === 0) {
+          groups.push({ ...section, level: 1, children: [] });
+        } else {
+          groups[groups.length - 1].children.push(section);
+        }
+        return groups;
+      }, [])
+    : [];
+
+  if (hasHierarchy) {
+    return (
+      <nav
+        aria-labelledby={headingId}
+        className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
+      >
+        <h2 id={headingId} className="sr-only">목차</h2>
+        <ul id={listId} className="m-0 flex list-none flex-col gap-0 p-0">
+          {groupedSections.map((group) => {
+            const groupActive = activeId === group.id || group.children.some((child) => child.id === activeId);
+            return (
+              <li
+                key={group.id}
+                className="relative pb-5 pl-6 last:pb-0 before:absolute before:left-[0.21875rem] before:top-2 before:bottom-0 before:border-l before:border-default"
+              >
+                <span aria-hidden="true" className="absolute left-0 top-1.5 size-2 rounded-full border border-default bg-background" />
+                <a
+                  href={`#${group.id}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection(group.id);
+                  }}
+                  aria-current={activeId === group.id ? "location" : undefined}
+                  className={[
+                    "block py-0.5 text-caption font-bold uppercase tracking-[0.18em] no-underline transition-colors",
+                    groupActive ? "foreground-brand" : "text-gray-40 hover:foreground-brand",
+                  ].join(" ")}
+                >
+                  {group.label}
+                </a>
+                {group.children.length > 0 ? (
+                  <ul className="m-0 mt-3 flex list-none flex-col gap-2.5 p-0">
+                    {group.children.map((child) => {
+                      const isActive = activeId === child.id;
+                      return (
+                        <li key={child.id}>
+                          <a
+                            href={`#${child.id}`}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              scrollToSection(child.id);
+                            }}
+                            aria-current={isActive ? "location" : undefined}
+                            className={[
+                              "block py-0.5 text-body-sm no-underline transition-colors",
+                              isActive
+                                ? "font-semibold foreground-brand"
+                                : "font-normal foreground-default hover:foreground-brand",
+                            ].join(" ")}
+                          >
+                            {child.label}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    );
+  }
+
   return (
     <nav
       aria-labelledby={headingId}
@@ -916,8 +1104,9 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
         </div>
         {!collapsed ? (
           <ul id={listId} className="m-0 flex list-none flex-col gap-0.5 py-2">
-            {sections.map(({ id, label }) => {
+            {sections.map(({ id, label, level = 1 }) => {
               const isActive = activeId === id;
+              const isChild = level === 2;
               return (
                 <li key={id}>
                   <a
@@ -928,10 +1117,22 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                     }}
                     aria-current={isActive ? "location" : undefined}
                     className={[
-                      "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
-                      isActive
-                        ? "bg-gray-5 font-bold foreground-default"
-                        : "font-normal text-gray-60 hover:bg-gray-5 hover:foreground-default",
+                      "block lowercase no-underline transition-colors",
+                      isChild
+                        ? "ml-4 border-l border-default py-2 pl-4 pr-4 text-body-sm"
+                        : "mt-1 px-4 py-2.5 text-label-md font-bold first:mt-0",
+                      isActive && isChild
+                        ? "border-brand surface-brand-faint font-semibold foreground-brand-strong"
+                        : "",
+                      isActive && !isChild
+                        ? "surface-brand-faint foreground-brand"
+                        : "",
+                      !isActive && isChild
+                        ? "font-normal text-gray-60 hover:border-brand hover:bg-gray-5 hover:foreground-default"
+                        : "",
+                      !isActive && !isChild
+                        ? "foreground-brand hover:bg-gray-5"
+                        : "",
                     ].join(" ")}
                   >
                     {label}

@@ -450,6 +450,8 @@
 
   /* 그림자 — 모드 무관(검정α) */
   --ds-shadow: var(--raw-black-a20);
+  --ds-effect-shadow-default: 0 0.25rem 1rem var(--ds-shadow);
+  --ds-effect-blur-default: blur(0.75rem);
 
   /* 오버레이(반투명) — 라이트=검정α, 다크=흰색α(.dark) */
   --ds-overlay-subtle: var(--raw-black-a5);
@@ -888,6 +890,10 @@
 @utility utility-focus-ring { outline-color: var(--color-utility-focus-ring); }
 @utility utility-scroll-thumb { background-color: var(--color-utility-scroll-thumb); }
 @utility utility-scroll-track { background-color: var(--color-utility-scroll-track); }
+
+/* Effect(효과) 유틸리티 — 그림자·블러 등 비색상 시각 효과. */
+@utility shadow-default { box-shadow: var(--ds-effect-shadow-default); }
+@utility blur-default { backdrop-filter: var(--ds-effect-blur-default); }
 
 /* Gradient(그라데이션) 배경 — 용도 유틸. */
 @utility gradient-brand { background-image: var(--ds-gradient-brand); }

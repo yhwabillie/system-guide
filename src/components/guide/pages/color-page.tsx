@@ -28,13 +28,18 @@ import {
   rawPaletteSwatchClass,
   RawPaletteSwatchFill,
   semanticColorCatalog,
+  semanticBlurCatalog,
   semanticGradientCatalog,
   semanticOverlayCatalog,
+  semanticShadowCatalog,
   SemanticColorCategorySection,
   SemanticColorGroupGrid,
   SemanticColorSwatchCard,
+  SemanticBlurSwatchCard,
   SemanticGradientSwatchCard,
   SemanticOverlaySwatchCard,
+  SemanticShadowSwatchCard,
+  SemanticTokenFamilySection,
   semanticTocSections,
   semanticUtilityCatalog,
   backgroundAnchors,
@@ -456,15 +461,129 @@ export function GuideColorPage() {
 
         <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={semanticTocSections}>
-          {semanticColorCatalog.map((category, index) => (
+          <SemanticTokenFamilySection
+            id="semantic-color-tokens"
+            title="Color Tokens"
+            lead
+            description={
+              <>
+                화면을 구성하는 기본 색상 토큰입니다. <strong>Background</strong>는 최하위 배경, <strong>Surface</strong>는 컴포넌트 면, <strong>Foreground</strong>는 텍스트·아이콘, <strong>Border</strong>는 경계선에 사용합니다.
+              </>
+            }
+          >
+            {semanticColorCatalog.map((category) => (
+              <SemanticColorCategorySection
+                key={category.id}
+                id={category.id}
+                title={category.title}
+                description={category.description}
+              >
+                {category.groups.map((group) => (
+                  <SemanticColorGroupGrid key={group.id} label={group.label}>
+                    {group.tokens.map((token) => (
+                      <SemanticColorSwatchCard
+                        key={token.cssVar}
+                        utility={token.utility}
+                        rawVar={isDark && token.rawVarDark ? token.rawVarDark : token.rawVar}
+                        color={semanticResolved[token.cssVar] ?? "—"}
+                      />
+                    ))}
+                  </SemanticColorGroupGrid>
+                ))}
+              </SemanticColorCategorySection>
+            ))}
+          </SemanticTokenFamilySection>
+
+          <SemanticTokenFamilySection
+            id="semantic-effect-tokens"
+            title="Effect Tokens"
+            description={
+              <>
+                색상 위에 얹히는 시각 효과 토큰입니다. <strong>Gradient</strong>·<strong>Shadow</strong>·<strong>Blur</strong>처럼 면의 색 자체보다 강조, 깊이, 흐림을 표현합니다.
+              </>
+            }
+          >
             <SemanticColorCategorySection
-              key={category.id}
-              id={category.id}
-              title={category.title}
-              description={category.description}
-              lead={index === 0}
+              id={semanticGradientCatalog.id}
+              title={semanticGradientCatalog.title}
+              description={semanticGradientCatalog.description}
             >
-              {category.groups.map((group) => (
+              {semanticGradientCatalog.groups.map((group) => (
+                <SemanticColorGroupGrid key={group.id} label={group.label}>
+                  {group.gradients.map(({ utility, dsVar, rawVar, rawVarDark, value, valueDark }) => (
+                    <SemanticGradientSwatchCard
+                      key={dsVar}
+                      utility={utility}
+                      dsVar={dsVar}
+                      rawVar={isDark && rawVarDark ? rawVarDark : rawVar}
+                      value={isDark && valueDark ? valueDark : value}
+                    />
+                  ))}
+                </SemanticColorGroupGrid>
+              ))}
+            </SemanticColorCategorySection>
+
+            <SemanticColorCategorySection
+              id={semanticShadowCatalog.id}
+              title={semanticShadowCatalog.title}
+              description={semanticShadowCatalog.description}
+            >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {semanticShadowCatalog.tokens.map((token) => (
+                  <SemanticShadowSwatchCard
+                    key={token.id}
+                    id={token.id}
+                    utility={token.utility}
+                    sourceVar={token.sourceVar}
+                    value={token.value}
+                  />
+                ))}
+              </div>
+            </SemanticColorCategorySection>
+
+            <SemanticColorCategorySection
+              id={semanticBlurCatalog.id}
+              title={semanticBlurCatalog.title}
+              description={semanticBlurCatalog.description}
+            >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {semanticBlurCatalog.tokens.map((token) => (
+                  <SemanticBlurSwatchCard
+                    key={token.id}
+                    id={token.id}
+                    utility={token.utility}
+                    sourceVar={token.sourceVar}
+                    value={token.value}
+                  />
+                ))}
+              </div>
+            </SemanticColorCategorySection>
+
+            <SemanticColorCategorySection
+              id={semanticOverlayCatalog.id}
+              title={semanticOverlayCatalog.title}
+              description={semanticOverlayCatalog.description}
+            >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {semanticOverlayCatalog.tokens.map((token) => (
+                  <SemanticOverlaySwatchCard
+                    key={token.id}
+                    utility={token.utility}
+                    rawVar={isDark ? token.rawVarDark : token.rawVarLight}
+                    cssVar={token.cssVar}
+                    valueLabel={isDark ? token.dark : token.light}
+                    isDark={isDark}
+                  />
+                ))}
+              </div>
+            </SemanticColorCategorySection>
+
+            <SemanticColorCategorySection
+              id={semanticUtilityCatalog.id}
+              title={semanticUtilityCatalog.title}
+              description={semanticUtilityCatalog.description}
+            >
+              {semanticUtilityCatalog.groups.map((group) => (
                 <SemanticColorGroupGrid key={group.id} label={group.label}>
                   {group.tokens.map((token) => (
                     <SemanticColorSwatchCard
@@ -477,65 +596,7 @@ export function GuideColorPage() {
                 </SemanticColorGroupGrid>
               ))}
             </SemanticColorCategorySection>
-          ))}
-
-          <SemanticColorCategorySection
-            id={semanticOverlayCatalog.id}
-            title={semanticOverlayCatalog.title}
-            description={semanticOverlayCatalog.description}
-          >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {semanticOverlayCatalog.tokens.map((token) => (
-                <SemanticOverlaySwatchCard
-                  key={token.id}
-                  utility={token.utility}
-                  rawVar={isDark ? token.rawVarDark : token.rawVarLight}
-                  cssVar={token.cssVar}
-                  valueLabel={isDark ? token.dark : token.light}
-                  isDark={isDark}
-                />
-              ))}
-            </div>
-          </SemanticColorCategorySection>
-
-          <SemanticColorCategorySection
-            id={semanticGradientCatalog.id}
-            title={semanticGradientCatalog.title}
-            description={semanticGradientCatalog.description}
-          >
-            {semanticGradientCatalog.groups.map((group) => (
-              <SemanticColorGroupGrid key={group.id} label={group.label}>
-                {group.gradients.map(({ utility, dsVar, rawVar, rawVarDark, value, valueDark }) => (
-                  <SemanticGradientSwatchCard
-                    key={dsVar}
-                    utility={utility}
-                    dsVar={dsVar}
-                    rawVar={isDark && rawVarDark ? rawVarDark : rawVar}
-                    value={isDark && valueDark ? valueDark : value}
-                  />
-                ))}
-              </SemanticColorGroupGrid>
-            ))}
-          </SemanticColorCategorySection>
-
-          <SemanticColorCategorySection
-            id={semanticUtilityCatalog.id}
-            title={semanticUtilityCatalog.title}
-            description={semanticUtilityCatalog.description}
-          >
-            {semanticUtilityCatalog.groups.map((group) => (
-              <SemanticColorGroupGrid key={group.id} label={group.label}>
-                {group.tokens.map((token) => (
-                  <SemanticColorSwatchCard
-                    key={token.cssVar}
-                    utility={token.utility}
-                    rawVar={isDark && token.rawVarDark ? token.rawVarDark : token.rawVar}
-                    color={semanticResolved[token.cssVar] ?? "—"}
-                  />
-                ))}
-              </SemanticColorGroupGrid>
-            ))}
-          </SemanticColorCategorySection>
+          </SemanticTokenFamilySection>
         </GuideContentLayout>
         </div>{/* /panel-color-semantic */}
 
