@@ -156,7 +156,7 @@
   --raw-gray-95: #0f1012;
   --raw-gray-100: #020202;
 
-  /* Surface anchors — 중립 램프 밖 순백/심흑(페이지 표면용) */
+  /* Background anchors — 중립 램프 밖 순백/심흑(최하위 배경용) */
   --raw-white: #ffffff;
   --raw-black: #0a0a0a;
 
@@ -374,19 +374,33 @@
   --ds-border-subtle: var(--raw-black-a10);
   /* Brand purpose — 라이트 기준 violet 스케일 큐레이션(.dark 용도 재매핑·대비 검증: docs/accessibility.md) */
   --ds-border-brand: var(--ds-violet-40);
-  /* 상태(status) 경계 — danger·attention·success 는 라이트 50, 다크는 .dark 에서 70(→raw 30)으로 재매핑(전경 status 와 색 일치). UI 3:1 충족.
+  /* 상태(status) 경계 — required 제외 foreground status 와 색을 맞춘다. 라이트 50, 다크는 .dark 에서 70(→raw 30)으로 재매핑. UI 3:1 충족.
      disabled 은 비활성 경계라 의도적 저대비(gray-10, .dark gray-90 자동 반사 — WCAG 1.4.3 비활성 예외). */
-  --ds-border-danger: var(--ds-red-50);
+  --ds-border-negative: var(--ds-red-50);
   --ds-border-attention: var(--ds-orange-50);
-  --ds-border-success: var(--ds-green-50);
+  --ds-border-positive: var(--ds-green-50);
+  --ds-border-info: var(--ds-blue-50);
+  --ds-border-danger: var(--ds-border-negative);
+  --ds-border-success: var(--ds-border-positive);
   --ds-border-disabled: var(--ds-gray-10);
+  /* 컴포넌트 표면(surface) — background 위에 올라오는 면. dark 는 아래 .dark 에서 elevation 방향으로 명시 재매핑. */
+  --ds-surface-default: var(--ds-gray-0);
   --ds-surface-subtle: var(--ds-gray-5);
-  --ds-surface-brand: var(--ds-violet-5);
+  --ds-surface-strong: var(--ds-gray-10);
+  --ds-surface-brand-subtle: var(--ds-violet-5);
+  --ds-surface-brand: var(--ds-violet-50);
+  --ds-surface-brand-strong: var(--ds-violet-60);
+  --ds-surface-negative: var(--ds-red-5);
+  --ds-surface-attention: var(--ds-orange-5);
+  --ds-surface-positive: var(--ds-green-5);
+  --ds-surface-info: var(--ds-blue-5);
+  --ds-surface-disabled: var(--ds-gray-5);
   /* 중립(neutral) 텍스트 위계 — default(=--ds-foreground, gray-90) 메인 타이틀/본문 · subtle(gray-70) 서브타이틀 · muted(gray-40) 보조.
      subtle 은 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1.
      muted 는 .dark 에서 gray-60 으로 용도 재매핑(아래 .dark 블록) — #0a0a0a 단독 배경·nav 라벨에는 쓰지 않음. */
   --ds-foreground-subtle: var(--ds-gray-70);
   --ds-foreground-muted: var(--ds-gray-40);
+  --ds-foreground-inverse: var(--raw-white);
   --ds-foreground-brand: var(--ds-violet-50);
   /* brand-subtle — brand(violet-50)보다 옅은 보조 브랜드 전경. 라이트 violet-40(white ~3.8:1) · 본문 4.5:1 미달 가능 → 캡션·eyebrow·surface-brand 위 보조 라벨. */
   --ds-foreground-brand-subtle: var(--ds-violet-40);
@@ -394,7 +408,7 @@
   --ds-foreground-brand-strong: var(--ds-violet-60);
   /* 상태(status) 전경 — negative·attention·positive·info·required 는 흰 배경 4.5:1 이상(orange-50 4.65:1·blue-50 4.55:1 등).
      required(필수 *)는 negative 와 동일 red 스케일이나 검증 오류(negative)와 의미 분리.
-     채움(--ds-accent-*)과 분리해 .dark에서 본문 대비로 재매핑(70→raw 30).
+     채움(fill) 토큰과 분리해 .dark에서 본문 대비로 재매핑(70→raw 30).
      disabled 는 비활성 의미라 의도적 저대비(WCAG 1.4.3 비활성 예외) — gray 스케일 참조라 .dark 자동 반사(gray-30↔gray-70). */
   --ds-foreground-required: var(--ds-red-50);
   --ds-foreground-negative: var(--ds-red-50);
@@ -429,12 +443,6 @@
   --ds-gradient-surface-fade-up: linear-gradient(0deg, var(--ds-background), transparent);
   --ds-gradient-overlay-fade-up: linear-gradient(0deg, var(--ds-overlay-strong), transparent);
 
-  /* 강조(선택) — 브랜드 violet-50 base */
-  --ds-accent: var(--ds-violet-50);
-  --ds-accent-negative: var(--ds-red-50);
-  --ds-accent-positive: var(--ds-green-50);
-  --ds-on-accent: var(--raw-white);
-
   /* Guide-only: 대비 체커 등급 — AA는 green-30+90, AA Large는 orange-20+90, AAA는 60+white, Fail은 70+white */
   --ds-guide-level-aaa-bg: var(--raw-green-60);
   --ds-guide-level-aaa-fg: var(--raw-white);
@@ -457,7 +465,7 @@
    다크 팔레트 = raw 의 반사(u ↔ 100−u). 모든 hue family가 0·5·10·…·100 전 구간을 갖는다.
    raw 는 건드리지 않고, --ds-{family}-{scale} 만 반사로 가리킨다.
    → 다크용 hex 중복이 전혀 없고, 인버전 규칙이 한눈에 보인다.
-   용도 토큰(--ds-border/accent 등)은 이 스케일을 참조하므로 자동 대응.
+   용도 토큰(--ds-border 등)은 이 스케일을 참조하므로 자동 대응.
    ============================================================ */
 .dark {
   --ds-background: var(--raw-black);
@@ -557,14 +565,27 @@
   --ds-foreground-attention: var(--ds-orange-70);
   --ds-foreground-positive: var(--ds-green-70);
   --ds-foreground-info: var(--ds-blue-70);
-  --ds-surface-brand: var(--ds-violet-10);
+  --ds-foreground-inverse: var(--raw-black);
+  --ds-surface-default: var(--ds-gray-5);
+  --ds-surface-subtle: var(--ds-gray-10);
+  --ds-surface-strong: var(--ds-gray-20);
+  --ds-surface-brand-subtle: var(--ds-violet-20);
+  --ds-surface-brand: var(--ds-violet-70);
+  --ds-surface-brand-strong: var(--ds-violet-80);
+  --ds-surface-negative: var(--ds-red-20);
+  --ds-surface-attention: var(--ds-orange-20);
+  --ds-surface-positive: var(--ds-green-20);
+  --ds-surface-info: var(--ds-blue-20);
+  --ds-surface-disabled: var(--ds-gray-10);
   --ds-border-brand: var(--ds-violet-60);
-  /* 상태 경계 — 전경 status(negative·attention·positive)와 동일하게 다크 재매핑(50→70=raw 30). UI 3:1 충족, 텍스트·경계 색 일치.
+  /* 상태 경계 — 전경 status(negative·attention·positive·info)와 동일하게 다크 재매핑(50→70=raw 30). UI 3:1 충족, 텍스트·경계 색 일치.
      disabled 은 neutral gray 라 :root 의 gray-10 스케일 반사(→raw 90)로 양 모드 처리되므로 별도 .dark 불필요. */
-  --ds-border-danger: var(--ds-red-70);
+  --ds-border-negative: var(--ds-red-70);
   --ds-border-attention: var(--ds-orange-70);
-  --ds-border-success: var(--ds-green-70);
-  --ds-accent: var(--ds-violet-50);
+  --ds-border-positive: var(--ds-green-70);
+  --ds-border-info: var(--ds-blue-70);
+  --ds-border-danger: var(--ds-border-negative);
+  --ds-border-success: var(--ds-border-positive);
   --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-50), var(--ds-violet-70));
   --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-violet-10), var(--ds-violet-20));
 
@@ -575,13 +596,13 @@
    --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
    이름으로 사용한다: --color-green-50 → bg/text/border-green-50.
    슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
-   예: --color-surface-subtle → surface-subtle · --color-default → border-default.
-   (전경·표면 색은 예외: 아이콘·배경 의미 통일을 위해 @utility foreground-* · surface-* 로 노출 — 아래 참고)
+   예: --color-background → bg-background · --color-surface-subtle → surface-subtle · --color-default → border-default.
+   (전경·컴포넌트 표면 색은 예외: 아이콘·surface 의미 통일을 위해 @utility foreground-* · surface-* 로 노출 — 아래 참고)
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
    생성 유틸 예: bg-gray-20 / text-green-50 / text-body-md / leading-base ...
    ============================================================ */
 @theme inline {
-  --color-surface-default: var(--ds-background);
+  --color-background: var(--ds-background);
   --color-foreground-default: var(--ds-foreground);
 
   --color-red-0: var(--ds-red-0);   --color-red-5: var(--ds-red-5);
@@ -660,17 +681,30 @@
   --color-strong: var(--ds-border-strong);
   --color-brand: var(--ds-border-brand);
   --color-subtle: var(--ds-border-subtle);
+  --color-negative: var(--ds-border-negative);
   --color-danger: var(--ds-border-danger);
   --color-attention: var(--ds-border-attention);
+  --color-positive: var(--ds-border-positive);
   --color-success: var(--ds-border-success);
+  --color-info: var(--ds-border-info);
   --color-disabled: var(--ds-border-disabled);
   --color-utility-focus-ring: var(--ds-utility-focus-ring);
   --color-utility-scroll-thumb: var(--ds-utility-scroll-thumb);
   --color-utility-scroll-track: var(--ds-utility-scroll-track);
+  --color-surface-default: var(--ds-surface-default);
   --color-surface-subtle: var(--ds-surface-subtle);
+  --color-surface-strong: var(--ds-surface-strong);
+  --color-surface-brand-subtle: var(--ds-surface-brand-subtle);
   --color-surface-brand: var(--ds-surface-brand);
+  --color-surface-brand-strong: var(--ds-surface-brand-strong);
+  --color-surface-negative: var(--ds-surface-negative);
+  --color-surface-attention: var(--ds-surface-attention);
+  --color-surface-positive: var(--ds-surface-positive);
+  --color-surface-info: var(--ds-surface-info);
+  --color-surface-disabled: var(--ds-surface-disabled);
   --color-foreground-subtle: var(--ds-foreground-subtle);
   --color-foreground-muted: var(--ds-foreground-muted);
+  --color-foreground-inverse: var(--ds-foreground-inverse);
   --color-foreground-brand: var(--ds-foreground-brand);
   --color-foreground-brand-subtle: var(--ds-foreground-brand-subtle);
   --color-foreground-brand-strong: var(--ds-foreground-brand-strong);
@@ -680,10 +714,6 @@
   --color-foreground-positive: var(--ds-foreground-positive);
   --color-foreground-info: var(--ds-foreground-info);
   --color-foreground-disabled: var(--ds-foreground-disabled);
-  --color-accent: var(--ds-accent);
-  --color-accent-negative: var(--ds-accent-negative);
-  --color-accent-positive: var(--ds-accent-positive);
-  --color-on-accent: var(--ds-on-accent);
   --color-overlay-subtle: var(--ds-overlay-subtle);
   --color-overlay: var(--ds-overlay);
   --color-overlay-strong: var(--ds-overlay-strong);
@@ -798,6 +828,7 @@
 @utility foreground-default { color: var(--color-foreground-default); }
 @utility foreground-subtle { color: var(--color-foreground-subtle); }
 @utility foreground-muted { color: var(--color-foreground-muted); }
+@utility foreground-inverse { color: var(--color-foreground-inverse); }
 @utility foreground-brand { color: var(--color-foreground-brand); }
 @utility foreground-brand-subtle { color: var(--color-foreground-brand-subtle); }
 @utility foreground-brand-strong { color: var(--color-foreground-brand-strong); }
@@ -808,10 +839,18 @@
 @utility foreground-info { color: var(--color-foreground-info); }
 @utility foreground-disabled { color: var(--color-foreground-disabled); }
 
-/* Surface(표면) 배경색 — `bg-` 접두는 palette 조합용. 시맨틱 표면은 surface-* 로 통일. */
+/* Surface(표면) 배경색 — 최하위 캔버스는 Tailwind 색상 유틸 `bg-background`, 컴포넌트 면은 surface-* 로 구분한다. */
 @utility surface-default { background-color: var(--color-surface-default); }
 @utility surface-subtle { background-color: var(--color-surface-subtle); }
+@utility surface-strong { background-color: var(--color-surface-strong); }
+@utility surface-brand-subtle { background-color: var(--color-surface-brand-subtle); }
 @utility surface-brand { background-color: var(--color-surface-brand); }
+@utility surface-brand-strong { background-color: var(--color-surface-brand-strong); }
+@utility surface-negative { background-color: var(--color-surface-negative); }
+@utility surface-attention { background-color: var(--color-surface-attention); }
+@utility surface-positive { background-color: var(--color-surface-positive); }
+@utility surface-info { background-color: var(--color-surface-info); }
+@utility surface-disabled { background-color: var(--color-surface-disabled); }
 
 /* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
 @utility typo-display-lg {

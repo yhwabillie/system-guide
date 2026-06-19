@@ -37,7 +37,7 @@ import {
   SemanticOverlaySwatchCard,
   semanticTocSections,
   semanticUtilityCatalog,
-  surfaceAnchors,
+  backgroundAnchors,
   type SwatchInfo,
 } from "@/components/guide/shared";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -145,7 +145,7 @@ export function GuideColorPage() {
             lead
             description={
               <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray) 순으로 배열하고, 스케일 단위 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. KRDS 표준형 family는 5~90 단계를 그대로 쓰고, <strong>Violet</strong>(<code className="font-mono text-caption">#5B4CF0</code>=<strong>50</strong> base)는 0~100 전 구간 스케일입니다. 스케일 <strong>0</strong>·<strong>100</strong>은 순백/순흑이 아니라 각 family <strong>5</strong>·<strong>95</strong> hue를 앵커에 10%만 혼합한 가장 밝/어두운 틴트입니다. surface·base·text 등 역할은 Semantic Color 탭에서 매핑합니다.
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray) 순으로 배열하고, 스케일 단위 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. KRDS 표준형 family는 5~90 단계를 그대로 쓰고, <strong>Violet</strong>(<code className="font-mono text-caption">#5B4CF0</code>=<strong>50</strong> base)는 0~100 전 구간 스케일입니다. 스케일 <strong>0</strong>·<strong>100</strong>은 순백/순흑이 아니라 각 family <strong>5</strong>·<strong>95</strong> hue를 앵커에 10%만 혼합한 가장 밝/어두운 틴트입니다. background·surface·foreground 등 역할은 Semantic Color 탭에서 매핑합니다.
               </>
             }
           >
@@ -162,7 +162,7 @@ export function GuideColorPage() {
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground-default ring-offset-1 ring-offset-surface-default"
+                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground-default ring-offset-1 ring-offset-background"
                 >
                   <ContrastSwatchFill
                     hex={selecting === "bg" ? bgColor.hex : textColor.hex}
@@ -245,8 +245,8 @@ export function GuideColorPage() {
             {/* 스케일 팔레트와 구분 — 앵커는 스케일(0~100)과 무관 */}
             <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-default" />
 
-            {/* Surface 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
-            {surfaceAnchors.map(({ label, hex, cssVar }) => {
+            {/* Background 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
+            {backgroundAnchors.map(({ label, hex, cssVar }) => {
               const isBg = bgColor.hex.toLowerCase() === hex.toLowerCase();
               const isText = textColor.hex.toLowerCase() === hex.toLowerCase();
               const isInteractive = !!selecting;
@@ -365,7 +365,7 @@ export function GuideColorPage() {
               aria-label={`대비율 결과: ${ratio}:1 — ${level}`}
               aria-live="polite"
               aria-atomic="true"
-              className="surface-default p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
+              className="bg-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">

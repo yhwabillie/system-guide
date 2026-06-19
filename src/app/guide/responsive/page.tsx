@@ -137,7 +137,7 @@ function ContentAreaGuidePreview({
       {outerPx > 0 && <OuterMarginCell px={outerPx} />}
       {/* 콘텐츠 프레임(전체 너비, max 1280) — 실제 layout-page 박스. 내부 = 최소 마진 + 칼럼 + 최소 마진 */}
       <div
-        className="relative flex min-w-0 flex-col overflow-hidden surface-default"
+        className="relative flex min-w-0 flex-col overflow-hidden bg-background"
         style={{
           outline: `${pxToRem(2)} solid var(--ds-accent)`,
           outlineOffset: pxToRem(-2),
@@ -359,7 +359,7 @@ function SidenavLayoutMetricsLegend({
         content column {contentColumnPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
         프레임 {framePx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -371,7 +371,7 @@ function SidenavLayoutMetricsLegend({
         스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
         칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -408,7 +408,7 @@ function LayoutMetricsLegend({
         layout {layoutWidth}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
         프레임(전체 너비) {framePx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -420,7 +420,7 @@ function LayoutMetricsLegend({
         스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
         칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -541,7 +541,7 @@ export default function ResponsiveGuidePage() {
                   className={`py-1.5 px-3 rounded-md border text-caption font-semibold ${
                     isActive
                       ? "bg-accent text-on-accent border-accent"
-                      : "surface-default foreground-muted border-default"
+                      : "bg-background foreground-muted border-default"
                   }`}
                 >
                   {t.name}

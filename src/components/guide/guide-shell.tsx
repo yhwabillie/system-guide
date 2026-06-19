@@ -48,7 +48,7 @@ const navSubItemClass = (active: boolean) =>
     "flex w-full items-center justify-between gap-2 text-left rounded-lg font-sans text-label-sm leading-base no-underline",
     "py-2 px-3 transition-colors duration-150",
     active
-      ? "surface-brand foreground-brand font-semibold"
+      ? "surface-brand-subtle foreground-brand-strong font-semibold"
       : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:foreground-default",
   ].join(" ");
 
@@ -90,7 +90,7 @@ function GuideNavSubLinks({
           >
             <span>{item.label}</span>
             {item.active ? (
-              <NavIcon className="size-icon-xs shrink-0 foreground-brand">
+              <NavIcon className="size-icon-xs shrink-0 foreground-brand-strong">
                 <path d="M9 6l6 6-6 6" />
               </NavIcon>
             ) : null}
@@ -204,7 +204,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
         본문 바로가기
       </a>
 
-      <div className="min-h-screen font-sans surface-default foreground-default transition-colors duration-300">
+      <div className="min-h-screen font-sans bg-background foreground-default transition-colors duration-300">
         <GuideSiteHeader
           isSidenavOpen={isSidenavOpen}
           onToggleSidenav={() => setIsSidenavOpen((open) => !open)}
@@ -215,7 +215,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
             id="guide-sidenav"
             hidden={!isSidenavOpen}
             aria-label="디자인 토큰 가이드"
-            className={`${layoutSidenavMenuClass} flex flex-col border-b border-default surface-default py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
+            className={`${layoutSidenavMenuClass} flex flex-col border-b border-default bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
           >
             <p className={navSectionEyebrowClass}>Tokens</p>
             <div className="flex flex-col gap-0.5">
