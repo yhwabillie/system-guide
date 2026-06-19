@@ -145,7 +145,7 @@ export function GuideColorPage() {
             lead
             description={
               <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. hue family(Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray) 순으로 배열하고, 스케일 단위 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 그리드와 <strong>White/Black</strong> 앵커를 확인합니다. KRDS 표준형 family는 5~90 단계를 그대로 쓰고, <strong>Violet</strong>(<code className="font-mono text-caption">#5B4CF0</code>=<strong>50</strong> base)는 0~100 전 구간 스케일입니다. 스케일 <strong>0</strong>·<strong>100</strong>은 순백/순흑이 아니라 각 family <strong>5</strong>·<strong>95</strong> hue를 앵커에 10%만 혼합한 가장 밝/어두운 틴트입니다. background·surface·foreground 등 역할은 Semantic Color 탭에서 매핑합니다.
+                가공 전 <strong>원본 팔레트(raw)</strong>입니다. 색상 family와 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 스케일을 확인합니다. <strong>50</strong>은 기준색, <strong>0</strong>·<strong>100</strong>은 White/Black 앵커에 가까운 틴트입니다. background·surface·foreground 같은 역할은 Semantic Color에서 매핑합니다.
               </>
             }
           >
