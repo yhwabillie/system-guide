@@ -363,15 +363,27 @@ export const semanticBlurCatalog = {
   title: "Blur",
   description: (
     <>
-      배경 콘텐츠를 흐리게 처리하는 <strong>블러(blur)</strong> 효과 토큰입니다. 반투명 레이어나 오버레이와 함께 쓸 때 <strong>blur-default</strong>를 사용합니다.
+      배경 콘텐츠를 흐리게 처리하는 <strong>블러(blur)</strong> 효과 토큰입니다. 필요한 흐림 정도에 따라 <strong>blur-*</strong> 유틸리티를 사용합니다.
     </>
   ),
   tokens: [
+    {
+      id: "blur-subtle",
+      utility: "blur-subtle",
+      sourceVar: "--ds-effect-blur-subtle",
+      value: "blur(0.375rem)",
+    },
     {
       id: "blur-default",
       utility: "blur-default",
       sourceVar: "--ds-effect-blur-default",
       value: "blur(0.75rem)",
+    },
+    {
+      id: "blur-strong",
+      utility: "blur-strong",
+      sourceVar: "--ds-effect-blur-strong",
+      value: "blur(1.25rem)",
     },
   ] satisfies SemanticEffectTokenDef[],
 };
@@ -604,11 +616,15 @@ export function SemanticGradientSwatchCard({
 
 export function SemanticShadowSwatchCard({ utility, sourceVar, value }: SemanticEffectTokenDef) {
   return (
-    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
-      <div className="flex h-24 w-full items-center justify-center border-b border-default surface-subtle">
-        <div aria-hidden="true" className={`h-14 w-24 rounded-lg surface-default ${utility}`} />
+    <div className="grid items-center gap-8 sm:grid-cols-[9rem_1fr]">
+      <div className="flex items-center justify-center py-5">
+        <div aria-hidden="true" className={`size-28 rounded-2xl surface-default ${utility}`} />
       </div>
-      <SwatchCardMeta utility={utility} sourceVar={sourceVar} value={value} />
+      <div className="min-w-0 py-5">
+        <p className="m-0 font-mono text-label-md font-bold foreground-default">{utility}</p>
+        <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
+        <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{value}</p>
+      </div>
     </div>
   );
 }
@@ -616,11 +632,13 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value }: Semantic
 export function SemanticBlurSwatchCard({ utility, sourceVar, value }: SemanticEffectTokenDef) {
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
-      <div className="flex h-24 w-full items-center justify-center overflow-hidden border-b border-default surface-subtle">
-        <div aria-hidden="true" className="relative h-16 w-32 overflow-hidden rounded-lg border border-default" style={checkerLight}>
-          <div className="absolute inset-2 rounded-md gradient-brand opacity-75" />
-          <div className={`absolute inset-4 rounded-md border border-subtle overlay-subtle ${utility}`} />
-        </div>
+      <div aria-hidden="true" className="relative h-32 w-full overflow-hidden border-b border-default">
+        <img
+          src="/blur_sample.webp"
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+        />
+        <div className={`absolute inset-0 ${utility}`} />
       </div>
       <SwatchCardMeta utility={utility} sourceVar={sourceVar} value={value} />
     </div>
