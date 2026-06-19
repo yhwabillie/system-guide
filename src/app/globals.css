@@ -436,12 +436,7 @@
   --ds-overlay-strong: var(--raw-black-a20);
 
   /* 그라데이션 — 시맨틱 스케일·용도 토큰을 참조해 모드 자동 대응 */
-  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-40), var(--ds-violet-60));
-  --ds-gradient-accent: var(--ds-gradient-brand);
-  --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-violet-5), var(--ds-violet-10));
-  --ds-gradient-surface-fade-down: linear-gradient(180deg, var(--ds-background), transparent);
-  --ds-gradient-surface-fade-up: linear-gradient(0deg, var(--ds-background), transparent);
-  --ds-gradient-overlay-fade-up: linear-gradient(0deg, var(--ds-overlay-strong), transparent);
+  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-20) 0%, var(--ds-violet-40) 48%, var(--ds-violet-50) 100%);
 
   /* Guide-only: 대비 체커 등급 — AA는 green-30+90, AA Large는 orange-20+90, AAA는 60+white, Fail은 70+white */
   --ds-guide-level-aaa-bg: var(--raw-green-60);
@@ -586,8 +581,7 @@
   --ds-border-info: var(--ds-blue-70);
   --ds-border-danger: var(--ds-border-negative);
   --ds-border-success: var(--ds-border-positive);
-  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-50), var(--ds-violet-70));
-  --ds-gradient-accent-subtle: linear-gradient(180deg, var(--ds-violet-10), var(--ds-violet-20));
+  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-20) 0%, var(--ds-violet-40) 48%, var(--ds-violet-50) 100%);
 
 }
 
@@ -718,13 +712,6 @@
   --color-overlay: var(--ds-overlay);
   --color-overlay-strong: var(--ds-overlay-strong);
 
-  --background-image-gradient-brand: var(--ds-gradient-brand);
-  --background-image-gradient-accent: var(--ds-gradient-accent);
-  --background-image-gradient-accent-subtle: var(--ds-gradient-accent-subtle);
-  --background-image-gradient-surface-fade-down: var(--ds-gradient-surface-fade-down);
-  --background-image-gradient-surface-fade-up: var(--ds-gradient-surface-fade-up);
-  --background-image-gradient-overlay-fade-up: var(--ds-gradient-overlay-fade-up);
-
   /* Guide-only tokens — 큐레이션 가이드 화면에서만 쓰는 표시/검증용 유틸리티 */
   --color-guide-level-aaa-bg: var(--ds-guide-level-aaa-bg);
   --color-guide-level-aaa-fg: var(--ds-guide-level-aaa-fg);
@@ -851,6 +838,18 @@
 @utility surface-positive { background-color: var(--color-surface-positive); }
 @utility surface-info { background-color: var(--color-surface-info); }
 @utility surface-disabled { background-color: var(--color-surface-disabled); }
+
+/* Overlay(오버레이) 배경색 — 반투명 레이어 용도 유틸. */
+@utility overlay-subtle { background-color: var(--color-overlay-subtle); }
+@utility overlay-default { background-color: var(--color-overlay); }
+@utility overlay-strong { background-color: var(--color-overlay-strong); }
+
+/* Utility(유틸리티) 배경색 — 스크롤바 thumb/track 전용 유틸. */
+@utility utility-scroll-thumb { background-color: var(--color-utility-scroll-thumb); }
+@utility utility-scroll-track { background-color: var(--color-utility-scroll-track); }
+
+/* Gradient(그라데이션) 배경 — 용도 유틸. */
+@utility gradient-brand { background-image: var(--ds-gradient-brand); }
 
 /* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
 @utility typo-display-lg {

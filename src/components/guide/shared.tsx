@@ -29,6 +29,7 @@ export const backgroundAnchors = [
 const overlayTokens = [
   {
     label: "overlay-subtle",
+    utility: "overlay-subtle",
     cssVar: "--color-overlay-subtle",
     rawVarLight: "--raw-black-a5",
     rawVarDark: "--raw-white-a5",
@@ -36,7 +37,8 @@ const overlayTokens = [
     dark: "rgba(255, 255, 255, 0.05)",
   },
   {
-    label: "overlay",
+    label: "overlay-default",
+    utility: "overlay-default",
     cssVar: "--color-overlay",
     rawVarLight: "--raw-black-a10",
     rawVarDark: "--raw-white-a10",
@@ -45,6 +47,7 @@ const overlayTokens = [
   },
   {
     label: "overlay-strong",
+    utility: "overlay-strong",
     cssVar: "--color-overlay-strong",
     rawVarLight: "--raw-black-a20",
     rawVarDark: "--raw-white-a20",
@@ -54,10 +57,15 @@ const overlayTokens = [
 ];
 
 const gradientTokens = [
-  { label: "gradient-brand", utility: "bg-gradient-brand", dsVar: "--ds-gradient-brand", rawVar: "--raw-violet-40 → --raw-violet-60", rawVarDark: "--raw-violet-50 → --raw-violet-30", desc: "브랜드 강조 — violet 40 → 60 (135°)" },
-  { label: "gradient-surface-fade-down", utility: "bg-gradient-surface-fade-down", dsVar: "--ds-gradient-surface-fade-down", rawVar: "--ds-background → transparent", desc: "배경 하단 페이드 — background → transparent (↓)" },
-  { label: "gradient-surface-fade-up", utility: "bg-gradient-surface-fade-up", dsVar: "--ds-gradient-surface-fade-up", rawVar: "--ds-background → transparent", desc: "배경 상단 페이드 — background → transparent (↑)" },
-  { label: "gradient-overlay-fade-up", utility: "bg-gradient-overlay-fade-up", dsVar: "--ds-gradient-overlay-fade-up", rawVar: "--ds-overlay-strong → transparent", desc: "이미지·카드 스크림 — overlay-strong → transparent (↑)" },
+  {
+    label: "gradient-brand",
+    utility: "gradient-brand",
+    dsVar: "--ds-gradient-brand",
+    rawVar: "--raw-violet-20 → --raw-violet-40 → --raw-violet-50",
+    rawVarDark: "--raw-violet-80 → --raw-violet-60 → --raw-violet-50",
+    value: "linear-gradient(135deg, violet-20 0%, violet-40 48%, violet-50 100%)",
+    valueDark: "linear-gradient(135deg, violet-80 0%, violet-60 48%, violet-50 100%)",
+  },
 ];
 
 export type SemanticGradientTokenDef = {
@@ -66,7 +74,8 @@ export type SemanticGradientTokenDef = {
   dsVar: string;
   rawVar: string;
   rawVarDark?: string;
-  desc: string;
+  value: string;
+  valueDark?: string;
 };
 
 export type SemanticGradientGroupDef = {
@@ -105,7 +114,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
   {
     id: "semantic-foreground",
     title: "Foreground",
-    description: <>본문·캡션·버튼 등 텍스트와 아이콘을 아우르는 <strong>전경(foreground)</strong> 색상입니다. <strong>text-</strong> 접두 없이 <strong>foreground-*</strong> 유틸리티로 적용합니다(아이콘 포함).</>,
+    description: <>텍스트와 아이콘에 쓰는 <strong>전경(foreground)</strong> 색상입니다. 아이콘은 currentColor를 상속하므로 <strong>foreground-*</strong> 유틸리티로 함께 적용합니다.</>,
     groups: [
       {
         id: "brand",
@@ -145,7 +154,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Background",
     description: (
       <>
-        웹사이트·앱 화면의 가장 바닥 면을 뜻하는 <strong>배경(background)</strong> 색상입니다. 페이지 shell·최상위 캔버스에는 <strong>bg-background</strong> 유틸리티를 사용합니다.
+        화면의 가장 바닥 면을 뜻하는 <strong>배경(background)</strong> 색상입니다. 페이지 shell·최상위 캔버스에는 <strong>bg-background</strong>를 사용합니다.
       </>
     ),
     groups: [
@@ -163,7 +172,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Surface",
     description: (
       <>
-        카드·패널·선택 상태처럼 컴포넌트 내부에 올라오는 면을 뜻하는 <strong>표면(surface)</strong> 색상입니다. 컴포넌트 면에는 <strong>surface-*</strong> 유틸리티를 사용합니다.
+        카드·패널·선택 상태처럼 컴포넌트에 올라오는 <strong>표면(surface)</strong> 색상입니다. 컴포넌트 면에는 <strong>surface-*</strong>를 사용합니다.
       </>
     ),
     groups: [
@@ -203,7 +212,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Border",
     description: (
       <>
-        구분선·칩 테두리 등 <strong>경계선(border)</strong>에 사용합니다. <strong>border-*</strong> 유틸리티로 적용합니다.
+        구분선·컨트롤·칩의 <strong>경계선(border)</strong> 색상입니다. 구조 경계와 상태 경계를 <strong>border-*</strong> 유틸리티로 구분합니다.
       </>
     ),
     groups: [
@@ -243,7 +252,7 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
   title: "Utility",
   description: (
     <>
-      컴포넌트 border·ring·채움 의미색이 아닌 <strong>유틸리티 전용</strong> 색상입니다. <strong>focus-ring</strong>·<strong>scroll</strong>(thumb/track) 등 단일 목적 토큰을 <strong>utility-*</strong> 슬러그로 관리합니다.
+      컴포넌트 의미색과 분리된 <strong>유틸리티 전용</strong> 색상입니다. focus-ring·scroll처럼 단일 목적 토큰을 <strong>utility-*</strong> 슬러그로 관리합니다.
     </>
   ),
   groups: [
@@ -267,7 +276,7 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
       tokens: [
         {
           token: "utility-scroll-thumb",
-          utility: "bg-utility-scroll-thumb",
+          utility: "utility-scroll-thumb",
           cssVar: "--color-utility-scroll-thumb",
           readAs: "bg",
           rawVar: "--raw-gray-30",
@@ -275,7 +284,7 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
         },
         {
           token: "utility-scroll-track",
-          utility: "bg-utility-scroll-track",
+          utility: "utility-scroll-track",
           cssVar: "--color-utility-scroll-track",
           readAs: "bg",
           rawVar: "--raw-gray-10",
@@ -291,14 +300,14 @@ export const semanticOverlayCatalog = {
   title: "Overlay",
   description: (
     <>
-      오버레이용 반투명 시맨틱 토큰. 라이트=<strong>검정α</strong> / 다크=<strong>흰색α</strong>로 모드에 따라 자동 전환됩니다. 체크무늬 위에서 투명도를 확인하세요.
+      오버레이에 쓰는 반투명 토큰입니다. 라이트는 <strong>검정 alpha</strong>, 다크는 <strong>흰색 alpha</strong>로 전환되어 아래 콘텐츠를 어둡히거나 밝힙니다.
     </>
   ),
-  groups: overlayTokens.map(({ label, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
+  tokens: overlayTokens.map(({ label, utility, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
     id: label,
     label,
+    utility,
     cssVar,
-    utility: `bg-${label}`,
     rawVarLight,
     rawVarDark,
     light,
@@ -311,7 +320,7 @@ export const semanticGradientCatalog = {
   title: "Gradient",
   description: (
     <>
-      용도 기반 그라데이션 토큰입니다. <strong>--ds-gradient-*</strong> 원본이 <strong>bg-gradient-*</strong>로 노출되며, 시맨틱 색을 참조해 라이트/다크에 자동 대응합니다.
+      브랜드 강조에 쓰는 용도 기반 그라데이션입니다. <strong>gradient-*</strong> 유틸리티로 적용하며, 시맨틱 색 스케일을 참조해 라이트/다크에 대응합니다.
     </>
   ),
   groups: [
@@ -319,16 +328,6 @@ export const semanticGradientCatalog = {
       id: "brand",
       label: "brand",
       gradients: [gradientTokens[0]],
-    },
-    {
-      id: "background",
-      label: "background",
-      gradients: [gradientTokens[1], gradientTokens[2]],
-    },
-    {
-      id: "overlay",
-      label: "overlay",
-      gradients: [gradientTokens[3]],
     },
   ] satisfies SemanticGradientGroupDef[],
 };
@@ -531,12 +530,12 @@ export function SemanticGradientSwatchCard({
   utility,
   dsVar,
   rawVar,
-  desc,
+  value,
 }: {
   utility: string;
   dsVar: string;
   rawVar: string;
-  desc: string;
+  value: string;
 }) {
   const isFade = dsVar.includes("fade");
   const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-violet-10)" };
@@ -550,7 +549,7 @@ export function SemanticGradientSwatchCard({
       ) : (
         <div aria-hidden="true" className={`h-24 w-full border-b border-default ${utility}`} />
       )}
-      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={desc} />
+      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={value} />
     </div>
   );
 }
@@ -1849,7 +1848,7 @@ export const levelStyle: Record<ContrastLevel, { bg: string; color: string; labe
   Fail:       { bg: "var(--ds-guide-level-fail-bg)", color: "var(--ds-guide-level-fail-fg)", label: "Fail" },
 };
 
-/** 명암비 결과 카드 — 숫자·기준 박스 배경 통일 */
+/** 명암비 결과 카드 — 숫자 배경 */
 export const contrastResultSurfaceClass = "rounded-xl bg-gray-5";
 
 export function LevelBadge({ level }: { level: ContrastLevel }) {
@@ -1870,17 +1869,19 @@ export function LevelBadge({ level }: { level: ContrastLevel }) {
   );
 }
 
-/** 원형 통과/실패 배지 — positive(통과)·negative(실패) 채움 + 흰색 체크/엑스. */
+/** 통과/실패 아이콘 — 기존 status foreground 토큰으로 상태를 드러낸다. */
 export function ContrastCircle({ passed }: { passed: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="inline-flex items-center justify-center rounded-full shrink-0 size-icon-md"
-      style={{ background: passed ? "var(--ds-accent-positive)" : "var(--ds-accent-negative)" }}
+      className={[
+        "inline-flex items-center justify-center shrink-0 size-icon-md rounded-full",
+        passed ? "bg-positive foreground-inverse" : "bg-negative foreground-inverse",
+      ].join(" ")}
     >
       <NavIcon
         innerMarkup={(passed ? outlineIconById.check : outlineIconById.close).innerMarkup}
-        className="size-icon-xs text-on-accent"
+        className="size-icon-xs"
       />
     </span>
   );

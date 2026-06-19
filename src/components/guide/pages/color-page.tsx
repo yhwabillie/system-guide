@@ -484,17 +484,18 @@ export function GuideColorPage() {
             title={semanticOverlayCatalog.title}
             description={semanticOverlayCatalog.description}
           >
-            {semanticOverlayCatalog.groups.map((group) => (
-              <SemanticColorGroupGrid key={group.id} label={group.label}>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {semanticOverlayCatalog.tokens.map((token) => (
                 <SemanticOverlaySwatchCard
-                  utility={group.utility}
-                  rawVar={isDark ? group.rawVarDark : group.rawVarLight}
-                  cssVar={group.cssVar}
-                  valueLabel={isDark ? group.dark : group.light}
+                  key={token.id}
+                  utility={token.utility}
+                  rawVar={isDark ? token.rawVarDark : token.rawVarLight}
+                  cssVar={token.cssVar}
+                  valueLabel={isDark ? token.dark : token.light}
                   isDark={isDark}
                 />
-              </SemanticColorGroupGrid>
-            ))}
+              ))}
+            </div>
           </SemanticColorCategorySection>
 
           <SemanticColorCategorySection
@@ -504,13 +505,13 @@ export function GuideColorPage() {
           >
             {semanticGradientCatalog.groups.map((group) => (
               <SemanticColorGroupGrid key={group.id} label={group.label}>
-                {group.gradients.map(({ utility, dsVar, rawVar, rawVarDark, desc }) => (
+                {group.gradients.map(({ utility, dsVar, rawVar, rawVarDark, value, valueDark }) => (
                   <SemanticGradientSwatchCard
                     key={dsVar}
                     utility={utility}
                     dsVar={dsVar}
                     rawVar={isDark && rawVarDark ? rawVarDark : rawVar}
-                    desc={desc}
+                    value={isDark && valueDark ? valueDark : value}
                   />
                 ))}
               </SemanticColorGroupGrid>
