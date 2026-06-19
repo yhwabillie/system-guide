@@ -108,27 +108,32 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     description: <>본문·캡션·버튼 등 텍스트와 아이콘을 아우르는 <strong>전경(foreground)</strong> 색상입니다. <strong>text-</strong> 접두 없이 <strong>foreground-*</strong> 유틸리티로 적용합니다(아이콘 포함).</>,
     groups: [
       {
-        id: "emphasis",
-        label: "emphasis",
+        id: "brand",
+        label: "brand",
+        tokens: [
+          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
+          { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
+        ],
+      },
+      {
+        id: "neutral",
+        label: "neutral",
         tokens: [
           { token: "foreground-primary", utility: "foreground-primary", cssVar: "--color-foreground-primary", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
           { token: "foreground-secondary", utility: "foreground-secondary", cssVar: "--color-foreground-secondary", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
+          { token: "foreground-muted", utility: "foreground-muted", cssVar: "--color-foreground-muted", readAs: "text", rawVar: "--raw-gray-40", rawVarDark: "--raw-gray-60" },
         ],
       },
       {
         id: "status",
         label: "status",
         tokens: [
-          { token: "foreground-danger", utility: "foreground-danger", cssVar: "--color-foreground-danger", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
-          { token: "foreground-success", utility: "foreground-success", cssVar: "--color-foreground-success", readAs: "text", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
+          { token: "foreground-required", utility: "foreground-required", cssVar: "--color-foreground-required", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
+          { token: "foreground-negative", utility: "foreground-negative", cssVar: "--color-foreground-negative", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
+          { token: "foreground-attention", utility: "foreground-attention", cssVar: "--color-foreground-attention", readAs: "text", rawVar: "--raw-orange-50", rawVarDark: "--raw-orange-30" },
+          { token: "foreground-positive", utility: "foreground-positive", cssVar: "--color-foreground-positive", readAs: "text", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
+          { token: "foreground-info", utility: "foreground-info", cssVar: "--color-foreground-info", readAs: "text", rawVar: "--raw-blue-50", rawVarDark: "--raw-blue-30" },
           { token: "foreground-disabled", utility: "foreground-disabled", cssVar: "--color-foreground-disabled", readAs: "text", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
-        ],
-      },
-      {
-        id: "brand",
-        label: "brand",
-        tokens: [
-          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
         ],
       },
     ],
@@ -138,29 +143,23 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Surface",
     description: (
       <>
-        페이지·카드·패널 등 <strong>배경 표면</strong>에 사용합니다. <strong>bg-*</strong> 유틸리티로 적용합니다.
+        페이지·카드·패널 등 <strong>배경 표면</strong>에 사용합니다. <strong>surface-*</strong> 유틸리티로 적용합니다.
       </>
     ),
     groups: [
       {
-        id: "base",
-        label: "base",
-        tokens: [
-          { token: "background", utility: "bg-background", cssVar: "--color-background", readAs: "bg", rawVar: "--raw-white" },
-        ],
-      },
-      {
-        id: "subtle",
-        label: "subtle",
-        tokens: [
-          { token: "surface-subtle", utility: "bg-surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-5" },
-        ],
-      },
-      {
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "surface-brand", utility: "bg-surface-brand", cssVar: "--color-surface-brand", readAs: "bg", rawVar: "--raw-violet-5", rawVarDark: "--raw-violet-90" },
+          { token: "surface-brand", utility: "surface-brand", cssVar: "--color-surface-brand", readAs: "bg", rawVar: "--raw-violet-5", rawVarDark: "--raw-violet-90" },
+        ],
+      },
+      {
+        id: "neutral",
+        label: "neutral",
+        tokens: [
+          { token: "surface-background", utility: "surface-background", cssVar: "--color-background", readAs: "bg", rawVar: "--raw-white", rawVarDark: "--raw-black" },
+          { token: "surface-subtle", utility: "surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-5", rawVarDark: "--raw-gray-95" },
         ],
       },
     ],
@@ -178,21 +177,21 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "default",
         label: "default",
         tokens: [
-          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border", rawVar: "--raw-gray-20" },
+          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border", rawVar: "--raw-gray-20", rawVarDark: "--raw-gray-80" },
         ],
       },
       {
         id: "strong",
         label: "strong",
         tokens: [
-          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border", rawVar: "--raw-gray-30" },
+          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
         ],
       },
       {
         id: "overlay",
         label: "overlay",
         tokens: [
-          { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border", rawVar: "--raw-black-a10" },
+          { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border", rawVar: "--raw-black-a10", rawVarDark: "--raw-white-a10" },
         ],
       },
       {
@@ -209,7 +208,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Accent",
     description: (
       <>
-        CTA·선택·강조 상태 등 <strong>브랜드·성공·위험</strong> 의미의 채움 색입니다. 버튼·배지에 <strong>bg-*</strong>로 적용합니다.
+        CTA·선택·강조 상태 등 <strong>브랜드·positive·negative</strong> 의미의 채움 색입니다. 버튼·배지에 <strong>bg-*</strong>로 적용합니다.
       </>
     ),
     groups: [
@@ -224,21 +223,21 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "on-brand",
         label: "on-brand",
         tokens: [
-          { token: "on-accent", utility: "bg-on-accent", cssVar: "--color-on-accent", readAs: "bg", rawVar: "--raw-white" },
+          { token: "on-accent", utility: "bg-on-accent", cssVar: "--color-on-accent", readAs: "bg", rawVar: "--raw-white", rawVarDark: "--raw-white" },
         ],
       },
       {
-        id: "success",
-        label: "success",
+        id: "positive",
+        label: "positive",
         tokens: [
-          { token: "accent-success", utility: "bg-accent-success", cssVar: "--color-accent-success", readAs: "bg", rawVar: "--raw-green-50" },
+          { token: "accent-positive", utility: "bg-accent-positive", cssVar: "--color-accent-positive", readAs: "bg", rawVar: "--raw-green-50", rawVarDark: "--raw-green-50" },
         ],
       },
       {
-        id: "danger",
-        label: "danger",
+        id: "negative",
+        label: "negative",
         tokens: [
-          { token: "accent-danger", utility: "bg-accent-danger", cssVar: "--color-accent-danger", readAs: "bg", rawVar: "--raw-red-50" },
+          { token: "accent-negative", utility: "bg-accent-negative", cssVar: "--color-accent-negative", readAs: "bg", rawVar: "--raw-red-50", rawVarDark: "--raw-red-50" },
         ],
       },
     ],
@@ -264,6 +263,7 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
           cssVar: "--color-utility-focus-ring",
           readAs: "outline",
           rawVar: "--raw-utility-focus-ring",
+          rawVarDark: "--raw-orange-30",
         },
       ],
     },
@@ -277,6 +277,7 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
           cssVar: "--color-utility-scroll-thumb",
           readAs: "bg",
           rawVar: "--raw-gray-30",
+          rawVarDark: "--raw-gray-70",
         },
         {
           token: "utility-scroll-track",
@@ -284,6 +285,7 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
           cssVar: "--color-utility-scroll-track",
           readAs: "bg",
           rawVar: "--raw-gray-10",
+          rawVarDark: "--raw-gray-90",
         },
       ],
     },
@@ -490,7 +492,7 @@ export function SemanticColorSwatchCard({
   const hexLabel = cssColorToHex(color);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-line surface-background shadow-[0_4px_16px_var(--ds-shadow)]">
       <div
         aria-hidden="true"
         className={[
@@ -518,7 +520,7 @@ export function SemanticOverlaySwatchCard({
   isDark: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-line surface-background shadow-[0_4px_16px_var(--ds-shadow)]">
       <div
         aria-hidden="true"
         className="h-24 w-full overflow-hidden border-b border-line"
@@ -546,7 +548,7 @@ export function SemanticGradientSwatchCard({
   const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-violet-10)" };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-line surface-background shadow-[0_4px_16px_var(--ds-shadow)]">
       {isFade ? (
         <div className="h-24 w-full overflow-hidden border-b border-line" style={underlayStyle}>
           <div aria-hidden="true" className={`size-full ${utility}`} />
@@ -662,7 +664,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line bg-background px-4 py-3 text-label-sm font-medium foreground-primary shadow-[0_6px_24px_var(--ds-shadow)]"
+          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line surface-background px-4 py-3 text-label-sm font-medium foreground-primary shadow-[0_6px_24px_var(--ds-shadow)]"
         >
           {toast.message}
         </div>
@@ -700,7 +702,7 @@ export function TokenChip({
   const toast = useToast();
 
   const chipClassName = [
-    "inline-flex w-fit items-center rounded-full border border-accent bg-transparent font-mono font-semibold text-accent",
+    "inline-flex w-fit items-center rounded-full border border-accent bg-transparent font-mono font-semibold foreground-brand",
     size === "lg" ? "px-4 py-1.5 text-label-md" : "px-3 py-1 text-label-sm",
     copyValue ? "cursor-pointer transition-colors hover:bg-accent/5" : "",
   ].join(" ");
@@ -896,7 +898,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
       aria-labelledby={headingId}
       className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
-      <div className="overflow-hidden rounded-md border border-line bg-background">
+      <div className="overflow-hidden rounded-md border border-line surface-background">
         <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3.5">
           <h2 id={headingId} className="m-0 text-label-md font-bold foreground-primary">
             목차
@@ -906,7 +908,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
             onClick={() => setCollapsed((prev) => !prev)}
             aria-expanded={!collapsed}
             aria-controls={listId}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:foreground-primary"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line surface-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:foreground-primary"
           >
             {collapsed ? "펼치기" : "접기"}
             <NavIcon
@@ -982,7 +984,7 @@ export function ContentSubsectionTitle({
     <h4
       id={id}
       className={[
-        "m-0 mb-6 text-heading-md font-bold text-accent",
+        "m-0 mb-6 text-heading-md font-bold foreground-brand",
         guideSectionAnchorClass,
         spaced ? "mt-20" : "",
         className,
@@ -1019,12 +1021,12 @@ export const contentOutlineSubTabClass = (active: boolean) =>
   [
     "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-0 border-b-0 border-t-2 border-l-2 border-r-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-[color,background-color] duration-200",
     active
-      ? "z-[1] -mb-0.5 border-foreground-primary bg-background font-bold foreground-primary after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:bg-background after:content-['']"
-      : "border-transparent bg-surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:foreground-primary",
+      ? "z-[1] -mb-0.5 border-foreground-primary surface-background font-bold foreground-primary after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:surface-background after:content-['']"
+      : "border-transparent surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:foreground-primary",
   ].join(" ");
 
 export const guideTabScrollBtnClass =
-  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-line bg-background text-gray-60 transition-opacity duration-150 hover:bg-surface-subtle hover:foreground-primary focus-visible:opacity-100 focus-visible:visible";
+  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-line surface-background text-gray-60 transition-opacity duration-150 hover:surface-subtle hover:foreground-primary focus-visible:opacity-100 focus-visible:visible";
 
 export const GUIDE_TAB_SCROLL_AMOUNT = 200;
 
@@ -1163,7 +1165,7 @@ export const guideHeaderHeightClass = "h-[3.75rem]";
 export const guideHeaderOffsetClass = "top-[3.75rem]";
 export const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 export const guideHeaderIconButtonClass =
-  "inline-flex size-control-sm items-center justify-center rounded-full bg-surface-subtle foreground-primary transition-colors duration-150 hover:bg-gray-10 hover:foreground-primary";
+  "inline-flex size-control-sm items-center justify-center rounded-full surface-subtle foreground-primary transition-colors duration-150 hover:bg-gray-10 hover:foreground-primary";
 
 export function GuideLogoMark() {
   return (
@@ -1188,7 +1190,7 @@ export function GuideSiteHeader({
 }) {
   return (
     <header
-      className={`sticky z-40 border-b border-line bg-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
+      className={`sticky z-40 border-b border-line surface-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
     >
       <div className={`grid w-full ${guideHeaderHeightClass} grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6`}>
         <div className="flex items-center gap-1 justify-self-start">
@@ -1246,7 +1248,7 @@ export function GuideSiteHeader({
               type="search"
               name="guide-search"
               placeholder="가이드 검색..."
-              className="h-control-sm w-[12.5rem] rounded-full border border-line bg-surface-subtle pl-9 pr-4 text-label-sm foreground-primary placeholder:foreground-muted md:w-[15rem]"
+              className="h-control-sm w-[12.5rem] rounded-full border border-line surface-subtle pl-9 pr-4 text-label-sm foreground-primary placeholder:foreground-muted md:w-[15rem]"
             />
           </label>
         </div>
@@ -1316,7 +1318,7 @@ export function FontStackCuration() {
                     {name}
                   </span>
                   <span
-                    className={`text-caption font-semibold ${emphasis === "primary" ? "text-accent" : "foreground-muted"}`}
+                    className={`text-caption font-semibold ${emphasis === "primary" ? "foreground-brand" : "foreground-muted"}`}
                   >
                     {role}
                   </span>
@@ -1683,7 +1685,7 @@ export function IconCopyCell({
           type="button"
           onClick={() => void handleCopy()}
           aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
-          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line bg-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:foreground-primary focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line surface-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:foreground-primary focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
         >
           copy
         </button>
@@ -1790,14 +1792,14 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="text-label-lg font-bold foreground-primary">{source.name}</span>
-              <span className="text-caption font-semibold text-accent">{source.style}</span>
+              <span className="text-caption font-semibold foreground-brand">{source.style}</span>
             </div>
             <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">
               {source.sourceUrl ? (
                 <>
                   <a
                     href={source.sourceUrl}
-                    className="text-accent underline-offset-2 hover:underline"
+                    className="foreground-brand underline-offset-2 hover:underline"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -1874,13 +1876,13 @@ export function LevelBadge({ level }: { level: ContrastLevel }) {
   );
 }
 
-/** 원형 통과/실패 배지 — success(통과)·danger(실패) 채움 + 흰색 체크/엑스. */
+/** 원형 통과/실패 배지 — positive(통과)·negative(실패) 채움 + 흰색 체크/엑스. */
 export function ContrastCircle({ passed }: { passed: boolean }) {
   return (
     <span
       aria-hidden="true"
       className="inline-flex items-center justify-center rounded-full shrink-0 size-icon-md"
-      style={{ background: passed ? "var(--ds-accent-success)" : "var(--ds-accent-danger)" }}
+      style={{ background: passed ? "var(--ds-accent-positive)" : "var(--ds-accent-negative)" }}
     >
       <NavIcon
         innerMarkup={(passed ? outlineIconById.check : outlineIconById.close).innerMarkup}
@@ -1936,7 +1938,7 @@ export function ContrastSwatchRoleMarker({ role }: { role: "BG" | "TXT" }) {
     <span
       aria-hidden="true"
       className={[
-        "absolute top-1 left-1 z-[1] rounded border-2 bg-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
+        "absolute top-1 left-1 z-[1] rounded border-2 surface-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
         "border-foreground-primary foreground-primary",
       ].join(" ")}
     >
@@ -1982,7 +1984,7 @@ export function ContrastColorPickButton({
           "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
           isSelecting
             ? "bg-gray-10 shadow-sm ring-2 ring-foreground-primary"
-            : "bg-surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-line",
+            : "surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-line",
         ].join(" ")}
       >
         <span
@@ -2004,7 +2006,7 @@ export function ContrastColorPickButton({
             "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
             isSelecting
               ? "border-foreground-primary bg-gray-10 foreground-primary"
-              : "border-line-strong bg-background foreground-primary group-hover:border-foreground-primary",
+              : "border-line-strong surface-background foreground-primary group-hover:border-foreground-primary",
           ].join(" ")}
         >
           {isSelecting ? (
@@ -2076,7 +2078,7 @@ export function MeasureBar({
   height?: string;
 }) {
   return (
-    <div className="h-9 bg-surface-subtle border border-line flex items-center px-3">
+    <div className="h-9 surface-subtle border border-line flex items-center px-3">
       <span
         role="img"
         aria-label={label}
@@ -2116,7 +2118,7 @@ export function GridGapPreview({ utility, label }: { utility: string; label: str
         <div
           key={i}
           aria-hidden="true"
-          className="bg-background"
+          className="surface-background"
           style={{ height: pxToRem(32) }}
         />
       ))}
@@ -2154,7 +2156,7 @@ export function GridGapCuration() {
           붉은색 = gap
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block size-2 bg-background border border-line" />
+          <span aria-hidden="true" className="inline-block size-2 surface-background border border-line" />
           밝은 블록 = grid item
         </span>
       </p>
@@ -2298,7 +2300,7 @@ export const guideFabButtonClass =
   "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150";
 
 export const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
-export const guideFabSurfaceClass = `${guideFabButtonClass} bg-background foreground-primary ring-1 ring-line`;
+export const guideFabSurfaceClass = `${guideFabButtonClass} surface-background foreground-primary ring-1 ring-line`;
 
 export const GUIDE_SCROLL_TOP_THRESHOLD = 240;
 

@@ -157,7 +157,7 @@ export function GuideColorPage() {
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 flex items-center justify-between rounded-lg border border-line-strong bg-surface-subtle py-2.5 px-4 text-label-md font-semibold foreground-primary ring-2 ring-foreground-primary"
+              className="mb-3 flex items-center justify-between rounded-lg border border-line-strong surface-subtle py-2.5 px-4 text-label-md font-semibold foreground-primary ring-2 ring-foreground-primary"
             >
               <span className="flex items-center gap-2">
                 <span
@@ -365,7 +365,7 @@ export function GuideColorPage() {
               aria-label={`대비율 결과: ${ratio}:1 — ${level}`}
               aria-live="polite"
               aria-atomic="true"
-              className="bg-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
+              className="surface-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">

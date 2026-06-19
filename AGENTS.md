@@ -19,18 +19,27 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 컴포넌트             className 유틸리티 또는 var(--ds-*)로 소비.
 ```
 
-- 다크 모드 값은 `.dark`에서 **시맨틱 스케일만 재매핑**(raw 반사). raw는 절대 모드별로 재정의하지 않습니다.
-- **다크 모드 시맨틱 대비 필수** — 용도 토큰(`--ds-foreground-brand`·`--ds-accent` 등)은 스케일 50 고정·반사만으로는 WCAG 4.5:1/3:1이 깨질 수 있다. `.dark`에서 **대비 계산 후** violet 스케일 단계를 재선택한다. 검증 표·절차: [`docs/accessibility.md`](docs/accessibility.md) 「시맨틱 색상·다크 모드 대비」.
-- 새 색이 필요하면: raw에 추가 → `--ds-*`에 매핑 → `@theme inline`의 `--color-*`로 노출 → 컴포넌트에서 사용.
-- **TIER 1 `--raw-*` 팔레트 family는 hue·색상명만 사용** — `red`·`blue`·`violet`·`gray` 등 스펙트럼/색상 기준 네이밍. `brand`·`primary`·`accent`·`danger`·`success`·`warning` 등 **역할·기능·의미 이름 금지**. 브랜드 보라(#5B4CF0)는 `--raw-violet-50`으로 정의하고, 강조 역할은 TIER 2 `--ds-accent: var(--ds-violet-50)`처럼 시맨틱에서 참조한다. 팔레트 스케일 family의 TIER 2(`--ds-violet-*`)·TIER 3(`--color-violet-*`)도 동일하게 hue명만 쓴다.
+- 다크 모드 값은 `.dark`에서 **시맨틱 스케일(`--ds-{family}-{scale}`) 재매핑** 또는 **용도 토큰(`--ds-foreground-*`·`--ds-surface-*` 등) 명시적 재매핑**으로 처리한다. **raw(`--raw-*`)는 모드별로 재정의하지 않는다.**
+- **시맨틱 색상 토큰은 라이트·다크를 한 세트로 정의한다** — `:root`만 추가하고 `.dark`를 비우면 WAVE Contrast Error가 난다. 아래 절차·검증 표를 **항상** 따른다: [`docs/accessibility.md`](docs/accessibility.md) 「시맨틱 색상·다크 모드 대비」.
+- 새 시맨틱 색 추가 **체크리스트** (순서 고정):
+  1. TIER 1 `--raw-*`에 팔레트 값이 없으면 추가 (모드 무관·한 번만).
+  2. TIER 2 `:root`에 `--ds-*` 용도 토큰 정의.
+  3. **`.dark` 블록** — gray 스케일 **자동 반사만**으로 4.5:1/3:1이 보장되면 생략 가능. brand·status 전경·`foreground-muted`·overlay·focus-ring 등 **반사만으로 부족한 토큰은 용도 재매핑을 반드시 추가**.
+  4. TIER 3 `@theme inline` `--color-*` · `@utility` 노출.
+  5. 가이드 `semanticColorCatalog`(`src/components/guide/shared.tsx`)에 `rawVar`·`rawVarDark` **둘 다** 기재.
+  6. `docs/accessibility.md` 대비 표·PR 체크리스트 갱신 후 라이트·다크 WAVE 재검증.
+- **다크 모드 시맨틱 대비 필수** — 용도 토큰(`--ds-foreground-brand`·`--ds-accent` 등)은 스케일 50 고정·반사만으로는 WCAG 4.5:1/3:1이 깨질 수 있다. `.dark`에서 **대비 계산 후** 스케일 단계를 재선택한다.
+- 새 색이 필요하면: raw에 추가 → `--ds-*`에 매핑(`:root` + `.dark`) → `@theme inline`의 `--color-*`로 노출 → 가이드 큐레이션 → 컴포넌트에서 사용.
+- **TIER 1 `--raw-*` 팔레트 family는 hue·색상명만 사용** — `red`·`blue`·`violet`·`gray` 등 스펙트럼/색상 기준 네이밍. `brand`·`primary`·`accent`·`negative`·`positive`·`attention` 등 **역할·기능·의미 이름 금지**. 브랜드 보라(#5B4CF0)는 `--raw-violet-50`으로 정의하고, 강조 역할은 TIER 2 `--ds-accent: var(--ds-violet-50)`처럼 시맨틱에서 참조한다. 팔레트 스케일 family의 TIER 2(`--ds-violet-*`)·TIER 3(`--color-violet-*`)도 동일하게 hue명만 쓴다.
 - **Raw 스케일 단위** — `0 · 5 · 10 · 20 · 30 · 40 · 50 · 60 · 70 · 80 · 90 · 95 · 100`(첨부 가이드·KRDS 5~90과 동일 축). 예전 Tailwind식 `50~900` 배수 명명 금지. KRDS family는 5~90, Violet은 0~100 전 구간. `50`이 base(앵커), `5`≈surface, `60`≈text 용도 참고. SSOT: [`src/lib/raw-color-palettes.ts`](src/lib/raw-color-palettes.ts) `RAW_COLOR_SCALE_UNITS`.
 - **TIER 3 `--color-*` 슬러그에는 Tailwind 유틸 접두(`text`·`bg`·`border`)를 넣지 않는다.** 유틸리티는 `{접두}-{슬러그}`로 조합되므로, 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생긴다.
-  - 올바른 예: `--color-surface-subtle` → `bg-surface-subtle` · `--color-line` → `border-line` · `--color-background` → `bg-background`
+  - 올바른 예: `--color-surface-subtle` → `surface-subtle` · `--color-line` → `border-line` · `--color-background` → `surface-background`
   - 금지 예: `--color-text-muted` → `text-text-muted` · `--color-border` → `border-border`
   - TIER 2 `--ds-*` 용도명(`--ds-border`·`--ds-utility-focus-ring` 등)은 내부 의미용으로 유지 가능. TIER 3 노출명만 슬러그 규칙을 따른다.
-  - **전경(foreground) 패밀리** — 텍스트·아이콘 공통 전경색은 `text-`/`icon-` 접두로 한정하지 않는다(`text-`는 아이콘을 포함 못 함). prefix 없는 **`foreground-*` @utility로 통일**하고 `color`로 적용한다(아이콘은 `currentColor` 상속). 체인: TIER 2 `--ds-foreground`(=primary base)·`--ds-foreground-{secondary,muted,brand,danger,success,disabled}` → TIER 3 `--color-foreground-{primary,secondary,muted,brand,danger,success,disabled}`(@theme) → `@utility foreground-{primary,secondary,muted,brand,danger,success,disabled}`(globals.css) → 유틸 `foreground-primary`·`foreground-secondary`·`foreground-muted`·`foreground-brand`·`foreground-danger`·`foreground-success`·`foreground-disabled`. border/ring 등 다른 속성은 TIER 3 `--color-foreground-primary`에서 `border-foreground-primary`·`ring-foreground-primary`로 그대로 노출. 큐레이션: 시맨틱 컬러 `Foreground` 카테고리(`emphasis`=primary·secondary / `status`=danger·success·disabled / `brand` 그룹).
-    - **강조(emphasis) 그룹** — 중립 텍스트 위계. `primary`(gray-90, 메인 타이틀/본문) → `secondary`(gray-70, 서브타이틀) → (보조) `muted`(gray-40). secondary 는 gray 스케일 참조라 `.dark` 자동 반사(gray-70↔gray-30)로 양 모드 본문 대비 충족(라이트 8.8:1·다크 10:1).
-    - **상태(status) 그룹** — `danger`(red-50)·`success`(green-50)는 본문 대비 충족(`.dark` 재매핑), `disabled`(gray-30, .dark gray-70 자동 반사)는 비활성 의미라 **의도적 저대비**(WCAG 1.4.3 비활성 컴포넌트 예외). disabled 는 실제 비활성 요소에만 쓰고 일반 본문/캡션에 쓰지 않는다.
+  - **전경(foreground) 패밀리** — 텍스트·아이콘 공통 전경색은 `text-`/`icon-` 접두로 한정하지 않는다(`text-`는 아이콘을 포함 못 함). prefix 없는 **`foreground-*` @utility로 통일**하고 `color`로 적용한다(아이콘은 `currentColor` 상속). 체인: TIER 2 `--ds-foreground`(=primary base)·`--ds-foreground-{secondary,muted,brand,brand-subtle,required,negative,attention,positive,info,disabled}` → TIER 3 `--color-foreground-{primary,secondary,muted,brand,brand-subtle,required,negative,attention,positive,info,disabled}`(@theme) → `@utility foreground-{primary,secondary,muted,brand,brand-subtle,required,negative,attention,positive,info,disabled}`(globals.css). border/ring 등 다른 속성은 TIER 3 `--color-foreground-primary`에서 `border-foreground-primary`·`ring-foreground-primary`로 그대로 노출. **링크·브랜드 강조 텍스트는 `text-accent` 대신 `foreground-brand`**(다크 모드 대비 재매핑). 큐레이션: 시맨틱 컬러 `Foreground` 카테고리(`brand`=brand·brand-subtle / `neutral`=primary·secondary·muted / `status`=required·negative·attention·positive·info·disabled 그룹).
+    - **중립(neutral) 그룹** — gray 계열 텍스트 위계(현업에서 emphasis보다 neutral이 흔함 — emphasis는 보통 굵기·강조색 의미). `primary`(gray-90, 메인 타이틀/본문) → `secondary`(gray-70, 서브타이틀) → `muted`(gray-40, 캡션·메타·placeholder). secondary·muted 는 gray 스케일 참조. secondary 는 `.dark` 자동 반사(gray-70↔gray-30)로 양 모드 본문 대비 충족(라이트 8.8:1·다크 10:1). muted 는 `.dark`에서 gray-60으로 재매핑.
+    - **상태(status) 그룹** — `required`(필수 입력 `*`, red-50·negative 와 동일 스케일·의미 분리) · `negative`·`attention`·`positive`·`info`는 본문 대비 4.5:1 충족(`.dark`에서 70→raw 30 재매핑). `disabled`(gray-30, .dark gray-70 자동 반사)는 비활성 의미라 **의도적 저대비**(WCAG 1.4.3 비활성 컴포넌트 예외). disabled 는 실제 비활성 요소에만 쓰고 일반 본문/캡션에 쓰지 않는다. **필수 `*`는 `foreground-required`만** — 검증 오류 문구는 `foreground-negative`.
+  - **표면(surface) 패밀리** — 시맨틱 배경 표면은 `bg-*` 대신 **`surface-*` @utility**로 통일(`background-color`). 체인: TIER 2 `--ds-background`·`--ds-surface-{subtle,brand}` → TIER 3 `--color-background`·`--color-surface-*`(@theme) → `@utility surface-{background,subtle,brand}`(globals.css). palette 조합용 `bg-gray-*` 등은 예외. 큐레이션: 시맨틱 컬러 `Surface` 카테고리(`brand` / `neutral`=background·subtle 그룹).
   - 포커스 링 색은 TIER 1 `--raw-utility-focus-ring`(#00cbde) → TIER 2 `--ds-utility-focus-ring` → TIER 3 `--color-utility-focus-ring` → 유틸 `outline-utility-focus-ring`. 라이트 `--raw-utility-focus-ring` · 다크 `--raw-orange-30`. **utility** 접두 + **focus-ring** 기능명으로 관리한다(`ring` 단독 슬러그 금지). SSOT hex는 [`src/lib/raw-color-palettes.ts`](src/lib/raw-color-palettes.ts) `rawUtilityColors.focusRing`.
   - 스크롤바 색은 TIER 2 `--ds-utility-scroll-thumb`·`--ds-utility-scroll-track` → TIER 3 `--color-utility-scroll-*` → `bg-utility-scroll-thumb`·`bg-utility-scroll-track`. `::-webkit-scrollbar` pseudo는 `--ds-utility-scroll-*`를 직접 참조한다.
 - 큐레이션 가이드 화면 전용 표시/검증 토큰은 `guide-*` 접두를 붙입니다. 예: `--ds-guide-level-*`, `--color-guide-level-*`, `--ds-guide-callout-*`·`--color-guide-callout-*`(탭 설명 콜아웃), `--ds-guide-intro-*`·`--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).
@@ -54,7 +63,7 @@ TIER 3  --color-*   Tailwind @theme 노출용 토큰. 유틸리티 클래스 이
 
 ## 스타일 적용 (className 우선)
 
-- **고정 레이아웃·여백·타이포·색**은 `className` + Tailwind 유틸리티(`p-4`, `text-body-md`, `bg-surface-subtle` 등) 또는 `@utility layout-*`·`typo-*`로 적용합니다.
+- **고정 레이아웃·여백·타이포·색**은 `className` + Tailwind 유틸리티(`p-4`, `text-body-md`, `surface-subtle` 등) 또는 `@utility layout-*`·`typo-*`로 적용합니다.
 - **`style` 인라인**은 런타임에만 결정되는 값에 한정합니다. 예: 대비 체커·팔레트에서 사용자가 고른 **배경/텍스트 hex**, 미리보기 견본의 **동적 color**, 체커보드·대비 계산용 데이터, `getComputedStyle`로 읽은 resolved 색.
 - padding·margin·font-size·border-radius 등 **디자인 토큰으로 표현 가능한 값**을 `style={{ padding: "60px 30px" }}`처럼 인라인으로 넣지 않습니다. 필요 시 `--layout-*` / `--space-*`에 토큰을 추가한 뒤 유틸리티 또는 `@utility`로 노출합니다.
 

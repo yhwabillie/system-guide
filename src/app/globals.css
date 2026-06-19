@@ -376,15 +376,23 @@
   --ds-border-brand: var(--ds-violet-40);
   --ds-surface-subtle: var(--ds-gray-5);
   --ds-surface-brand: var(--ds-violet-5);
-  /* 강조(emphasis) 위계 — primary(=--ds-foreground, gray-90) 메인 타이틀/본문 · secondary(gray-70) 서브타이틀 · muted(gray-40) 보조.
-     secondary 는 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1. */
+  /* 중립(neutral) 텍스트 위계 — primary(=--ds-foreground, gray-90) 메인 타이틀/본문 · secondary(gray-70) 서브타이틀 · muted(gray-40) 보조.
+     secondary 는 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1.
+     muted 는 .dark 에서 gray-60 으로 용도 재매핑(아래 .dark 블록) — #0a0a0a 단독 배경·nav 라벨에는 쓰지 않음. */
   --ds-foreground-secondary: var(--ds-gray-70);
   --ds-foreground-muted: var(--ds-gray-40);
   --ds-foreground-brand: var(--ds-violet-50);
-  /* 상태(status) 전경 — danger·success 는 흰 배경 4.5:1(red-50 4.56:1·green-50 4.58:1), 채움(--ds-accent-*)과 분리해 .dark에서 본문 대비로 재매핑.
+  /* brand-subtle — brand(violet-50)보다 옅은 보조 브랜드 전경. 라이트 violet-40(white ~3.8:1) · 본문 4.5:1 미달 가능 → 캡션·eyebrow·surface-brand 위 보조 라벨. */
+  --ds-foreground-brand-subtle: var(--ds-violet-40);
+  /* 상태(status) 전경 — negative·attention·positive·info·required 는 흰 배경 4.5:1 이상(orange-50 4.65:1·blue-50 4.55:1 등).
+     required(필수 *)는 negative 와 동일 red 스케일이나 검증 오류(negative)와 의미 분리.
+     채움(--ds-accent-*)과 분리해 .dark에서 본문 대비로 재매핑(70→raw 30).
      disabled 는 비활성 의미라 의도적 저대비(WCAG 1.4.3 비활성 예외) — gray 스케일 참조라 .dark 자동 반사(gray-30↔gray-70). */
-  --ds-foreground-danger: var(--ds-red-50);
-  --ds-foreground-success: var(--ds-green-50);
+  --ds-foreground-required: var(--ds-red-50);
+  --ds-foreground-negative: var(--ds-red-50);
+  --ds-foreground-attention: var(--ds-orange-50);
+  --ds-foreground-positive: var(--ds-green-50);
+  --ds-foreground-info: var(--ds-blue-50);
   --ds-foreground-disabled: var(--ds-gray-30);
 
   /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-30(.dark) */
@@ -415,8 +423,8 @@
 
   /* 강조(선택) — 브랜드 violet-50 base */
   --ds-accent: var(--ds-violet-50);
-  --ds-accent-danger: var(--ds-red-50);
-  --ds-accent-success: var(--ds-green-50);
+  --ds-accent-negative: var(--ds-red-50);
+  --ds-accent-positive: var(--ds-green-50);
   --ds-on-accent: var(--raw-white);
 
   /* Guide-only: 대비 체커 등급 — AA는 green-30+90, AA Large는 orange-20+90, AAA는 60+white, Fail은 70+white */
@@ -531,9 +539,14 @@
   /* Brand purpose — 다크 배경(#0a0a0a) 대비 WCAG AA(본문 4.5:1·UI 3:1) 검증 후 매핑. docs/accessibility.md 참고 */
   --ds-foreground-muted: var(--ds-gray-60);
   --ds-foreground-brand: var(--ds-violet-70);
-  /* 상태 전경 — 채움 50 고정은 #0a0a0a에서 ~4.3:1로 미달. 70(→raw 30)으로 올려 본문 4.5:1 충족(red-30 8.1:1·green-30 9.9:1) */
-  --ds-foreground-danger: var(--ds-red-70);
-  --ds-foreground-success: var(--ds-green-70);
+  /* brand-subtle — 다크에서 brand(violet-70→raw30)보다 옅게 violet-50(#5B4CF0, ~3.5:1 UI). 본문 단독 4.5:1 미달 — 보조 브랜드 텍스트만. */
+  --ds-foreground-brand-subtle: var(--ds-violet-50);
+  /* 상태 전경 — 채움 50 고정은 #0a0a0a에서 ~4.3:1로 미달. 70(→raw 30)으로 올려 본문 4.5:1 충족 */
+  --ds-foreground-required: var(--ds-red-70);
+  --ds-foreground-negative: var(--ds-red-70);
+  --ds-foreground-attention: var(--ds-orange-70);
+  --ds-foreground-positive: var(--ds-green-70);
+  --ds-foreground-info: var(--ds-blue-70);
   --ds-surface-brand: var(--ds-violet-10);
   --ds-border-brand: var(--ds-violet-60);
   --ds-accent: var(--ds-violet-50);
@@ -547,8 +560,8 @@
    --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
    이름으로 사용한다: --color-green-50 → bg/text/border-green-50.
    슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
-   예: --color-surface-subtle → bg-surface-subtle · --color-line → border-line.
-   (전경 색은 예외: 아이콘 포함 위해 prefix 없는 @utility foreground-* 로 노출 — 아래 참고)
+   예: --color-surface-subtle → surface-subtle · --color-line → border-line.
+   (전경·표면 색은 예외: 아이콘·배경 의미 통일을 위해 @utility foreground-* · surface-* 로 노출 — 아래 참고)
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
    생성 유틸 예: bg-gray-20 / text-green-50 / text-body-md / leading-base ...
    ============================================================ */
@@ -640,12 +653,16 @@
   --color-foreground-secondary: var(--ds-foreground-secondary);
   --color-foreground-muted: var(--ds-foreground-muted);
   --color-foreground-brand: var(--ds-foreground-brand);
-  --color-foreground-danger: var(--ds-foreground-danger);
-  --color-foreground-success: var(--ds-foreground-success);
+  --color-foreground-brand-subtle: var(--ds-foreground-brand-subtle);
+  --color-foreground-required: var(--ds-foreground-required);
+  --color-foreground-negative: var(--ds-foreground-negative);
+  --color-foreground-attention: var(--ds-foreground-attention);
+  --color-foreground-positive: var(--ds-foreground-positive);
+  --color-foreground-info: var(--ds-foreground-info);
   --color-foreground-disabled: var(--ds-foreground-disabled);
   --color-accent: var(--ds-accent);
-  --color-accent-danger: var(--ds-accent-danger);
-  --color-accent-success: var(--ds-accent-success);
+  --color-accent-negative: var(--ds-accent-negative);
+  --color-accent-positive: var(--ds-accent-positive);
   --color-on-accent: var(--ds-on-accent);
   --color-overlay-subtle: var(--ds-overlay-subtle);
   --color-overlay: var(--ds-overlay);
@@ -762,9 +779,18 @@
 @utility foreground-secondary { color: var(--color-foreground-secondary); }
 @utility foreground-muted { color: var(--color-foreground-muted); }
 @utility foreground-brand { color: var(--color-foreground-brand); }
-@utility foreground-danger { color: var(--color-foreground-danger); }
-@utility foreground-success { color: var(--color-foreground-success); }
+@utility foreground-brand-subtle { color: var(--color-foreground-brand-subtle); }
+@utility foreground-required { color: var(--color-foreground-required); }
+@utility foreground-negative { color: var(--color-foreground-negative); }
+@utility foreground-attention { color: var(--color-foreground-attention); }
+@utility foreground-positive { color: var(--color-foreground-positive); }
+@utility foreground-info { color: var(--color-foreground-info); }
 @utility foreground-disabled { color: var(--color-foreground-disabled); }
+
+/* Surface(표면) 배경색 — `bg-` 접두는 palette 조합용. 시맨틱 표면은 surface-* 로 통일. */
+@utility surface-background { background-color: var(--color-background); }
+@utility surface-subtle { background-color: var(--color-surface-subtle); }
+@utility surface-brand { background-color: var(--color-surface-brand); }
 
 /* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
 @utility typo-display-lg {
