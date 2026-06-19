@@ -1,7 +1,7 @@
 /**
- * Raw hue 팔레트 — KRDS 표준형 hex + 프로젝트 Violet 스케일.
+ * Raw hue 팔레트 — KRDS 표준형 hex + 프로젝트 Teal/Violet 스케일.
  * 스케일 단위: 0 · 5 · 10 · 20 · 30 · 40 · 50 · 60 · 70 · 80 · 90 · 95 · 100 (KRDS 5~90 + 양끝 0·95·100).
- * Violet 50 앵커 = #5B4CF0 (시맨틱 accent에서 매핑).
+ * Teal 50 앵커 = #00CBDE (focus-ring), Violet 50 앵커 = #5B4CF0 (brand).
  * @see https://www.krds.go.kr/html/site/style/style_02.html
  */
 
@@ -74,7 +74,7 @@ function paletteFromSteps(steps: Record<number, string>): PrimitiveColorFamily["
     .sort((a, b) => a.scale - b.scale);
 }
 
-/** hue 순: Red → Rose → Orange → Green → Cyan → Blue → Violet → Navy → Gray */
+/** hue 순: Red → Rose → Orange → Green → Teal → Cyan → Blue → Violet → Navy → Gray */
 export const primitiveColors: PrimitiveColorFamily[] = [
   {
     family: "Red",
@@ -138,6 +138,22 @@ export const primitiveColors: PrimitiveColorFamily[] = [
       70: "#285d33",
       80: "#1f4727",
       90: "#122b18",
+    })),
+  },
+  {
+    family: "Teal",
+    name: "teal",
+    swatches: paletteFromSteps(rampEndpoints({
+      5: "#e5fbfd",
+      10: "#ccf7fb",
+      20: "#99eff7",
+      30: "#66e7f2",
+      40: "#33dfeb",
+      50: "#00cbde",
+      60: "#00aabd",
+      70: "#008396",
+      80: "#005763",
+      90: "#00333a",
     })),
   },
   {
@@ -221,12 +237,3 @@ export const primitiveColors: PrimitiveColorFamily[] = [
     })),
   },
 ];
-
-/**
- * Utility 전용 raw hex — hue 팔레트(KRDS) 밖 단일 목적 색.
- * globals.css `--raw-utility-*` 와 동기화 유지.
- */
-export const rawUtilityColors = {
-  /** 포커스 링(outline) — 라이트 모드 */
-  focusRing: "#00CBDE",
-} as const;

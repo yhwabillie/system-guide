@@ -16,11 +16,11 @@
 /* ============================================================
    TIER 1 — RAW (원본 팔레트)
    불변·모드 무관. raw 값은 여기서만 단 한 번 정의한다.
-   family 행 순서: hue 스펙트럼 Red → Rose → Orange → Green → Cyan → Blue → Navy → Gray (KRDS 표준형 hex)
+   family 행 순서: hue 스펙트럼 Red → Rose → Orange → Green → Teal → Cyan → Blue → Violet → Navy → Gray
    (스케일 명명은 라이트 기준 = 캐논값)
    ============================================================ */
 :root {
-  /* KRDS 표준형 hue 팔레트 + Violet — src/lib/raw-color-palettes.ts 와 동기화 */
+  /* KRDS 표준형 hue 팔레트 + 프로젝트 Teal/Violet — src/lib/raw-color-palettes.ts 와 동기화 */
   /* Red */
   --raw-red-0: #fffdfd;
   --raw-red-5: #fdefec;
@@ -80,6 +80,21 @@
   --raw-green-90: #122b18;
   --raw-green-95: #09160c;
   --raw-green-100: #010201;
+
+  /* Teal */
+  --raw-teal-0: #fcffff;
+  --raw-teal-5: #e5fbfd;
+  --raw-teal-10: #ccf7fb;
+  --raw-teal-20: #99eff7;
+  --raw-teal-30: #66e7f2;
+  --raw-teal-40: #33dfeb;
+  --raw-teal-50: #00cbde;
+  --raw-teal-60: #00aabd;
+  --raw-teal-70: #008396;
+  --raw-teal-80: #005763;
+  --raw-teal-90: #00333a;
+  --raw-teal-95: #001a1d;
+  --raw-teal-100: #000303;
 
   /* Cyan */
   --raw-cyan-0: #fdfeff;
@@ -168,9 +183,6 @@
   --raw-white-a5:  rgba(255, 255, 255, 0.05);
   --raw-white-a10: rgba(255, 255, 255, 0.10);
   --raw-white-a20: rgba(255, 255, 255, 0.20);
-
-  /* Utility raw — hue 팔레트 밖 단일 목적 색. src/lib/raw-color-palettes.ts rawUtilityColors 와 동기화 */
-  --raw-utility-focus-ring: #00cbde;
 
   /* ============================================================
      SIZE FOUNDATIONS — 모드 무관 레이아웃 스케일
@@ -270,6 +282,14 @@
   --ds-green-70: var(--raw-green-70);    --ds-green-80: var(--raw-green-80);
   --ds-green-90: var(--raw-green-90);    --ds-green-95: var(--raw-green-95);
   --ds-green-100: var(--raw-green-100);
+
+  --ds-teal-0: var(--raw-teal-0);    --ds-teal-5: var(--raw-teal-5);
+  --ds-teal-10: var(--raw-teal-10);    --ds-teal-20: var(--raw-teal-20);
+  --ds-teal-30: var(--raw-teal-30);    --ds-teal-40: var(--raw-teal-40);
+  --ds-teal-50: var(--raw-teal-50);    --ds-teal-60: var(--raw-teal-60);
+  --ds-teal-70: var(--raw-teal-70);    --ds-teal-80: var(--raw-teal-80);
+  --ds-teal-90: var(--raw-teal-90);    --ds-teal-95: var(--raw-teal-95);
+  --ds-teal-100: var(--raw-teal-100);
 
   --ds-cyan-0: var(--raw-cyan-0);    --ds-cyan-5: var(--raw-cyan-5);
   --ds-cyan-10: var(--raw-cyan-10);    --ds-cyan-20: var(--raw-cyan-20);
@@ -418,8 +438,8 @@
   --ds-foreground-info: var(--ds-blue-50);
   --ds-foreground-disabled: var(--ds-gray-30);
 
-  /* Utility — 포커스 링(outline) 색. 라이트=--raw-utility-focus-ring(#00cbde) · 다크=orange-30(.dark) */
-  --ds-utility-focus-ring: var(--raw-utility-focus-ring);
+  /* Utility — 포커스 링(outline) 색. 라이트=teal-50 · 다크=orange-30(.dark) */
+  --ds-utility-focus-ring: var(--raw-teal-50);
   --outline-focus-width: 0.15625rem; /* 2.5px */
   --outline-focus-offset: 0.125rem; /* 2px — tab 제외 기본 offset */
   --outline-focus-tab-offset: -0.125rem; /* -2px — tab·TOC 등 인셋 outline */
@@ -507,6 +527,14 @@
   --ds-green-70: var(--raw-green-30);   --ds-green-80: var(--raw-green-20);
   --ds-green-90: var(--raw-green-10);   --ds-green-95: var(--raw-green-5);
   --ds-green-100: var(--raw-green-0);
+
+  --ds-teal-0: var(--raw-teal-100);   --ds-teal-5: var(--raw-teal-95);
+  --ds-teal-10: var(--raw-teal-90);   --ds-teal-20: var(--raw-teal-80);
+  --ds-teal-30: var(--raw-teal-70);   --ds-teal-40: var(--raw-teal-60);
+  --ds-teal-50: var(--raw-teal-50);   --ds-teal-60: var(--raw-teal-40);
+  --ds-teal-70: var(--raw-teal-30);   --ds-teal-80: var(--raw-teal-20);
+  --ds-teal-90: var(--raw-teal-10);   --ds-teal-95: var(--raw-teal-5);
+  --ds-teal-100: var(--raw-teal-0);
 
   --ds-cyan-0: var(--raw-cyan-100);   --ds-cyan-5: var(--raw-cyan-95);
   --ds-cyan-10: var(--raw-cyan-90);   --ds-cyan-20: var(--raw-cyan-80);
@@ -632,6 +660,14 @@
   --color-green-70: var(--ds-green-70);   --color-green-80: var(--ds-green-80);
   --color-green-90: var(--ds-green-90);   --color-green-95: var(--ds-green-95);
   --color-green-100: var(--ds-green-100);
+
+  --color-teal-0: var(--ds-teal-0);   --color-teal-5: var(--ds-teal-5);
+  --color-teal-10: var(--ds-teal-10);   --color-teal-20: var(--ds-teal-20);
+  --color-teal-30: var(--ds-teal-30);   --color-teal-40: var(--ds-teal-40);
+  --color-teal-50: var(--ds-teal-50);   --color-teal-60: var(--ds-teal-60);
+  --color-teal-70: var(--ds-teal-70);   --color-teal-80: var(--ds-teal-80);
+  --color-teal-90: var(--ds-teal-90);   --color-teal-95: var(--ds-teal-95);
+  --color-teal-100: var(--ds-teal-100);
 
   --color-cyan-0: var(--ds-cyan-0);   --color-cyan-5: var(--ds-cyan-5);
   --color-cyan-10: var(--ds-cyan-10);   --color-cyan-20: var(--ds-cyan-20);
@@ -849,6 +885,7 @@
 @utility overlay-strong { background-color: var(--color-overlay-strong); }
 
 /* Utility(유틸리티) 배경색 — 스크롤바 thumb/track 전용 유틸. */
+@utility utility-focus-ring { outline-color: var(--color-utility-focus-ring); }
 @utility utility-scroll-thumb { background-color: var(--color-utility-scroll-thumb); }
 @utility utility-scroll-track { background-color: var(--color-utility-scroll-track); }
 

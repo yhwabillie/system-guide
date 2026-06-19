@@ -263,10 +263,10 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
       tokens: [
         {
           token: "utility-focus-ring",
-          utility: "outline-utility-focus-ring",
+          utility: "utility-focus-ring",
           cssVar: "--color-utility-focus-ring",
           readAs: "outline",
-          rawVar: "--raw-utility-focus-ring",
+          rawVar: "--raw-teal-50",
           rawVarDark: "--raw-orange-30",
         },
       ],
