@@ -370,16 +370,16 @@
   /* 선·표면·보조 텍스트 — 모드 인지 스케일 참조(자동 대응) */
   --ds-border: var(--ds-gray-20);
   --ds-border-strong: var(--ds-gray-30);
-  /* 어느 배경에도 보이는 반투명 선/오버레이 — 라이트=검정α, 다크=흰색α(.dark) */
-  --ds-border-overlay: var(--raw-black-a10);
+  /* 어느 배경에도 보이는 반투명 선 — 라이트=검정α, 다크=흰색α(.dark) */
+  --ds-border-subtle: var(--raw-black-a10);
   /* Brand purpose — 라이트 기준 violet 스케일 큐레이션(.dark 용도 재매핑·대비 검증: docs/accessibility.md) */
   --ds-border-brand: var(--ds-violet-40);
   --ds-surface-subtle: var(--ds-gray-5);
   --ds-surface-brand: var(--ds-violet-5);
-  /* 중립(neutral) 텍스트 위계 — primary(=--ds-foreground, gray-90) 메인 타이틀/본문 · secondary(gray-70) 서브타이틀 · muted(gray-40) 보조.
-     secondary 는 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1.
+  /* 중립(neutral) 텍스트 위계 — default(=--ds-foreground, gray-90) 메인 타이틀/본문 · subtle(gray-70) 서브타이틀 · muted(gray-40) 보조.
+     subtle 은 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1.
      muted 는 .dark 에서 gray-60 으로 용도 재매핑(아래 .dark 블록) — #0a0a0a 단독 배경·nav 라벨에는 쓰지 않음. */
-  --ds-foreground-secondary: var(--ds-gray-70);
+  --ds-foreground-subtle: var(--ds-gray-70);
   --ds-foreground-muted: var(--ds-gray-40);
   --ds-foreground-brand: var(--ds-violet-50);
   /* brand-subtle — brand(violet-50)보다 옅은 보조 브랜드 전경. 라이트 violet-40(white ~3.8:1) · 본문 4.5:1 미달 가능 → 캡션·eyebrow·surface-brand 위 보조 라벨. */
@@ -457,8 +457,8 @@
   --ds-background: var(--raw-black);
   /* --ds-foreground 는 --ds-gray-90 이 반사되어 #fafafa 자동 적용 */
 
-  /* 다크 배경엔 흰색 반투명 오버레이가 더 자연스러움 */
-  --ds-border-overlay: var(--raw-white-a10);
+  /* 다크 배경엔 흰색 반투명 선이 더 자연스러움 */
+  --ds-border-subtle: var(--raw-white-a10);
   --ds-overlay-subtle: var(--raw-white-a5);
   --ds-overlay: var(--raw-white-a10);
   --ds-overlay-strong: var(--raw-white-a20);
@@ -564,14 +564,14 @@
    --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
    이름으로 사용한다: --color-green-50 → bg/text/border-green-50.
    슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
-   예: --color-surface-subtle → surface-subtle · --color-line → border-line.
+   예: --color-surface-subtle → surface-subtle · --color-default → border-default.
    (전경·표면 색은 예외: 아이콘·배경 의미 통일을 위해 @utility foreground-* · surface-* 로 노출 — 아래 참고)
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
    생성 유틸 예: bg-gray-20 / text-green-50 / text-body-md / leading-base ...
    ============================================================ */
 @theme inline {
-  --color-background: var(--ds-background);
-  --color-foreground-primary: var(--ds-foreground);
+  --color-surface-default: var(--ds-background);
+  --color-foreground-default: var(--ds-foreground);
 
   --color-red-0: var(--ds-red-0);   --color-red-5: var(--ds-red-5);
   --color-red-10: var(--ds-red-10);   --color-red-20: var(--ds-red-20);
@@ -645,16 +645,16 @@
   --color-gray-90: var(--ds-gray-90);   --color-gray-95: var(--ds-gray-95);
   --color-gray-100: var(--ds-gray-100);
 
-  --color-line: var(--ds-border);
-  --color-line-strong: var(--ds-border-strong);
-  --color-line-brand: var(--ds-border-brand);
-  --color-line-overlay: var(--ds-border-overlay);
+  --color-default: var(--ds-border);
+  --color-strong: var(--ds-border-strong);
+  --color-brand: var(--ds-border-brand);
+  --color-subtle: var(--ds-border-subtle);
   --color-utility-focus-ring: var(--ds-utility-focus-ring);
   --color-utility-scroll-thumb: var(--ds-utility-scroll-thumb);
   --color-utility-scroll-track: var(--ds-utility-scroll-track);
   --color-surface-subtle: var(--ds-surface-subtle);
   --color-surface-brand: var(--ds-surface-brand);
-  --color-foreground-secondary: var(--ds-foreground-secondary);
+  --color-foreground-subtle: var(--ds-foreground-subtle);
   --color-foreground-muted: var(--ds-foreground-muted);
   --color-foreground-brand: var(--ds-foreground-brand);
   --color-foreground-brand-subtle: var(--ds-foreground-brand-subtle);
@@ -779,9 +779,9 @@
 
 /* Foreground(전경) 색 — 텍스트·아이콘 공통. `text-` 접두는 아이콘을 포함하지 못하므로
    prefix 없는 `foreground-*` 로 통일하고 `color`(아이콘은 currentColor 상속)로 적용한다.
-   border/ring 등 다른 속성은 TIER 3 `--color-foreground-primary`(@theme)에서 그대로 노출. */
-@utility foreground-primary { color: var(--color-foreground-primary); }
-@utility foreground-secondary { color: var(--color-foreground-secondary); }
+   border/ring 등 다른 속성은 TIER 3 `--color-foreground-default`(@theme)에서 그대로 노출. */
+@utility foreground-default { color: var(--color-foreground-default); }
+@utility foreground-subtle { color: var(--color-foreground-subtle); }
 @utility foreground-muted { color: var(--color-foreground-muted); }
 @utility foreground-brand { color: var(--color-foreground-brand); }
 @utility foreground-brand-subtle { color: var(--color-foreground-brand-subtle); }
@@ -794,7 +794,7 @@
 @utility foreground-disabled { color: var(--color-foreground-disabled); }
 
 /* Surface(표면) 배경색 — `bg-` 접두는 palette 조합용. 시맨틱 표면은 surface-* 로 통일. */
-@utility surface-background { background-color: var(--color-background); }
+@utility surface-default { background-color: var(--color-surface-default); }
 @utility surface-subtle { background-color: var(--color-surface-subtle); }
 @utility surface-brand { background-color: var(--color-surface-brand); }
 

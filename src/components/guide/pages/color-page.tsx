@@ -157,12 +157,12 @@ export function GuideColorPage() {
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 flex items-center justify-between rounded-lg border border-line-strong surface-subtle py-2.5 px-4 text-label-md font-semibold foreground-primary ring-2 ring-foreground-primary"
+              className="mb-3 flex items-center justify-between rounded-lg border border-strong surface-subtle py-2.5 px-4 text-label-md font-semibold foreground-default ring-2 ring-foreground-default"
             >
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground-primary ring-offset-1 ring-offset-background"
+                  className="relative inline-block size-2.5 shrink-0 overflow-hidden rounded-full ring-2 ring-foreground-default ring-offset-1 ring-offset-surface-default"
                 >
                   <ContrastSwatchFill
                     hex={selecting === "bg" ? bgColor.hex : textColor.hex}
@@ -177,7 +177,7 @@ export function GuideColorPage() {
                 type="button"
                 onClick={() => setSelecting(null)}
                 aria-label="색상 선택 취소"
-                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent foreground-muted transition-colors hover:bg-gray-10 hover:foreground-primary"
+                className="inline-flex size-control-sm cursor-pointer items-center justify-center rounded-full border-0 bg-transparent foreground-muted transition-colors hover:bg-gray-10 hover:foreground-default"
               >
                 <NavIcon innerMarkup={contrastPickCloseIcon} className="size-icon-xs shrink-0" />
               </button>
@@ -198,7 +198,7 @@ export function GuideColorPage() {
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
               <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                <span className="text-label-sm font-semibold foreground-primary">{family}</span>
+                <span className="text-label-sm font-semibold foreground-default">{family}</span>
                 {RAW_COLOR_SCALE_UNITS.map((unit) => {
                   const sw = swatchByScale[unit];
                   if (!sw) {
@@ -243,7 +243,7 @@ export function GuideColorPage() {
             );})}
 
             {/* 스케일 팔레트와 구분 — 앵커는 스케일(0~100)과 무관 */}
-            <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-line" />
+            <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-default" />
 
             {/* Surface 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
             {surfaceAnchors.map(({ label, hex, cssVar }) => {
@@ -253,7 +253,7 @@ export function GuideColorPage() {
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
                 <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold foreground-primary">{label}</span>
+                  <span className="text-label-sm font-semibold foreground-default">{label}</span>
                   {isInteractive ? (
                     <button
                       type="button"
@@ -365,14 +365,14 @@ export function GuideColorPage() {
               aria-label={`대비율 결과: ${ratio}:1 — ${level}`}
               aria-live="polite"
               aria-atomic="true"
-              className="surface-background p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
+              className="surface-default p-6 md:p-7 flex flex-col gap-5 border-t lg:border-t-0 lg:border-l border-gray-20"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-label-md font-bold m-0">명암비</p>
                   <LevelBadge level={level} />
                 </div>
-                <output className={`block py-5 text-center foreground-primary ${contrastResultSurfaceClass}`}>
+                <output className={`block py-5 text-center foreground-default ${contrastResultSurfaceClass}`}>
                   <span className="font-bold leading-none numeric-tabular" style={{ fontSize: pxToRem(40) }}>
                     {ratio}<span className="font-normal text-gray-60" style={{ fontSize: pxToRem(18) }}> : 1</span>
                   </span>
@@ -413,7 +413,7 @@ export function GuideColorPage() {
                 const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
                 return (
                 <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold foreground-primary">{family}</span>
+                  <span className="text-label-sm font-semibold foreground-default">{family}</span>
                   {RAW_COLOR_SCALE_UNITS.map((unit) => {
                     const sw = swatchByScale[unit];
                     if (!sw) {

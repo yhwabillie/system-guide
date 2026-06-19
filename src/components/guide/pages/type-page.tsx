@@ -66,7 +66,7 @@ export function GuideTypePage() {
           {/* Pretendard GOV */}
           <div className="rounded-2xl border border-gray-20 overflow-hidden">
             <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
-              <h4 className="m-0 text-label-xl font-semibold foreground-primary">Pretendard GOV</h4>
+              <h4 className="m-0 text-label-xl font-semibold foreground-default">Pretendard GOV</h4>
               <p className="m-0 mt-1 text-caption foreground-muted">기본 폰트 · 1순위</p>
             </div>
             <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
@@ -146,7 +146,7 @@ export function GuideTypePage() {
           {/* Noto Sans KR */}
           <div className="mt-8 rounded-2xl border border-gray-20 overflow-hidden">
             <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
-              <h4 className="m-0 text-label-xl font-semibold foreground-primary">Noto Sans KR</h4>
+              <h4 className="m-0 text-label-xl font-semibold foreground-default">Noto Sans KR</h4>
               <p className="m-0 mt-1 text-caption foreground-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
             </div>
             <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">

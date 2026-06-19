@@ -38,10 +38,10 @@ const navSectionEyebrowClass =
   "mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-gray-60";
 
 const navExpandToggleClass =
-  "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:foreground-primary";
+  "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
 
 const navExternalLinkClass =
-  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold foreground-primary no-underline transition-colors duration-150 hover:bg-gray-10";
+  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold foreground-default no-underline transition-colors duration-150 hover:bg-gray-10";
 
 const navSubItemClass = (active: boolean) =>
   [
@@ -49,7 +49,7 @@ const navSubItemClass = (active: boolean) =>
     "py-2 px-3 transition-colors duration-150",
     active
       ? "surface-brand foreground-brand font-semibold"
-      : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:foreground-primary",
+      : "bg-transparent text-gray-60 font-medium hover:bg-gray-5 hover:foreground-default",
   ].join(" ");
 
 const navParentGroupClass = (active: boolean) =>
@@ -59,7 +59,7 @@ const navParentLinkClass = (active: boolean) =>
   [
     "flex min-w-0 flex-1 items-center gap-3 text-left font-sans text-label-md leading-base no-underline",
     "py-2.5 pl-3.5 pr-1 transition-colors duration-150",
-    active ? "font-semibold foreground-primary" : "font-medium text-gray-60 hover:foreground-primary",
+    active ? "font-semibold foreground-default" : "font-medium text-gray-60 hover:foreground-default",
   ].join(" ");
 
 function GuideNavSubLinks({
@@ -75,7 +75,7 @@ function GuideNavSubLinks({
     <ul
       id={listId}
       aria-labelledby={labelledBy}
-      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-line py-1 pl-4 pr-1"
+      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-default py-1 pl-4 pr-1"
     >
       {items.map((item) => (
         <li key={item.href} className="relative">
@@ -204,7 +204,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
         본문 바로가기
       </a>
 
-      <div className="min-h-screen font-sans surface-background foreground-primary transition-colors duration-300">
+      <div className="min-h-screen font-sans surface-default foreground-default transition-colors duration-300">
         <GuideSiteHeader
           isSidenavOpen={isSidenavOpen}
           onToggleSidenav={() => setIsSidenavOpen((open) => !open)}
@@ -215,7 +215,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
             id="guide-sidenav"
             hidden={!isSidenavOpen}
             aria-label="디자인 토큰 가이드"
-            className={`${layoutSidenavMenuClass} flex flex-col border-b border-line surface-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
+            className={`${layoutSidenavMenuClass} flex flex-col border-b border-default surface-default py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
           >
             <p className={navSectionEyebrowClass}>Tokens</p>
             <div className="flex flex-col gap-0.5">
@@ -270,7 +270,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
               />
             </div>
 
-            <div className="mt-5 border-t border-line pt-5">
+            <div className="mt-5 border-t border-default pt-5">
               <p className={navSectionEyebrowClass}>Assets</p>
               <GuideNavCategory
                 active={isIcons}
@@ -286,7 +286,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
               />
             </div>
 
-            <div className="mt-5 border-t border-line pt-5">
+            <div className="mt-5 border-t border-default pt-5">
               <p className={navSectionEyebrowClass}>Layout</p>
               <Link id="nav-layout-breakpoint" href={GUIDE_ROUTES.responsive} className={navExternalLinkClass}>
                 {navIconLayout}

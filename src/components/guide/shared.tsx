@@ -120,8 +120,8 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "neutral",
         label: "neutral",
         tokens: [
-          { token: "foreground-primary", utility: "foreground-primary", cssVar: "--color-foreground-primary", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
-          { token: "foreground-secondary", utility: "foreground-secondary", cssVar: "--color-foreground-secondary", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
+          { token: "foreground-default", utility: "foreground-default", cssVar: "--color-foreground-default", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
+          { token: "foreground-subtle", utility: "foreground-subtle", cssVar: "--color-foreground-subtle", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
           { token: "foreground-muted", utility: "foreground-muted", cssVar: "--color-foreground-muted", readAs: "text", rawVar: "--raw-gray-40", rawVarDark: "--raw-gray-60" },
         ],
       },
@@ -159,7 +159,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "neutral",
         label: "neutral",
         tokens: [
-          { token: "surface-background", utility: "surface-background", cssVar: "--color-background", readAs: "bg", rawVar: "--raw-white", rawVarDark: "--raw-black" },
+          { token: "surface-default", utility: "surface-default", cssVar: "--color-surface-default", readAs: "bg", rawVar: "--raw-white", rawVarDark: "--raw-black" },
           { token: "surface-subtle", utility: "surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-5", rawVarDark: "--raw-gray-95" },
         ],
       },
@@ -175,31 +175,19 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     ),
     groups: [
       {
-        id: "default",
-        label: "default",
-        tokens: [
-          { token: "line", utility: "border-line", cssVar: "--color-line", readAs: "border", rawVar: "--raw-gray-20", rawVarDark: "--raw-gray-80" },
-        ],
-      },
-      {
-        id: "strong",
-        label: "strong",
-        tokens: [
-          { token: "line-strong", utility: "border-line-strong", cssVar: "--color-line-strong", readAs: "border", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
-        ],
-      },
-      {
-        id: "overlay",
-        label: "overlay",
-        tokens: [
-          { token: "line-overlay", utility: "border-line-overlay", cssVar: "--color-line-overlay", readAs: "border", rawVar: "--raw-black-a10", rawVarDark: "--raw-white-a10" },
-        ],
-      },
-      {
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "line-brand", utility: "border-line-brand", cssVar: "--color-line-brand", readAs: "border", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-40" },
+          { token: "brand", utility: "border-brand", cssVar: "--color-brand", readAs: "border", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-40" },
+        ],
+      },
+      {
+        id: "neutral",
+        label: "neutral",
+        tokens: [
+          { token: "default", utility: "border-default", cssVar: "--color-default", readAs: "border", rawVar: "--raw-gray-20", rawVarDark: "--raw-gray-80" },
+          { token: "strong", utility: "border-strong", cssVar: "--color-strong", readAs: "border", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
+          { token: "subtle", utility: "border-subtle", cssVar: "--color-subtle", readAs: "border", rawVar: "--raw-black-a10", rawVarDark: "--raw-white-a10" },
         ],
       },
     ],
@@ -473,7 +461,7 @@ export function SwatchCardMeta({
 }) {
   return (
     <div className="p-4">
-      <p className="m-0 font-mono text-label-md font-bold foreground-primary">{utility}</p>
+      <p className="m-0 font-mono text-label-md font-bold foreground-default">{utility}</p>
       <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
       <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
     </div>
@@ -493,12 +481,12 @@ export function SemanticColorSwatchCard({
   const hexLabel = cssColorToHex(color);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line surface-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-default surface-default shadow-[0_4px_16px_var(--ds-shadow)]">
       <div
         aria-hidden="true"
         className={[
           "h-24 w-full",
-          needsBorder ? "border-b border-line" : "",
+          needsBorder ? "border-b border-default" : "",
         ].join(" ")}
         style={{ backgroundColor: color }}
       />
@@ -521,10 +509,10 @@ export function SemanticOverlaySwatchCard({
   isDark: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-line surface-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-default surface-default shadow-[0_4px_16px_var(--ds-shadow)]">
       <div
         aria-hidden="true"
-        className="h-24 w-full overflow-hidden border-b border-line"
+        className="h-24 w-full overflow-hidden border-b border-default"
         style={isDark ? checkerDark : checkerLight}
       >
         <div className="size-full" style={{ background: `var(${cssVar})` }} />
@@ -549,13 +537,13 @@ export function SemanticGradientSwatchCard({
   const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-violet-10)" };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line surface-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="overflow-hidden rounded-xl border border-default surface-default shadow-[0_4px_16px_var(--ds-shadow)]">
       {isFade ? (
-        <div className="h-24 w-full overflow-hidden border-b border-line" style={underlayStyle}>
+        <div className="h-24 w-full overflow-hidden border-b border-default" style={underlayStyle}>
           <div aria-hidden="true" className={`size-full ${utility}`} />
         </div>
       ) : (
-        <div aria-hidden="true" className={`h-24 w-full border-b border-line ${utility}`} />
+        <div aria-hidden="true" className={`h-24 w-full border-b border-default ${utility}`} />
       )}
       <SwatchCardMeta utility={utility} sourceVar={rawVar} value={desc} />
     </div>
@@ -624,8 +612,8 @@ export const fontStack = [
 
 export const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
   primary: "bg-accent text-on-accent",
-  fallback: "bg-gray-10 foreground-primary ring-1 ring-line",
-  system: "bg-transparent foreground-muted ring-1 ring-dashed ring-line",
+  fallback: "bg-gray-10 foreground-default ring-1 ring-default",
+  system: "bg-transparent foreground-muted ring-1 ring-dashed ring-default",
 };
 
 export const TOAST_DURATION_MS = 2500;
@@ -665,7 +653,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line surface-background px-4 py-3 text-label-sm font-medium foreground-primary shadow-[0_6px_24px_var(--ds-shadow)]"
+          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-default surface-default px-4 py-3 text-label-sm font-medium foreground-default shadow-[0_6px_24px_var(--ds-shadow)]"
         >
           {toast.message}
         </div>
@@ -749,7 +737,7 @@ export function TabDescriptionCallout({
     <div
       className={[
         margin,
-        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:foreground-primary [&_a]:font-semibold [&_a]:foreground-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
+        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:foreground-default [&_a]:font-semibold [&_a]:foreground-default [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
         className,
       ]
         .filter(Boolean)
@@ -793,7 +781,7 @@ export function ContentTitleBlock({
       <p className="m-0 text-label-md font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
       <h2
         id={titleId}
-        className="m-0 mt-2 font-bold tracking-normal foreground-primary typo-guide-content-title"
+        className="m-0 mt-2 font-bold tracking-normal foreground-default typo-guide-content-title"
       >
         {title}
       </h2>
@@ -834,7 +822,7 @@ export function ContentSectionTitle({
       <h3
         id={id}
         className={[
-          "m-0 text-heading-sm font-bold leading-base foreground-primary",
+          "m-0 text-heading-sm font-bold leading-base foreground-default",
           guideSectionAnchorClass,
           titleMargin,
           className,
@@ -899,9 +887,9 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
       aria-labelledby={headingId}
       className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
-      <div className="overflow-hidden rounded-md border border-line surface-background">
-        <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3.5">
-          <h2 id={headingId} className="m-0 text-label-md font-bold foreground-primary">
+      <div className="overflow-hidden rounded-md border border-default surface-default">
+        <div className="flex items-center justify-between gap-2 border-b border-default px-4 py-3.5">
+          <h2 id={headingId} className="m-0 text-label-md font-bold foreground-default">
             목차
           </h2>
           <button
@@ -909,7 +897,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
             onClick={() => setCollapsed((prev) => !prev)}
             aria-expanded={!collapsed}
             aria-controls={listId}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line surface-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:foreground-primary"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-default surface-default px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:foreground-default"
           >
             {collapsed ? "펼치기" : "접기"}
             <NavIcon
@@ -937,8 +925,8 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                     className={[
                       "block px-4 py-2.5 text-body-sm lowercase no-underline transition-colors",
                       isActive
-                        ? "bg-gray-5 font-bold foreground-primary"
-                        : "font-normal text-gray-60 hover:bg-gray-5 hover:foreground-primary",
+                        ? "bg-gray-5 font-bold foreground-default"
+                        : "font-normal text-gray-60 hover:bg-gray-5 hover:foreground-default",
                     ].join(" ")}
                   >
                     {label}
@@ -1001,7 +989,7 @@ export function ContentSubsectionTitle({
 /** 탭 패널 3단 — 표·그룹 라벨 (h3 섹션 직속) */
 export function ContentGroupTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <h4 className={["m-0 mb-4 text-heading-sm font-bold foreground-primary", className].filter(Boolean).join(" ")}>
+    <h4 className={["m-0 mb-4 text-heading-sm font-bold foreground-default", className].filter(Boolean).join(" ")}>
       {children}
     </h4>
   );
@@ -1022,12 +1010,12 @@ export const contentOutlineSubTabClass = (active: boolean) =>
   [
     "relative shrink-0 cursor-pointer select-none whitespace-nowrap rounded-t-lg border-0 border-b-0 border-t-2 border-l-2 border-r-2 border-solid px-5 py-3 font-sans text-guide-tab-title leading-base transition-[color,background-color] duration-200",
     active
-      ? "z-[1] -mb-0.5 border-foreground-primary surface-background font-bold foreground-primary after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:surface-background after:content-['']"
-      : "border-transparent surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:foreground-primary",
+      ? "z-[1] -mb-0.5 border-foreground-default surface-default font-bold foreground-default after:absolute after:-bottom-0.5 after:left-0 after:z-[2] after:h-0.5 after:w-full after:surface-default after:content-['']"
+      : "border-transparent surface-subtle font-medium text-gray-60 hover:bg-gray-10 hover:foreground-default",
   ].join(" ");
 
 export const guideTabScrollBtnClass =
-  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-line surface-background text-gray-60 transition-opacity duration-150 hover:surface-subtle hover:foreground-primary focus-visible:opacity-100 focus-visible:visible";
+  "guide-tabs-scroll-btn inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-full border border-default surface-default text-gray-60 transition-opacity duration-150 hover:surface-subtle hover:foreground-default focus-visible:opacity-100 focus-visible:visible";
 
 export const GUIDE_TAB_SCROLL_AMOUNT = 200;
 
@@ -1118,7 +1106,7 @@ export function ContentOutlineTabList({
             role="tablist"
             aria-label={ariaLabel}
             onKeyDown={onKeyDown}
-            className="flex w-max min-w-full border-b-2 border-foreground-primary px-control-md"
+            className="flex w-max min-w-full border-b-2 border-foreground-default px-control-md"
           >
             {tabs.map((tab) => {
               const active = activeValue === tab.value;
@@ -1166,7 +1154,7 @@ export const guideHeaderHeightClass = "h-[3.75rem]";
 export const guideHeaderOffsetClass = "top-[3.75rem]";
 export const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 export const guideHeaderIconButtonClass =
-  "inline-flex size-control-sm items-center justify-center rounded-full surface-subtle foreground-primary transition-colors duration-150 hover:bg-gray-10 hover:foreground-primary";
+  "inline-flex size-control-sm items-center justify-center rounded-full surface-subtle foreground-default transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
 
 export function GuideLogoMark() {
   return (
@@ -1191,7 +1179,7 @@ export function GuideSiteHeader({
 }) {
   return (
     <header
-      className={`sticky z-40 border-b border-line surface-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
+      className={`sticky z-40 border-b border-default surface-default ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
     >
       <div className={`grid w-full ${guideHeaderHeightClass} grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6`}>
         <div className="flex items-center gap-1 justify-self-start">
@@ -1249,7 +1237,7 @@ export function GuideSiteHeader({
               type="search"
               name="guide-search"
               placeholder="가이드 검색..."
-              className="h-control-sm w-[12.5rem] rounded-full border border-line surface-subtle pl-9 pr-4 text-label-sm foreground-primary placeholder:foreground-muted md:w-[15rem]"
+              className="h-control-sm w-[12.5rem] rounded-full border border-default surface-subtle pl-9 pr-4 text-label-sm foreground-default placeholder:foreground-muted md:w-[15rem]"
             />
           </label>
         </div>
@@ -1260,9 +1248,9 @@ export function GuideSiteHeader({
 
 export function FontTokenGuide() {
   return (
-    <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-line pb-6">
+    <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-default pb-6">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <p className="m-0 text-caption font-semibold uppercase tracking-normal foreground-primary">
+        <p className="m-0 text-caption font-semibold uppercase tracking-normal foreground-default">
           Tailwind utility class
         </p>
         <TokenChip size="lg" copyValue="font-sans">
@@ -1432,13 +1420,13 @@ export function TypographyScaleTable() {
                     {label}
                   </span>
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm foreground-primary">
+                <td className="px-4 py-4 align-middle text-label-sm foreground-default">
                   {typographyWeightLabel[weight] ?? weight}
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-primary">
+                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-default">
                   {sizePx}
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-primary">
+                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-default">
                   {lineHeightPx}
                 </td>
                 <td className="px-4 py-4 align-middle">
@@ -1468,7 +1456,7 @@ export function TypographyExampleOfUse() {
               </div>
               <span
                 aria-hidden="true"
-                className="hidden h-px w-full border-t border-dashed border-line sm:block"
+                className="hidden h-px w-full border-t border-dashed border-default sm:block"
               />
               <TokenChip>{chip}</TokenChip>
             </div>
@@ -1623,9 +1611,9 @@ const iconSourceByStyle = {
 
 export function buildIconSvgMarkup(style: IconStyle, utility: string, innerMarkup: string) {
   if (style === "filled") {
-    return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="${utility} shrink-0 foreground-primary">\n  ${innerMarkup}\n</svg>`;
+    return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="${utility} shrink-0 foreground-default">\n  ${innerMarkup}\n</svg>`;
   }
-  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="${utility} shrink-0 foreground-primary">\n  ${innerMarkup}\n</svg>`;
+  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="${utility} shrink-0 foreground-default">\n  ${innerMarkup}\n</svg>`;
 }
 
 export function ProjectIconGlyph({
@@ -1637,7 +1625,7 @@ export function ProjectIconGlyph({
   className?: string;
   style?: IconStyle;
 }) {
-  const resolvedClassName = className ?? "size-icon-md shrink-0 foreground-primary";
+  const resolvedClassName = className ?? "size-icon-md shrink-0 foreground-default";
 
   if (style === "filled") {
     return (
@@ -1681,12 +1669,12 @@ export function IconCopyCell({
   return (
     <td className="px-3 py-2 text-center align-middle">
       <div className="group relative flex min-h-[4.5rem] items-center justify-center">
-        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 foreground-primary`} style={style} />
+        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 foreground-default`} style={style} />
         <button
           type="button"
           onClick={() => void handleCopy()}
           aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
-          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-line surface-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:foreground-primary focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-default surface-default px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:foreground-default focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
         >
           copy
         </button>
@@ -1700,7 +1688,7 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
 
   if (catalog.length === 0) {
     return (
-      <div className="rounded-xl border border-line bg-gray-10 p-6">
+      <div className="rounded-xl border border-default bg-gray-10 p-6">
         <p className="m-0 text-body-sm text-gray-70">
           <strong>{styleLabel}</strong> 아이콘 세트가 아직 등록되지 않았습니다. 글리프를 추가하면 이 표에 크기별 배리에이션이 표시됩니다.
         </p>
@@ -1709,17 +1697,17 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-line">
+    <div className="overflow-x-auto rounded-xl border border-default">
       <table className="w-full min-w-[44rem] border-collapse text-left">
         <caption className="sr-only">{styleLabel} Icon — Tailwind utility class 크기별 배리에이션</caption>
         <thead>
-          <tr className="border-b border-line bg-gray-5">
+          <tr className="border-b border-default bg-gray-5">
             <th scope="col" className="px-4 py-3">
               <span className="sr-only">Icon</span>
             </th>
             {iconSizeTokens.map((token) => (
               <th key={token.name} scope="col" className="px-3 py-3 text-center align-middle">
-                <span className="font-mono text-label-sm font-semibold foreground-primary">
+                <span className="font-mono text-label-sm font-semibold foreground-default">
                   {token.utility} ({token.px})
                 </span>
               </th>
@@ -1728,7 +1716,7 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
         </thead>
         <tbody>
           {catalog.map(({ id, label, innerMarkup }) => (
-            <tr key={id} className="border-b border-line last:border-b-0">
+            <tr key={id} className="border-b border-default last:border-b-0">
               <th scope="row" className="px-4 py-4 align-middle">
                 <span className="font-mono text-caption text-gray-60">{id}</span>
                 <span className="sr-only">{label}</span>
@@ -1792,7 +1780,7 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-label-lg font-bold foreground-primary">{source.name}</span>
+              <span className="text-label-lg font-bold foreground-default">{source.name}</span>
               <span className="text-caption font-semibold foreground-brand">{source.style}</span>
             </div>
             <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">
@@ -1816,7 +1804,7 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
               {source.specs.map(({ label, value }) => (
                 <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <dt className="m-0 font-mono text-caption text-gray-60">{label}</dt>
-                  <dd className="m-0 font-mono text-caption foreground-primary">{value}</dd>
+                  <dd className="m-0 font-mono text-caption foreground-default">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -1906,7 +1894,7 @@ export function rawPaletteSwatchClass(isBg: boolean, isText: boolean, isInteract
     extra,
     isInteractive ? "cursor-pointer border-0 p-0 transition-[opacity,box-shadow,transform] duration-150" : "",
     isSelected
-      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-foreground-primary ring-offset-2 ring-offset-background"
+      ? "z-[1] scale-[1.04] shadow-md ring-2 ring-foreground-default ring-offset-2 ring-offset-surface-default"
       : "",
     isInteractive && !isSelected ? "opacity-90 hover:opacity-100 hover:scale-[1.02]" : "",
   ]
@@ -1939,8 +1927,8 @@ export function ContrastSwatchRoleMarker({ role }: { role: "BG" | "TXT" }) {
     <span
       aria-hidden="true"
       className={[
-        "absolute top-1 left-1 z-[1] rounded border-2 surface-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
-        "border-foreground-primary foreground-primary",
+        "absolute top-1 left-1 z-[1] rounded border-2 surface-default px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
+        "border-foreground-default foreground-default",
       ].join(" ")}
     >
       {role}
@@ -1973,7 +1961,7 @@ export function ContrastColorPickButton({
 }) {
   return (
     <div>
-      <p id={labelId} className="mb-1.5 text-label-sm font-semibold foreground-primary">
+      <p id={labelId} className="mb-1.5 text-label-sm font-semibold foreground-default">
         {labelText}
       </p>
       <button
@@ -1984,21 +1972,21 @@ export function ContrastColorPickButton({
         className={[
           "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
           isSelecting
-            ? "bg-gray-10 shadow-sm ring-2 ring-foreground-primary"
-            : "surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-line",
+            ? "bg-gray-10 shadow-sm ring-2 ring-foreground-default"
+            : "surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-default",
         ].join(" ")}
       >
         <span
           aria-hidden="true"
           className={[
-            "relative block size-8 shrink-0 overflow-hidden isolate rounded-md border border-line transition-transform duration-150",
-            isSelecting ? "scale-105 ring-2 ring-foreground-primary ring-offset-1 ring-offset-background" : "group-hover:scale-105",
+            "relative block size-8 shrink-0 overflow-hidden isolate rounded-md border border-default transition-transform duration-150",
+            isSelecting ? "scale-105 ring-2 ring-foreground-default ring-offset-1 ring-offset-surface-default" : "group-hover:scale-105",
           ].join(" ")}
         >
           <ContrastSwatchFill hex={swatchHex} checker={checker} />
         </span>
         <span className="flex min-w-0 flex-col text-left">
-          <span className="text-label-md font-semibold foreground-primary">{colorLabel}</span>
+          <span className="text-label-md font-semibold foreground-default">{colorLabel}</span>
           <span id={valueId} className="text-caption text-gray-70 font-mono numeric-tabular">{colorHex}</span>
         </span>
         <span
@@ -2006,8 +1994,8 @@ export function ContrastColorPickButton({
           className={[
             "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
             isSelecting
-              ? "border-foreground-primary bg-gray-10 foreground-primary"
-              : "border-line-strong surface-background foreground-primary group-hover:border-foreground-primary",
+              ? "border-foreground-default bg-gray-10 foreground-default"
+              : "border-strong surface-default foreground-default group-hover:border-foreground-default",
           ].join(" ")}
         >
           {isSelecting ? (
@@ -2033,7 +2021,7 @@ export function ContrastCriterionBox({ grade, threshold, passed }: { grade: stri
   return (
     <div className={`flex items-center gap-2 py-2.5 px-3 ${contrastResultSurfaceClass}`}>
       <ContrastCircle passed={passed} />
-      <span className="text-label-md font-bold foreground-primary">{grade}</span>
+      <span className="text-label-md font-bold foreground-default">{grade}</span>
       <span className="ml-auto text-caption text-gray-70 numeric-tabular">{threshold}</span>
     </div>
   );
@@ -2063,7 +2051,7 @@ export function ContrastCategory({
 export function TokenValue({ px, rem }: { px: string; rem: string }) {
   return (
     <span className="flex flex-col leading-base font-mono">
-      <span className="text-label-sm font-semibold numeric-tabular foreground-primary">{px}</span>
+      <span className="text-label-sm font-semibold numeric-tabular foreground-default">{px}</span>
       <span className="text-caption foreground-muted numeric-tabular">{rem}</span>
     </span>
   );
@@ -2079,7 +2067,7 @@ export function MeasureBar({
   height?: string;
 }) {
   return (
-    <div className="h-9 surface-subtle border border-line flex items-center px-3">
+    <div className="h-9 surface-subtle border border-default flex items-center px-3">
       <span
         role="img"
         aria-label={label}
@@ -2119,7 +2107,7 @@ export function GridGapPreview({ utility, label }: { utility: string; label: str
         <div
           key={i}
           aria-hidden="true"
-          className="surface-background"
+          className="surface-default"
           style={{ height: pxToRem(32) }}
         />
       ))}
@@ -2129,7 +2117,7 @@ export function GridGapPreview({ utility, label }: { utility: string; label: str
 
 export function GridGapCuration() {
   return (
-    <div className="rounded-xl border border-line p-6">
+    <div className="rounded-xl border border-default p-6">
       <div
         role="list"
         aria-label="gap 크기 배리에이션"
@@ -2137,12 +2125,12 @@ export function GridGapCuration() {
       >
         {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
           <div key={name} role="listitem" className="flex min-w-[5rem] flex-1 flex-col items-center gap-2">
-            <span className="text-label-sm font-semibold numeric-tabular foreground-primary">{px}</span>
+            <span className="text-label-sm font-semibold numeric-tabular foreground-default">{px}</span>
             <GridGapPreview
               utility={utility}
               label={`${name} ${px}, ${rem} — 좌우·상하 gap과 grid item 견본`}
             />
-            <span className="font-mono text-caption font-semibold foreground-primary">{name}</span>
+            <span className="font-mono text-caption font-semibold foreground-default">{name}</span>
             <span className="text-center text-caption foreground-muted">{desc}</span>
           </div>
         ))}
@@ -2157,7 +2145,7 @@ export function GridGapCuration() {
           붉은색 = gap
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block size-2 surface-background border border-line" />
+          <span aria-hidden="true" className="inline-block size-2 surface-default border border-default" />
           밝은 블록 = grid item
         </span>
       </p>
@@ -2301,7 +2289,7 @@ export const guideFabButtonClass =
   "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150";
 
 export const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
-export const guideFabSurfaceClass = `${guideFabButtonClass} surface-background foreground-primary ring-1 ring-line`;
+export const guideFabSurfaceClass = `${guideFabButtonClass} surface-default foreground-default ring-1 ring-default`;
 
 export const GUIDE_SCROLL_TOP_THRESHOLD = 240;
 
@@ -2324,7 +2312,7 @@ export function NavSubTree({
     <ul
       role="group"
       aria-label={ariaLabel}
-      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-line py-1 pl-4 pr-1"
+      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-default py-1 pl-4 pr-1"
     >
       {items.map((item) => (
         <li key={item.label} className="relative">

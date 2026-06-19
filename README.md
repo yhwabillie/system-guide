@@ -71,7 +71,7 @@ lg(1024px)부터 `16rem` menu + `1fr` 콘텐츠 2열(`layout-sidenav` shell gap 
 
 흐름은 `--raw-green-50` → `--ds-green-50` → `--color-green-50` → `bg-green-50`처럼 이어집니다. 스케일 단위는 `0·5·10·20…90·95·100`(KRDS family는 5~90). `.dark`에서는 `--ds-*`만 재매핑하므로 Tailwind 유틸리티도 같은 클래스명으로 다크 모드 값을 사용합니다.
 
-`--color-*` 슬러그에는 `text`·`bg`·`border` 접두를 넣지 않습니다. 유틸리티가 `{접두}-{슬러그}`로 조합되므로 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생깁니다. 예: `--color-muted` → `text-muted`, `--color-line` → `border-line`. 자세한 규칙은 [`AGENTS.md`](AGENTS.md) 참조.
+`--color-*` 슬러그에는 `text`·`bg`·`border` 접두를 넣지 않습니다. 유틸리티가 `{접두}-{슬러그}`로 조합되므로 슬러그에 접두가 있으면 `text-text-muted`·`border-border`처럼 이중 접두가 생깁니다. 예: `--color-surface-subtle` → `bg-surface-subtle`, `--color-default` → `border-default`. 자세한 규칙은 [`AGENTS.md`](AGENTS.md) 참조.
 
 큐레이션 가이드 화면에서만 쓰는 표시/검증용 토큰은 `guide-*` 접두로 구분합니다. 예: `--color-guide-level-*`(대비 등급), `--color-guide-callout-*`(탭 설명 콜아웃 배경·accent), `--color-guide-intro-*`(콘텐츠 상위 타이틀 eyebrow), `--text-guide-content-title` / `typo-guide-content-title`(콘텐츠 h2, 60px).
 

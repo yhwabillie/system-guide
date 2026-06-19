@@ -336,9 +336,9 @@ const FONT_LINE = 1.25;
 - **`line-height` 1.5 이외 값 금지** — 프로젝트 행간은 **전역 `1.5` 단일 토큰**(`tokens.ts` `FONT_LINE` → CSS `--font-line`)만 사용한다. `leading-none`·`leading-tight`·`line-height: 1`·`1.25`·고정 `px` 행간, 역할별 `--font-line-*` 토큰 신설, `globals.css`에 `--font-line` 숫자 직접 정의 모두 금지. 변경이 필요하면 **`FONT_LINE` 한 곳만** 수정하고 `body`·`@theme --leading-*`·`--typography-*` 연쇄를 따른다. 인라인은 `lineHeight: "var(--font-line)"`만 허용
 - **`caption`(12px) 미만 `font-size` 금지** — `pxToRem(10)`·`pxToRem(11)` 등 인라인 축소, `0.625rem` 직접 지정 포함. WAVE **Very small text** 오류 원인. DOM에 글리프가 있으면 `aria-hidden`이어도 검사 대상 → 최소 `text-caption`(`tokens.ts` `caption` = 12px) 이상만 사용
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
-- **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-line-overlay`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
-- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 브랜드 전경은 `foreground-brand`·중립은 `foreground-primary`·`ring-foreground-primary`·`border-line-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
-- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`foreground-muted` 금지**(다크에서 accent 채움색 ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`foreground-primary` 사용. 링크·브랜드 강조 텍스트는 `foreground-brand`. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `surface-brand` + `foreground-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
+- **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-subtle`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
+- **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 브랜드 전경은 `foreground-brand`·중립은 `foreground-default`·`ring-foreground-default`·`border-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
+- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`foreground-muted` 금지**(다크에서 accent 채움색 ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`foreground-default` 사용. 링크·브랜드 강조 텍스트는 `foreground-brand`. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `surface-brand` + `foreground-brand`(대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
 - **`foreground-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `foreground-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
 - **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
 - `user-scalable=no` meta viewport 금지
@@ -395,17 +395,17 @@ const FONT_LINE = 1.25;
 - 다크에서 스케일 50·반사만 믿고 본문 전경(`foreground-brand`·`foreground-negative` 등) 대비 미검증
 - 가이드 스와치에 `rawVar`만 넣고 다크 resolved hex가 바뀌는지 확인하지 않기
 
-**자동 반사로 충분한 예** — `foreground-primary`·`foreground-secondary`·`foreground-disabled`(gray 스케일 참조), `line`·`line-strong`(border gray 참조), `background`(`--ds-background`만 `.dark`에서 black)
+**자동 반사로 충분한 예** — `foreground-default`·`foreground-subtle`·`foreground-disabled`(gray 스케일 참조), `default`·`strong`(border gray 참조), `surface-default`(`--ds-background`만 `.dark`에서 black)
 
-**명시적 `.dark` 재매핑이 필요한 예** — `foreground-brand`·`foreground-brand-subtle`·`foreground-brand-strong`·`foreground-muted`·`foreground-required/negative/attention/positive/info`·`surface-brand`·`border-brand`·`border-overlay`·`utility-focus-ring`
+**명시적 `.dark` 재매핑이 필요한 예** — `foreground-brand`·`foreground-brand-subtle`·`foreground-brand-strong`·`foreground-muted`·`foreground-required/negative/attention/positive/info`·`surface-brand`·`border-brand`·`border-subtle`·`utility-focus-ring`
 
 ### 검증 기준
 
 | 용도 | 전경 | 배경(기본) | 최소 비율 |
 |------|------|------------|-----------|
-| 본문·링크·활성 라벨 (`foreground-brand`·`foreground-primary` 등) | 토큰 전경색 | `--ds-background` 또는 실제 깔리는 surface | **4.5:1** |
+| 본문·링크·활성 라벨 (`foreground-brand`·`foreground-default` 등) | 토큰 전경색 | `--ds-background` 또는 실제 깔리는 surface | **4.5:1** |
 | 큰 텍스트·굵은 라벨(18px+ / bold 14px+) | 동일 | 동일 | **3:1** |
-| 테두리·아이콘·채움 블록 (`border-line-brand`·`bg-accent` 단독 노출) | 토큰 색 | 인접 `--ds-background` | **3:1** |
+| 테두리·아이콘·채움 블록 (`border-brand`·`bg-accent` 단독 노출) | 토큰 색 | 인접 `--ds-background` | **3:1** |
 | 채움 버튼 (`bg-accent` + `text-on-accent`) | `--ds-on-accent` | `--ds-accent` | **4.5:1** |
 
 ### 배경 기준값
@@ -421,20 +421,20 @@ const FONT_LINE = 1.25;
 
 | 토큰 | 라이트 `--ds-*` | 다크 `--ds-*` | 검증 조합(예) |
 |------|-----------------|---------------|---------------|
-| `foreground-primary` | `gray-90` | `gray-90`→raw `gray-10` (스케일 반사) | on `background` ≥ 4.5:1 |
-| `foreground-secondary` | `gray-70` | `gray-70`→raw `gray-30` (스케일 반사) | on `background` ≥ 4.5:1 |
-| `foreground-muted` | `gray-40` | `gray-60` (용도 재매핑) | on `background` — 다크 본문용. **`#0a0a0a` 단독 배경·nav 라벨에는 사용 금지** |
-| `foreground-brand` | `violet-50` | `violet-70` | on `background` ≥ 4.5:1 · on `surface-brand` ≥ 4.5:1 |
-| `foreground-brand-subtle` | `violet-40` | `violet-50` | on `background` — 라이트 ~3.8:1 · 다크 ~3.5:1(UI). **본문 단독 4.5:1 미달** — 보조 브랜드·eyebrow·`surface-brand` 위 캡션 |
-| `foreground-brand-strong` | `violet-60` | `violet-80` | on `background` — 라이트 7.7:1 · 다크 ~10.7:1 · 헤더·강조 제목 |
+| `foreground-default` | `gray-90` | `gray-90`→raw `gray-10` (스케일 반사) | on `surface-default` ≥ 4.5:1 |
+| `foreground-subtle` | `gray-70` | `gray-70`→raw `gray-30` (스케일 반사) | on `surface-default` ≥ 4.5:1 |
+| `foreground-muted` | `gray-40` | `gray-60` (용도 재매핑) | on `surface-default` — 다크 본문용. **`#0a0a0a` 단독 배경·nav 라벨에는 사용 금지** |
+| `foreground-brand` | `violet-50` | `violet-70` | on `surface-default` ≥ 4.5:1 · on `surface-brand` ≥ 4.5:1 |
+| `foreground-brand-subtle` | `violet-40` | `violet-50` | on `surface-default` — 라이트 ~3.8:1 · 다크 ~3.5:1(UI). **본문 단독 4.5:1 미달** — 보조 브랜드·eyebrow·`surface-brand` 위 캡션 |
+| `foreground-brand-strong` | `violet-60` | `violet-80` | on `surface-default` — 라이트 7.7:1 · 다크 ~10.7:1 · 헤더·강조 제목 |
 | `surface-brand` | `violet-5` | `violet-10` | `foreground-brand` on surface ≥ 4.5:1 |
-| `border-brand` | `violet-40` | `violet-60` | on `background` ≥ 3:1 |
-| `accent`(채움) | `violet-50` | `violet-50` | `on-accent`(white) on accent ≥ 4.5:1 · accent on `background` ≥ 3:1 |
-| `foreground-required` | `red-50` | `red-70` | on `background` — 라벨 필수 `*` · negative 와 동일 스케일 |
-| `foreground-negative` | `red-50` | `red-70` | on `background` — 검증 오류 문구 · 라이트 4.56:1 · 다크 8.06:1 |
-| `foreground-attention` | `orange-50` | `orange-70` | on `background` — 라이트 4.65:1 · 다크 10.89:1 |
-| `foreground-positive` | `green-50` | `green-70` | on `background` — 라이트 4.57:1 · 다크 9.94:1 |
-| `foreground-info` | `blue-50` | `blue-70` | on `background` — 라이트 4.55:1 · 다크 8.97:1 |
+| `border-brand` | `violet-40` | `violet-60` | on `surface-default` ≥ 3:1 |
+| `accent`(채움) | `violet-50` | `violet-50` | `on-accent`(white) on accent ≥ 4.5:1 · accent on `surface-default` ≥ 3:1 |
+| `foreground-required` | `red-50` | `red-70` | on `surface-default` — 라벨 필수 `*` · negative 와 동일 스케일 |
+| `foreground-negative` | `red-50` | `red-70` | on `surface-default` — 검증 오류 문구 · 라이트 4.56:1 · 다크 8.06:1 |
+| `foreground-attention` | `orange-50` | `orange-70` | on `surface-default` — 라이트 4.65:1 · 다크 10.89:1 |
+| `foreground-positive` | `green-50` | `green-70` | on `surface-default` — 라이트 4.57:1 · 다크 9.94:1 |
+| `foreground-info` | `blue-50` | `blue-70` | on `surface-default` — 라이트 4.55:1 · 다크 8.97:1 |
 | `accent-negative`·`accent-positive`(채움) | `red-50`·`green-50` | `red-50`·`green-50` | `on-accent`(white) on 채움 ≥ 4.5:1 |
 
 **금지·주의**
@@ -526,7 +526,7 @@ const FONT_LINE = 1.25;
 - [ ] NVDA 주요 플로우 수동 테스트
 - [ ] 모바일 TalkBack 테스트
 - [ ] 브라우저 200% 줌 레이아웃 확인
-- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `foreground-primary`/`foreground-secondary`/`foreground-muted`/`foreground-brand`/`foreground-required`/`foreground-negative`/`foreground-attention`/`foreground-positive`/`foreground-info`/`border-brand`/`bg-accent`+`on-accent`/`surface-brand` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수
+- [ ] 라이트·다크 모드 **시맨틱 색상 대비** 확인 — `foreground-default`/`foreground-subtle`/`foreground-muted`/`foreground-brand`/`foreground-required`/`foreground-negative`/`foreground-attention`/`foreground-positive`/`foreground-info`/`border-brand`/`bg-accent`+`on-accent`/`surface-brand` 조합, [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수
 - [ ] 새 시맨틱 토큰 추가 시 `globals.css` **`:root` + `.dark`**·가이드 **`rawVar` + `rawVarDark`** 동시 반영 여부
 - [ ] 키보드 트랩 없음 확인
 - [ ] 자동 재생 콘텐츠 정지 버튼 확인

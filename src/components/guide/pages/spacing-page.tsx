@@ -120,16 +120,16 @@ export function GuideSpacingPage() {
             </ContentSectionTitle>
             <div role="list" className="grid grid-cols-2 gap-4">
               {radiusTokens.map(({ name, px, rem, utility }) => (
-                <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-line">
+                <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-default">
                   <div
                     role="img"
                     aria-label={`${name} ${px}, ${rem} 모서리 견본`}
-                    className={`w-24 h-14 bg-accent border border-line-overlay ${utility}`}
+                    className={`w-24 h-14 bg-accent border border-subtle ${utility}`}
                   />
                   <div>
                     <p className="m-0 text-label-sm font-semibold">{name}</p>
                     <p className="m-0 text-caption foreground-muted font-mono">
-                      <span className="font-semibold foreground-primary">{px}</span>
+                      <span className="font-semibold foreground-default">{px}</span>
                       <span> · {rem} · {utility}</span>
                     </p>
                   </div>
@@ -159,10 +159,10 @@ export function GuideSpacingPage() {
                 <ContentGroupTitle>Icon Size</ContentGroupTitle>
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-default">
                       <p className="m-0 text-label-sm font-semibold">{name}</p>
                       <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
-                        <span className="font-semibold foreground-primary">{px}</span>
+                        <span className="font-semibold foreground-default">{px}</span>
                         <span> · {rem} · {utility}</span>
                       </p>
                       <div className="flex flex-col gap-2">
@@ -192,10 +192,10 @@ export function GuideSpacingPage() {
                 <ContentGroupTitle>Control Height</ContentGroupTitle>
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-line">
+                    <div key={name} role="listitem" className="p-4 rounded-xl border border-default">
                       <p className="m-0 text-label-sm font-semibold">{name}</p>
                       <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
-                        <span className="font-semibold foreground-primary">{px}</span>
+                        <span className="font-semibold foreground-default">{px}</span>
                         <span> · {rem} · {utility}</span>
                       </p>
                       <div className="flex flex-col gap-2">

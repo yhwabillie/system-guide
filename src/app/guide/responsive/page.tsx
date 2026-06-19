@@ -86,7 +86,7 @@ function MenuCell({ px, stacked }: { px: number; stacked?: boolean }) {
       }`}
       style={{ minHeight: pxToRem(48) }}
     >
-      <span className="text-caption foreground-primary numeric-tabular px-2 text-center">
+      <span className="text-caption foreground-default numeric-tabular px-2 text-center">
         {stacked ? (
           <>
             menu · stack
@@ -137,7 +137,7 @@ function ContentAreaGuidePreview({
       {outerPx > 0 && <OuterMarginCell px={outerPx} />}
       {/* 콘텐츠 프레임(전체 너비, max 1280) — 실제 layout-page 박스. 내부 = 최소 마진 + 칼럼 + 최소 마진 */}
       <div
-        className="relative flex min-w-0 flex-col overflow-hidden surface-background"
+        className="relative flex min-w-0 flex-col overflow-hidden surface-default"
         style={{
           outline: `${pxToRem(2)} solid var(--ds-accent)`,
           outlineOffset: pxToRem(-2),
@@ -192,7 +192,7 @@ function LayoutGuidePreview({
   children: ReactNode;
 }) {
   return (
-    <div className="border-y border-line overflow-hidden">
+    <div className="border-y border-default overflow-hidden">
       <div
         role="img"
         aria-label={`layout ${layoutWidth}px — content frame ${framePx}px — screen margin ${screenMarginPx}px (min ${minMarginPx}px) — columns ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`}
@@ -259,7 +259,7 @@ function LayoutSidenavGuidePreview({
     : `layout-sidenav ${layoutWidth}px — stacked — content frame ${framePx}px — screen margin ${screenMarginPx}px (min ${minMarginPx}px) — columns ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`;
 
   return (
-    <div className="border-y border-line overflow-hidden">
+    <div className="border-y border-default overflow-hidden">
       <div role="img" aria-label={ariaLabel} className="surface-subtle">
         {isSidebarLayout ? (
           <div
@@ -341,9 +341,9 @@ function SidenavLayoutMetricsLegend({
   gridColWidthPx: number;
 }) {
   return (
-    <p className="m-0 py-1.5 px-3 text-caption foreground-muted surface-subtle border-t border-line flex flex-wrap items-center gap-x-3 gap-y-1">
+    <p className="m-0 py-1.5 px-3 text-caption foreground-muted surface-subtle border-t border-default flex flex-wrap items-center gap-x-3 gap-y-1">
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-line" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
         layout {layoutWidth}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -359,7 +359,7 @@ function SidenavLayoutMetricsLegend({
         content column {contentColumnPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
         프레임 {framePx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -371,7 +371,7 @@ function SidenavLayoutMetricsLegend({
         스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
         칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -402,13 +402,13 @@ function LayoutMetricsLegend({
   gridColWidthPx: number;
 }) {
   return (
-    <p className="m-0 py-1.5 px-3 text-caption foreground-muted surface-subtle border-t border-line flex flex-wrap items-center gap-x-3 gap-y-1">
+    <p className="m-0 py-1.5 px-3 text-caption foreground-muted surface-subtle border-t border-default flex flex-wrap items-center gap-x-3 gap-y-1">
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-line" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
         layout {layoutWidth}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
         프레임(전체 너비) {framePx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -420,7 +420,7 @@ function LayoutMetricsLegend({
         스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-default border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
         칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -473,7 +473,7 @@ export default function ResponsiveGuidePage() {
       </header>
 
       {/* Live status */}
-      <section aria-labelledby="live-status" className="mb-20 p-5 rounded-xl border border-line surface-subtle">
+      <section aria-labelledby="live-status" className="mb-20 p-5 rounded-xl border border-default surface-subtle">
         <h2 id="live-status" className="text-heading-md font-bold m-0 mb-4">현재 viewport</h2>
         <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -541,7 +541,7 @@ export default function ResponsiveGuidePage() {
                   className={`py-1.5 px-3 rounded-md border text-caption font-semibold ${
                     isActive
                       ? "bg-accent text-on-accent border-accent"
-                      : "surface-background foreground-muted border-line"
+                      : "surface-default foreground-muted border-default"
                   }`}
                 >
                   {t.name}
@@ -677,7 +677,7 @@ export default function ResponsiveGuidePage() {
             className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
             style={{ minHeight: pxToRem(48) }}
           >
-            <span className="text-caption font-semibold foreground-primary numeric-tabular">menu</span>
+            <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
           </aside>
           <main className={layoutSidenavContentClass}>
             {Array.from({ length: sidenavMetrics.gridCols }, (_, i) => (
@@ -708,7 +708,7 @@ export default function ResponsiveGuidePage() {
             className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
             style={{ minHeight: pxToRem(48) }}
           >
-            <span className="text-caption font-semibold foreground-primary numeric-tabular">menu</span>
+            <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
           </aside>
           <main className={layoutSidenavContentClass}>
             <LayoutPageCell label="content · full" className={layoutPageColSpanFull} />
@@ -722,10 +722,10 @@ export default function ResponsiveGuidePage() {
       {/* Reference table */}
       <section aria-labelledby="breakpoint-table">
         <h2 id="breakpoint-table" className="text-heading-md font-bold mb-4">Grid tier reference</h2>
-        <div className="overflow-x-auto rounded-xl border border-line">
+        <div className="overflow-x-auto rounded-xl border border-default">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="surface-subtle border-b border-line">
+              <tr className="surface-subtle border-b border-default">
                 <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">name</th>
                 <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Viewport</th>
                 <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Prefix</th>
@@ -742,7 +742,7 @@ export default function ResponsiveGuidePage() {
                 return (
                   <tr
                     key={t.name}
-                    className={`border-b border-line ${isActive ? "bg-accent/10" : ""}`}
+                    className={`border-b border-default ${isActive ? "bg-accent/10" : ""}`}
                   >
                     <td className="py-3 px-4 text-label-sm font-semibold">
                       {t.name}
