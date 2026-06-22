@@ -266,9 +266,9 @@ export function GuideTypePage() {
         <section id="section-typography-scale" aria-label="Type Scale" className="mb-0">
           <TabDescriptionCallout>
             <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
-              <li>다양한 크기의 텍스트를 일관되게 사용할 수 있도록 역할과 스타일에 따라 구분해 정의합니다.</li>
-              <li>반응형에 대응하기 위해 개발 코드에서는 px 고정값 대신 <strong>rem</strong> 기반 토큰과 <strong>typo-*</strong> 묶음 유틸리티를 사용합니다.</li>
-              <li>토큰 이름은 해상도별로 분리하지 않고 유지하며, <strong>display-*</strong>와 가이드 상위 타이틀처럼 큰 제목 계층만 breakpoint별 값으로 재매핑합니다.</li>
+              <li>텍스트 크기는 <strong>Display·Heading·Body·Label·Caption</strong> 역할로 나누어 사용합니다.</li>
+              <li>개발에서는 개별 px 값을 쓰지 않고 <strong>text-*</strong> 또는 <strong>typo-*</strong> 토큰 유틸리티를 사용합니다.</li>
+              <li>반응형에서는 토큰 이름은 그대로 두고, 필요한 큰 제목 계층의 크기 값만 breakpoint에서 바뀝니다.</li>
             </ul>
           </TabDescriptionCallout>
           <TypeScaleBaseGuide />

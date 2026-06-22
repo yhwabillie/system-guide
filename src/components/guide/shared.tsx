@@ -1080,22 +1080,15 @@ export function ContentSectionTitle({
   lead?: boolean;
   description?: React.ReactNode;
 }) {
-  const titleMargin = description
-    ? lead
-      ? "mb-4"
-      : "mt-24 mb-4"
-    : lead
-      ? "mb-10"
-      : "mt-24 mb-10";
+  const headerMargin = lead ? "mb-12" : "mt-40 mb-12";
 
   return (
-    <>
+    <header className={headerMargin}>
       <h3
         id={id}
         className={[
-          "m-0 text-heading-small font-bold leading-base foreground-default",
+          "m-0 text-heading-large font-bold leading-base foreground-brand",
           guideSectionAnchorClass,
-          titleMargin,
           className,
         ]
           .filter(Boolean)
@@ -1103,8 +1096,10 @@ export function ContentSectionTitle({
       >
         {children}
       </h3>
-      {description ? <TabDescriptionCallout>{description}</TabDescriptionCallout> : null}
-    </>
+      {description ? (
+        <p className="m-0 mt-3 w-full text-body-medium leading-base foreground-subtle">{description}</p>
+      ) : null}
+    </header>
   );
 }
 
