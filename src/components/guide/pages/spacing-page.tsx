@@ -4,22 +4,30 @@ import { useRef } from "react";
 import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   contentSubTabPanelClass,
-  ContentGroupTitle,
   ContentIntroShell,
   ContentOutlineTabList,
-  ContentSectionTitle,
   ContentTitleBlock,
   controlSizeTokens,
+  GuideContentLayout,
   iconSizeTokens,
   MeasureBar,
   radiusTokens,
   spacingTokens,
+  spinnerSizeTokens,
+  TabDescriptionCallout,
   TokenChip,
   TokenValue,
 } from "@/components/guide/shared";
 import { useRouter, useSearchParams } from "next/navigation";
 import { guideSpacingTabHref } from "@/lib/guide-routes";
 import { pxToRem } from "@/lib/tokens";
+
+const fixedSizeTocSections = [
+  { id: "section-fixed-size", label: "Fixed Size", level: 1 as const },
+  { id: "fixed-size-icon-size", label: "Icon Size", level: 2 as const },
+  { id: "fixed-size-control-size", label: "Control Size", level: 2 as const },
+  { id: "fixed-size-spinner-size", label: "Spinner Size", level: 2 as const },
+];
 
 const radiusSystemMeta = {
   "radius-none": {
@@ -115,19 +123,13 @@ export function GuideSpacingPage() {
           </ContentIntroShell>
 
           <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"} className={contentSubTabPanelClass}>
-          <section aria-labelledby="section-spacing" className="mb-0">
-            <ContentSectionTitle
-              id="section-spacing"
-              lead
-              description={
-                <>
-                  간격은 Tailwind 기본 spacing과 같은 <strong>4px 단위</strong>를 사용하지만, 디자인 시스템의 공식 scale로 <strong>--space-*</strong>에 명시합니다.{" "}
-                  이 값은 <strong>--spacing-*</strong> bridge를 통해 <strong>p-*</strong>, <strong>m-*</strong>, <strong>gap-*</strong> 유틸리티의 기준이 됩니다.
-                </>
-              }
-            >
-              Spacing
-            </ContentSectionTitle>
+          <section id="section-spacing" aria-label="Spacing" className="mb-0">
+            <TabDescriptionCallout>
+              <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
+                <li>간격은 Tailwind 기본 spacing과 같은 <strong>4px 단위</strong>를 사용하되, 디자인 시스템의 공식 scale로 <strong>--space-*</strong>에 명시합니다.</li>
+                <li><strong>--spacing-*</strong> bridge를 통해 <strong>p-*</strong>, <strong>m-*</strong>, <strong>gap-*</strong> 유틸리티의 기준값으로 사용합니다.</li>
+              </ul>
+            </TabDescriptionCallout>
             <div className="overflow-x-auto rounded-xl border border-gray-20">
               <table className="w-full min-w-[56rem] border-collapse text-left">
                 <caption className="sr-only">Spacing 토큰별 유틸리티 클래스, 미리보기, 크기, 토큰명</caption>
@@ -168,18 +170,13 @@ export function GuideSpacingPage() {
           </div>{/* /panel-spacing-measure */}
 
           <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"} className={contentSubTabPanelClass}>
-          <section aria-labelledby="section-radius" className="mb-0">
-            <ContentSectionTitle
-              id="section-radius"
-              lead
-              description={
-                <>
-                  모서리 값은 <strong>--shape-radius-*</strong> primitive token으로 정의하고, <strong>--radius-*</strong> bridge를 통해 <strong>rounded-*</strong> 유틸리티로 사용합니다.
-                </>
-              }
-            >
-              Radius
-            </ContentSectionTitle>
+          <section id="section-radius" aria-label="Radius" className="mb-0">
+            <TabDescriptionCallout>
+              <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
+                <li>모서리 값은 <strong>--shape-radius-*</strong> primitive token으로 정의합니다.</li>
+                <li><strong>--radius-*</strong> bridge를 통해 <strong>rounded-*</strong> 유틸리티로 사용합니다.</li>
+              </ul>
+            </TabDescriptionCallout>
             <div className="flex flex-col gap-8">
               <div role="list" aria-label="Radius 토큰 시각 비교" className="overflow-hidden rounded-xl border border-gray-20">
                 {radiusTokens.map(({ name, px, rem, utility }) => {
@@ -243,87 +240,203 @@ export function GuideSpacingPage() {
           </div>{/* /panel-spacing-radius */}
 
           <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"} className={contentSubTabPanelClass}>
-          <section aria-labelledby="section-fixed-size" className="mb-0">
-            <ContentSectionTitle
-              id="section-fixed-size"
-              lead
-              description={
-                <>
-                  아이콘과 컨트롤처럼 반복되는 <strong>고정 크기</strong>입니다. <strong>--size-*</strong>를 spacing namespace에 연결해{" "}
-                  <strong>size-*</strong>, <strong>h-*</strong> 계열로 사용할 수 있습니다.
-                </>
-              }
-            >
-              Fixed Size
-            </ContentSectionTitle>
-            <div className="flex flex-col gap-10">
+          <GuideContentLayout sections={fixedSizeTocSections}>
+          <section id="section-fixed-size" aria-label="Fixed Size" className="mb-0">
+            <TabDescriptionCallout margin="mb-20">
+              <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
+                <li>아이콘, 스피너, 컨트롤처럼 반복되는 고정 크기는 <strong>--size-*</strong> primitive token으로 관리합니다.</li>
+                <li><strong>--spacing-icon-*</strong>, <strong>--spacing-spinner-*</strong>, <strong>--spacing-control-*</strong> bridge를 통해 <strong>size-icon-*</strong>, <strong>size-spinner-*</strong>, <strong>size-control-*</strong> 유틸리티로 사용합니다.</li>
+              </ul>
+            </TabDescriptionCallout>
+            <div className="flex flex-col gap-20">
               <div>
-                <ContentGroupTitle>Icon Size</ContentGroupTitle>
-                <div role="list" className="grid grid-cols-2 gap-4">
-                  {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-default">
-                      <p className="m-0 text-label-xsmall font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
-                        <span className="font-semibold foreground-default">{px}</span>
-                        <span> · {rem} · {utility}</span>
-                      </p>
-                      <div className="flex flex-col gap-2">
-                        <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 아이콘 길이 견본`} height={pxToRem(10)} />
-                        <div className="flex items-center gap-3">
-                          <span aria-hidden="true" className="text-caption foreground-muted" style={{ width: pxToRem(56) }}>
-                            square
-                          </span>
-                          <span
-                            role="img"
-                            aria-label={`${name} ${px}, ${rem} 아이콘 정사각 크기 견본`}
-                            className="surface-brand"
-                            style={{
-                              width: `var(${cssVar})`,
-                              height: `var(${cssVar})`,
-                              borderRadius: pxToRem(2),
-                            }}
-                          />
-                        </div>
+                <header className="mb-5">
+                  <h3 id="fixed-size-icon-size" className="m-0 scroll-mt-[calc(3.75rem+1.5rem)] text-heading-large font-bold leading-base foreground-brand">Icon Size</h3>
+                  <p className="m-0 mt-3 text-body-medium foreground-subtle">
+                    시스템 아이콘은 <strong>24px</strong>를 기본 크기로 두고, 보조 아이콘부터 강조 아이콘까지 <strong>16px·20px·24px·32px·40px</strong> 범위를 사용합니다.
+                  </p>
+                </header>
+                <div className="mb-6 rounded-xl border border-dashed border-default surface-subtle px-6 py-8">
+                  <div role="list" aria-label="아이콘 크기 비교" className="flex items-center justify-center gap-8">
+                    {iconSizeTokens.map(({ name, cssVar, px }) => (
+                      <div key={name} role="listitem" className="flex flex-col items-center gap-2">
+                        <span
+                          role="img"
+                          aria-label={`${name} ${px} 아이콘 크기 견본`}
+                          className="block border border-strong surface-default"
+                          style={{
+                            width: `var(${cssVar})`,
+                            height: `var(${cssVar})`,
+                          }}
+                        />
+                        <span className="font-mono text-caption foreground-muted">{px}</span>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+                <div className="overflow-x-auto rounded-xl border border-gray-20">
+                  <table className="w-full min-w-[42rem] border-collapse text-left">
+                    <caption className="sr-only">Icon size 토큰별 유틸리티 클래스와 크기</caption>
+                    <thead>
+                      <tr className="border-b border-gray-20 bg-gray-5">
+                        <th scope="col" className="w-44 px-4 py-3 text-label-xsmall font-bold foreground-default">Utility Class</th>
+                        <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Size</th>
+                        <th scope="col" className="px-4 py-3 text-label-xsmall font-bold foreground-default">Usage</th>
+                        <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Token</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {iconSizeTokens.map(({ name, px, rem, utility }) => (
+                        <tr key={name} className="border-b border-gray-20 last:border-b-0">
+                          <td className="px-4 py-4 align-middle">
+                            <TokenChip copyValue={utility}>{utility}</TokenChip>
+                          </td>
+                          <td className="px-4 py-4 align-middle">
+                            <TokenValue px={px} rem={rem} />
+                          </td>
+                          <td className="px-4 py-4 align-middle text-body-small foreground-default">
+                            {name === "icon-xs"
+                              ? "인라인 보조 아이콘"
+                              : name === "icon-sm"
+                                ? "작은 버튼·보조 액션"
+                                : name === "icon-md"
+                                  ? "일반 UI 기본 아이콘"
+                                  : name === "icon-lg"
+                                    ? "섹션 강조 아이콘"
+                                    : "큰 상태·강조 아이콘"}
+                          </td>
+                          <td className="px-4 py-4 align-middle text-caption font-mono foreground-muted">{name}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
               <div>
-                <ContentGroupTitle>Control Height</ContentGroupTitle>
-                <div role="list" className="grid grid-cols-2 gap-4">
-                  {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
-                    <div key={name} role="listitem" className="p-4 rounded-xl border border-default">
-                      <p className="m-0 text-label-xsmall font-semibold">{name}</p>
-                      <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
-                        <span className="font-semibold foreground-default">{px}</span>
-                        <span> · {rem} · {utility}</span>
-                      </p>
-                      <div className="flex flex-col gap-2">
-                        <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 컨트롤 높이 견본`} height={pxToRem(10)} />
-                        <div className="flex items-center gap-3">
-                          <span aria-hidden="true" className="text-caption foreground-muted" style={{ width: pxToRem(56) }}>
-                            height
-                          </span>
-                          <span
-                            role="img"
-                            aria-label={`${name} ${px}, ${rem} 컨트롤 높이 실제 견본`}
-                            className="surface-brand"
-                            style={{
-                              width: pxToRem(112),
-                              height: `var(${cssVar})`,
-                              borderRadius: pxToRem(2),
-                            }}
-                          />
-                        </div>
+                <header className="mb-5">
+                  <h3 id="fixed-size-control-size" className="m-0 scroll-mt-[calc(3.75rem+1.5rem)] text-heading-large font-bold leading-base foreground-brand">Control Size</h3>
+                  <p className="m-0 mt-3 text-body-medium foreground-subtle">
+                    버튼, 아이콘 버튼, input, search bar, selectbox, combobox, tab처럼 한 줄에 함께 놓이는 인터랙션 컴포넌트는 <strong>40px·48px·56px·64px</strong> 높이 scale을 공유합니다.
+                  </p>
+                </header>
+                <div className="mb-6 rounded-xl border border-dashed border-default surface-subtle px-6 py-8">
+                  <div role="list" aria-label="컨트롤 크기 비교" className="flex items-end justify-center gap-6">
+                    {controlSizeTokens.map(({ name, cssVar, px }) => (
+                      <div key={name} role="listitem" className="flex flex-col items-center gap-2">
+                        <span
+                          role="img"
+                          aria-label={`${name} ${px} 컨트롤 높이 견본`}
+                          className="block w-32 border border-strong surface-default"
+                          style={{
+                            height: `var(${cssVar})`,
+                            borderRadius: pxToRem(8),
+                          }}
+                        />
+                        <span className="font-mono text-caption foreground-muted">{px}</span>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+                <div className="overflow-x-auto rounded-xl border border-gray-20">
+                  <table className="w-full min-w-[42rem] border-collapse text-left">
+                    <caption className="sr-only">Control size 토큰별 유틸리티 클래스와 크기</caption>
+                    <thead>
+                      <tr className="border-b border-gray-20 bg-gray-5">
+                        <th scope="col" className="w-44 px-4 py-3 text-label-xsmall font-bold foreground-default">Utility Class</th>
+                        <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Size</th>
+                        <th scope="col" className="px-4 py-3 text-label-xsmall font-bold foreground-default">Usage</th>
+                        <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Token</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {controlSizeTokens.map(({ name, px, rem, utility }) => (
+                        <tr key={name} className="border-b border-gray-20 last:border-b-0">
+                          <td className="px-4 py-4 align-middle">
+                            <TokenChip copyValue={utility}>{utility}</TokenChip>
+                          </td>
+                          <td className="px-4 py-4 align-middle">
+                            <TokenValue px={px} rem={rem} />
+                          </td>
+                          <td className="px-4 py-4 align-middle text-body-small foreground-default">
+                            {name === "control-sm"
+                              ? "밀도 높은 툴바·테이블 필터"
+                              : name === "control-md"
+                                ? "일반 폼·기본 버튼"
+                                : name === "control-lg"
+                                  ? "검색 바·강조 입력"
+                                  : "히어로 검색·넓은 선택 컨트롤"}
+                          </td>
+                          <td className="px-4 py-4 align-middle text-caption font-mono foreground-muted">{name}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <header className="mb-5">
+                  <h3 id="fixed-size-spinner-size" className="m-0 scroll-mt-[calc(3.75rem+1.5rem)] text-heading-large font-bold leading-base foreground-brand">Spinner Size</h3>
+                  <p className="m-0 mt-3 text-body-medium foreground-subtle">
+                    로딩 상태의 위계와 배치 맥락에 맞춰 <strong>20px·32px·48px</strong> 스피너 크기를 사용합니다.
+                  </p>
+                </header>
+                <div className="mb-6 rounded-xl border border-dashed border-default surface-subtle px-6 py-8">
+                  <div role="list" aria-label="스피너 크기 비교" className="flex items-end justify-center gap-10">
+                    {spinnerSizeTokens.map(({ name, cssVar, px, rem }) => (
+                      <div key={name} role="listitem" className="flex flex-col items-center gap-2">
+                        <span
+                          role="img"
+                          aria-label={`${name} ${px} 스피너 크기 견본`}
+                          className="block rounded-full border border-strong surface-default"
+                          style={{
+                            width: `var(${cssVar}, ${rem})`,
+                            height: `var(${cssVar}, ${rem})`,
+                          }}
+                        />
+                        <span className="font-mono text-caption foreground-muted">{px}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="overflow-x-auto rounded-xl border border-gray-20">
+                  <table className="w-full min-w-[42rem] border-collapse text-left">
+                    <caption className="sr-only">Spinner size 토큰별 유틸리티 클래스와 크기</caption>
+                    <thead>
+                      <tr className="border-b border-gray-20 bg-gray-5">
+                        <th scope="col" className="w-44 px-4 py-3 text-label-xsmall font-bold foreground-default">Utility Class</th>
+                        <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Size</th>
+                        <th scope="col" className="px-4 py-3 text-label-xsmall font-bold foreground-default">Usage</th>
+                        <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Token</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {spinnerSizeTokens.map(({ name, px, rem, utility }) => (
+                        <tr key={name} className="border-b border-gray-20 last:border-b-0">
+                          <td className="px-4 py-4 align-middle">
+                            <TokenChip copyValue={utility}>{utility}</TokenChip>
+                          </td>
+                          <td className="px-4 py-4 align-middle">
+                            <TokenValue px={px} rem={rem} />
+                          </td>
+                          <td className="px-4 py-4 align-middle text-body-small foreground-default">
+                            {name === "spinner-lg"
+                              ? "페이지·섹션 로딩"
+                              : name === "spinner-md"
+                                ? "패널·카드 로딩"
+                                : "버튼·인라인 로딩"}
+                          </td>
+                          <td className="px-4 py-4 align-middle text-caption font-mono foreground-muted">{name}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </section>
+          </GuideContentLayout>
 
           </div>{/* /panel-spacing-fixed-size */}
 

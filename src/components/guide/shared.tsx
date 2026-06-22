@@ -2091,12 +2091,17 @@ export const fixedSizeTokens = [
   { name: "icon-md", cssVar: "--size-icon-md", px: "24px", rem: "1.5rem", utility: "size-icon-md" },
   { name: "icon-lg", cssVar: "--size-icon-lg", px: "32px", rem: "2rem", utility: "size-icon-lg" },
   { name: "icon-xl", cssVar: "--size-icon-xl", px: "40px", rem: "2.5rem", utility: "size-icon-xl" },
-  { name: "control-sm", cssVar: "--size-control-sm", px: "32px", rem: "2rem", utility: "h-control-sm" },
-  { name: "control-md", cssVar: "--size-control-md", px: "40px", rem: "2.5rem", utility: "h-control-md" },
-  { name: "control-lg", cssVar: "--size-control-lg", px: "48px", rem: "3rem", utility: "h-control-lg" },
+  { name: "spinner-sm", cssVar: "--size-spinner-sm", px: "20px", rem: "1.25rem", utility: "size-spinner-sm" },
+  { name: "spinner-md", cssVar: "--size-spinner-md", px: "32px", rem: "2rem", utility: "size-spinner-md" },
+  { name: "spinner-lg", cssVar: "--size-spinner-lg", px: "48px", rem: "3rem", utility: "size-spinner-lg" },
+  { name: "control-sm", cssVar: "--size-control-sm", px: "40px", rem: "2.5rem", utility: "size-control-sm" },
+  { name: "control-md", cssVar: "--size-control-md", px: "48px", rem: "3rem", utility: "size-control-md" },
+  { name: "control-lg", cssVar: "--size-control-lg", px: "56px", rem: "3.5rem", utility: "size-control-lg" },
+  { name: "control-xl", cssVar: "--size-control-xl", px: "64px", rem: "4rem", utility: "size-control-xl" },
 ];
 
 export const iconSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("icon"));
+export const spinnerSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("spinner"));
 export const controlSizeTokens = fixedSizeTokens.filter(({ name }) => name.startsWith("control"));
 
 export type IconStyle = "outline" | "filled";
@@ -2424,12 +2429,6 @@ export const gridColumnTokens = [
   { name: "grid-cols-12", cols: 12, utility: "grid-cols-12", desc: "12열 — span 기반 페이지 레이아웃" },
 ];
 
-const gridGapTokens = [
-  { name: "gap-4", cssVar: "--space-4", px: "16px", rem: "1rem", utility: "gap-4", desc: "기본 간격 — 컴팩트 카드·폼" },
-  { name: "gap-6", cssVar: "--space-6", px: "24px", rem: "1.5rem", utility: "gap-6", desc: "표준 간격 — 섹션 내부 그리드" },
-  { name: "gap-8", cssVar: "--space-8", px: "32px", rem: "2rem", utility: "gap-8", desc: "넓은 간격 — 랜딩·갤러리" },
-];
-
 export const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
   AAA:        { bg: "var(--ds-guide-level-aaa-bg)",  color: "var(--ds-guide-level-aaa-fg)",  label: "AAA" },
   AA:         { bg: "var(--ds-guide-level-aa-bg)",   color: "var(--ds-guide-level-aa-fg)",   label: "AA" },
@@ -2701,63 +2700,6 @@ export function GridColumnPreview({ cols, utility, label }: { cols: number; util
       {Array.from({ length: cols }, (_, i) => (
         <div key={i} className="bg-accent" style={{ height: cellHeight }} aria-hidden="true" />
       ))}
-    </div>
-  );
-}
-
-export function GridGapPreview({ utility, label }: { utility: string; label: string }) {
-  return (
-    <div
-      role="img"
-      aria-label={label}
-      className={`grid w-full grid-cols-2 ${utility} bg-red-20`}
-    >
-      {Array.from({ length: 4 }, (_, i) => (
-        <div
-          key={i}
-          aria-hidden="true"
-          className="bg-background"
-          style={{ height: pxToRem(32) }}
-        />
-      ))}
-    </div>
-  );
-}
-
-export function GridGapCuration() {
-  return (
-    <div className="rounded-xl border border-default p-6">
-      <div
-        role="list"
-        aria-label="gap 크기 배리에이션"
-        className="flex items-end justify-between gap-6 overflow-x-auto"
-      >
-        {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
-          <div key={name} role="listitem" className="flex min-w-[5rem] flex-1 flex-col items-center gap-2">
-            <span className="text-label-xsmall font-semibold numeric-tabular foreground-default">{px}</span>
-            <GridGapPreview
-              utility={utility}
-              label={`${name} ${px}, ${rem} — 좌우·상하 gap과 grid item 견본`}
-            />
-            <span className="font-mono text-caption font-semibold foreground-default">{name}</span>
-            <span className="text-center text-caption foreground-muted">{desc}</span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-6 mb-3 text-caption foreground-muted">
-        Linear: 16px → 24px → 32px (+8px) — <span className="font-mono">gap-*</span>는{" "}
-        <span className="font-mono">space-*</span> 토큰과 1:1 대응합니다.
-      </p>
-      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption foreground-muted">
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block size-2 bg-red-20" />
-          붉은색 = gap
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block size-2 bg-background border border-default" />
-          밝은 블록 = grid item
-        </span>
-      </p>
     </div>
   );
 }

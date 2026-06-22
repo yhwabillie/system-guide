@@ -6,7 +6,6 @@ import { useEffect, useId, useState, type ReactNode } from "react";
 import {
   GUIDE_ROUTES,
   guideColorTabHref,
-  guideGridTabHref,
   guideIconsTabHref,
   guideSpacingTabHref,
   guideTypeTabHref,
@@ -273,8 +272,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 label="Grid"
                 expandLabel="Grid"
                 subItems={[
-                  { label: "Columns", href: guideGridTabHref("columns"), active: isGrid && tab !== "gap" },
-                  { label: "Gap", href: guideGridTabHref("gap"), active: isGrid && tab === "gap" },
+                  { label: "Columns", href: GUIDE_ROUTES.grid, active: isGrid },
                 ]}
               />
             </div>

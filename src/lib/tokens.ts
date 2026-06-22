@@ -78,8 +78,8 @@ export const responsiveFontSizePx: Partial<Record<ResponsiveFontSizeTier, Partia
 };
 
 const responsiveFontSizeMediaQuery: Record<ResponsiveFontSizeTier, string> = {
-  md: "(min-width: 48rem)",
-  lg: "(min-width: 64rem)",
+  md: "(min-width: 48rem)", // 768px
+  lg: "(min-width: 64rem)", // 1024px
 };
 
 function fontSizeDeclarations(values: Partial<Record<FontSizeTokenName, number>>): string {
