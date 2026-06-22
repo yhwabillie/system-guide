@@ -41,11 +41,11 @@ const navExpandToggleClass =
   "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
 
 const navExternalLinkClass =
-  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-md font-semibold foreground-default no-underline transition-colors duration-150 hover:bg-gray-10";
+  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-small font-semibold foreground-default no-underline transition-colors duration-150 hover:bg-gray-10";
 
 const navSubItemClass = (active: boolean) =>
   [
-    "flex w-full items-center justify-between gap-2 text-left rounded-lg font-sans text-label-sm leading-base no-underline",
+    "flex w-full items-center justify-between gap-2 text-left rounded-lg font-sans text-label-xsmall leading-base no-underline",
     "py-2 px-3 transition-colors duration-150",
     active
       ? "surface-brand-faint foreground-brand-strong font-semibold"
@@ -57,7 +57,7 @@ const navParentGroupClass = (active: boolean) =>
 
 const navParentLinkClass = (active: boolean) =>
   [
-    "flex min-w-0 flex-1 items-center gap-3 text-left font-sans text-label-md leading-base no-underline",
+    "flex min-w-0 flex-1 items-center gap-3 text-left font-sans text-label-small leading-base no-underline",
     "py-2.5 pl-3.5 pr-1 transition-colors duration-150",
     active ? "font-semibold foreground-default" : "font-medium text-gray-60 hover:foreground-default",
   ].join(" ");
@@ -223,7 +223,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 type="search"
                 name="guide-search"
                 placeholder="가이드 검색..."
-                className="h-control-md w-full rounded-lg surface-subtle pl-9 pr-3 text-label-sm foreground-default placeholder:foreground-muted"
+                className="h-control-md w-full rounded-lg surface-subtle pl-9 pr-3 text-label-xsmall foreground-default placeholder:foreground-muted"
               />
             </label>
             <p className={navSectionEyebrowClass}>Tokens</p>

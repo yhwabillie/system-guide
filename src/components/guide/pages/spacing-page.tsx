@@ -94,7 +94,7 @@ export function GuideSpacingPage() {
                   className="grid gap-4 items-center"
                   style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
                 >
-                  <span className="text-label-sm font-semibold">{name}</span>
+                  <span className="text-label-xsmall font-semibold">{name}</span>
                   <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 여백 길이 견본`} />
                   <TokenValue px={px} rem={rem} />
                   <span className="text-caption foreground-muted font-mono">{utility}</span>
@@ -127,7 +127,7 @@ export function GuideSpacingPage() {
                     className={`w-24 h-14 surface-brand border border-subtle ${utility}`}
                   />
                   <div>
-                    <p className="m-0 text-label-sm font-semibold">{name}</p>
+                    <p className="m-0 text-label-xsmall font-semibold">{name}</p>
                     <p className="m-0 text-caption foreground-muted font-mono">
                       <span className="font-semibold foreground-default">{px}</span>
                       <span> · {rem} · {utility}</span>
@@ -160,7 +160,7 @@ export function GuideSpacingPage() {
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {iconSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
                     <div key={name} role="listitem" className="p-4 rounded-xl border border-default">
-                      <p className="m-0 text-label-sm font-semibold">{name}</p>
+                      <p className="m-0 text-label-xsmall font-semibold">{name}</p>
                       <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
                         <span className="font-semibold foreground-default">{px}</span>
                         <span> · {rem} · {utility}</span>
@@ -193,7 +193,7 @@ export function GuideSpacingPage() {
                 <div role="list" className="grid grid-cols-2 gap-4">
                   {controlSizeTokens.map(({ name, cssVar, px, rem, utility }) => (
                     <div key={name} role="listitem" className="p-4 rounded-xl border border-default">
-                      <p className="m-0 text-label-sm font-semibold">{name}</p>
+                      <p className="m-0 text-label-xsmall font-semibold">{name}</p>
                       <p className="mt-0.5 mb-4 text-caption foreground-muted font-mono">
                         <span className="font-semibold foreground-default">{px}</span>
                         <span> · {rem} · {utility}</span>

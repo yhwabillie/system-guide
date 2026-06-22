@@ -377,16 +377,6 @@
   --typography-display-lg: var(--typography-weight-bold) var(--font-size-display-lg) / var(--font-line) var(--font-family-base);
   --typography-display-md: var(--typography-weight-bold) var(--font-size-display-md) / var(--font-line) var(--font-family-base);
   --typography-display-sm: var(--typography-weight-bold) var(--font-size-display-sm) / var(--font-line) var(--font-family-base);
-  --typography-heading-lg: var(--typography-weight-bold) var(--font-size-heading-lg) / var(--font-line) var(--font-family-base);
-  --typography-heading-md: var(--typography-weight-bold) var(--font-size-heading-md) / var(--font-line) var(--font-family-base);
-  --typography-heading-sm: var(--typography-weight-bold) var(--font-size-heading-sm) / var(--font-line) var(--font-family-base);
-  --typography-body-lg: var(--typography-weight-regular) var(--font-size-body-lg) / var(--font-line) var(--font-family-base);
-  --typography-body-md: var(--typography-weight-regular) var(--font-size-body-md) / var(--font-line) var(--font-family-base);
-  --typography-body-sm: var(--typography-weight-regular) var(--font-size-body-sm) / var(--font-line) var(--font-family-base);
-  --typography-label-xl: var(--typography-weight-semibold) var(--font-size-label-xl) / var(--font-line) var(--font-family-base);
-  --typography-label-lg: var(--typography-weight-semibold) var(--font-size-label-lg) / var(--font-line) var(--font-family-base);
-  --typography-label-md: var(--typography-weight-semibold) var(--font-size-label-md) / var(--font-line) var(--font-family-base);
-  --typography-label-sm: var(--typography-weight-semibold) var(--font-size-label-sm) / var(--font-line) var(--font-family-base);
   --typography-caption: var(--typography-weight-regular) var(--font-size-caption) / var(--font-line) var(--font-family-base);
   --typography-guide-selected-lg: var(--typography-weight-semibold) var(--font-size-guide-selected-lg) / var(--font-line) var(--font-family-base);
   --typography-guide-selected-md: var(--typography-weight-semibold) var(--font-size-guide-selected-md) / var(--font-line) var(--font-family-base);
@@ -646,7 +636,7 @@
    예: --color-background → bg-background · --color-surface-subtle → surface-subtle · --color-default → border-default.
    (전경·컴포넌트 표면 색은 예외: 아이콘·surface 의미 통일을 위해 @utility foreground-* · surface-* 로 노출 — 아래 참고)
    런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
-   생성 유틸 예: bg-gray-20 / text-green-50 / text-body-md / leading-base ...
+   생성 유틸 예: bg-gray-20 / text-green-50 / text-body-medium / leading-base ...
    ============================================================ */
 @theme inline {
   --color-background: var(--ds-background);
@@ -852,16 +842,6 @@
   --text-display-lg: var(--font-size-display-lg);
   --text-display-md: var(--font-size-display-md);
   --text-display-sm: var(--font-size-display-sm);
-  --text-heading-lg: var(--font-size-heading-lg);
-  --text-heading-md: var(--font-size-heading-md);
-  --text-heading-sm: var(--font-size-heading-sm);
-  --text-body-lg: var(--font-size-body-lg);
-  --text-body-md: var(--font-size-body-md);
-  --text-body-sm: var(--font-size-body-sm);
-  --text-label-xl: var(--font-size-label-xl);
-  --text-label-lg: var(--font-size-label-lg);
-  --text-label-md: var(--font-size-label-md);
-  --text-label-sm: var(--font-size-label-sm);
   --text-caption: var(--font-size-caption);
   --text-guide-selected-lg: var(--font-size-guide-selected-lg);
   --text-guide-selected-md: var(--font-size-guide-selected-md);
@@ -1038,56 +1018,6 @@
 
 @utility typo-display-sm {
   font: var(--typography-display-sm);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-heading-lg {
-  font: var(--typography-heading-lg);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-heading-md {
-  font: var(--typography-heading-md);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-heading-sm {
-  font: var(--typography-heading-sm);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-body-lg {
-  font: var(--typography-body-lg);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-body-md {
-  font: var(--typography-body-md);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-body-sm {
-  font: var(--typography-body-sm);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-label-xl {
-  font: var(--typography-label-xl);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-label-lg {
-  font: var(--typography-label-lg);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-label-md {
-  font: var(--typography-label-md);
-  letter-spacing: var(--font-tracking);
-}
-
-@utility typo-label-sm {
-  font: var(--typography-label-sm);
   letter-spacing: var(--font-tracking);
 }
 

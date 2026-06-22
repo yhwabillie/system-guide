@@ -37,20 +37,11 @@ export const fontSizePx = {
   "label-medium": 17,
   "label-small": 15,
   "label-xsmall": 13,
-  /** 기존 utility 호환 alias — 값은 새 scale 기준으로 유지 */
+  /** Display — 페이지 대표 제목(heading 과 별개 최상위 계층) */
   "display-lg": 32,
   "display-md": 28,
   "display-sm": 24,
-  "heading-lg": 32,
-  "heading-md": 24,
-  "heading-sm": 20,
-  "body-lg": 18,
-  "body-md": 16,
-  "body-sm": 14,
-  "label-xl": 18,
-  "label-lg": 16,
-  "label-md": 14,
-  "label-sm": 12,
+  /** Caption — 최소 텍스트(메타·보조 수치) */
   "caption": 12,
   "guide-selected-lg": 18,
   "guide-selected-md": 16,

@@ -523,7 +523,7 @@ export function SwatchCardMeta({
 }) {
   return (
     <div className="p-4">
-      <p className="m-0 font-mono text-label-md font-bold foreground-default">{utility}</p>
+      <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
       <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
       <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
     </div>
@@ -619,7 +619,7 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value }: Semantic
         <div aria-hidden="true" className={`size-28 rounded-2xl surface-default ${utility}`} />
       </div>
       <div className="min-w-0 py-5">
-        <p className="m-0 font-mono text-label-md font-bold foreground-default">{utility}</p>
+        <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
         <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
         <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{value}</p>
       </div>
@@ -652,7 +652,7 @@ export function SemanticColorGroupGrid({
 }) {
   return (
     <div className="mb-8 last:mb-0">
-      <h4 className="m-0 mb-3 text-label-md font-semibold lowercase text-gray-60">{label}</h4>
+      <h4 className="m-0 mb-3 text-label-small font-semibold lowercase text-gray-60">{label}</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>
     </div>
   );
@@ -674,7 +674,7 @@ export function SemanticColorCategorySection({
       <h4
         id={id}
         className={[
-          "m-0 mb-4 text-heading-sm font-bold leading-base foreground-default",
+          "m-0 mb-4 text-heading-small font-bold leading-base foreground-default",
           guideSectionAnchorClass,
         ].join(" ")}
       >
@@ -705,13 +705,13 @@ export function SemanticTokenFamilySection({
         <h3
           id={id}
           className={[
-            "m-0 text-heading-lg font-bold leading-base foreground-brand",
+            "m-0 text-heading-large font-bold leading-base foreground-brand",
             guideSectionAnchorClass,
           ].join(" ")}
         >
           {title}
         </h3>
-        <p className="m-0 mt-3 max-w-3xl text-body-md leading-base foreground-subtle">
+        <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">
           {description}
         </p>
       </header>
@@ -813,7 +813,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-default bg-background px-4 py-3 text-label-sm font-medium foreground-default shadow-[0_6px_24px_var(--ds-shadow)]"
+          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-default bg-background px-4 py-3 text-label-xsmall font-medium foreground-default shadow-[0_6px_24px_var(--ds-shadow)]"
         >
           {toast.message}
         </div>
@@ -852,7 +852,7 @@ export function TokenChip({
 
   const chipClassName = [
     "inline-flex w-fit items-center rounded-md border border-brand bg-transparent font-mono font-semibold foreground-brand",
-    size === "lg" ? "px-4 py-1.5 text-label-md" : "px-3 py-1 text-label-sm",
+    size === "lg" ? "px-4 py-1.5 text-label-small" : "px-3 py-1 text-label-xsmall",
     copyValue
       ? "cursor-pointer transition-[background-color,border-color,color,transform] duration-150 hover:surface-brand-faint hover:foreground-brand-strong active:translate-y-px"
       : "",
@@ -1003,7 +1003,7 @@ export function TabDescriptionCallout({
     <div
       className={[
         margin,
-        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-md leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:foreground-default [&_a]:font-semibold [&_a]:foreground-default [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
+        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-medium leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:foreground-default [&_a]:font-semibold [&_a]:foreground-default [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
         className,
       ]
         .filter(Boolean)
@@ -1044,7 +1044,7 @@ export function ContentTitleBlock({
 }) {
   return (
     <header className={["mb-20", className].filter(Boolean).join(" ")}>
-      <p className="m-0 text-label-md font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
+      <p className="m-0 text-label-small font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
       <h2
         id={titleId}
         className="m-0 mt-2 font-bold tracking-normal foreground-default typo-guide-content-title"
@@ -1088,7 +1088,7 @@ export function ContentSectionTitle({
       <h3
         id={id}
         className={[
-          "m-0 text-heading-sm font-bold leading-base foreground-default",
+          "m-0 text-heading-small font-bold leading-base foreground-default",
           guideSectionAnchorClass,
           titleMargin,
           className,
@@ -1204,7 +1204,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                             }}
                             aria-current={isActive ? "location" : undefined}
                             className={[
-                              "block py-0.5 text-body-sm no-underline transition-colors",
+                              "block py-0.5 text-body-small no-underline transition-colors",
                               isActive
                                 ? "font-semibold foreground-brand"
                                 : "font-normal foreground-default hover:foreground-brand",
@@ -1232,7 +1232,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
     >
       <div className="overflow-hidden rounded-md border border-default bg-background">
         <div className="flex items-center justify-between gap-2 border-b border-default px-4 py-3.5">
-          <h2 id={headingId} className="m-0 text-label-md font-bold foreground-default">
+          <h2 id={headingId} className="m-0 text-label-small font-bold foreground-default">
             목차
           </h2>
           <button
@@ -1269,8 +1269,8 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                     className={[
                       "block lowercase no-underline transition-colors",
                       isChild
-                        ? "ml-4 border-l border-default py-2 pl-4 pr-4 text-body-sm"
-                        : "mt-1 px-4 py-2.5 text-label-md font-bold first:mt-0",
+                        ? "ml-4 border-l border-default py-2 pl-4 pr-4 text-body-small"
+                        : "mt-1 px-4 py-2.5 text-label-small font-bold first:mt-0",
                       isActive && isChild
                         ? "border-brand surface-brand-faint font-semibold foreground-brand-strong"
                         : "",
@@ -1329,7 +1329,7 @@ export function ContentSubsectionTitle({
     <h4
       id={id}
       className={[
-        "m-0 mb-6 text-heading-md font-bold foreground-brand",
+        "m-0 mb-6 text-heading-medium font-bold foreground-brand",
         guideSectionAnchorClass,
         spaced ? "mt-20" : "",
         className,
@@ -1345,7 +1345,7 @@ export function ContentSubsectionTitle({
 /** 탭 패널 3단 — 표·그룹 라벨 (h3 섹션 직속) */
 export function ContentGroupTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <h4 className={["m-0 mb-4 text-heading-sm font-bold foreground-default", className].filter(Boolean).join(" ")}>
+    <h4 className={["m-0 mb-4 text-heading-small font-bold foreground-default", className].filter(Boolean).join(" ")}>
       {children}
     </h4>
   );
@@ -1599,7 +1599,7 @@ export function GuideZoomControl() {
             : `현재 확대 비율 ${zoomPercent}%, 100%로 초기화`
         }
         title={zoomPercent === GUIDE_ZOOM_DEFAULT ? "현재 100%" : "100%로 초기화"}
-        className="inline-flex h-7 w-12 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 text-label-md font-bold foreground-default numeric-tabular transition-colors duration-150 hover:surface-subtle"
+        className="inline-flex h-7 w-12 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 text-label-small font-bold foreground-default numeric-tabular transition-colors duration-150 hover:surface-subtle"
       >
         {zoomPercent}%
       </button>
@@ -1669,7 +1669,7 @@ export function GuideSiteHeader({
 
         <div className="flex min-w-0 items-center justify-center gap-2 justify-self-center">
           <GuideLogoMark />
-          <h1 className="truncate text-label-lg font-bold foreground-brand-strong">디자인 시스템 가이드</h1>
+          <h1 className="truncate text-label-medium font-bold foreground-brand-strong">디자인 시스템 가이드</h1>
         </div>
 
         <div className="justify-self-end">
@@ -1711,7 +1711,7 @@ export function FontStackCuration() {
                   <span
                     role="img"
                     aria-label={`${name} 글꼴 견본`}
-                    className={`leading-base ${emphasis === "primary" ? "text-label-lg font-bold" : "text-label-md font-semibold"}`}
+                    className={`leading-base ${emphasis === "primary" ? "text-label-medium font-bold" : "text-label-small font-semibold"}`}
                     style={{ fontFamily: family }}
                   >
                     {name}
@@ -1798,7 +1798,7 @@ const typeScaleBaseRows = [
 
 const typographyTableFrameClass = "overflow-x-auto rounded-xl border border-gray-20";
 const typographyTableHeaderRowClass = "border-b border-gray-20 bg-gray-5";
-const typographyTableHeaderCellClass = "px-4 py-3 text-label-sm font-bold foreground-default";
+const typographyTableHeaderCellClass = "px-4 py-3 text-label-xsmall font-bold foreground-default";
 const typographyTableBodyRowClass = "border-b border-gray-20 last:border-b-0";
 
 export function TypeScaleBaseGuide() {
@@ -1823,20 +1823,20 @@ export function TypeScaleBaseGuide() {
             return (
               <tr key={percentLabel} className={typographyTableBodyRowClass}>
                 {index === 0 ? (
-                  <th scope="rowgroup" rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-md font-bold foreground-default">
+                  <th scope="rowgroup" rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-small font-bold foreground-default">
                     {REM_BASE}px 기준
                   </th>
                 ) : null}
                 {index === 0 ? (
-                  <td rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-md font-bold foreground-default numeric-tabular">
+                  <td rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-small font-bold foreground-default numeric-tabular">
                     1rem
                   </td>
                 ) : null}
-                <td className="px-4 py-4 align-middle text-label-sm foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-label-xsmall foreground-default numeric-tabular">
                   <span className="block font-semibold">{percentLabel}</span>
                   <span className="block text-caption text-gray-60">{label}</span>
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-label-xsmall foreground-default numeric-tabular">
                   <span className="block font-semibold">{pxLabel}</span>
                   <span className="block text-caption text-gray-60">{note}</span>
                 </td>
@@ -1864,10 +1864,10 @@ function TypographyScaleSpecTable({
 
   return (
     <section aria-labelledby={sectionId}>
-      <h5 id={sectionId} className="m-0 mb-4 text-heading-sm font-bold foreground-default">
+      <h5 id={sectionId} className="m-0 mb-4 text-heading-small font-bold foreground-default">
         {title}
       </h5>
-      {description ? <p className="m-0 mb-5 text-body-md foreground-default">{description}</p> : null}
+      {description ? <p className="m-0 mb-5 text-body-medium foreground-default">{description}</p> : null}
       {usage}
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
@@ -1884,22 +1884,22 @@ function TypographyScaleSpecTable({
           <tbody>
             {rows.map(({ style, pc, mobile, weight, letterSpacing, typoClass }) => (
               <tr key={style} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-4 align-middle text-body-md foreground-default">
+                <td className="px-4 py-4 align-middle text-body-medium foreground-default">
                   <TokenChip copyValue={typoClass}>{style}</TokenChip>
                 </td>
-                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
                   {pc}
                 </td>
-                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
                   {mobile}
                 </td>
-                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
                   {weight}
                 </td>
-                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
                   150%
                 </td>
-                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
                   {letterSpacing}
                 </td>
               </tr>
@@ -1925,7 +1925,7 @@ function TypographyScalePreviewTable({
 
   return (
     <section aria-labelledby={previewId} className="mt-8">
-      <h6 id={previewId} className="m-0 mb-4 text-label-lg font-bold foreground-default">
+      <h6 id={previewId} className="m-0 mb-4 text-label-medium font-bold foreground-default">
         Preview
       </h6>
       <div className={typographyTableFrameClass}>
@@ -1945,12 +1945,12 @@ function TypographyScalePreviewTable({
                   <th
                     scope="rowgroup"
                     rowSpan={rows.length}
-                    className="w-44 px-4 py-5 align-middle text-label-md font-bold foreground-default"
+                    className="w-44 px-4 py-5 align-middle text-label-small font-bold foreground-default"
                   >
                     {title}
                   </th>
                 ) : null}
-                <th scope="row" className="w-44 px-4 py-5 align-middle text-label-md font-bold foreground-default">
+                <th scope="row" className="w-44 px-4 py-5 align-middle text-label-small font-bold foreground-default">
                   {style}
                 </th>
                 <td className="px-4 py-5 align-middle foreground-default">
@@ -1969,7 +1969,7 @@ function TypographyScalePreviewTable({
 function TypographyHeadingUsageTable() {
   return (
     <div aria-labelledby="typography-heading-usage" className="mb-8">
-      <h6 id="typography-heading-usage" className="m-0 mb-4 text-label-lg font-bold foreground-default">계층별 사용</h6>
+      <h6 id="typography-heading-usage" className="m-0 mb-4 text-label-medium font-bold foreground-default">계층별 사용</h6>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">Heading 계층별 사용 기준</caption>
@@ -1983,9 +1983,9 @@ function TypographyHeadingUsageTable() {
           <tbody>
             {headingUsageRows.map(({ structure, range, usage }) => (
               <tr key={structure} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-4 text-body-md foreground-default">{structure}</td>
-                <td className="px-4 py-4 text-body-md foreground-default">{range}</td>
-                <td className="px-4 py-4 text-body-md foreground-default">{usage}</td>
+                <td className="px-4 py-4 text-body-medium foreground-default">{structure}</td>
+                <td className="px-4 py-4 text-body-medium foreground-default">{range}</td>
+                <td className="px-4 py-4 text-body-medium foreground-default">{usage}</td>
               </tr>
             ))}
           </tbody>
@@ -1998,7 +1998,7 @@ function TypographyHeadingUsageTable() {
 function TypographyBodyUsageTable() {
   return (
     <div aria-labelledby="typography-body-usage" className="mb-8">
-      <h6 id="typography-body-usage" className="m-0 mb-4 text-label-lg font-bold foreground-default">계층별 사용</h6>
+      <h6 id="typography-body-usage" className="m-0 mb-4 text-label-medium font-bold foreground-default">계층별 사용</h6>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">Body 계층별 사용 기준</caption>
@@ -2011,8 +2011,8 @@ function TypographyBodyUsageTable() {
           <tbody>
             {bodyUsageRows.map(({ range, usage }) => (
               <tr key={range} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-4 text-body-md foreground-default">{range}</td>
-                <td className="px-4 py-4 text-body-md foreground-default">{usage}</td>
+                <td className="px-4 py-4 text-body-medium foreground-default">{range}</td>
+                <td className="px-4 py-4 text-body-medium foreground-default">{usage}</td>
               </tr>
             ))}
           </tbody>
@@ -2025,17 +2025,17 @@ function TypographyBodyUsageTable() {
 export function TypographyScaleTable() {
   return (
     <div className="flex flex-col gap-20">
+      <TypographyScaleSpecTable
+        title="Display"
+        description="페이지 대표 제목과 강한 시각적 진입점에 사용하는 가장 큰 제목 계층입니다."
+        rows={displayScaleSpecs}
+      />
       <TypographyScaleSpecTable title="Heading" rows={headingScaleSpecs} usage={<TypographyHeadingUsageTable />} />
       <TypographyScaleSpecTable title="Body" rows={bodyScaleSpecs} usage={<TypographyBodyUsageTable />} />
       <TypographyScaleSpecTable
         title="Label"
         description="컴포넌트 구성 내 label, placeholder 등에 사용한다."
         rows={labelScaleSpecs}
-      />
-      <TypographyScaleSpecTable
-        title="Display"
-        description="페이지 대표 제목과 강한 시각적 진입점에 사용하는 가장 큰 제목 계층입니다."
-        rows={displayScaleSpecs}
       />
       <TypographyScaleSpecTable
         title="Caption"
@@ -2268,7 +2268,7 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
   if (catalog.length === 0) {
     return (
       <div className="rounded-xl border border-default bg-gray-10 p-6">
-        <p className="m-0 text-body-sm text-gray-70">
+        <p className="m-0 text-body-small text-gray-70">
           <strong>{styleLabel}</strong> 아이콘 세트가 아직 등록되지 않았습니다. 글리프를 추가하면 이 표에 크기별 배리에이션이 표시됩니다.
         </p>
       </div>
@@ -2286,7 +2286,7 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
             </th>
             {iconSizeTokens.map((token) => (
               <th key={token.name} scope="col" className="px-3 py-3 text-center align-middle">
-                <span className="font-mono text-label-sm font-semibold foreground-default">
+                <span className="font-mono text-label-xsmall font-semibold foreground-default">
                   {token.utility} ({token.px})
                 </span>
               </th>
@@ -2359,7 +2359,7 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-label-lg font-bold foreground-default">{source.name}</span>
+              <span className="text-label-medium font-bold foreground-default">{source.name}</span>
               <span className="text-caption font-semibold foreground-brand">{source.style}</span>
             </div>
             <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">
@@ -2542,7 +2542,7 @@ export function ContrastColorPickButton({
 }) {
   return (
     <div>
-      <p id={labelId} className="mb-1.5 text-label-sm font-semibold foreground-default">
+      <p id={labelId} className="mb-1.5 text-label-xsmall font-semibold foreground-default">
         {labelText}
       </p>
       <button
@@ -2567,13 +2567,13 @@ export function ContrastColorPickButton({
           <ContrastSwatchFill hex={swatchHex} checker={checker} />
         </span>
         <span className="flex min-w-0 flex-col text-left">
-          <span className="text-label-md font-semibold foreground-default">{colorLabel}</span>
+          <span className="text-label-small font-semibold foreground-default">{colorLabel}</span>
           <span id={valueId} className="text-caption text-gray-70 font-mono numeric-tabular">{colorHex}</span>
         </span>
         <span
           id={actionId}
           className={[
-            "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-sm font-semibold transition-colors duration-150",
+            "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-xsmall font-semibold transition-colors duration-150",
             isSelecting
               ? "border-foreground-default bg-gray-10 foreground-default"
               : "border-strong bg-background foreground-default group-hover:border-foreground-default",
@@ -2602,7 +2602,7 @@ export function ContrastCriterionBox({ grade, threshold, passed }: { grade: stri
   return (
     <div className={`flex items-center gap-2 py-2.5 px-3 ${contrastResultSurfaceClass}`}>
       <ContrastCircle passed={passed} />
-      <span className="text-label-md font-bold foreground-default">{grade}</span>
+      <span className="text-label-small font-bold foreground-default">{grade}</span>
       <span className="ml-auto text-caption text-gray-70 numeric-tabular">{threshold}</span>
     </div>
   );
@@ -2620,7 +2620,7 @@ export function ContrastCategory({
 }) {
   return (
     <div>
-      <p className="text-label-sm font-semibold text-gray-60 mb-2">{title}</p>
+      <p className="text-label-xsmall font-semibold text-gray-60 mb-2">{title}</p>
       <div className="grid grid-cols-2 gap-2">
         <ContrastCriterionBox grade="AA" threshold={aa.threshold} passed={aa.passed} />
         <ContrastCriterionBox grade="AAA" threshold={aaa.threshold} passed={aaa.passed} />
@@ -2632,7 +2632,7 @@ export function ContrastCategory({
 export function TokenValue({ px, rem }: { px: string; rem: string }) {
   return (
     <span className="flex flex-col leading-base font-mono">
-      <span className="text-label-sm font-semibold numeric-tabular foreground-default">{px}</span>
+      <span className="text-label-xsmall font-semibold numeric-tabular foreground-default">{px}</span>
       <span className="text-caption foreground-muted numeric-tabular">{rem}</span>
     </span>
   );
@@ -2706,7 +2706,7 @@ export function GridGapCuration() {
       >
         {gridGapTokens.map(({ name, utility, px, rem, desc }) => (
           <div key={name} role="listitem" className="flex min-w-[5rem] flex-1 flex-col items-center gap-2">
-            <span className="text-label-sm font-semibold numeric-tabular foreground-default">{px}</span>
+            <span className="text-label-xsmall font-semibold numeric-tabular foreground-default">{px}</span>
             <GridGapPreview
               utility={utility}
               label={`${name} ${px}, ${rem} — 좌우·상하 gap과 grid item 견본`}
@@ -2852,7 +2852,7 @@ export function LinkIcon({ className }: { className?: string }) {
 export function ExternalTextLink({
   href,
   children,
-  className = "text-body-sm foreground-brand",
+  className = "text-body-small foreground-brand",
 }: {
   href: string;
   children: React.ReactNode;

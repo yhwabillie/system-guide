@@ -162,7 +162,7 @@ export function GuideColorPage() {
             <div
               role="status"
               aria-live="polite"
-              className="mb-3 flex items-center justify-between rounded-lg border border-strong surface-subtle py-2.5 px-4 text-label-md font-semibold foreground-default ring-2 ring-foreground-default"
+              className="mb-3 flex items-center justify-between rounded-lg border border-strong surface-subtle py-2.5 px-4 text-label-small font-semibold foreground-default ring-2 ring-foreground-default"
             >
               <span className="flex items-center gap-2">
                 <span
@@ -203,7 +203,7 @@ export function GuideColorPage() {
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
               <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                <span className="text-label-sm font-semibold foreground-default">{family}</span>
+                <span className="text-label-xsmall font-semibold foreground-default">{family}</span>
                 {RAW_COLOR_SCALE_UNITS.map((unit) => {
                   const sw = swatchByScale[unit];
                   if (!sw) {
@@ -258,7 +258,7 @@ export function GuideColorPage() {
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
                 <div key={label} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold foreground-default">{label}</span>
+                  <span className="text-label-xsmall font-semibold foreground-default">{label}</span>
                   {isInteractive ? (
                     <button
                       type="button"
@@ -374,7 +374,7 @@ export function GuideColorPage() {
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-label-md font-bold m-0">명암비</p>
+                  <p className="text-label-small font-bold m-0">명암비</p>
                   <LevelBadge level={level} />
                 </div>
                 <output className={`block py-5 text-center foreground-default ${contrastResultSurfaceClass}`}>
@@ -418,7 +418,7 @@ export function GuideColorPage() {
                 const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
                 return (
                 <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                  <span className="text-label-sm font-semibold foreground-default">{family}</span>
+                  <span className="text-label-xsmall font-semibold foreground-default">{family}</span>
                   {RAW_COLOR_SCALE_UNITS.map((unit) => {
                     const sw = swatchByScale[unit];
                     if (!sw) {
