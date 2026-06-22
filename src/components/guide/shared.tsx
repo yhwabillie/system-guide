@@ -345,17 +345,52 @@ export const semanticShadowCatalog = {
   title: "Shadow",
   description: (
     <>
-      컴포넌트가 배경 위에 떠 있는 깊이를 표현하는 <strong>그림자(shadow)</strong> 토큰입니다. 기본 elevation에는 <strong>shadow-default</strong>를 사용합니다.
+      면의 깊이감을 만드는 실제 <strong>그림자(shadow)</strong> 효과 토큰입니다. 높이감이 낮은 표면부터 강한 부유 레이어까지 <strong>shadow-1</strong>부터 <strong>shadow-4</strong> 순서로 사용합니다.
     </>
   ),
   tokens: [
     {
-      id: "shadow-default",
-      utility: "shadow-default",
-      sourceVar: "--ds-effect-shadow-default",
-      value: "0 0.25rem 1rem var(--ds-shadow)",
+      id: "shadow-1",
+      utility: "shadow-1",
+      sourceVar: "--ds-effect-shadow-1",
+      value: "0 1px 2px alpha-1, 0 0 2px alpha-1",
+    },
+    {
+      id: "shadow-2",
+      utility: "shadow-2",
+      sourceVar: "--ds-effect-shadow-2",
+      value: "0 0 2px alpha-1, 0 4px 8px alpha-2",
+    },
+    {
+      id: "shadow-3",
+      utility: "shadow-3",
+      sourceVar: "--ds-effect-shadow-3",
+      value: "0 0 2px alpha-2, 0 8px 16px alpha-3",
+    },
+    {
+      id: "shadow-4",
+      utility: "shadow-4",
+      sourceVar: "--ds-effect-shadow-4",
+      value: "0 0 2px alpha-2, 0 16px 24px alpha-3",
     },
   ] satisfies SemanticEffectTokenDef[],
+};
+
+export const semanticElevationCatalog = {
+  id: "semantic-elevation",
+  title: "Elevation",
+  description: (
+    <>
+      모달처럼 배경 위에 올라오는 <strong>레이어 위계(elevation)</strong> 토큰입니다. <strong>elevation-modal</strong>은 내부 그림자 값으로 <strong>shadow-3</strong> 단계를 참조합니다.
+    </>
+  ),
+  tokens: [
+    {
+      id: "elevation-modal",
+      utility: "elevation-modal",
+      sourceVar: "--ds-effect-elevation-modal",
+    },
+  ] satisfies (Omit<SemanticEffectTokenDef, "value">)[],
 };
 
 export const semanticBlurCatalog = {
@@ -388,11 +423,60 @@ export const semanticBlurCatalog = {
   ] satisfies SemanticEffectTokenDef[],
 };
 
+export const semanticRoleBlurCatalog = {
+  id: "semantic-role-blur",
+  title: "Blur",
+  description: (
+    <>
+      배경 흐림을 사용하는 맥락에 맞춘 <strong>시맨틱 blur</strong> 토큰입니다. 내부 값은 원본 blur scale을 참조합니다.
+    </>
+  ),
+  tokens: [
+    {
+      id: "blur-backdrop",
+      utility: "blur-backdrop",
+      sourceVar: "--ds-effect-blur-backdrop",
+      value: "var(--ds-effect-blur-default)",
+    },
+    {
+      id: "blur-modal-backdrop",
+      utility: "blur-modal-backdrop",
+      sourceVar: "--ds-effect-blur-modal-backdrop",
+      value: "var(--ds-effect-blur-strong)",
+    },
+  ] satisfies SemanticEffectTokenDef[],
+};
+
+export const semanticRoleOverlayCatalog = {
+  id: "semantic-role-overlay",
+  title: "Overlay",
+  description: (
+    <>
+      모달 뒤의 배경 차단면에 사용하는 <strong>시맨틱 overlay</strong> 토큰입니다. 원본 overlay scale의 <strong>overlay-strong</strong>을 참조합니다.
+    </>
+  ),
+  tokens: [
+    {
+      id: "overlay-modal-backdrop",
+      utility: "overlay-modal-backdrop",
+      cssVar: "--color-overlay-modal-backdrop",
+      rawVarLight: "--ds-overlay-modal-backdrop",
+      rawVarDark: "--ds-overlay-modal-backdrop",
+      light: "var(--ds-overlay-strong)",
+      dark: "var(--ds-overlay-strong)",
+    },
+  ],
+};
+
 export type TocSection = { id: string; label: string; level?: 1 | 2 };
 
 export const colorRawTocSections: TocSection[] = [
   { id: "section-color", label: "Color Palette" },
   { id: "section-contrast", label: "Contrast Checker" },
+  { id: "raw-effect-tokens", label: "Effect Tokens", level: 1 },
+  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
+  { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
+  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
 ];
 
 export const semanticTocSections: TocSection[] = [
@@ -401,9 +485,9 @@ export const semanticTocSections: TocSection[] = [
   { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title, level: 2 },
   { id: "semantic-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
-  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
-  { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
-  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
+  { id: semanticElevationCatalog.id, label: semanticElevationCatalog.title, level: 2 },
+  { id: semanticRoleBlurCatalog.id, label: semanticRoleBlurCatalog.title, level: 2 },
+  { id: semanticRoleOverlayCatalog.id, label: semanticRoleOverlayCatalog.title, level: 2 },
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
@@ -524,13 +608,13 @@ export function SwatchCardMeta({
 }: {
   utility: string;
   sourceVar: string;
-  value: string;
+  value?: string;
 }) {
   return (
     <div className="p-4">
       <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
       <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
-      <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
+      {value ? <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p> : null}
     </div>
   );
 }
@@ -632,7 +716,28 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value }: Semantic
   );
 }
 
-export function SemanticBlurSwatchCard({ utility, sourceVar, value }: SemanticEffectTokenDef) {
+export function SemanticElevationSwatchCard({ utility, sourceVar }: Omit<SemanticEffectTokenDef, "value">) {
+  return (
+    <div className="grid items-center gap-8 sm:grid-cols-[9rem_1fr]">
+      <div className="flex items-center justify-center py-6">
+        <div
+          aria-hidden="true"
+          className={`flex h-24 w-32 items-center justify-center rounded-2xl border border-default surface-default ${utility}`}
+        />
+      </div>
+      <div className="min-w-0 py-5">
+        <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
+        <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
+      </div>
+    </div>
+  );
+}
+
+export function SemanticBlurSwatchCard({
+  utility,
+  sourceVar,
+  value,
+}: Omit<SemanticEffectTokenDef, "value"> & { value?: string }) {
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
       <div aria-hidden="true" className="relative h-32 w-full overflow-hidden border-b border-default">
