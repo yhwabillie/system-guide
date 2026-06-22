@@ -7,6 +7,7 @@ import {
   GUIDE_ROUTES,
   guideColorTabHref,
   guideIconsTabHref,
+  guideLayoutTabHref,
   guideSpacingTabHref,
   guideTypeTabHref,
   isGuideCategoryPath,
@@ -279,7 +280,8 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 label="Layout"
                 expandLabel="Layout"
                 subItems={[
-                  { label: "Columns", href: GUIDE_ROUTES.grid, active: isGrid },
+                  { label: "Columns", href: guideLayoutTabHref("columns"), active: isGrid && tab !== "rows" },
+                  { label: "Rows", href: guideLayoutTabHref("rows"), active: isGrid && tab === "rows" },
                   { label: "Responsive Layout Guide", href: GUIDE_ROUTES.responsive, active: isResponsive, target: "_blank" },
                 ]}
               />

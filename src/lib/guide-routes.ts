@@ -25,6 +25,10 @@ export function guideSpacingTabHref(tab: "spacing" | "radius" | "fixed-size") {
   return `${GUIDE_ROUTES.spacing}${params}`;
 }
 
+export function guideLayoutTabHref(tab: "columns" | "rows") {
+  return tab === "columns" ? GUIDE_ROUTES.grid : `${GUIDE_ROUTES.grid}?tab=rows`;
+}
+
 export function guideIconsTabHref(tab: "outline" | "filled") {
   return tab === "outline" ? GUIDE_ROUTES.icons : `${GUIDE_ROUTES.icons}?tab=filled`;
 }
