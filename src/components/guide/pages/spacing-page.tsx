@@ -10,11 +10,11 @@ import {
   ContentSectionTitle,
   ContentTitleBlock,
   controlSizeTokens,
-  fixedSizeTokens,
   iconSizeTokens,
   MeasureBar,
   radiusTokens,
   spacingTokens,
+  TokenChip,
   TokenValue,
 } from "@/components/guide/shared";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -69,37 +69,47 @@ export function GuideSpacingPage() {
               lead
               description={
                 <>
-                  <strong>margin</strong>, <strong>padding</strong>, <strong>gap</strong>의 기준 스케일입니다.{" "}
-                  <strong>--space-*</strong> 원본 토큰이 <strong>--spacing-*</strong>로 노출됩니다.
+                  간격은 Tailwind 기본 spacing과 같은 <strong>4px 단위</strong>를 사용하지만, 디자인 시스템의 공식 scale로 <strong>--space-*</strong>에 명시합니다.{" "}
+                  이 값은 <strong>--spacing-*</strong> bridge를 통해 <strong>p-*</strong>, <strong>m-*</strong>, <strong>gap-*</strong> 유틸리티의 기준이 됩니다.
                 </>
               }
             >
               Spacing
             </ContentSectionTitle>
-            <div role="list" className="flex flex-col gap-2">
-              <div
-                aria-hidden="true"
-                className="grid gap-4 items-center pb-1"
-                style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
-              >
-                <span className="text-caption foreground-muted">Token</span>
-                <span className="text-caption foreground-muted">Preview</span>
-                <span className="text-caption foreground-muted">Size</span>
-                <span className="text-caption foreground-muted">Utility</span>
-              </div>
-              {spacingTokens.map(({ name, cssVar, px, rem, utility }) => (
-                <div
-                  role="listitem"
-                  key={name}
-                  className="grid gap-4 items-center"
-                  style={{ gridTemplateColumns: `${pxToRem(140)} 1fr ${pxToRem(120)} ${pxToRem(160)}` }}
-                >
-                  <span className="text-label-xsmall font-semibold">{name}</span>
-                  <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 여백 길이 견본`} />
-                  <TokenValue px={px} rem={rem} />
-                  <span className="text-caption foreground-muted font-mono">{utility}</span>
-                </div>
-              ))}
+            <div className="overflow-x-auto rounded-xl border border-gray-20">
+              <table className="w-full min-w-[56rem] border-collapse text-left">
+                <caption className="sr-only">Spacing 토큰별 유틸리티 클래스, 미리보기, 크기, 토큰명</caption>
+                <thead>
+                  <tr className="border-b border-gray-20 bg-gray-5">
+                    <th scope="col" className="w-72 px-4 py-3 text-label-xsmall font-bold foreground-default">Utility Class</th>
+                    <th scope="col" className="px-4 py-3 text-label-xsmall font-bold foreground-default">Preview</th>
+                    <th scope="col" className="w-32 px-4 py-3 text-label-xsmall font-bold foreground-default">Size</th>
+                    <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Token</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {spacingTokens.map(({ name, cssVar, px, rem, utility }) => (
+                    <tr key={name} className="border-b border-gray-20 last:border-b-0">
+                      <td className="px-4 py-4 align-middle">
+                        <div className="flex flex-wrap gap-2">
+                          {utility.split(" / ").map((utilityClass) => (
+                            <TokenChip key={utilityClass} copyValue={utilityClass}>
+                              {utilityClass}
+                            </TokenChip>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 align-middle">
+                        <MeasureBar cssVar={cssVar} label={`${name} ${px}, ${rem} 여백 길이 견본`} variant="gap" />
+                      </td>
+                      <td className="px-4 py-4 align-middle">
+                        <TokenValue px={px} rem={rem} />
+                      </td>
+                      <td className="px-4 py-4 align-middle text-caption font-mono foreground-muted">{name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
 
@@ -112,7 +122,7 @@ export function GuideSpacingPage() {
               lead
               description={
                 <>
-                  원본은 <strong>--shape-radius-*</strong>, 유틸리티 노출은 <strong>--radius-*</strong>로 분리해 이름 충돌을 피합니다.
+                  모서리 값은 <strong>--shape-radius-*</strong> primitive token으로 정의하고, <strong>--radius-*</strong> bridge를 통해 <strong>rounded-*</strong> 유틸리티로 사용합니다.
                 </>
               }
             >
@@ -126,11 +136,11 @@ export function GuideSpacingPage() {
                     aria-label={`${name} ${px}, ${rem} 모서리 견본`}
                     className={`w-24 h-14 surface-brand border border-subtle ${utility}`}
                   />
-                  <div>
-                    <p className="m-0 text-label-xsmall font-semibold">{name}</p>
-                    <p className="m-0 text-caption foreground-muted font-mono">
+                  <div className="min-w-0">
+                    <TokenChip copyValue={utility}>{utility}</TokenChip>
+                    <p className="m-0 mt-2 text-caption foreground-muted font-mono">
                       <span className="font-semibold foreground-default">{px}</span>
-                      <span> · {rem} · {utility}</span>
+                      <span> · {rem}</span>
                     </p>
                   </div>
                 </div>

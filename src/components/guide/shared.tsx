@@ -2061,18 +2061,18 @@ export function TypographyScaleTable() {
 }
 
 export const spacingTokens = [
-  { name: "space-0", cssVar: "--space-0", px: "0", rem: "0", utility: "p-0 / gap-0" },
-  { name: "space-1", cssVar: "--space-1", px: "4px", rem: "0.25rem", utility: "p-1 / gap-1" },
-  { name: "space-2", cssVar: "--space-2", px: "8px", rem: "0.5rem", utility: "p-2 / gap-2" },
-  { name: "space-3", cssVar: "--space-3", px: "12px", rem: "0.75rem", utility: "p-3 / gap-3" },
-  { name: "space-4", cssVar: "--space-4", px: "16px", rem: "1rem", utility: "p-4 / gap-4" },
-  { name: "space-5", cssVar: "--space-5", px: "20px", rem: "1.25rem", utility: "p-5 / gap-5" },
-  { name: "space-6", cssVar: "--space-6", px: "24px", rem: "1.5rem", utility: "p-6 / gap-6" },
-  { name: "space-8", cssVar: "--space-8", px: "32px", rem: "2rem", utility: "p-8 / gap-8" },
-  { name: "space-10", cssVar: "--space-10", px: "40px", rem: "2.5rem", utility: "p-10 / gap-10" },
-  { name: "space-12", cssVar: "--space-12", px: "48px", rem: "3rem", utility: "p-12 / gap-12" },
-  { name: "space-16", cssVar: "--space-16", px: "64px", rem: "4rem", utility: "p-16 / gap-16" },
-  { name: "space-20", cssVar: "--space-20", px: "80px", rem: "5rem", utility: "p-20 / gap-20" },
+  { name: "space-0", cssVar: "--space-0", px: "0", rem: "0", utility: "p-0 / m-0 / gap-0" },
+  { name: "space-1", cssVar: "--space-1", px: "4px", rem: "0.25rem", utility: "p-1 / m-1 / gap-1" },
+  { name: "space-2", cssVar: "--space-2", px: "8px", rem: "0.5rem", utility: "p-2 / m-2 / gap-2" },
+  { name: "space-3", cssVar: "--space-3", px: "12px", rem: "0.75rem", utility: "p-3 / m-3 / gap-3" },
+  { name: "space-4", cssVar: "--space-4", px: "16px", rem: "1rem", utility: "p-4 / m-4 / gap-4" },
+  { name: "space-5", cssVar: "--space-5", px: "20px", rem: "1.25rem", utility: "p-5 / m-5 / gap-5" },
+  { name: "space-6", cssVar: "--space-6", px: "24px", rem: "1.5rem", utility: "p-6 / m-6 / gap-6" },
+  { name: "space-8", cssVar: "--space-8", px: "32px", rem: "2rem", utility: "p-8 / m-8 / gap-8" },
+  { name: "space-10", cssVar: "--space-10", px: "40px", rem: "2.5rem", utility: "p-10 / m-10 / gap-10" },
+  { name: "space-12", cssVar: "--space-12", px: "48px", rem: "3rem", utility: "p-12 / m-12 / gap-12" },
+  { name: "space-16", cssVar: "--space-16", px: "64px", rem: "4rem", utility: "p-16 / m-16 / gap-16" },
+  { name: "space-20", cssVar: "--space-20", px: "80px", rem: "5rem", utility: "p-20 / m-20 / gap-20" },
 ];
 
 export const radiusTokens = [
@@ -2656,11 +2656,25 @@ export function MeasureBar({
   cssVar,
   label,
   height = pxToRem(12),
+  variant = "bar",
 }: {
   cssVar: string;
   label: string;
   height?: string;
+  variant?: "bar" | "gap";
 }) {
+  if (variant === "gap") {
+    return (
+      <div role="img" aria-label={label} className="flex h-control-md items-center">
+        <span
+          aria-hidden="true"
+          className="block h-6 rounded-sm bg-foreground-brand"
+          style={{ width: `var(${cssVar})` }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="h-9 surface-subtle border border-default flex items-center px-3">
       <span
