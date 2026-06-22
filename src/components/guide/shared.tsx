@@ -1683,9 +1683,9 @@ export function GuideSiteHeader({
 export function FontStackCuration() {
   return (
     <>
-      <ContentSubsectionTitle id="section-font-stack">
+      <ContentSectionTitle id="section-font-stack" lead>
         Font Stack
-      </ContentSubsectionTitle>
+      </ContentSectionTitle>
       <TabDescriptionCallout>
         <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. 폰트 패밀리는 <strong>--font-family-base</strong> 토큰으로 관리합니다.
       </TabDescriptionCallout>
@@ -1864,9 +1864,9 @@ function TypographyScaleSpecTable({
 
   return (
     <section aria-labelledby={sectionId}>
-      <h5 id={sectionId} className="m-0 mb-4 text-heading-small font-bold foreground-default">
+      <h4 id={sectionId} className="m-0 mb-4 text-heading-xsmall font-bold foreground-default">
         {title}
-      </h5>
+      </h4>
       {description ? <p className="m-0 mb-5 text-body-medium foreground-default">{description}</p> : null}
       {usage}
       <div className={typographyTableFrameClass}>
@@ -1925,9 +1925,9 @@ function TypographyScalePreviewTable({
 
   return (
     <section aria-labelledby={previewId} className="mt-8">
-      <h6 id={previewId} className="m-0 mb-4 text-label-medium font-bold foreground-default">
+      <h5 id={previewId} className="m-0 mb-4 text-label-small font-bold foreground-subtle">
         Preview
-      </h6>
+      </h5>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">{title} 타이포그래피 사이즈별 미리보기</caption>
@@ -1969,7 +1969,7 @@ function TypographyScalePreviewTable({
 function TypographyHeadingUsageTable() {
   return (
     <div aria-labelledby="typography-heading-usage" className="mb-8">
-      <h6 id="typography-heading-usage" className="m-0 mb-4 text-label-medium font-bold foreground-default">계층별 사용</h6>
+      <h5 id="typography-heading-usage" className="m-0 mb-4 text-label-small font-bold foreground-subtle">계층별 사용</h5>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">Heading 계층별 사용 기준</caption>
@@ -1998,7 +1998,7 @@ function TypographyHeadingUsageTable() {
 function TypographyBodyUsageTable() {
   return (
     <div aria-labelledby="typography-body-usage" className="mb-8">
-      <h6 id="typography-body-usage" className="m-0 mb-4 text-label-medium font-bold foreground-default">계층별 사용</h6>
+      <h5 id="typography-body-usage" className="m-0 mb-4 text-label-small font-bold foreground-subtle">계층별 사용</h5>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">Body 계층별 사용 기준</caption>

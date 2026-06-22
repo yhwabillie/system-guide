@@ -6,7 +6,7 @@ import {
   contentSubTabPanelClass,
   ContentIntroShell,
   ContentOutlineTabList,
-  ContentSubsectionTitle,
+  ContentSectionTitle,
   ContentTitleBlock,
   CodeBlock,
   ExternalTextLink,
@@ -256,9 +256,9 @@ export function GuideTypePage() {
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={typographyTocSections}>
         <section aria-labelledby="section-typography-scale" className="mb-0">
-          <ContentSubsectionTitle id="section-typography-scale">
+          <ContentSectionTitle id="section-typography-scale" lead>
             Type Scale
-          </ContentSubsectionTitle>
+          </ContentSectionTitle>
           <TabDescriptionCallout>
             <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
               <li>다양한 크기의 텍스트를 일관되게 사용할 수 있도록 역할과 스타일에 따라 구분해 정의합니다.</li>

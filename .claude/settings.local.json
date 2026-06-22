@@ -80,7 +80,8 @@
       "Bash(kill 50946)",
       "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/type?tab=font-family\")",
       "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/responsive\")",
-      "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/color\")"
+      "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/color\")",
+      "Bash(curl -s -m 30 \"http://localhost:3000/guide/type?tab=typography\")"
     ]
   }
 }
