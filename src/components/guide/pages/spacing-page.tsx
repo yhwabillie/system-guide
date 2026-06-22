@@ -21,6 +21,58 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { guideSpacingTabHref } from "@/lib/guide-routes";
 import { pxToRem } from "@/lib/tokens";
 
+const radiusSystemMeta = {
+  "radius-none": {
+    level: "None",
+    container: "직각 요소",
+    usage: "모서리 표현을 제거해야 하는 정렬용 견본이나 직각 UI에 사용합니다.",
+    components: "Square swatch",
+    previewClass: "h-12 w-16",
+  },
+  "radius-sm": {
+    level: "Small",
+    container: "작은 컨트롤",
+    usage: "작은 칩, 보조 태그처럼 면적이 좁은 요소에 사용합니다.",
+    components: "Chip, Tag",
+    previewClass: "h-12 w-20",
+  },
+  "radius-md": {
+    level: "Medium",
+    container: "기본 컨트롤",
+    usage: "버튼, 입력 필드처럼 기본 조작 요소에 사용하는 표준 radius입니다.",
+    components: "Button, Text input, Select",
+    previewClass: "h-14 w-24",
+  },
+  "radius-lg": {
+    level: "Large",
+    container: "카드 내부 블록",
+    usage: "정보 블록, 작은 패널처럼 컨테이너 성격이 있는 요소에 사용합니다.",
+    components: "Panel, Preview block",
+    previewClass: "h-16 w-28",
+  },
+  "radius-xl": {
+    level: "Xlarge",
+    container: "카드",
+    usage: "카드와 섹션 박스처럼 화면에서 독립된 면을 만들 때 사용합니다.",
+    components: "Card, Section box",
+    previewClass: "h-16 w-32",
+  },
+  "radius-2xl": {
+    level: "2Xlarge",
+    container: "큰 카드",
+    usage: "강조 카드나 넓은 표면처럼 큰 컨테이너에 사용합니다.",
+    components: "Large card, Dialog surface",
+    previewClass: "h-20 w-36",
+  },
+  "radius-full": {
+    level: "Full",
+    container: "캡슐 형태",
+    usage: "항상 pill 형태를 유지해야 하는 배지나 원형 요소에 사용합니다.",
+    components: "Badge, Pill button, Avatar",
+    previewClass: "h-12 w-36",
+  },
+} as const;
+
 export function GuideSpacingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -128,23 +180,63 @@ export function GuideSpacingPage() {
             >
               Radius
             </ContentSectionTitle>
-            <div role="list" className="grid grid-cols-2 gap-4">
-              {radiusTokens.map(({ name, px, rem, utility }) => (
-                <div key={name} role="listitem" className="flex items-center gap-4 p-4 rounded-xl border border-default">
-                  <div
-                    role="img"
-                    aria-label={`${name} ${px}, ${rem} 모서리 견본`}
-                    className={`w-24 h-14 surface-brand border border-subtle ${utility}`}
-                  />
-                  <div className="min-w-0">
-                    <TokenChip copyValue={utility}>{utility}</TokenChip>
-                    <p className="m-0 mt-2 text-caption foreground-muted font-mono">
-                      <span className="font-semibold foreground-default">{px}</span>
-                      <span> · {rem}</span>
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col gap-8">
+              <div role="list" aria-label="Radius 토큰 시각 비교" className="overflow-hidden rounded-xl border border-gray-20">
+                {radiusTokens.map(({ name, px, rem, utility }) => {
+                  const meta = radiusSystemMeta[name as keyof typeof radiusSystemMeta];
+                  return (
+                    <div key={name} role="listitem" className="grid grid-cols-[12rem_1fr_5rem] items-center gap-4 border-b border-gray-20 px-4 py-3 last:border-b-0">
+                      <div className="min-w-0">
+                        <TokenChip copyValue={utility}>{utility}</TokenChip>
+                        <p className="m-0 mt-1 text-caption font-mono foreground-muted">{name}</p>
+                      </div>
+                      <div className="relative flex min-h-20 items-center justify-center overflow-hidden rounded-md surface-subtle">
+                        <span aria-hidden="true" className="absolute inset-x-4 top-1/2 border-t border-dashed border-subtle" />
+                        <div
+                          role="img"
+                          aria-label={`${name} ${px}, ${rem} 모서리 견본`}
+                          className={`relative z-10 surface-brand border border-subtle ${utility} ${meta.previewClass}`}
+                        />
+                      </div>
+                      <span className="justify-self-end rounded-md border border-default px-2 py-1 text-caption font-mono foreground-muted">
+                        {px}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="overflow-x-auto rounded-xl border border-gray-20">
+                <table className="w-full min-w-[56rem] border-collapse text-left">
+                  <caption className="sr-only">Radius 레벨별 사용 기준</caption>
+                  <thead>
+                    <tr className="border-b border-gray-20 bg-gray-5">
+                      <th scope="col" className="w-28 px-4 py-3 text-label-xsmall font-bold foreground-default">Level</th>
+                      <th scope="col" className="px-4 py-3 text-label-xsmall font-bold foreground-default">Usage</th>
+                      <th scope="col" className="w-36 px-4 py-3 text-label-xsmall font-bold foreground-default">Container</th>
+                      <th scope="col" className="w-32 px-4 py-3 text-label-xsmall font-bold foreground-default">Radius</th>
+                      <th scope="col" className="w-44 px-4 py-3 text-label-xsmall font-bold foreground-default">Components</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {radiusTokens.map(({ name, px, rem }) => {
+                      const meta = radiusSystemMeta[name as keyof typeof radiusSystemMeta];
+                      return (
+                        <tr key={name} className="border-b border-gray-20 last:border-b-0">
+                          <th scope="row" className="px-4 py-4 align-top text-label-xsmall font-semibold foreground-default">{meta.level}</th>
+                          <td className="px-4 py-4 align-top text-body-small foreground-default">{meta.usage}</td>
+                          <td className="px-4 py-4 align-top text-caption foreground-muted">{meta.container}</td>
+                          <td className="px-4 py-4 align-top font-mono text-caption foreground-muted">
+                            <span className="font-semibold foreground-default">{px}</span>
+                            <span> · {rem}</span>
+                          </td>
+                          <td className="px-4 py-4 align-top text-caption foreground-muted">{meta.components}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </section>
 
