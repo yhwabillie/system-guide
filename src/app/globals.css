@@ -475,6 +475,7 @@
   --ds-effect-shadow-4: 0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 1rem 1.5rem 0 var(--ds-shadow-alpha-3); /* 0 0 2px, y 16px · blur 24px */
   --ds-effect-shadow-default: var(--ds-effect-shadow-2);
   --ds-effect-elevation-modal: var(--ds-effect-shadow-3);
+  --ds-effect-elevation-floating: var(--ds-effect-shadow-2);
   --ds-effect-blur-subtle: blur(0.375rem);  /* 6px */
   --ds-effect-blur-default: blur(0.75rem);  /* 12px */
   --ds-effect-blur-strong: blur(1.25rem);   /* 20px */
@@ -947,6 +948,7 @@
 @utility shadow-4 { box-shadow: var(--ds-effect-shadow-4); }
 @utility shadow-default { box-shadow: var(--ds-effect-shadow-default); }
 @utility elevation-modal { box-shadow: var(--ds-effect-elevation-modal); }
+@utility elevation-floating { box-shadow: var(--ds-effect-elevation-floating); }
 @utility blur-subtle { backdrop-filter: var(--ds-effect-blur-subtle); }
 @utility blur-default { backdrop-filter: var(--ds-effect-blur-default); }
 @utility blur-strong { backdrop-filter: var(--ds-effect-blur-strong); }

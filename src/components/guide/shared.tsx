@@ -381,10 +381,15 @@ export const semanticElevationCatalog = {
   title: "Elevation",
   description: (
     <>
-      모달처럼 배경 위에 올라오는 <strong>레이어 위계(elevation)</strong> 토큰입니다. <strong>elevation-modal</strong>은 내부 그림자 값으로 <strong>shadow-3</strong> 단계를 참조합니다.
+      배경 위에 올라오는 <strong>레이어 위계(elevation)</strong> 토큰입니다. 모달은 <strong>elevation-modal</strong>, floating button은 <strong>elevation-floating</strong>을 사용합니다.
     </>
   ),
   tokens: [
+    {
+      id: "elevation-floating",
+      utility: "elevation-floating",
+      sourceVar: "--ds-effect-elevation-floating",
+    },
     {
       id: "elevation-modal",
       utility: "elevation-modal",
@@ -2999,11 +3004,11 @@ export const scrollToTopIcon = (
 );
 
 export const guideFabButtonClass =
-  "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150";
+  "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 elevation-floating transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 active:scale-100 active:duration-150";
 
 export const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
 export const guideFabBrandClass = `${guideFabButtonClass} surface-brand foreground-inverse`;
-export const guideFabSurfaceClass = `${guideFabButtonClass} bg-background foreground-default ring-1 ring-default`;
+export const guideFabSurfaceClass = `${guideFabButtonClass} surface-brand-subtle foreground-brand-strong ring-1 ring-brand`;
 
 export const GUIDE_SCROLL_TOP_THRESHOLD = 240;
 
