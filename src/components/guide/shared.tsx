@@ -411,7 +411,12 @@ export const fontFamilyTocSections: TocSection[] = [
 ];
 
 export const typographyTocSections: TocSection[] = [
-  { id: "section-typography-scale", label: "Type Scale" },
+  { id: "section-typography-scale", label: "Type Scale", level: 1 },
+  { id: "typography-display-scale", label: "Display", level: 2 },
+  { id: "typography-heading-scale", label: "Heading", level: 2 },
+  { id: "typography-body-scale", label: "Body", level: 2 },
+  { id: "typography-label-scale", label: "Label", level: 2 },
+  { id: "typography-caption-scale", label: "Caption", level: 2 },
 ];
 
 export const outlineIconsTocSections: TocSection[] = [
@@ -1683,9 +1688,6 @@ export function GuideSiteHeader({
 export function FontStackCuration() {
   return (
     <>
-      <ContentSectionTitle id="section-font-stack" lead>
-        Font Stack
-      </ContentSectionTitle>
       <TabDescriptionCallout>
         <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. 폰트 패밀리는 <strong>--font-family-base</strong> 토큰으로 관리합니다.
       </TabDescriptionCallout>
@@ -1864,10 +1866,17 @@ function TypographyScaleSpecTable({
 
   return (
     <section aria-labelledby={sectionId}>
-      <h4 id={sectionId} className="m-0 mb-4 text-heading-xsmall font-bold foreground-default">
-        {title}
-      </h4>
-      {description ? <p className="m-0 mb-5 text-body-medium foreground-default">{description}</p> : null}
+      <header className="mb-5">
+        <h4
+          id={sectionId}
+          className={["m-0 text-heading-large font-bold leading-base foreground-brand", guideSectionAnchorClass].join(" ")}
+        >
+          {title}
+        </h4>
+        {description ? (
+          <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">{description}</p>
+        ) : null}
+      </header>
       {usage}
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
@@ -2030,8 +2039,18 @@ export function TypographyScaleTable() {
         description="페이지 대표 제목과 강한 시각적 진입점에 사용하는 가장 큰 제목 계층입니다."
         rows={displayScaleSpecs}
       />
-      <TypographyScaleSpecTable title="Heading" rows={headingScaleSpecs} usage={<TypographyHeadingUsageTable />} />
-      <TypographyScaleSpecTable title="Body" rows={bodyScaleSpecs} usage={<TypographyBodyUsageTable />} />
+      <TypographyScaleSpecTable
+        title="Heading"
+        description="콘텐츠 내부의 섹션 제목과 정보 구조를 단계적으로 구분하는 제목 계층입니다."
+        rows={headingScaleSpecs}
+        usage={<TypographyHeadingUsageTable />}
+      />
+      <TypographyScaleSpecTable
+        title="Body"
+        description="본문, 안내 문장, 긴 설명처럼 읽기 흐름이 중요한 텍스트에 사용하는 기본 계층입니다."
+        rows={bodyScaleSpecs}
+        usage={<TypographyBodyUsageTable />}
+      />
       <TypographyScaleSpecTable
         title="Label"
         description="컴포넌트 구성 내 label, placeholder 등에 사용한다."

@@ -248,7 +248,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 label="Font & Type"
                 expandLabel="Font & Type"
                 subItems={[
-                  { label: "Font Family", href: guideTypeTabHref("font-family"), active: isType && tab !== "typography" },
+                  { label: "Font Stack", href: guideTypeTabHref("font-family"), active: isType && tab !== "typography" },
                   { label: "Type Scale", href: guideTypeTabHref("typography"), active: isType && tab === "typography" },
                 ]}
               />

@@ -6,7 +6,6 @@ import {
   contentSubTabPanelClass,
   ContentIntroShell,
   ContentOutlineTabList,
-  ContentSectionTitle,
   ContentTitleBlock,
   CodeBlock,
   ExternalTextLink,
@@ -53,7 +52,7 @@ export function GuideTypePage() {
           onSelect={(value) => selectTypeSection(value as "font-family" | "typography")}
           onKeyDown={handleTypeTabKeyDown}
           tabs={[
-            { value: "font-family", tabId: "tab-type-font-family", panelId: "panel-type-font-family", label: "Font Family", ref: fontFamilyTabRef },
+            { value: "font-family", tabId: "tab-type-font-family", panelId: "panel-type-font-family", label: "Font Stack", ref: fontFamilyTabRef },
             { value: "typography", tabId: "tab-type-typography", panelId: "panel-type-typography", label: "Type Scale", ref: typographyTabRef },
           ]}
         />
@@ -62,8 +61,17 @@ export function GuideTypePage() {
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={fontFamilyTocSections}>
-        <section aria-labelledby="section-font-stack" className="mb-0">
+        <section id="section-font-stack" aria-label="Font Stack" className="mb-0">
           <FontStackCuration />
+
+          <header className="mt-20 mb-5">
+            <h3 className="m-0 text-heading-large font-bold leading-base foreground-brand">
+              Font Family
+            </h3>
+            <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">
+              프로젝트에서 실제로 사용하는 기본 폰트와 폴백 폰트의 역할, 출처, 적용 방식을 정리합니다.
+            </p>
+          </header>
 
           {/* Pretendard GOV */}
           <div className="rounded-2xl border border-gray-20 overflow-hidden">
@@ -255,10 +263,7 @@ export function GuideTypePage() {
 
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={typographyTocSections}>
-        <section aria-labelledby="section-typography-scale" className="mb-0">
-          <ContentSectionTitle id="section-typography-scale" lead>
-            Type Scale
-          </ContentSectionTitle>
+        <section id="section-typography-scale" aria-label="Type Scale" className="mb-0">
           <TabDescriptionCallout>
             <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
               <li>다양한 크기의 텍스트를 일관되게 사용할 수 있도록 역할과 스타일에 따라 구분해 정의합니다.</li>
