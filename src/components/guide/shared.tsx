@@ -1753,7 +1753,7 @@ const bodyScaleSpecs: TypographyScaleSpec[] = [
   { style: "small-bold", pc: 15, mobile: 15, weight: 700, letterSpacing: "0px", typoClass: "typo-body-small-bold" },
   { style: "xsmall-bold", pc: 13, mobile: 13, weight: 700, letterSpacing: "0px", typoClass: "typo-body-xsmall-bold" },
   { style: "large", pc: 19, mobile: 19, weight: 400, letterSpacing: "0px", typoClass: "typo-body-large" },
-  { style: "medium*", pc: 17, mobile: 17, weight: 400, letterSpacing: "0px", typoClass: "typo-body-medium" },
+  { style: "medium", pc: 17, mobile: 17, weight: 400, letterSpacing: "0px", typoClass: "typo-body-medium" },
   { style: "small", pc: 15, mobile: 15, weight: 400, letterSpacing: "0px", typoClass: "typo-body-small" },
   { style: "xsmall", pc: 13, mobile: 13, weight: 400, letterSpacing: "0px", typoClass: "typo-body-xsmall" },
 ];
