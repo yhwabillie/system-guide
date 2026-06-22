@@ -18,7 +18,7 @@ import {
   ExternalLinkIcon,
   GuideSiteHeader,
   GUIDE_SCROLL_TOP_THRESHOLD,
-  guideFabAccentClass,
+  guideFabBrandClass,
   guideFabSurfaceClass,
   guideHeaderMaxHeightClass,
   guideHeaderOffsetClass,
@@ -192,14 +192,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
     <>
       <a
         href="#main-content"
-        className="absolute left-0 z-[100] px-4 py-2 font-semibold no-underline transition-[top] duration-100 bg-accent text-on-accent"
-        style={{ top: "-40px" }}
-        onFocus={(e) => {
-          e.currentTarget.style.top = "0";
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.top = "-40px";
-        }}
+        className="fixed left-0 top-0 z-[100] -translate-y-full px-4 py-2 font-semibold no-underline transition-transform duration-100 surface-brand foreground-inverse focus-visible:translate-y-0"
       >
         본문 바로가기
       </a>
@@ -217,6 +210,22 @@ export function GuideShell({ children }: { children: ReactNode }) {
             aria-label="디자인 토큰 가이드"
             className={`${layoutSidenavMenuClass} flex flex-col border-b border-default bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
           >
+            <label className="relative mb-6 flex items-center">
+              <span className="sr-only">가이드 검색</span>
+              <NavIcon
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 size-icon-xs shrink-0 foreground-muted"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </NavIcon>
+              <input
+                type="search"
+                name="guide-search"
+                placeholder="가이드 검색..."
+                className="h-control-md w-full rounded-lg surface-subtle pl-9 pr-3 text-label-sm foreground-default placeholder:foreground-muted"
+              />
+            </label>
             <p className={navSectionEyebrowClass}>Tokens</p>
             <div className="flex flex-col gap-0.5">
               <GuideNavCategory
@@ -320,7 +329,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
             onClick={toggleDark}
             aria-pressed={isDark}
             aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-            className={guideFabAccentClass}
+            className={guideFabBrandClass}
           >
             {isDark ? themeIconSun : themeIconMoon}
           </button>

@@ -38,7 +38,7 @@ function LayoutPageCell({
 }) {
   return (
     <div
-      className={`bg-accent text-on-accent flex min-w-0 items-center justify-center font-semibold ${className ?? ""}`}
+      className={`surface-brand foreground-inverse flex min-w-0 items-center justify-center font-semibold ${className ?? ""}`}
       style={{ minHeight: pxToRem(48) }}
     >
       <span className="text-caption numeric-tabular leading-none">
@@ -68,7 +68,7 @@ function MinMarginCell({ px }: { px: number }) {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center min-w-0 leading-tight bg-accent/10 foreground-muted text-center"
+      className="flex flex-col items-center justify-center min-w-0 leading-tight bg-violet-50/10 foreground-muted text-center"
     >
       <span className="text-caption numeric-tabular font-mono leading-none">
         {px}
@@ -81,7 +81,7 @@ function MenuCell({ px, stacked }: { px: number; stacked?: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className={`min-w-0 bg-accent/25 flex items-center justify-center border-accent ${
+      className={`min-w-0 bg-violet-50/25 flex items-center justify-center border-brand ${
         stacked ? "border-b" : "border-r"
       }`}
       style={{ minHeight: pxToRem(48) }}
@@ -139,12 +139,12 @@ function ContentAreaGuidePreview({
       <div
         className="relative flex min-w-0 flex-col overflow-hidden bg-background"
         style={{
-          outline: `${pxToRem(2)} solid var(--ds-accent)`,
+          outline: `${pxToRem(2)} solid var(--ds-surface-brand)`,
           outlineOffset: pxToRem(-2),
           borderRadius: pxToRem(2),
         }}
       >
-        <p className="m-0 shrink-0 py-1.5 px-2 text-caption font-semibold foreground-brand bg-accent/10 border-b border-accent/20 text-center numeric-tabular">
+        <p className="m-0 shrink-0 py-1.5 px-2 text-caption font-semibold foreground-brand bg-violet-50/10 border-b border-violet-50/20 text-center numeric-tabular">
           프레임 {framePx}px · 칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px · col {gridColWidthPx}px
         </p>
         <div
@@ -349,17 +349,17 @@ function SidenavLayoutMetricsLegend({
       <span className="inline-flex items-center gap-1.5">
         <span
           aria-hidden="true"
-          className="inline-block w-2 h-2 border border-accent bg-accent/25"
+          className="inline-block w-2 h-2 border border-brand bg-violet-50/25"
           style={{ borderRadius: pxToRem(2) }}
         />
         {isSidebarLayout ? `menu ${menuPx}px` : "menu · stack"}
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 border border-accent/50 bg-accent/15" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 border border-violet-50/50 bg-violet-50/15" style={{ borderRadius: pxToRem(2) }} />
         content column {contentColumnPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
         프레임 {framePx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -367,15 +367,15 @@ function SidenavLayoutMetricsLegend({
         여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent/10" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
         스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
         칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
         col {gridColWidthPx}px (fill)
       </span>
     </p>
@@ -408,7 +408,7 @@ function LayoutMetricsLegend({
         layout {layoutWidth}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-accent)`, outlineOffset: pxToRem(-1) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
         프레임(전체 너비) {framePx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
@@ -416,15 +416,15 @@ function LayoutMetricsLegend({
         여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent/10" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
         스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-accent/30" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
         칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
         col {gridColWidthPx}px (fill)
       </span>
     </p>
@@ -540,7 +540,7 @@ export default function ResponsiveGuidePage() {
                   role="listitem"
                   className={`py-1.5 px-3 rounded-md border text-caption font-semibold ${
                     isActive
-                      ? "bg-accent text-on-accent border-accent"
+                      ? "surface-brand foreground-inverse border-brand"
                       : "bg-background foreground-muted border-default"
                   }`}
                 >
@@ -563,7 +563,7 @@ export default function ResponsiveGuidePage() {
             가이드 미리보기(아래) 가운데 테두리 박스가 실제 <strong>콘텐츠 프레임</strong>(<code className="font-mono text-caption">{layoutPageClass}</code> 박스, large+에서 1280px 고정)입니다. 프레임 안쪽 = <strong>최소 스크린 마진</strong>(16/24px) + <strong>칼럼 영역</strong>. 프레임이 max에 닿은 뒤 남는 폭은 바깥 <strong>여백(centering)</strong>(붉은색)으로 흡수됩니다. 좌우 스크린 마진(통합) = 최소 마진 + 바깥 여백. 칼럼 수·가터(gap)는 tier 표를 따릅니다.
           </p>
           <p className="m-0 mb-3 inline-flex items-center gap-2 text-caption font-semibold foreground-brand">
-            <span aria-hidden="true" className="inline-block w-2 h-2 bg-accent" style={{ borderRadius: pxToRem(2) }} />
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
             레이아웃 프리뷰
           </p>
         </div>
@@ -674,7 +674,7 @@ export default function ResponsiveGuidePage() {
 
         <div className={layoutSidenavClass}>
           <aside
-            className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
+            className={`${layoutSidenavMenuClass} bg-violet-50/25 border-b lg:border-b-0 lg:border-r border-brand flex items-center justify-center`}
             style={{ minHeight: pxToRem(48) }}
           >
             <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
@@ -705,7 +705,7 @@ export default function ResponsiveGuidePage() {
 
         <div className={layoutSidenavClass}>
           <aside
-            className={`${layoutSidenavMenuClass} bg-accent/25 border-b lg:border-b-0 lg:border-r border-accent flex items-center justify-center`}
+            className={`${layoutSidenavMenuClass} bg-violet-50/25 border-b lg:border-b-0 lg:border-r border-brand flex items-center justify-center`}
             style={{ minHeight: pxToRem(48) }}
           >
             <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
@@ -742,7 +742,7 @@ export default function ResponsiveGuidePage() {
                 return (
                   <tr
                     key={t.name}
-                    className={`border-b border-default ${isActive ? "bg-accent/10" : ""}`}
+                    className={`border-b border-default ${isActive ? "bg-violet-50/10" : ""}`}
                   >
                     <td className="py-3 px-4 text-label-sm font-semibold">
                       {t.name}

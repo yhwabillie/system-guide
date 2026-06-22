@@ -356,6 +356,24 @@
 
   /* Typography shorthand 토큰 — font-family / size / weight / line-height 를 한 번에 적용.
      개별 제어가 필요하면 text-* / font-* / leading-* 유틸리티를 조합한다. */
+  --typography-heading-xlarge: var(--typography-weight-bold) var(--font-size-heading-xlarge) / var(--font-line) var(--font-family-base);
+  --typography-heading-large: var(--typography-weight-bold) var(--font-size-heading-large) / var(--font-line) var(--font-family-base);
+  --typography-heading-medium: var(--typography-weight-bold) var(--font-size-heading-medium) / var(--font-line) var(--font-family-base);
+  --typography-heading-small: var(--typography-weight-bold) var(--font-size-heading-small) / var(--font-line) var(--font-family-base);
+  --typography-heading-xsmall: var(--typography-weight-bold) var(--font-size-heading-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-heading-xxsmall: var(--typography-weight-bold) var(--font-size-heading-xxsmall) / var(--font-line) var(--font-family-base);
+  --typography-body-large-bold: var(--typography-weight-bold) var(--font-size-body-large) / var(--font-line) var(--font-family-base);
+  --typography-body-medium-bold: var(--typography-weight-bold) var(--font-size-body-medium) / var(--font-line) var(--font-family-base);
+  --typography-body-small-bold: var(--typography-weight-bold) var(--font-size-body-small) / var(--font-line) var(--font-family-base);
+  --typography-body-xsmall-bold: var(--typography-weight-bold) var(--font-size-body-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-body-large: var(--typography-weight-regular) var(--font-size-body-large) / var(--font-line) var(--font-family-base);
+  --typography-body-medium: var(--typography-weight-regular) var(--font-size-body-medium) / var(--font-line) var(--font-family-base);
+  --typography-body-small: var(--typography-weight-regular) var(--font-size-body-small) / var(--font-line) var(--font-family-base);
+  --typography-body-xsmall: var(--typography-weight-regular) var(--font-size-body-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-label-large: var(--typography-weight-regular) var(--font-size-label-large) / var(--font-line) var(--font-family-base);
+  --typography-label-medium: var(--typography-weight-regular) var(--font-size-label-medium) / var(--font-line) var(--font-family-base);
+  --typography-label-small: var(--typography-weight-regular) var(--font-size-label-small) / var(--font-line) var(--font-family-base);
+  --typography-label-xsmall: var(--typography-weight-regular) var(--font-size-label-xsmall) / var(--font-line) var(--font-family-base);
   --typography-display-lg: var(--typography-weight-bold) var(--font-size-display-lg) / var(--font-line) var(--font-family-base);
   --typography-display-md: var(--typography-weight-bold) var(--font-size-display-md) / var(--font-line) var(--font-family-base);
   --typography-display-sm: var(--typography-weight-bold) var(--font-size-display-sm) / var(--font-line) var(--font-family-base);
@@ -416,11 +434,11 @@
   --ds-surface-positive: var(--ds-green-5);
   --ds-surface-info: var(--ds-blue-5);
   --ds-surface-disabled: var(--ds-gray-5);
-  /* 중립(neutral) 텍스트 위계 — default(=--ds-foreground, gray-90) 메인 타이틀/본문 · subtle(gray-70) 서브타이틀 · muted(gray-40) 보조.
+  /* 중립(neutral) 텍스트 위계 — default(=--ds-foreground, gray-90) 메인 타이틀/본문 · subtle(gray-70) 서브타이틀 · muted(gray-60) 보조.
      subtle 은 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1.
-     muted 는 .dark 에서 gray-60 으로 용도 재매핑(아래 .dark 블록) — #0a0a0a 단독 배경·nav 라벨에는 쓰지 않음. */
+     muted 는 라이트 white·gray-5·gray-10 배경에서 4.5:1 이상, .dark 에서도 gray-60 으로 용도 재매핑(아래 .dark 블록)해 4.5:1 이상 유지. */
   --ds-foreground-subtle: var(--ds-gray-70);
-  --ds-foreground-muted: var(--ds-gray-40);
+  --ds-foreground-muted: var(--ds-gray-60);
   --ds-foreground-inverse: var(--raw-white);
   --ds-foreground-brand: var(--ds-violet-50);
   /* brand-subtle — brand(violet-50)보다 옅은 보조 브랜드 전경. 라이트 violet-40(white ~3.8:1) · 본문 4.5:1 미달 가능 → 캡션·eyebrow·surface-brand 위 보조 라벨. */
@@ -817,6 +835,20 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
 
+  --text-heading-xlarge: var(--font-size-heading-xlarge);
+  --text-heading-large: var(--font-size-heading-large);
+  --text-heading-medium: var(--font-size-heading-medium);
+  --text-heading-small: var(--font-size-heading-small);
+  --text-heading-xsmall: var(--font-size-heading-xsmall);
+  --text-heading-xxsmall: var(--font-size-heading-xxsmall);
+  --text-body-large: var(--font-size-body-large);
+  --text-body-medium: var(--font-size-body-medium);
+  --text-body-small: var(--font-size-body-small);
+  --text-body-xsmall: var(--font-size-body-xsmall);
+  --text-label-large: var(--font-size-label-large);
+  --text-label-medium: var(--font-size-label-medium);
+  --text-label-small: var(--font-size-label-small);
+  --text-label-xsmall: var(--font-size-label-xsmall);
   --text-display-lg: var(--font-size-display-lg);
   --text-display-md: var(--font-size-display-md);
   --text-display-sm: var(--font-size-display-sm);
@@ -904,6 +936,96 @@
 @utility gradient-brand { background-image: var(--ds-gradient-brand); }
 
 /* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
+@utility typo-heading-xlarge {
+  font: var(--typography-heading-xlarge);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-large {
+  font: var(--typography-heading-large);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-medium {
+  font: var(--typography-heading-medium);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-small {
+  font: var(--typography-heading-small);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-xsmall {
+  font: var(--typography-heading-xsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-xxsmall {
+  font: var(--typography-heading-xxsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-large-bold {
+  font: var(--typography-body-large-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-medium-bold {
+  font: var(--typography-body-medium-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-small-bold {
+  font: var(--typography-body-small-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-xsmall-bold {
+  font: var(--typography-body-xsmall-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-large {
+  font: var(--typography-body-large);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-medium {
+  font: var(--typography-body-medium);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-small {
+  font: var(--typography-body-small);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-xsmall {
+  font: var(--typography-body-xsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-large {
+  font: var(--typography-label-large);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-medium {
+  font: var(--typography-label-medium);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-small {
+  font: var(--typography-label-small);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-xsmall {
+  font: var(--typography-label-xsmall);
+  letter-spacing: var(--font-tracking);
+}
+
 @utility typo-display-lg {
   font: var(--typography-display-lg);
   letter-spacing: var(--font-tracking);

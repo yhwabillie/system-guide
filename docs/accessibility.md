@@ -111,6 +111,13 @@
 - [x] **[1.4.12 / 텍스트 간격] line-height 1.5 통일** — 전역 `--font-line`(=`tokens.ts` `FONT_LINE`)만 사용. `body`·`typo-*`·`leading-*` 일괄 적용. 계층별·컴포넌트별 행간 분기 금지
 - [x] **[3.1.4] 텍스트를 이미지로 사용 금지** — 로고 제외, 모든 텍스트는 실제 텍스트로
 
+#### 텍스트/화면 확대 컨트롤 기준
+
+- **기준 범위** — KWCAG 2.2의 텍스트 크기 조절 검증은 WCAG 1.4.4 Resize Text와 같은 취지로, 텍스트가 **최대 200%까지 확대**되어도 콘텐츠나 기능 손실이 없어야 한다. 프로젝트 내 직접 제공하는 확대 컨트롤도 최소한 200%까지 지원한다.
+- **프로젝트 구현** — 헤더 우측 줌 컨트롤은 **50%~200% / 10% 단위 / 100% 원복**을 제공한다. 축소 50%는 가이드 문서 탐색용 편의 기능이고, 접근성 적합성 검증의 필수 상한은 200% 확대다.
+- **적용 방식** — 확대/축소는 `document.documentElement.style.fontSize = "{percent}%"`로 적용한다. 이 레포의 크기·여백·타이포 토큰이 rem 기반이므로 헤더·사이드메뉴·본문이 같은 비율로 스케일된다.
+- **검증 포인트** — 100%·150%·200%에서 헤더, 사이드메뉴, 본문, floating action button의 텍스트 겹침·클리핑·기능 손실이 없어야 한다. 200%에서 viewport가 좁아지면 반응형 레이아웃으로 재배치되는 것은 허용되지만, 콘텐츠가 사라지거나 조작할 수 없으면 실패다.
+
 ### 지침 3.2 예측 가능성
 > 콘텐츠의 기능과 작동 방식은 예측 가능해야 한다.
 
@@ -291,6 +298,13 @@ const FONT_LINE = 1.25;
 
 값을 바꿀 때는 **`src/lib/tokens.ts`의 `FONT_LINE`만** 수정합니다. `globals.css`·컴포넌트·`@theme`는 `--font-line`을 참조하므로 연쇄 반영됩니다.
 
+### 반응형 타이포 토큰 전략
+
+- **토큰 이름은 해상도별로 분리하지 않는다.** `display-lg-mobile`·`display-lg-desktop`처럼 새 토큰을 발급하지 않고, `display-lg`·`heading-md` 같은 역할 기반 이름을 유지한다.
+- **값만 breakpoint별로 재매핑한다.** `src/lib/tokens.ts`의 `fontSizePx`는 small/base 값을, `responsiveFontSizePx`는 `md`·`lg` 재매핑 값을 가진다. `fontSizeCssVars()`가 `:root`와 `@media` CSS 변수를 함께 생성한다.
+- **대상은 큰 제목 계층으로 제한한다.** 현재 반응형 값은 `display-*`와 `guide-content-title`에만 적용한다. `body-*`·`label-*`·`caption`은 반복 UI와 가독성 안정성을 위해 고정 rem 스케일을 유지한다.
+- **컴포넌트는 항상 동일 유틸리티를 쓴다.** 예: `typo-display-lg`는 모든 viewport에서 같은 class이며, 실제 크기만 `--font-size-display-lg` 재매핑을 따른다.
+
 ---
 
 ## CSS 코딩 규칙
@@ -338,9 +352,9 @@ const FONT_LINE = 1.25;
 - **장식 색상 견본에 `role="img"` + `aria-label` 금지** — 단색 스와치·팔레트 칸은 시각용 장식. `aria-label`이 있으면 WAVE가 배경색 대비를 오검(Contrast Error 다수). 토큰명·hex는 인접 **보이는 텍스트**로 제공하고, 견본 블록은 `aria-hidden="true"`. 선택 가능한 스와치만 `button` + `aria-label`
 - **Raw Color 팔레트 견본** — `--ds-*`(모드 반사)가 아니라 **`--raw-*` 고정색**을 체커보드(`checkerLight`/`checkerDark`) 위에 올려 표시한다. 다크 페이지 배경 위에 ds 반사색·`border-subtle`를 직접 깔면 WAVE 비텍스트 대비 오류가 다수 발생한다. 구현: `RawPaletteSwatchFill` · `rawPaletteSwatchClass`. 체커보드·색 레이어는 **`span` + `absolute inset-0 block`만 사용** — [`span`/`button` 안 `div` 금지](#w3c-validator-마크업) 참고
 - **Contrast Checker 피커·선택 UI** — 배경/텍스트 선택 버튼·팔레트 선택 링·BG/TXT 배지에 **`text-accent`·`ring-accent` 금지**(다크에서 violet-50 on black ≈ 3.5:1). 브랜드 전경은 `foreground-brand`·중립은 `foreground-default`·`ring-foreground-default`·`border-strong` 사용. 피커 스와치는 `ContrastSwatchFill`로 체커보드 언더레이(`span` 레이어만). 버튼 이름은 `aria-labelledby`(라벨·hex·액션)로 제공
-- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent`·`foreground-muted` 금지**(다크에서 accent 채움색 ≈ 3.5:1·muted ≈ 3.1:1 on `#0a0a0a`). `text-gray-60`·`foreground-default` 사용. 링크·브랜드 강조 텍스트는 `foreground-brand`. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `surface-brand-faint` + `foreground-brand-strong`(아이콘도 동일 색상, 대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
-- **`foreground-muted`를 밝은 회색 배경 위에 쓰지 않는다** — `surface-subtle`(gray-5)·`gray-10` 위 `foreground-muted`(gray-40)는 대비 ~2.5~3:1로 WAVE Contrast Error. 임계값·보조 숫자는 `text-gray-60`~`text-gray-70`, 배경은 `bg-gray-10` 등으로 조합 검증
-- **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-50` 이상
+- **사이드 네비(`guide-sidenav`)** — 섹션 라벨(Tokens·Assets·Layout)·외부 링크·펼치기 토글에 **`text-accent` 금지**(다크에서 accent 채움색 ≈ 3.5:1). `foreground-muted`는 라이트 gray-60·다크 raw-gray-40으로 4.5:1 이상을 유지한다. 링크·브랜드 강조 텍스트는 `foreground-brand`. 활성 **메인** 탭 그룹은 `bg-gray-5`, 활성 **서브**메뉴는 `surface-brand-faint` + `foreground-brand-strong`(아이콘도 동일 색상, 대비는 [시맨틱 색상·다크 모드 대비](#시맨틱-색상다크-모드-대비-필수) 표 준수). **카테고리 부모 행은 `<Link>` 금지** — 기본 서브탭과 동일 URL이면 [Redundant link](#중복-링크redundant-link-방지) 발생. 부모는 `span` 그룹 라벨, 이동은 서브 링크만
+- **`foreground-muted` 대비 기준** — 라이트 모드 `foreground-muted`는 gray-60으로 매핑해 white·gray-5·gray-10 배경에서 4.5:1 이상을 유지한다. 새 보조 텍스트는 `foreground-muted` 또는 `text-gray-60` 이상을 사용하고, 배경 조합은 실제 렌더로 검증한다
+- **`text-gray-40` 본문·캡션 금지(흰 배경)** — gray-40는 white 대비 ~3:1(본문 4.5:1 미달). 보조 라벨은 `text-gray-60` 이상
 - `user-scalable=no` meta viewport 금지
 - `tabindex` 양수값 사용 금지 (`tabindex="1"` 등)
 - `div`, `span`에 클릭 이벤트만 추가하는 패턴 금지
@@ -423,7 +437,7 @@ const FONT_LINE = 1.25;
 |------|-----------------|---------------|---------------|
 | `foreground-default` | `gray-90` | `gray-90`→raw `gray-10` (스케일 반사) | on `bg-background` ≥ 4.5:1 |
 | `foreground-subtle` | `gray-70` | `gray-70`→raw `gray-30` (스케일 반사) | on `bg-background` ≥ 4.5:1 |
-| `foreground-muted` | `gray-40` | `gray-60` (용도 재매핑) | on `bg-background` — 다크 본문용. **`#0a0a0a` 단독 배경·nav 라벨에는 사용 금지** |
+| `foreground-muted` | `gray-60` | `gray-60` (용도 재매핑) | on `bg-background`·`surface-subtle` — 라이트·다크 모두 4.5:1 이상 |
 | `foreground-inverse` | `white` | `black` (용도 재매핑) | inverse surface·반전 채움 위 전용. 일반 background/surface 위 본문 금지 |
 | `foreground-brand` | `violet-50` | `violet-70` | on `bg-background` ≥ 4.5:1 |
 | `foreground-brand-subtle` | `violet-40` | `violet-50` | on `bg-background` — 라이트 ~3.8:1 · 다크 ~3.5:1(UI). **본문 단독 4.5:1 미달** — 보조 브랜드·eyebrow 캡션 |

@@ -10,7 +10,7 @@ import {
   layoutSidenavContentClass,
   layoutSidenavMenuClass,
 } from "@/lib/layout-tokens";
-import { FONT_LINE, fontSizePx, pxToRem } from "@/lib/tokens";
+import { REM_BASE, pxToRem } from "@/lib/tokens";
 import { RAW_COLOR_SCALE_UNITS, primitiveColors } from "@/lib/raw-color-palettes";
 import {
   applyColorModeClass,
@@ -407,13 +407,11 @@ export const semanticTocSections: TocSection[] = [
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
-  { id: "section-font-family", label: "Font Family" },
   { id: "section-font-stack", label: "Font Stack" },
 ];
 
 export const typographyTocSections: TocSection[] = [
   { id: "section-typography-scale", label: "Type Scale" },
-  { id: "section-typography-example", label: "Example of Use" },
 ];
 
 export const outlineIconsTocSections: TocSection[] = [
@@ -745,10 +743,38 @@ export const fontStack = [
 ];
 
 export const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
-  primary: "bg-accent text-on-accent",
-  fallback: "bg-gray-10 foreground-default ring-1 ring-default",
-  system: "bg-transparent foreground-muted ring-1 ring-dashed ring-default",
+  primary: "surface-brand foreground-inverse",
+  fallback: "surface-brand-subtle foreground-brand-strong",
+  system: "bg-background text-gray-60 ring-1 ring-default",
 };
+
+export const fontStackLineClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
+  primary: "surface-brand",
+  fallback: "bg-default",
+  system: "bg-default",
+};
+
+export const fontStackTagClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
+  primary: "surface-brand-faint foreground-brand-strong",
+  fallback: "bg-gray-10 foreground-subtle",
+  system: "bg-transparent foreground-subtle ring-1 ring-default",
+};
+
+export function FontStackRoleTag({
+  emphasis,
+  children,
+}: {
+  emphasis: (typeof fontStack)[number]["emphasis"];
+  children: React.ReactNode;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-caption font-semibold ${fontStackTagClass[emphasis]}`}
+    >
+      {children}
+    </span>
+  );
+}
 
 export const TOAST_DURATION_MS = 2500;
 
@@ -825,9 +851,11 @@ export function TokenChip({
   const toast = useToast();
 
   const chipClassName = [
-    "inline-flex w-fit items-center rounded-full border border-accent bg-transparent font-mono font-semibold foreground-brand",
+    "inline-flex w-fit items-center rounded-md border border-brand bg-transparent font-mono font-semibold foreground-brand",
     size === "lg" ? "px-4 py-1.5 text-label-md" : "px-3 py-1 text-label-sm",
-    copyValue ? "cursor-pointer transition-colors hover:bg-accent/5" : "",
+    copyValue
+      ? "cursor-pointer transition-[background-color,border-color,color,transform] duration-150 hover:surface-brand-faint hover:foreground-brand-strong active:translate-y-px"
+      : "",
   ].join(" ");
 
   if (!copyValue) {
@@ -855,6 +883,110 @@ export function TokenChip({
     >
       {children}
     </button>
+  );
+}
+
+type CodeToken = {
+  value: string;
+  className: string;
+};
+
+const codeKeywordSet = new Set([
+  "const",
+  "let",
+  "var",
+  "import",
+  "from",
+  "export",
+  "function",
+  "return",
+  "true",
+  "false",
+  "null",
+  "undefined",
+]);
+
+function highlightCodeLine(line: string): CodeToken[] {
+  const tokens: CodeToken[] = [];
+  const pattern = /(\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b\d+\b|\b[A-Za-z_$][\w$]*(?=\s*:)|\b[A-Za-z_$][\w$]*\b|[{}()[\],.:;+*/=-])/g;
+  let cursor = 0;
+
+  for (const match of line.matchAll(pattern)) {
+    const value = match[0];
+    const index = match.index ?? 0;
+
+    if (index > cursor) {
+      tokens.push({ value: line.slice(cursor, index), className: "text-gray-10" });
+    }
+
+    if (value.startsWith("//")) {
+      tokens.push({ value, className: "text-gray-40" });
+    } else if (value.startsWith("\"") || value.startsWith("'") || value.startsWith("`")) {
+      tokens.push({ value, className: "text-green-30" });
+    } else if (/^\d+$/.test(value)) {
+      tokens.push({ value, className: "text-cyan-30" });
+    } else if (codeKeywordSet.has(value)) {
+      tokens.push({ value, className: "text-orange-30" });
+    } else if (/^[A-Za-z_$][\w$]*$/.test(value) && line.slice(index + value.length).trimStart().startsWith(":")) {
+      tokens.push({ value, className: "text-orange-20" });
+    } else if (/^[{}()[\],.:;+*/=-]$/.test(value)) {
+      tokens.push({ value, className: "text-gray-20" });
+    } else {
+      tokens.push({ value, className: "text-violet-30" });
+    }
+
+    cursor = index + value.length;
+  }
+
+  if (cursor < line.length) {
+    tokens.push({ value: line.slice(cursor), className: "text-gray-10" });
+  }
+
+  return tokens;
+}
+
+export function CodeBlock({
+  code,
+  language = "tsx",
+  copyLabel = "Copy",
+}: {
+  code: string;
+  language?: string;
+  copyLabel?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    await copyTextToClipboard(code);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), TOAST_DURATION_MS);
+  }
+
+  return (
+    <div className="overflow-hidden rounded-md bg-gray-90">
+      <pre className="m-0 whitespace-pre-wrap break-words px-4 py-3 text-caption font-mono leading-base text-gray-10">
+        <code className={`language-${language}`}>
+          {code.split("\n").map((line, lineIndex) => (
+            <span key={`${lineIndex}-${line}`} className="block min-h-[1.5em] whitespace-pre-wrap break-words">
+              {highlightCodeLine(line).map((token, tokenIndex) => (
+                <span key={`${lineIndex}-${tokenIndex}`} className={token.className}>
+                  {token.value}
+                </span>
+              ))}
+            </span>
+          ))}
+        </code>
+      </pre>
+      <div className="flex justify-end border-t border-gray-80 px-2 py-1.5">
+        <button
+          type="button"
+          onClick={() => void handleCopy()}
+          className="cursor-pointer rounded-sm border-0 bg-gray-70 px-2 py-1 text-caption font-bold text-gray-5 transition-colors duration-150 hover:bg-gray-60"
+        >
+          {copied ? "Copied" : copyLabel}
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -1380,6 +1512,17 @@ export const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 export const guideHeaderIconButtonClass =
   "inline-flex size-control-sm items-center justify-center rounded-full surface-subtle foreground-default transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
 
+const GUIDE_ZOOM_STORAGE_KEY = "system-guide:zoom";
+const GUIDE_ZOOM_MIN = 50;
+const GUIDE_ZOOM_MAX = 200;
+const GUIDE_ZOOM_STEP = 10;
+const GUIDE_ZOOM_DEFAULT = 100;
+
+function normalizeGuideZoom(value: number): number {
+  if (!Number.isFinite(value)) return GUIDE_ZOOM_DEFAULT;
+  return Math.min(GUIDE_ZOOM_MAX, Math.max(GUIDE_ZOOM_MIN, Math.round(value / GUIDE_ZOOM_STEP) * GUIDE_ZOOM_STEP));
+}
+
 export function GuideLogoMark() {
   return (
     <svg
@@ -1391,6 +1534,88 @@ export function GuideLogoMark() {
       <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
       <circle cx="22" cy="10" r="8" fill="currentColor" />
     </svg>
+  );
+}
+
+export function GuideZoomControl() {
+  const [zoomPercent, setZoomPercent] = useState(() => {
+    if (typeof window === "undefined") return GUIDE_ZOOM_DEFAULT;
+
+    try {
+      const storedZoom = window.localStorage.getItem(GUIDE_ZOOM_STORAGE_KEY);
+      return storedZoom === null ? GUIDE_ZOOM_DEFAULT : normalizeGuideZoom(Number(storedZoom));
+    } catch {
+      return GUIDE_ZOOM_DEFAULT;
+    }
+  });
+
+  const zoomOut = useCallback(() => {
+    setZoomPercent((current) => normalizeGuideZoom(current - GUIDE_ZOOM_STEP));
+  }, []);
+
+  const zoomIn = useCallback(() => {
+    setZoomPercent((current) => normalizeGuideZoom(current + GUIDE_ZOOM_STEP));
+  }, []);
+
+  const resetZoom = useCallback(() => {
+    setZoomPercent(GUIDE_ZOOM_DEFAULT);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${zoomPercent}%`;
+    try {
+      window.localStorage.setItem(GUIDE_ZOOM_STORAGE_KEY, String(zoomPercent));
+    } catch {
+      // 저장소 접근이 막힌 환경에서도 현재 세션의 확대/축소는 유지한다.
+    }
+  }, [zoomPercent]);
+
+  const zoomButtonClass =
+    "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 foreground-default transition-colors duration-150 hover:surface-strong disabled:cursor-not-allowed disabled:foreground-disabled disabled:hover:bg-transparent";
+
+  return (
+    <div
+      role="group"
+      aria-label="화면 확대 축소"
+      className="inline-flex h-control-md items-center gap-1.5 rounded-lg border border-default surface-default px-1.5"
+    >
+      <button
+        type="button"
+        aria-label="축소"
+        onClick={zoomOut}
+        disabled={zoomPercent <= GUIDE_ZOOM_MIN}
+        className={zoomButtonClass}
+      >
+        <NavIcon aria-hidden="true" className="size-icon-xs shrink-0">
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </NavIcon>
+      </button>
+      <button
+        type="button"
+        onClick={resetZoom}
+        aria-label={
+          zoomPercent === GUIDE_ZOOM_DEFAULT
+            ? "현재 확대 비율 100%, 기본값"
+            : `현재 확대 비율 ${zoomPercent}%, 100%로 초기화`
+        }
+        title={zoomPercent === GUIDE_ZOOM_DEFAULT ? "현재 100%" : "100%로 초기화"}
+        className="inline-flex h-7 w-12 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 text-label-md font-bold foreground-default numeric-tabular transition-colors duration-150 hover:surface-subtle"
+      >
+        {zoomPercent}%
+      </button>
+      <button
+        type="button"
+        aria-label="확대"
+        onClick={zoomIn}
+        disabled={zoomPercent >= GUIDE_ZOOM_MAX}
+        className={zoomButtonClass}
+      >
+        <NavIcon aria-hidden="true" className="size-icon-xs shrink-0">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </NavIcon>
+      </button>
+    </div>
   );
 }
 
@@ -1447,68 +1672,29 @@ export function GuideSiteHeader({
           <h1 className="truncate text-label-lg font-bold foreground-brand-strong">디자인 시스템 가이드</h1>
         </div>
 
-        <div className="flex items-center justify-self-end">
-          <label className="relative hidden items-center sm:flex">
-            <span className="sr-only">가이드 검색</span>
-            <NavIcon
-              aria-hidden="true"
-              className="pointer-events-none absolute left-3 size-icon-xs shrink-0 foreground-muted"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </NavIcon>
-            <input
-              type="search"
-              name="guide-search"
-              placeholder="가이드 검색..."
-              className="h-control-sm w-[12.5rem] rounded-full border border-default surface-subtle pl-9 pr-4 text-label-sm foreground-default placeholder:foreground-muted md:w-[15rem]"
-            />
-          </label>
+        <div className="justify-self-end">
+          <GuideZoomControl />
         </div>
       </div>
     </header>
   );
 }
 
-export function FontTokenGuide() {
-  return (
-    <section aria-label="폰트 패밀리 적용 방법" className="mb-6 border-b border-default pb-6">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <p className="m-0 text-caption font-semibold uppercase tracking-normal foreground-default">
-          Tailwind utility class
-        </p>
-        <TokenChip size="lg" copyValue="font-sans">
-          font-sans
-        </TokenChip>
-      </div>
-    </section>
-  );
-}
-
 export function FontStackCuration() {
   return (
     <>
-      <ContentSectionTitle
-        id="section-font-family"
-        lead
-        description={
-          <>
-            <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. <strong>font-sans</strong> 유틸리티로 <strong>--font-family-base</strong> 토큰을 적용합니다.
-          </>
-        }
-      >
-        Font Family
-      </ContentSectionTitle>
-
-      <FontTokenGuide />
-
-      <ContentSubsectionTitle id="section-font-stack" spaced>
+      <ContentSubsectionTitle id="section-font-stack">
         Font Stack
       </ContentSubsectionTitle>
-      <ol className="m-0 flex list-none flex-col p-0">
-        {fontStack.map(({ order, name, family, role, source, desc, emphasis }, index) => (
-          <li key={order}>
-            <div className="flex gap-4">
+      <TabDescriptionCallout>
+        <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. 폰트 패밀리는 <strong>--font-family-base</strong> 토큰으로 관리합니다.
+      </TabDescriptionCallout>
+
+      <ol className="mx-0 mt-0 mb-8 flex list-none flex-col p-0">
+        {fontStack.map(({ order, name, family, role, source, desc, emphasis }, index) => {
+          const isLast = index === fontStack.length - 1;
+          return (
+            <li key={order} className="flex gap-4">
               <div className="flex w-8 shrink-0 flex-col items-center">
                 <span
                   aria-hidden="true"
@@ -1516,12 +1702,12 @@ export function FontStackCuration() {
                 >
                   {order}
                 </span>
-                {index < fontStack.length - 1 && (
-                  <span aria-hidden="true" className="my-1 w-px flex-1 min-h-4 bg-line" />
+                {!isLast && (
+                  <span aria-hidden="true" className={`my-1 w-px flex-1 min-h-6 ${fontStackLineClass[emphasis]}`} />
                 )}
               </div>
-              <div className={`min-w-0 flex-1 ${index < fontStack.length - 1 ? "pb-5" : ""}`}>
-                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <div className={`min-w-0 flex-1 ${isLast ? "" : "pb-8"}`}>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span
                     role="img"
                     aria-label={`${name} 글꼴 견본`}
@@ -1530,131 +1716,129 @@ export function FontStackCuration() {
                   >
                     {name}
                   </span>
-                  <span
-                    className={`text-caption font-semibold ${emphasis === "primary" ? "foreground-brand" : "foreground-muted"}`}
-                  >
-                    {role}
-                  </span>
+                  <FontStackRoleTag emphasis={emphasis}>{role}</FontStackRoleTag>
                 </div>
-                <p className="m-0 mt-1 text-caption foreground-muted">{desc}</p>
-                <p className="m-0 mt-0.5 font-mono text-caption foreground-muted">{source}</p>
+                <p className="m-0 mt-1.5 text-caption text-gray-60">{desc}</p>
+                <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{source}</p>
               </div>
-            </div>
-            {index < fontStack.length - 1 && (
-              <p className="mb-1 mt-0 flex items-center gap-4 pl-0 text-caption foreground-muted" aria-hidden="true">
-                <span className="flex w-8 shrink-0 justify-center">↓</span>
-                <span>미로드 시</span>
-              </p>
-            )}
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ol>
     </>
   );
 }
 
-const typographySample = "다람쥐 헌 쳇바퀴에 타고파 · ABC xyz 123 (4.5:1) !?";
-
-// 역할별 타이포 토큰 — 개별 유틸리티(text/font/leading)와 묶음 유틸리티(typo) 모두 제공
-const typographyTokens = [
-  { label: "Display LG", var: "--font-size-display-lg", weight: "--font-weight-bold", typoClass: "typo-display-lg" },
-  { label: "Display MD", var: "--font-size-display-md", weight: "--font-weight-bold", typoClass: "typo-display-md" },
-  { label: "Display SM", var: "--font-size-display-sm", weight: "--font-weight-bold", typoClass: "typo-display-sm" },
-  { label: "Heading LG", var: "--font-size-heading-lg", weight: "--font-weight-bold", typoClass: "typo-heading-lg" },
-  { label: "Heading MD", var: "--font-size-heading-md", weight: "--font-weight-bold", typoClass: "typo-heading-md" },
-  { label: "Heading SM", var: "--font-size-heading-sm", weight: "--font-weight-bold", typoClass: "typo-heading-sm" },
-  { label: "Body LG", var: "--font-size-body-lg", weight: "--font-weight-regular", typoClass: "typo-body-lg" },
-  { label: "Body MD", var: "--font-size-body-md", weight: "--font-weight-regular", typoClass: "typo-body-md" },
-  { label: "Body SM", var: "--font-size-body-sm", weight: "--font-weight-regular", typoClass: "typo-body-sm" },
-  { label: "Label XL", var: "--font-size-label-xl", weight: "--font-weight-semibold", typoClass: "typo-label-xl" },
-  { label: "Label LG", var: "--font-size-label-lg", weight: "--font-weight-semibold", typoClass: "typo-label-lg" },
-  { label: "Label MD", var: "--font-size-label-md", weight: "--font-weight-semibold", typoClass: "typo-label-md" },
-  { label: "Label SM", var: "--font-size-label-sm", weight: "--font-weight-semibold", typoClass: "typo-label-sm" },
-  { label: "Caption", var: "--font-size-caption", weight: "--font-weight-regular", typoClass: "typo-caption" },
-];
-
-const typographyWeightLabel: Record<string, string> = {
-  "--font-weight-regular": "Regular",
-  "--font-weight-medium": "Medium",
-  "--font-weight-semibold": "Semibold",
-  "--font-weight-bold": "Bold",
+type TypographyScaleSpec = {
+  style: string;
+  pc: number;
+  mobile: number;
+  weight: 400 | 700;
+  letterSpacing: "0px" | "1px";
+  typoClass: string;
 };
 
-const typographyExamples = [
-  {
-    chip: "typo-label-sm",
-    className: "typo-label-sm uppercase",
-    text: "Latest News",
-    ariaLabel: "Label SM 견본",
-  },
-  {
-    chip: "typo-display-md",
-    className: "typo-display-md",
-    text: "데이터를 더 스마트하게 관리하는 방법",
-    ariaLabel: "Display MD 견본",
-  },
-  {
-    chip: "typo-body-lg",
-    className: "typo-body-lg",
-    text: "디자인 토큰과 Tailwind 유틸리티로 일관된 타이포 스케일을 적용합니다. 개발자는 typo-* 클래스만 지정하면 됩니다.",
-    ariaLabel: "Body LG 견본",
-  },
-  {
-    chip: "typo-label-md",
-    className: "typo-label-md inline-flex rounded-lg bg-accent px-4 py-2 text-on-accent",
-    text: "시작하기",
-    ariaLabel: "Label MD 버튼 견본",
-  },
+const headingScaleSpecs: TypographyScaleSpec[] = [
+  { style: "xlarge", pc: 40, mobile: 28, weight: 700, letterSpacing: "1px", typoClass: "typo-heading-xlarge" },
+  { style: "large", pc: 32, mobile: 24, weight: 700, letterSpacing: "1px", typoClass: "typo-heading-large" },
+  { style: "medium", pc: 24, mobile: 22, weight: 700, letterSpacing: "0px", typoClass: "typo-heading-medium" },
+  { style: "small", pc: 19, mobile: 19, weight: 700, letterSpacing: "0px", typoClass: "typo-heading-small" },
+  { style: "xsmall", pc: 17, mobile: 17, weight: 700, letterSpacing: "0px", typoClass: "typo-heading-xsmall" },
+  { style: "xxsmall", pc: 15, mobile: 15, weight: 700, letterSpacing: "0px", typoClass: "typo-heading-xxsmall" },
+];
+
+const bodyScaleSpecs: TypographyScaleSpec[] = [
+  { style: "large-bold", pc: 19, mobile: 19, weight: 700, letterSpacing: "0px", typoClass: "typo-body-large-bold" },
+  { style: "medium-bold", pc: 17, mobile: 17, weight: 700, letterSpacing: "0px", typoClass: "typo-body-medium-bold" },
+  { style: "small-bold", pc: 15, mobile: 15, weight: 700, letterSpacing: "0px", typoClass: "typo-body-small-bold" },
+  { style: "xsmall-bold", pc: 13, mobile: 13, weight: 700, letterSpacing: "0px", typoClass: "typo-body-xsmall-bold" },
+  { style: "large", pc: 19, mobile: 19, weight: 400, letterSpacing: "0px", typoClass: "typo-body-large" },
+  { style: "medium*", pc: 17, mobile: 17, weight: 400, letterSpacing: "0px", typoClass: "typo-body-medium" },
+  { style: "small", pc: 15, mobile: 15, weight: 400, letterSpacing: "0px", typoClass: "typo-body-small" },
+  { style: "xsmall", pc: 13, mobile: 13, weight: 400, letterSpacing: "0px", typoClass: "typo-body-xsmall" },
+];
+
+const labelScaleSpecs: TypographyScaleSpec[] = [
+  { style: "large", pc: 19, mobile: 19, weight: 400, letterSpacing: "0px", typoClass: "typo-label-large" },
+  { style: "medium", pc: 17, mobile: 17, weight: 400, letterSpacing: "0px", typoClass: "typo-label-medium" },
+  { style: "small", pc: 15, mobile: 15, weight: 400, letterSpacing: "0px", typoClass: "typo-label-small" },
+  { style: "xsmall", pc: 13, mobile: 13, weight: 400, letterSpacing: "0px", typoClass: "typo-label-xsmall" },
+];
+
+const displayScaleSpecs: TypographyScaleSpec[] = [
+  { style: "display-lg", pc: 40, mobile: 32, weight: 700, letterSpacing: "0px", typoClass: "typo-display-lg" },
+  { style: "display-md", pc: 32, mobile: 28, weight: 700, letterSpacing: "0px", typoClass: "typo-display-md" },
+  { style: "display-sm", pc: 28, mobile: 24, weight: 700, letterSpacing: "0px", typoClass: "typo-display-sm" },
+];
+
+const captionScaleSpecs: TypographyScaleSpec[] = [
+  { style: "caption", pc: 12, mobile: 12, weight: 400, letterSpacing: "0px", typoClass: "typo-caption" },
+];
+
+const headingUsageRows = [
+  { structure: "h1", range: "xlarge-large", usage: "페이지나 섹션의 가장 중요한 제목으로, 주요 주제를 강조하는 데 사용한다." },
+  { structure: "h2", range: "large-medium", usage: "콘텐츠의 주요 섹션을 구분하여 H1보다 작은 부제목 역할을 한다." },
+  { structure: "h3", range: "medium-small", usage: "세부 섹션을 나타내는 제목으로, H1과 H2보다 작은 크기로 사용한다." },
+  { structure: "h4", range: "small-xsmall", usage: "본문과 비슷한 크기의 제목으로, 세부적인 콘텐츠에 대한 설명에 사용한다." },
+  { structure: "h5", range: "xsmall-xxsmall", usage: "가장 작은 제목으로, 부차적인 정보나 보조 설명을 위해 사용한다." },
+];
+
+const bodyUsageRows = [
+  { range: "large", usage: "전체 글에 대한 써머리 또는 중요한 정보를 전달할 때 사용된다." },
+  { range: "medium", usage: "본문 텍스트에 사용되는 표준 크기로 전체적인 UI 요소에서 사용된다." },
+  { range: "small", usage: "덜 중요한 정보나 부가적인 설명 문구에 사용되며, 작은 크기로 가독성에 주의해야 한다." },
+  { range: "xsmall", usage: "가장 작은 크기로, 주석, 보조 설명 또는 부가적인 정보에 사용되며, 가독성이 떨어질 수 있으므로 신중하게 사용해야 한다." },
+];
+
+const typeScaleBaseRows = [
+  { percent: 100, label: "브라우저 기본값", note: "시스템 기본 크기" },
+  { percent: 62.5, label: "계산 참고값", note: "10px 환산이 필요할 때" },
+  { percent: 50, label: "축소 참고값", note: "8px 환산이 필요할 때" },
 ] as const;
 
-export function TypographyScaleTable() {
+const typographyTableFrameClass = "overflow-x-auto rounded-xl border border-gray-20";
+const typographyTableHeaderRowClass = "border-b border-gray-20 bg-gray-5";
+const typographyTableHeaderCellClass = "px-4 py-3 text-label-sm font-bold foreground-default";
+const typographyTableBodyRowClass = "border-b border-gray-20 last:border-b-0";
+
+export function TypeScaleBaseGuide() {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-20">
+    <div className={`mb-20 ${typographyTableFrameClass}`}>
       <table className="w-full min-w-[36rem] border-collapse text-left">
-        <caption className="sr-only">타이포그래피 스케일 — 계층, 굵기, 크기, 행간, Tailwind utility class</caption>
+        <caption className="sr-only">타이포 스케일 기준 rem, 퍼센트, 픽셀 환산표</caption>
         <thead>
-          <tr className="border-b border-gray-20 bg-gray-5">
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
-              Hierarchy
-            </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
-              Weight
-            </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
-              Size
-            </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
-              Line Height
-            </th>
-            <th scope="col" className="px-4 py-3 text-caption font-semibold uppercase tracking-normal foreground-muted">
-              Tailwind utility class
-            </th>
+          <tr className={typographyTableHeaderRowClass}>
+            <th scope="col" className={typographyTableHeaderCellClass}>시스템 기본 폰트 크기</th>
+            <th scope="col" className={typographyTableHeaderCellClass}>rem</th>
+            <th scope="col" className={typographyTableHeaderCellClass}>%</th>
+            <th scope="col" className={typographyTableHeaderCellClass}>px</th>
           </tr>
         </thead>
         <tbody>
-          {typographyTokens.map(({ label, var: cssVar, weight, typoClass }) => {
-            const sizeKey = cssVar.replace("--font-size-", "") as keyof typeof fontSizePx;
-            const sizePx = fontSizePx[sizeKey];
-            const lineHeightPx = Math.round(sizePx * FONT_LINE);
+          {typeScaleBaseRows.map(({ percent, label, note }, index) => {
+            const px = (REM_BASE * percent) / 100;
+            const percentLabel = `${percent}%`;
+            const pxLabel = `${Number.isInteger(px) ? px : px.toFixed(1)}px`;
 
             return (
-              <tr key={cssVar} className="border-b border-gray-20 last:border-b-0">
-                <td className="px-4 py-4 align-middle">
-                  <span role="img" aria-label={`${label} 견본`} className={typoClass}>
-                    {label}
-                  </span>
+              <tr key={percentLabel} className={typographyTableBodyRowClass}>
+                {index === 0 ? (
+                  <th scope="rowgroup" rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-md font-bold foreground-default">
+                    {REM_BASE}px 기준
+                  </th>
+                ) : null}
+                {index === 0 ? (
+                  <td rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-md font-bold foreground-default numeric-tabular">
+                    1rem
+                  </td>
+                ) : null}
+                <td className="px-4 py-4 align-middle text-label-sm foreground-default numeric-tabular">
+                  <span className="block font-semibold">{percentLabel}</span>
+                  <span className="block text-caption text-gray-60">{label}</span>
                 </td>
-                <td className="px-4 py-4 align-middle text-label-sm foreground-default">
-                  {typographyWeightLabel[weight] ?? weight}
-                </td>
-                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-default">
-                  {sizePx}
-                </td>
-                <td className="px-4 py-4 align-middle text-label-sm numeric-tabular foreground-default">
-                  {lineHeightPx}
-                </td>
-                <td className="px-4 py-4 align-middle">
-                  <TokenChip copyValue={typoClass}>{typoClass}</TokenChip>
+                <td className="px-4 py-4 align-middle text-label-sm foreground-default numeric-tabular">
+                  <span className="block font-semibold">{pxLabel}</span>
+                  <span className="block text-caption text-gray-60">{note}</span>
                 </td>
               </tr>
             );
@@ -1665,29 +1849,200 @@ export function TypographyScaleTable() {
   );
 }
 
-export function TypographyExampleOfUse() {
+function TypographyScaleSpecTable({
+  title,
+  description,
+  rows,
+  usage,
+}: {
+  title: string;
+  description?: string;
+  rows: TypographyScaleSpec[];
+  usage?: React.ReactNode;
+}) {
+  const sectionId = `typography-${title.toLowerCase().replace(/\s+/g, "-")}-scale`;
+
   return (
-    <section aria-labelledby="section-typography-example" className="mt-24">
-      <ContentSubsectionTitle id="section-typography-example">Example of Use</ContentSubsectionTitle>
-      <div className="rounded-xl border border-gray-20 p-6">
-        <div className="flex flex-col gap-5">
-          {typographyExamples.map(({ chip, className, text, ariaLabel }) => (
-            <div key={chip} className="grid items-center gap-3 sm:grid-cols-[minmax(0,1fr)_2rem_auto]">
-              <div className="min-w-0">
-                <span role="img" aria-label={ariaLabel} className={className}>
-                  {text}
-                </span>
-              </div>
-              <span
-                aria-hidden="true"
-                className="hidden h-px w-full border-t border-dashed border-default sm:block"
-              />
-              <TokenChip>{chip}</TokenChip>
-            </div>
-          ))}
-        </div>
+    <section aria-labelledby={sectionId}>
+      <h5 id={sectionId} className="m-0 mb-4 text-heading-sm font-bold foreground-default">
+        {title}
+      </h5>
+      {description ? <p className="m-0 mb-5 text-body-md foreground-default">{description}</p> : null}
+      {usage}
+      <div className={typographyTableFrameClass}>
+        <table className="w-full min-w-[48rem] border-collapse text-left">
+          <caption className="sr-only">{title} 타이포그래피 스케일</caption>
+          <thead>
+            <tr className={typographyTableHeaderRowClass}>
+              {["Style", "Size(pc)", "Size(mobile)", "Font weight", "Line height", "Letter spacing"].map((header) => (
+                <th key={header} scope="col" className={typographyTableHeaderCellClass}>
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ style, pc, mobile, weight, letterSpacing, typoClass }) => (
+              <tr key={style} className={typographyTableBodyRowClass}>
+                <td className="px-4 py-4 align-middle text-body-md foreground-default">
+                  <TokenChip copyValue={typoClass}>{style}</TokenChip>
+                </td>
+                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                  {pc}
+                </td>
+                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                  {mobile}
+                </td>
+                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                  {weight}
+                </td>
+                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                  150%
+                </td>
+                <td className="px-4 py-4 align-middle text-body-md foreground-default numeric-tabular">
+                  {letterSpacing}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <TypographyScalePreviewTable title={title} rows={rows} />
+    </section>
+  );
+}
+
+const typographyPreviewSampleText = "다람쥐 헌 쳇바퀴에 타고파 ABC xyz 123 !?@#";
+
+function TypographyScalePreviewTable({
+  title,
+  rows,
+}: {
+  title: string;
+  rows: TypographyScaleSpec[];
+}) {
+  const previewId = `typography-${title.toLowerCase().replace(/\s+/g, "-")}-preview`;
+
+  return (
+    <section aria-labelledby={previewId} className="mt-8">
+      <h6 id={previewId} className="m-0 mb-4 text-label-lg font-bold foreground-default">
+        Preview
+      </h6>
+      <div className={typographyTableFrameClass}>
+        <table className="w-full min-w-[48rem] border-collapse text-left">
+          <caption className="sr-only">{title} 타이포그래피 사이즈별 미리보기</caption>
+          <thead>
+            <tr className={typographyTableHeaderRowClass}>
+              <th scope="col" className={typographyTableHeaderCellClass}>Group</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>Name</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>Sample</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ style, weight, typoClass }, index) => (
+              <tr key={`${title}-${style}-preview`} className={typographyTableBodyRowClass}>
+                {index === 0 ? (
+                  <th
+                    scope="rowgroup"
+                    rowSpan={rows.length}
+                    className="w-44 px-4 py-5 align-middle text-label-md font-bold foreground-default"
+                  >
+                    {title}
+                  </th>
+                ) : null}
+                <th scope="row" className="w-44 px-4 py-5 align-middle text-label-md font-bold foreground-default">
+                  {style}
+                </th>
+                <td className="px-4 py-5 align-middle foreground-default">
+                  <span className="mb-2 block text-caption text-gray-60 numeric-tabular">{weight}</span>
+                  <span className={typoClass}>{typographyPreviewSampleText}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
+  );
+}
+
+function TypographyHeadingUsageTable() {
+  return (
+    <div aria-labelledby="typography-heading-usage" className="mb-8">
+      <h6 id="typography-heading-usage" className="m-0 mb-4 text-label-lg font-bold foreground-default">계층별 사용</h6>
+      <div className={typographyTableFrameClass}>
+        <table className="w-full min-w-[48rem] border-collapse text-left">
+          <caption className="sr-only">Heading 계층별 사용 기준</caption>
+          <thead>
+            <tr className={typographyTableHeaderRowClass}>
+              <th scope="col" className={typographyTableHeaderCellClass}>구조</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>범위</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>사용</th>
+            </tr>
+          </thead>
+          <tbody>
+            {headingUsageRows.map(({ structure, range, usage }) => (
+              <tr key={structure} className={typographyTableBodyRowClass}>
+                <td className="px-4 py-4 text-body-md foreground-default">{structure}</td>
+                <td className="px-4 py-4 text-body-md foreground-default">{range}</td>
+                <td className="px-4 py-4 text-body-md foreground-default">{usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function TypographyBodyUsageTable() {
+  return (
+    <div aria-labelledby="typography-body-usage" className="mb-8">
+      <h6 id="typography-body-usage" className="m-0 mb-4 text-label-lg font-bold foreground-default">계층별 사용</h6>
+      <div className={typographyTableFrameClass}>
+        <table className="w-full min-w-[48rem] border-collapse text-left">
+          <caption className="sr-only">Body 계층별 사용 기준</caption>
+          <thead>
+            <tr className={typographyTableHeaderRowClass}>
+              <th scope="col" className={typographyTableHeaderCellClass}>범위</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>사용</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bodyUsageRows.map(({ range, usage }) => (
+              <tr key={range} className={typographyTableBodyRowClass}>
+                <td className="px-4 py-4 text-body-md foreground-default">{range}</td>
+                <td className="px-4 py-4 text-body-md foreground-default">{usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export function TypographyScaleTable() {
+  return (
+    <div className="flex flex-col gap-20">
+      <TypographyScaleSpecTable title="Heading" rows={headingScaleSpecs} usage={<TypographyHeadingUsageTable />} />
+      <TypographyScaleSpecTable title="Body" rows={bodyScaleSpecs} usage={<TypographyBodyUsageTable />} />
+      <TypographyScaleSpecTable
+        title="Label"
+        description="컴포넌트 구성 내 label, placeholder 등에 사용한다."
+        rows={labelScaleSpecs}
+      />
+      <TypographyScaleSpecTable
+        title="Display"
+        description="페이지 대표 제목과 강한 시각적 진입점에 사용하는 가장 큰 제목 계층입니다."
+        rows={displayScaleSpecs}
+      />
+      <TypographyScaleSpecTable
+        title="Caption"
+        description="메타 정보, 보조 수치, 짧은 캡션에 사용하는 최소 텍스트 토큰입니다."
+        rows={captionScaleSpecs}
+      />
+    </div>
   );
 }
 
@@ -2485,6 +2840,40 @@ export function ExternalLinkIcon({ className }: { className?: string }) {
   );
 }
 
+export function LinkIcon({ className }: { className?: string }) {
+  return (
+    <NavIcon className={className ?? "size-icon-xs shrink-0"}>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </NavIcon>
+  );
+}
+
+export function ExternalTextLink({
+  href,
+  children,
+  className = "text-body-sm foreground-brand",
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group inline-flex items-start gap-1.5 ${className}`}
+    >
+      <LinkIcon className="mt-0.5 size-icon-xs shrink-0" />
+      <span className="break-all underline-offset-2 group-hover:underline group-focus-visible:underline">
+        {children}
+      </span>
+      <span className="sr-only">(새 창에서 열림)</span>
+    </a>
+  );
+}
+
 export const themeIconSun = (
   <NavIcon className="size-icon-md shrink-0">
     <circle cx="12" cy="12" r="4" />
@@ -2515,6 +2904,7 @@ export const guideFabButtonClass =
   "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-[0_6px_24px_var(--ds-shadow)] transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 hover:shadow-[0_8px_32px_var(--ds-shadow)] active:scale-100 active:duration-150";
 
 export const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
+export const guideFabBrandClass = `${guideFabButtonClass} surface-brand foreground-inverse`;
 export const guideFabSurfaceClass = `${guideFabButtonClass} bg-background foreground-default ring-1 ring-default`;
 
 export const GUIDE_SCROLL_TOP_THRESHOLD = 240;

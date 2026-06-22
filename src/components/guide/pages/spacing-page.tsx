@@ -124,7 +124,7 @@ export function GuideSpacingPage() {
                   <div
                     role="img"
                     aria-label={`${name} ${px}, ${rem} 모서리 견본`}
-                    className={`w-24 h-14 bg-accent border border-subtle ${utility}`}
+                    className={`w-24 h-14 surface-brand border border-subtle ${utility}`}
                   />
                   <div>
                     <p className="m-0 text-label-sm font-semibold">{name}</p>
@@ -174,7 +174,7 @@ export function GuideSpacingPage() {
                           <span
                             role="img"
                             aria-label={`${name} ${px}, ${rem} 아이콘 정사각 크기 견본`}
-                            className="bg-accent"
+                            className="surface-brand"
                             style={{
                               width: `var(${cssVar})`,
                               height: `var(${cssVar})`,
@@ -207,7 +207,7 @@ export function GuideSpacingPage() {
                           <span
                             role="img"
                             aria-label={`${name} ${px}, ${rem} 컨트롤 높이 실제 견본`}
-                            className="bg-accent"
+                            className="surface-brand"
                             style={{
                               width: pxToRem(112),
                               height: `var(${cssVar})`,

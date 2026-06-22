@@ -6,12 +6,14 @@ import {
   contentSubTabPanelClass,
   ContentIntroShell,
   ContentOutlineTabList,
-  ContentSectionTitle,
+  ContentSubsectionTitle,
   ContentTitleBlock,
+  CodeBlock,
+  ExternalTextLink,
   FontStackCuration,
-  FontTokenGuide,
   GuideContentLayout,
-  TypographyExampleOfUse,
+  TabDescriptionCallout,
+  TypeScaleBaseGuide,
   TypographyScaleTable,
   fontFamilyTocSections,
   typographyTocSections,
@@ -60,21 +62,21 @@ export function GuideTypePage() {
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={fontFamilyTocSections}>
-        <section aria-labelledby="section-font-family" className="mb-0">
+        <section aria-labelledby="section-font-stack" className="mb-0">
           <FontStackCuration />
 
           {/* Pretendard GOV */}
           <div className="rounded-2xl border border-gray-20 overflow-hidden">
             <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
               <h4 className="m-0 text-label-xl font-semibold foreground-default">Pretendard GOV</h4>
-              <p className="m-0 mt-1 text-caption foreground-muted">기본 폰트 · 1순위</p>
+              <p className="m-0 mt-1 text-caption foreground-subtle">기본 폰트 · 1순위</p>
             </div>
             <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
               <span role="img" aria-label="Pretendard GOV 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>Pretendard GOV</span>
               <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-50" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-60" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-pretendard-gov), sans-serif" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
@@ -90,7 +92,7 @@ export function GuideTypePage() {
                   { label: "CSS 변수", value: "--font-pretendard-gov" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt className="text-caption text-gray-40 font-semibold tracking-normal uppercase">{label}</dt>
+                    <dt className="text-caption text-gray-60 font-semibold tracking-normal uppercase">{label}</dt>
                     <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
                   </div>
                 ))}
@@ -98,29 +100,29 @@ export function GuideTypePage() {
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">공식 GitHub</p>
-                  <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-0.5">공식 GitHub</p>
+                  <ExternalTextLink href="https://github.com/orioncactus/pretendard">
                     github.com/orioncactus/pretendard
-                    <span className="sr-only">(새 창에서 열림)</span>
-                  </a>
+                  </ExternalTextLink>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">원본 다운로드</p>
-                  <a href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-0.5">원본 다운로드</p>
+                  <ExternalTextLink href="https://github.com/orioncactus/pretendard/releases/tag/v1.3.9">
                     github.com/orioncactus/pretendard/releases/tag/v1.3.9
-                    <span className="sr-only">(새 창에서 열림)</span>
-                  </a>
-                  <p className="mt-1 text-caption text-gray-40">Assets → pretendard-gov.zip 다운로드</p>
+                  </ExternalTextLink>
+                  <p className="mt-1 text-caption text-gray-60">Assets → pretendard-gov.zip 다운로드</p>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
-                  <p className="mb-2 text-caption text-gray-40">자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
-                  <pre className="m-0 py-3 px-4 rounded-lg bg-gray-10 text-caption text-gray-70 border border-gray-20 break-all whitespace-pre-wrap">
-                    <code>{`localFont({ src: "./fonts/PretendardGOVVariable.woff2", weight: "100 900", variable: "--font-pretendard-gov" })`}</code>
-                  </pre>
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="mb-2 text-caption text-gray-60">자체 호스팅 — next/font/local (런타임 외부 요청 0). variable woff2를 src/app/fonts에 보관.</p>
+                  <CodeBlock code={`localFont({
+  src: "./fonts/PretendardGOVVariable.woff2",
+  weight: "100 900",
+  variable: "--font-pretendard-gov",
+})`} />
                 </div>
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">GOV 버전 특징</p>
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-1">GOV 버전 특징</p>
                   <ul className="m-0 pl-4 flex flex-col gap-1">
                     {["공공기관·정부 웹사이트 최적화", "한국 웹 접근성 지침(KWCAG) 대응", "완성형 한글 11,172자 전체 지원", "다양한 weight 지원 (100–900)"].map((item) => (
                       <li key={item} className="text-caption text-gray-60">{item}</li>
@@ -131,12 +133,12 @@ export function GuideTypePage() {
             </div>
 
             <div className="py-6 px-10 border-t border-gray-20 flex flex-col gap-3">
-              <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase m-0">Weight</p>
+              <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase m-0">Weight</p>
               <div className="grid grid-cols-5 gap-4">
                 {[{ weight: 100, label: "Thin" }, { weight: 300, label: "Light" }, { weight: 400, label: "Regular" }, { weight: 600, label: "SemiBold" }, { weight: 700, label: "Bold" }].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
                     <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-pretendard-gov), sans-serif" }}>가나다 Aa</span>
-                    <span className="text-caption text-gray-40">{weight} · {label}</span>
+                    <span className="text-caption text-gray-60">{weight} · {label}</span>
                   </div>
                 ))}
               </div>
@@ -147,14 +149,14 @@ export function GuideTypePage() {
           <div className="mt-8 rounded-2xl border border-gray-20 overflow-hidden">
             <div className="py-3 px-10 bg-gray-5 border-b border-gray-20">
               <h4 className="m-0 text-label-xl font-semibold foreground-default">Noto Sans KR</h4>
-              <p className="m-0 mt-1 text-caption foreground-muted">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
+              <p className="m-0 mt-1 text-caption foreground-subtle">폴백 폰트 · 2순위 · Pretendard 미로드 시 로드</p>
             </div>
             <div className="py-12 px-10 bg-gray-5 border-b border-gray-20 flex flex-col gap-1">
               <span role="img" aria-label="Noto Sans KR 글꼴 견본" className="block font-bold leading-base" style={{ fontSize: pxToRem(48), fontFamily: "var(--font-noto), sans-serif" }}>Noto Sans KR</span>
               <span role="img" aria-label="한글 견본" className="block font-normal leading-base" style={{ fontSize: pxToRem(24), fontFamily: "var(--font-noto), sans-serif" }}>
                 가나다라마바사아자차카타파하 — ABCDEFGHIJKLMNOPQRSTUVWXYZ
               </span>
-              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-50" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-noto), sans-serif" }}>
+              <span role="img" aria-label="영문·숫자·특수문자 견본" className="block font-normal leading-base text-gray-60" style={{ fontSize: pxToRem(18), fontFamily: "var(--font-noto), sans-serif" }}>
                 abcdefghijklmnopqrstuvwxyz — 0123456789 !@#$%^&*()
               </span>
             </div>
@@ -170,7 +172,7 @@ export function GuideTypePage() {
                   { label: "CSS 변수", value: "--font-noto" },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <dt className="text-caption text-gray-40 font-semibold tracking-normal uppercase">{label}</dt>
+                    <dt className="text-caption text-gray-60 font-semibold tracking-normal uppercase">{label}</dt>
                     <dd className="text-body-sm mt-0.5 ml-0">{value}</dd>
                   </div>
                 ))}
@@ -178,25 +180,22 @@ export function GuideTypePage() {
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">공식 페이지</p>
-                  <a href="https://fonts.google.com/noto/specimen/Noto+Sans+KR" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-0.5">공식 페이지</p>
+                  <ExternalTextLink href="https://fonts.google.com/noto/specimen/Noto+Sans+KR">
                     fonts.google.com/noto/specimen/Noto+Sans+KR
-                    <span className="sr-only">(새 창에서 열림)</span>
-                  </a>
+                  </ExternalTextLink>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-0.5">원본 저장소</p>
-                  <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer" className="text-body-sm text-green-50 break-all">
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-0.5">원본 저장소</p>
+                  <ExternalTextLink href="https://github.com/notofonts/noto-cjk">
                     github.com/notofonts/noto-cjk
-                    <span className="sr-only">(새 창에서 열림)</span>
-                  </a>
-                  <p className="mt-1 text-caption text-gray-40">한글 static woff2를 src/app/fonts에 self-host</p>
+                  </ExternalTextLink>
+                  <p className="mt-1 text-caption text-gray-60">한글 static woff2를 src/app/fonts에 self-host</p>
                 </div>
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
-                  <p className="mb-2 text-caption text-gray-40">자체 호스팅 — next/font/local. <code className="font-mono">preload: false</code>로 평상시 다운로드를 막고, Pretendard 미로드 시에만 브라우저가 폴백으로 로드합니다.</p>
-                  <pre className="m-0 py-3 px-4 rounded-lg bg-gray-10 text-caption text-gray-70 border border-gray-20 break-all whitespace-pre-wrap">
-                    <code>{`localFont({
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-1">이 프로젝트 적용 방식</p>
+                  <p className="mb-2 text-caption text-gray-60">자체 호스팅 — next/font/local. <code className="font-mono">preload: false</code>로 평상시 다운로드를 막고, Pretendard 미로드 시에만 브라우저가 폴백으로 로드합니다.</p>
+                  <CodeBlock code={`localFont({
   src: [
     { path: "./fonts/NotoSansKR-100.woff2", weight: "100" },
     { path: "./fonts/NotoSansKR-300.woff2", weight: "300" },
@@ -207,11 +206,11 @@ export function GuideTypePage() {
   ],
   variable: "--font-noto",
   preload: false,
-})`}</code>
-                  </pre>
+})`}
+                  />
                 </div>
                 <div>
-                  <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase mb-1">폴백 적용 시 유의사항</p>
+                  <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase mb-1">폴백 적용 시 유의사항</p>
                   <ul className="m-0 pl-4 flex flex-col gap-1">
                     {[
                       "next/font/google 사용 불가 — Google 메타데이터에 complete Korean subset이 없어 한글 글리프 누락",
@@ -228,7 +227,7 @@ export function GuideTypePage() {
             </div>
 
             <div className="py-6 px-10 border-t border-gray-20 flex flex-col gap-3">
-              <p className="text-caption text-gray-40 font-semibold tracking-normal uppercase m-0">Weight</p>
+              <p className="text-caption text-gray-60 font-semibold tracking-normal uppercase m-0">Weight</p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
                 {[
                   { weight: 100, label: "Thin" },
@@ -240,11 +239,11 @@ export function GuideTypePage() {
                 ].map(({ weight, label }) => (
                   <div key={weight} className="flex flex-col gap-0.5">
                     <span role="img" aria-label={`${weight} ${label} 견본`} className="leading-base" style={{ fontSize: pxToRem(24), fontWeight: weight, fontFamily: "var(--font-noto), sans-serif" }}>가나다 Aa</span>
-                    <span className="text-caption text-gray-40">{weight} · {label}</span>
+                    <span className="text-caption text-gray-60">{weight} · {label}</span>
                   </div>
                 ))}
               </div>
-              <p className="m-0 text-caption foreground-muted">
+              <p className="m-0 text-caption foreground-subtle">
                 타이포 토큰의 <span className="font-mono">font-medium(500)</span>·<span className="font-mono">font-semibold(600)</span>도 self-host 파일로 제공합니다. Pretendard는 variable(100–900), Noto는 동일 구간을 static weight로 대응합니다.
               </p>
             </div>
@@ -257,19 +256,18 @@ export function GuideTypePage() {
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={typographyTocSections}>
         <section aria-labelledby="section-typography-scale" className="mb-0">
-          <ContentSectionTitle
-            id="section-typography-scale"
-            lead
-            description={
-              <>
-                역할별 타이포 스케일과 <strong>typo-*</strong> 묶음 유틸리티를 확인합니다.
-              </>
-            }
-          >
+          <ContentSubsectionTitle id="section-typography-scale">
             Type Scale
-          </ContentSectionTitle>
+          </ContentSubsectionTitle>
+          <TabDescriptionCallout>
+            <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
+              <li>다양한 크기의 텍스트를 일관되게 사용할 수 있도록 역할과 스타일에 따라 구분해 정의합니다.</li>
+              <li>반응형에 대응하기 위해 개발 코드에서는 px 고정값 대신 <strong>rem</strong> 기반 토큰과 <strong>typo-*</strong> 묶음 유틸리티를 사용합니다.</li>
+              <li>토큰 이름은 해상도별로 분리하지 않고 유지하며, <strong>display-*</strong>와 가이드 상위 타이틀처럼 큰 제목 계층만 breakpoint별 값으로 재매핑합니다.</li>
+            </ul>
+          </TabDescriptionCallout>
+          <TypeScaleBaseGuide />
           <TypographyScaleTable />
-          <TypographyExampleOfUse />
         </section>
 
         </GuideContentLayout>
