@@ -10,7 +10,7 @@ export const GUIDE_ROUTES = {
   responsive: "/guide/responsive",
 } as const;
 
-export type GuideCategoryId = "color" | "type" | "spacing" | "grid" | "icons";
+export type GuideCategoryId = "color" | "type" | "spacing" | "grid" | "responsive" | "icons";
 
 export function guideColorTabHref(tab: "raw" | "semantic") {
   return tab === "raw" ? GUIDE_ROUTES.color : `${GUIDE_ROUTES.color}?tab=semantic`;

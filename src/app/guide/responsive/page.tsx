@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import Link from "next/link";
 import { pxToRem } from "@/lib/tokens";
-import { GUIDE_ROUTES } from "@/lib/guide-routes";
 import {
   containerTokens,
   getActiveContainerToken,
@@ -41,7 +39,7 @@ function LayoutPageCell({
       className={`surface-brand foreground-inverse flex min-w-0 items-center justify-center font-semibold ${className ?? ""}`}
       style={{ minHeight: pxToRem(48) }}
     >
-      <span className="text-caption numeric-tabular leading-none">
+      <span className={["text-caption numeric-tabular leading-none", compact ? "font-medium" : "font-semibold"].join(" ")}>
         {label}
       </span>
     </div>
@@ -458,14 +456,9 @@ export default function ResponsiveGuidePage() {
   const sidenavMetrics = getSidenavLayoutMetrics(layoutWidth || 375, tier);
 
   return (
-    <div className={layoutPageColSpanFull}>
+    <main className="min-h-screen bg-background foreground-default">
       <div className="p-6 md:p-10">
       <header className="mb-16">
-        <p className="m-0 mb-2">
-          <Link href={GUIDE_ROUTES.color} className="text-body-small foreground-brand no-underline hover:underline">
-            ← Design Token Preview
-          </Link>
-        </p>
         <h1 className="text-display-sm font-bold m-0">Responsive Layout Guide</h1>
         <p className="mt-2 mb-0 text-body-small foreground-muted">
           브라우저 창 크기를 조절해 tier별 칼럼 수·가터(gap)·스크린 마진 변화를 확인하세요.
@@ -773,6 +766,6 @@ export default function ResponsiveGuidePage() {
         </div>
       </section>
       </div>{/* /guide prose padding */}
-    </div>
+    </main>
   );
 }

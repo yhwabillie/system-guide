@@ -9,13 +9,14 @@ import {
   GridColumnPreview,
   gridColumnTokens,
 } from "@/components/guide/shared";
+import { GUIDE_ROUTES } from "@/lib/guide-routes";
 
 export function GuideGridPage() {
   return (
     <div className={layoutPageColSpanFull}>
         <ContentIntroShell>
           <ContentTitleBlock
-            title="Grid"
+            title="Layout"
             titleId="content-grid"
           />
 
@@ -30,7 +31,7 @@ export function GuideGridPage() {
                 <>
                   Tailwind 기본 <strong>grid-cols-*</strong> 열 분할. <strong>12열</strong> 그리드는 <strong>col-span-*</strong>와 조합해 페이지 레이아웃을 구성합니다.{" "}
                   <strong>shell·breakpoint</strong> 검증은 사이드메뉴{" "}
-                  <a href="#nav-layout-breakpoint" className="font-semibold foreground-brand no-underline hover:underline">
+                  <a href={GUIDE_ROUTES.responsive} className="font-semibold foreground-brand no-underline hover:underline">
                     Layout & Breakpoint
                   </a>
                   {" "}가이드를 참고하세요.

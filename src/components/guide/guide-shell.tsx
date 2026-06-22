@@ -24,7 +24,6 @@ import {
   NavIcon,
   navIconAssets,
   navIconColor,
-  navIconGrid,
   navIconLayout,
   navIconSpacing,
   navIconType,
@@ -38,9 +37,6 @@ const navSectionEyebrowClass =
 
 const navExpandToggleClass =
   "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
-
-const navExternalLinkClass =
-  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-label-small font-semibold foreground-default no-underline transition-colors duration-150 hover:bg-gray-10";
 
 const navSubItemClass = (active: boolean) =>
   [
@@ -68,7 +64,7 @@ function GuideNavSubLinks({
 }: {
   listId: string;
   labelledBy: string;
-  items: { label: string; href: string; active: boolean }[];
+  items: { label: string; href: string; active: boolean; target?: "_blank" }[];
 }) {
   return (
     <ul
@@ -84,10 +80,15 @@ function GuideNavSubLinks({
           />
           <Link
             href={item.href}
+            target={item.target}
+            rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
             aria-current={item.active ? "page" : undefined}
             className={navSubItemClass(item.active)}
           >
             <span>{item.label}</span>
+            {item.target === "_blank" ? (
+              <ExternalLinkIcon className="ml-auto size-icon-xs shrink-0 foreground-muted" />
+            ) : null}
             {item.active ? (
               <NavIcon className="size-icon-xs shrink-0 foreground-brand-strong">
                 <path d="M9 6l6 6-6 6" />
@@ -115,7 +116,7 @@ function GuideNavCategory({
   icon: ReactNode;
   label: string;
   expandLabel: string;
-  subItems: { label: string; href: string; active: boolean }[];
+  subItems: { label: string; href: string; active: boolean; target?: "_blank" }[];
 }) {
   const labelId = useId();
   const listId = useId();
@@ -156,7 +157,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
   const [colorMenuExpanded, setColorMenuExpanded] = useState(true);
   const [typeMenuExpanded, setTypeMenuExpanded] = useState(true);
   const [spacingMenuExpanded, setSpacingMenuExpanded] = useState(true);
-  const [gridMenuExpanded, setGridMenuExpanded] = useState(true);
+  const [layoutMenuExpanded, setLayoutMenuExpanded] = useState(true);
   const [iconsMenuExpanded, setIconsMenuExpanded] = useState(true);
 
   const tab = searchParams.get("tab");
@@ -165,15 +166,17 @@ export function GuideShell({ children }: { children: ReactNode }) {
   const isType = isGuideCategoryPath(pathname, "type");
   const isSpacing = isGuideCategoryPath(pathname, "spacing");
   const isGrid = isGuideCategoryPath(pathname, "grid");
+  const isResponsive = isGuideCategoryPath(pathname, "responsive");
+  const isLayout = isGrid || isResponsive;
   const isIcons = isGuideCategoryPath(pathname, "icons");
 
   useEffect(() => {
     if (isColor) setColorMenuExpanded(true);
     if (isType) setTypeMenuExpanded(true);
     if (isSpacing) setSpacingMenuExpanded(true);
-    if (isGrid) setGridMenuExpanded(true);
+    if (isLayout) setLayoutMenuExpanded(true);
     if (isIcons) setIconsMenuExpanded(true);
-  }, [isColor, isType, isSpacing, isGrid, isIcons]);
+  }, [isColor, isType, isSpacing, isLayout, isIcons]);
 
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > GUIDE_SCROLL_TOP_THRESHOLD);
@@ -185,6 +188,10 @@ export function GuideShell({ children }: { children: ReactNode }) {
   function scrollToPageTop() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+  }
+
+  if (isResponsive) {
+    return <>{children}</>;
   }
 
   return (
@@ -265,14 +272,15 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 ]}
               />
               <GuideNavCategory
-                active={isGrid}
-                expanded={gridMenuExpanded}
-                onToggleExpand={() => setGridMenuExpanded((open) => !open)}
-                icon={navIconGrid}
-                label="Grid"
-                expandLabel="Grid"
+                active={isLayout}
+                expanded={layoutMenuExpanded}
+                onToggleExpand={() => setLayoutMenuExpanded((open) => !open)}
+                icon={navIconLayout}
+                label="Layout"
+                expandLabel="Layout"
                 subItems={[
                   { label: "Columns", href: GUIDE_ROUTES.grid, active: isGrid },
+                  { label: "Responsive Layout Guide", href: GUIDE_ROUTES.responsive, active: isResponsive, target: "_blank" },
                 ]}
               />
             </div>
@@ -293,14 +301,6 @@ export function GuideShell({ children }: { children: ReactNode }) {
               />
             </div>
 
-            <div className="mt-5 border-t border-default pt-5">
-              <p className={navSectionEyebrowClass}>Layout</p>
-              <Link id="nav-layout-breakpoint" href={GUIDE_ROUTES.responsive} className={navExternalLinkClass}>
-                {navIconLayout}
-                Layout & Breakpoint
-                <ExternalLinkIcon className="ml-auto size-icon-xs shrink-0" />
-              </Link>
-            </div>
           </nav>
 
           <main
