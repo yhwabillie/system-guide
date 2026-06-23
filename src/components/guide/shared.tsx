@@ -1988,7 +1988,7 @@ function TypographyScaleSpecTable({
           <caption className="sr-only">{title} 타이포그래피 스케일</caption>
           <thead>
             <tr className={typographyTableHeaderRowClass}>
-              {["Style", "Size(pc)", "Size(mobile)", "Font weight", "Line height", "Letter spacing"].map((header) => (
+              {["Utility Class", "Size(pc)", "Size(mobile)", "Font weight", "Line height", "Letter spacing"].map((header) => (
                 <th key={header} scope="col" className={typographyTableHeaderCellClass}>
                   {header}
                 </th>
@@ -1999,7 +1999,7 @@ function TypographyScaleSpecTable({
             {rows.map(({ style, pc, mobile, weight, letterSpacing, typoClass }) => (
               <tr key={style} className={typographyTableBodyRowClass}>
                 <td className="px-4 py-4 align-middle text-body-medium foreground-default">
-                  <TokenChip copyValue={typoClass}>{style}</TokenChip>
+                  <TokenChip copyValue={typoClass}>{typoClass}</TokenChip>
                 </td>
                 <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
                   {pc}
@@ -2036,6 +2036,8 @@ function TypographyScalePreviewTable({
   rows: TypographyScaleSpec[];
 }) {
   const previewId = `typography-${title.toLowerCase().replace(/\s+/g, "-")}-preview`;
+  // style 값에 그룹명이 접두로 붙은 경우(예: display-lg) 사이즈 이름만 노출
+  const groupPrefix = `${title.toLowerCase()}-`;
 
   return (
     <section aria-labelledby={previewId} className="mt-8">
@@ -2047,28 +2049,14 @@ function TypographyScalePreviewTable({
           <caption className="sr-only">{title} 타이포그래피 사이즈별 미리보기</caption>
           <thead>
             <tr className={typographyTableHeaderRowClass}>
-              <th scope="col" className={typographyTableHeaderCellClass}>Group</th>
-              <th scope="col" className={typographyTableHeaderCellClass}>Name</th>
               <th scope="col" className={typographyTableHeaderCellClass}>Sample</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ style, weight, typoClass }, index) => (
+            {rows.map(({ style, weight, typoClass }) => (
               <tr key={`${title}-${style}-preview`} className={typographyTableBodyRowClass}>
-                {index === 0 ? (
-                  <th
-                    scope="rowgroup"
-                    rowSpan={rows.length}
-                    className="w-44 px-4 py-5 align-middle text-label-small font-bold foreground-default"
-                  >
-                    {title}
-                  </th>
-                ) : null}
-                <th scope="row" className="w-44 px-4 py-5 align-middle text-label-small font-bold foreground-default">
-                  {style}
-                </th>
                 <td className="px-4 py-5 align-middle foreground-default">
-                  <span className="mb-2 block text-caption text-gray-60 numeric-tabular">{weight}</span>
+                  <span className="mb-2 block text-caption text-gray-60 numeric-tabular">{style.startsWith(groupPrefix) ? style.slice(groupPrefix.length) : style} / {weight}</span>
                   <span className={typoClass}>{typographyPreviewSampleText}</span>
                 </td>
               </tr>
