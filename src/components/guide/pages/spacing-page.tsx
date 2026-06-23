@@ -20,7 +20,6 @@ import {
 } from "@/components/guide/shared";
 import { useRouter, useSearchParams } from "next/navigation";
 import { guideSpacingTabHref } from "@/lib/guide-routes";
-import { pxToRem } from "@/lib/tokens";
 
 const fixedSizeTocSections = [
   { id: "section-fixed-size", label: "Fixed Size", level: 1 as const },
@@ -263,7 +262,7 @@ export function GuideSpacingPage() {
                         <span
                           role="img"
                           aria-label={`${name} ${px} 아이콘 크기 견본`}
-                          className="block border border-strong surface-default"
+                          className="block surface-brand border border-subtle"
                           style={{
                             width: `var(${cssVar})`,
                             height: `var(${cssVar})`,
@@ -327,10 +326,9 @@ export function GuideSpacingPage() {
                         <span
                           role="img"
                           aria-label={`${name} ${px} 컨트롤 높이 견본`}
-                          className="block w-32 border border-strong surface-default"
+                          className="block w-32 surface-brand border border-subtle"
                           style={{
                             height: `var(${cssVar})`,
-                            borderRadius: pxToRem(8),
                           }}
                         />
                         <span className="font-mono text-caption foreground-muted">{px}</span>
@@ -389,7 +387,7 @@ export function GuideSpacingPage() {
                         <span
                           role="img"
                           aria-label={`${name} ${px} 스피너 크기 견본`}
-                          className="block rounded-full border border-strong surface-default"
+                          className="block surface-brand border border-subtle"
                           style={{
                             width: `var(${cssVar}, ${rem})`,
                             height: `var(${cssVar}, ${rem})`,
