@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   checkerDark,
@@ -53,6 +53,59 @@ import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contr
 import { guideColorTabHref } from "@/lib/guide-routes";
 import { pxToRem } from "@/lib/tokens";
 import { useGuideTheme } from "@/components/guide/guide-theme-provider";
+
+function RawColorPaletteCard({
+  label,
+  sourceVar,
+  hex,
+  cssVar,
+  checker,
+  selecting,
+  onSelect,
+}: {
+  label: string;
+  sourceVar: string;
+  hex: string;
+  cssVar: string;
+  checker: CSSProperties;
+  selecting: "bg" | "text" | null;
+  onSelect: () => void;
+}) {
+  const cardClassName = [
+    "group overflow-hidden rounded-xl border border-default surface-default text-left transition-colors",
+    selecting ? "cursor-pointer hover:border-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-utility-focus-ring" : "",
+  ].join(" ");
+  const content = (
+    <>
+      <span className="relative block h-24 border-b border-default">
+        <RawPaletteSwatchFill cssVar={cssVar} checker={checker} />
+      </span>
+      <span className="block p-4">
+        <span className="block font-mono text-caption leading-base foreground-muted">{sourceVar}</span>
+        <span className="mt-1 block font-mono text-caption leading-base foreground-muted">{hex.toLowerCase()}</span>
+      </span>
+    </>
+  );
+
+  if (selecting) {
+    return (
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-label={`${label} (${hex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`}
+        className={cardClassName}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className={cardClassName} aria-label={`${label} ${sourceVar} ${hex}`}>
+      {content}
+    </div>
+  );
+}
 
 export function GuideColorPage() {
   const router = useRouter();
@@ -167,7 +220,7 @@ export function GuideColorPage() {
             Contrast Checker
           </ContentSectionTitle>
 
-          <div id="section-color" className="mb-8 scroll-mt-[calc(3.75rem+1.5rem)]">
+          <div className="mb-8">
           {/* 선택 모드 안내 - 중립 정보 스타일(빨강/초록 의미색 미사용으로 에러·성공 오인 방지) */}
           {selecting && (
             <div
@@ -200,8 +253,7 @@ export function GuideColorPage() {
             </div>
           )}
 
-          <div role="group" aria-label="색상 팔레트" className="flex flex-col gap-2">
-            {/* 스케일 헤더 */}
+          <div role="group" aria-label="대비 검사 색상 선택 팔레트" className="flex flex-col gap-2">
             <div aria-hidden="true" className="grid gap-1 mb-1" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
               <span className="text-caption text-gray-60">Family</span>
               {RAW_COLOR_SCALE_UNITS.map((s) => (
@@ -213,55 +265,54 @@ export function GuideColorPage() {
               const swatchByScale = Object.fromEntries(swatches.map((sw) => [sw.scale, sw]));
               const rawChecker = isDark ? checkerDark : checkerLight;
               return (
-              <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
-                <span className="text-label-xsmall font-semibold foreground-default">{family}</span>
-                {RAW_COLOR_SCALE_UNITS.map((unit) => {
-                  const sw = swatchByScale[unit];
-                  if (!sw) {
-                    return <div key={unit} aria-hidden="true" className="min-h-8 rounded-sm bg-transparent" />;
-                  }
-                  const { scale, hex } = sw;
-                  const label = `${family} ${scale}`;
-                  const rawCssVar = `var(--raw-${name}-${scale})`;
-                  const currentHex = hex.toUpperCase();
-                  const isBg = bgColor.hex.toLowerCase() === currentHex.toLowerCase();
-                  const isText = textColor.hex.toLowerCase() === currentHex.toLowerCase();
-                  const isInteractive = !!selecting;
-                  const labelText = isInteractive
-                    ? `${label} (${currentHex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`
-                    : `${label} — ${currentHex}`;
-                  return isInteractive ? (
-                    <button
-                      key={scale}
-                      type="button"
-                      onClick={() => handleSwatchClick(currentHex, label)}
-                      aria-label={labelText}
-                      aria-pressed={isBg || isText}
-                      className={rawPaletteSwatchClass(isBg, isText, true)}
-                    >
-                      <RawPaletteSwatchFill cssVar={rawCssVar} checker={rawChecker} />
-                      {isBg && <ContrastSwatchRoleMarker role="BG" />}
-                      {isText && <ContrastSwatchRoleMarker role="TXT" />}
-                    </button>
-                  ) : (
-                    <div
-                      key={scale}
-                      aria-hidden="true"
-                      className={rawPaletteSwatchClass(isBg, isText, false)}
-                    >
-                      <RawPaletteSwatchFill cssVar={rawCssVar} checker={rawChecker} />
-                      {isBg && <ContrastSwatchRoleMarker role="BG" />}
-                      {isText && <ContrastSwatchRoleMarker role="TXT" />}
-                    </div>
-                  );
-                })}
-              </div>
-            );})}
+                <div key={family} className="grid gap-1 items-center" style={{ gridTemplateColumns: "80px repeat(13, 1fr)" }}>
+                  <span className="text-label-xsmall font-semibold foreground-default">{family}</span>
+                  {RAW_COLOR_SCALE_UNITS.map((unit) => {
+                    const sw = swatchByScale[unit];
+                    if (!sw) {
+                      return <div key={unit} aria-hidden="true" className="min-h-8 rounded-sm bg-transparent" />;
+                    }
+                    const { scale, hex } = sw;
+                    const label = `${family} ${scale}`;
+                    const rawCssVar = `var(--raw-${name}-${scale})`;
+                    const currentHex = hex.toUpperCase();
+                    const isBg = bgColor.hex.toLowerCase() === currentHex.toLowerCase();
+                    const isText = textColor.hex.toLowerCase() === currentHex.toLowerCase();
+                    const isInteractive = !!selecting;
+                    const labelText = isInteractive
+                      ? `${label} (${currentHex}) — ${selecting === "bg" ? "배경색으로 선택" : "텍스트색으로 선택"}`
+                      : `${label} — ${currentHex}`;
+                    return isInteractive ? (
+                      <button
+                        key={scale}
+                        type="button"
+                        onClick={() => handleSwatchClick(currentHex, label)}
+                        aria-label={labelText}
+                        aria-pressed={isBg || isText}
+                        className={rawPaletteSwatchClass(isBg, isText, true)}
+                      >
+                        <RawPaletteSwatchFill cssVar={rawCssVar} checker={rawChecker} />
+                        {isBg && <ContrastSwatchRoleMarker role="BG" />}
+                        {isText && <ContrastSwatchRoleMarker role="TXT" />}
+                      </button>
+                    ) : (
+                      <div
+                        key={scale}
+                        aria-hidden="true"
+                        className={rawPaletteSwatchClass(isBg, isText, false)}
+                      >
+                        <RawPaletteSwatchFill cssVar={rawCssVar} checker={rawChecker} />
+                        {isBg && <ContrastSwatchRoleMarker role="BG" />}
+                        {isText && <ContrastSwatchRoleMarker role="TXT" />}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
 
-            {/* 스케일 팔레트와 구분 — 앵커는 스케일(0~100)과 무관 */}
             <div aria-hidden="true" className="mt-2 pt-2 border-t border-dashed border-default" />
 
-            {/* Background 앵커 — White / Black 각자 한 행(모드 무관 고정값, 스케일 없음) */}
             {backgroundAnchors.map(({ label, hex, cssVar }) => {
               const isBg = bgColor.hex.toLowerCase() === hex.toLowerCase();
               const isText = textColor.hex.toLowerCase() === hex.toLowerCase();
@@ -451,6 +502,74 @@ export function GuideColorPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="section-color" className="mb-24">
+          <ContentSectionTitle
+            id="section-color"
+            description={
+              <>
+                가공 전 원본 팔레트입니다. 색상 family와 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> scale을 카드 단위로 확인합니다.
+              </>
+            }
+          >
+            Color Palette
+          </ContentSectionTitle>
+
+          <div className="flex flex-col gap-12">
+            <section aria-labelledby="raw-palette-neutral">
+              <h3 id="raw-palette-neutral" className="m-0 mb-4 scroll-mt-[calc(3.75rem+1.5rem)] text-label-large font-bold lowercase foreground-subtle">
+                neutral
+              </h3>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4">
+                {backgroundAnchors.map(({ label, hex, cssVar }) => {
+                  const rawChecker = isDark ? checkerDark : checkerLight;
+                  const tokenLabel = label.toLowerCase() === "white" ? "raw-white" : "raw-black";
+                  const sourceVar = label.toLowerCase() === "white" ? "--raw-white" : "--raw-black";
+                  return (
+                    <RawColorPaletteCard
+                      key={label}
+                      label={tokenLabel}
+                      sourceVar={sourceVar}
+                      hex={hex}
+                      cssVar={cssVar}
+                      checker={rawChecker}
+                      selecting={selecting}
+                      onSelect={() => handleSwatchClick(hex, label)}
+                    />
+                  );
+                })}
+              </div>
+            </section>
+
+            {primitiveColors.map(({ family, name, swatches }) => {
+              const rawChecker = isDark ? checkerDark : checkerLight;
+              return (
+                <section key={family} aria-labelledby={`raw-palette-${name}`}>
+                  <h3 id={`raw-palette-${name}`} className="m-0 mb-4 scroll-mt-[calc(3.75rem+1.5rem)] text-label-large font-bold lowercase foreground-subtle">
+                    {family.toLowerCase()}
+                  </h3>
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4">
+                    {swatches.map(({ scale, hex }) => {
+                      const currentHex = hex.toUpperCase();
+                      return (
+                        <RawColorPaletteCard
+                          key={`${name}-${scale}`}
+                          label={`raw-${name}-${scale}`}
+                          sourceVar={`--raw-${name}-${scale}`}
+                          hex={currentHex}
+                          cssVar={`var(--raw-${name}-${scale})`}
+                          checker={rawChecker}
+                          selecting={selecting}
+                          onSelect={() => handleSwatchClick(currentHex, `${family} ${scale}`)}
+                        />
+                      );
+                    })}
+                  </div>
+                </section>
+              );
+            })}
           </div>
         </section>
 
