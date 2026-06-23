@@ -457,16 +457,16 @@ export default function ResponsiveGuidePage() {
 
   return (
     <main className="min-h-screen bg-background foreground-default">
-      <div className="p-6 md:p-10">
-      <header className="mb-16">
-        <h1 className="text-display-sm font-bold m-0">반응형 Layout 가이드</h1>
-        <p className="mt-2 mb-0 text-body-small foreground-muted">
+      <div className={layoutPageClass}>
+      <header className={`${layoutPageColSpanFull} pt-20`}>
+        <h1 className="m-0 text-heading-large font-bold leading-base foreground-brand">반응형 Layout 가이드</h1>
+        <p className="m-0 mt-3 text-body-medium leading-base foreground-subtle">
           브라우저 창 크기를 조절해 tier별 칼럼 수·가터(gap)·스크린 마진 변화를 확인하세요.
         </p>
       </header>
 
       {/* Live status */}
-      <section aria-labelledby="live-status" className="mb-20 p-5 rounded-xl border border-default surface-subtle">
+      <section aria-labelledby="live-status" className={`${layoutPageColSpanFull} mb-20 p-5 rounded-xl surface-subtle`}>
         <h2 id="live-status" className="text-heading-medium font-bold m-0 mb-4">현재 viewport</h2>
         <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -546,11 +546,12 @@ export default function ResponsiveGuidePage() {
         </div>
       </section>
 
-      </div>{/* /guide prose padding */}
+      </div>{/* /layout-page guide prose */}
 
       {/* viewport 전폭 — main padding 없이 layout-page·미리보기 검증 */}
       <section aria-labelledby="layout-page-demo" className="mb-20">
-        <div className="px-6 md:px-10">
+        <div className={layoutPageClass}>
+          <div className={layoutPageColSpanFull}>
           <h2 id="layout-page-demo" className="text-heading-medium font-bold mb-4">layout-page — 반응형 페이지 레이아웃</h2>
           <p className="text-body-small foreground-muted mb-4">
             가이드 미리보기(아래) 가운데 테두리 박스가 실제 <strong>콘텐츠 프레임</strong>(<code className="font-mono text-caption">{layoutPageClass}</code> 박스, large+에서 1280px 고정)입니다. 프레임 안쪽 = <strong>최소 스크린 마진</strong>(16/24px) + <strong>칼럼 영역</strong>. 프레임이 max에 닿은 뒤 남는 폭은 바깥 <strong>여백(centering)</strong>(붉은색)으로 흡수됩니다. 좌우 스크린 마진(통합) = 최소 마진 + 바깥 여백. 칼럼 수·가터(gap)는 tier 표를 따릅니다.
@@ -559,6 +560,7 @@ export default function ResponsiveGuidePage() {
             <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
             레이아웃 프리뷰
           </p>
+          </div>
         </div>
 
         {layoutWidth > 0 && (
@@ -583,8 +585,8 @@ export default function ResponsiveGuidePage() {
           </LayoutGuidePreview>
         )}
 
-        <div className="px-6 md:px-10">
-          <div className="mt-8">
+        <div className={layoutPageClass}>
+          <div className={`${layoutPageColSpanFull} mt-8`}>
             <h3 className="text-label-large font-semibold mb-2">프로젝트 적용 예시</h3>
             <p className="text-body-small foreground-muted mb-3">
               <code className="font-mono text-caption">{layoutPageClass}</code>만 부모에 적용합니다. 아래 셀 스타일은 가이드 표시용이며, 실제 콘텐츠 마크업·스타일은 프로젝트에서 자유롭게 구성합니다.
@@ -602,7 +604,8 @@ export default function ResponsiveGuidePage() {
           ))}
         </div>
 
-        <div className="px-6 md:px-10 mt-10">
+        <div className={`${layoutPageClass} mt-10`}>
+          <div className={layoutPageColSpanFull}>
           <h3 id="col-span-demo" className="text-label-large font-semibold mb-2">col-span 영역 구성</h3>
           <p className="text-body-small foreground-muted mb-3">
             <code className="font-mono text-caption">layout-page</code> 열 수는 tier마다 4→8→12→12로 변합니다.
@@ -613,6 +616,7 @@ export default function ResponsiveGuidePage() {
             <li>본문 8/12: {layoutPageColSpanMain}</li>
             <li>보조 4/12: {layoutPageColSpanAside}</li>
           </ul>
+          </div>
         </div>
 
         <div className={layoutPageClass}>
@@ -624,11 +628,13 @@ export default function ResponsiveGuidePage() {
 
       {/* viewport 전폭 — layout-sidenav 실제 화면 검증 */}
       <section aria-labelledby="layout-sidenav-demo" className="mb-20">
-        <div className="px-6 md:px-10">
+        <div className={layoutPageClass}>
+          <div className={layoutPageColSpanFull}>
           <h2 id="layout-sidenav-demo" className="text-heading-medium font-bold mb-4">layout-sidenav — 사이드메뉴 + layout-page 콘텐츠</h2>
           <p className="text-body-small foreground-muted mb-4">
             가이드 미리보기(아래)는 <code className="font-mono text-caption">{layoutSidenavClass}</code>·<code className="font-mono text-caption">{layoutSidenavContentClass}</code>에 menu + [스크린 마진 · 칼럼 영역 · 스크린 마진]을 겹쳐 표시합니다. large(1024px) tier 이상은 16rem menu + 콘텐츠 열, 미만은 1열 스택입니다.
           </p>
+          </div>
         </div>
 
         {layoutWidth > 0 && (
@@ -656,8 +662,8 @@ export default function ResponsiveGuidePage() {
           </LayoutSidenavGuidePreview>
         )}
 
-        <div className="px-6 md:px-10">
-          <div className="mt-8">
+        <div className={layoutPageClass}>
+          <div className={`${layoutPageColSpanFull} mt-8`}>
             <h3 className="text-label-large font-semibold mb-2">프로젝트 적용 예시</h3>
             <p className="text-body-small foreground-muted mb-3">
               <code className="font-mono text-caption">{layoutSidenavClass}</code> + <code className="font-mono text-caption">{layoutSidenavMenuClass}</code> + <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 조합입니다. 아래 셀 스타일은 가이드 표시용이며, 실제 콘텐츠 마크업·스타일은 프로젝트에서 자유롭게 구성합니다.
@@ -683,7 +689,8 @@ export default function ResponsiveGuidePage() {
           </main>
         </div>
 
-        <div className="px-6 md:px-10 mt-10">
+        <div className={`${layoutPageClass} mt-10`}>
+          <div className={layoutPageColSpanFull}>
           <h3 id="sidenav-col-span-demo" className="text-label-large font-semibold mb-2">col-span 영역 구성</h3>
           <p className="text-body-small foreground-muted mb-3">
             <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 열 수는 tier마다 4→8→12→12로 변합니다.
@@ -694,6 +701,7 @@ export default function ResponsiveGuidePage() {
             <li>본문 8/12: {layoutPageColSpanMain}</li>
             <li>보조 4/12: {layoutPageColSpanAside}</li>
           </ul>
+          </div>
         </div>
 
         <div className={layoutSidenavClass}>
@@ -711,9 +719,9 @@ export default function ResponsiveGuidePage() {
         </div>
       </section>
 
-      <div className="p-6 md:p-10">
+      <div className={layoutPageClass}>
       {/* Reference table */}
-      <section aria-labelledby="breakpoint-table">
+      <section aria-labelledby="breakpoint-table" className={layoutPageColSpanFull}>
         <h2 id="breakpoint-table" className="text-heading-medium font-bold mb-4">Grid tier reference</h2>
         <div className="overflow-x-auto rounded-xl border border-default">
           <table className="w-full border-collapse text-left">
@@ -765,7 +773,7 @@ export default function ResponsiveGuidePage() {
           </ul>
         </div>
       </section>
-      </div>{/* /guide prose padding */}
+      </div>{/* /layout-page guide prose */}
     </main>
   );
 }
