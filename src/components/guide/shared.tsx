@@ -1778,7 +1778,7 @@ export function GuideLogoMark() {
     <svg
       aria-hidden="true"
       viewBox="0 0 32 20"
-      className="size-icon-sm shrink-0 foreground-brand-strong"
+      className="size-icon-sm shrink-0 foreground-default"
       fill="currentColor"
     >
       <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
@@ -1919,7 +1919,7 @@ export function GuideSiteHeader({
 
         <div className="flex min-w-0 items-center justify-center gap-2 justify-self-center">
           <GuideLogoMark />
-          <h1 className="truncate text-label-medium font-bold foreground-brand-strong">디자인 시스템 가이드</h1>
+          <h1 className="truncate text-label-medium font-bold foreground-default">디자인 시스템 가이드</h1>
         </div>
 
         <div className="justify-self-end">

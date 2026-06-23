@@ -11,6 +11,7 @@ import {
   GridRowPreview,
   gridColumnTokens,
   gridRowTokens,
+  LinkIcon,
   TabDescriptionCallout,
   TokenChip,
 } from "@/components/guide/shared";
@@ -76,10 +77,17 @@ export function GuideGridPage() {
         className={contentSubTabPanelClass}
       >
         <section aria-label="Columns" className="mb-0">
-          <TabDescriptionCallout margin="mb-20" tone="info">
+          <TabDescriptionCallout margin="mb-4" tone="info">
             <div className="flex flex-col gap-2">
               <p className="m-0">Tailwind 기본 <strong>grid-cols-*</strong> 열 분할을 사용합니다. <strong>12열</strong> 그리드는 <strong>col-span-*</strong>와 조합해 페이지 레이아웃을 구성합니다.</p>
-              <p className="m-0"><strong>전체 Layout·breakpoint</strong> 검증은 사이드메뉴 <a href={GUIDE_ROUTES.responsive}>반응형 Layout 가이드</a>를 참고하세요.</p>
+              <p className="m-0">
+                <strong>전체 Layout·breakpoint</strong> 검증은 사이드메뉴{" "}
+                <a href={GUIDE_ROUTES.responsive} className="inline-flex items-center gap-1">
+                  <LinkIcon className="size-icon-xs shrink-0" />
+                  <span>반응형 Layout 가이드</span>
+                </a>
+                를 참고하세요.
+              </p>
             </div>
           </TabDescriptionCallout>
           <div role="list" className="grid grid-cols-2 gap-4">
@@ -103,7 +111,7 @@ export function GuideGridPage() {
         className={contentSubTabPanelClass}
       >
         <section aria-label="Rows" className="mb-0">
-          <TabDescriptionCallout margin="mb-20" tone="info">
+          <TabDescriptionCallout margin="mb-4" tone="info">
             <div className="flex flex-col gap-2">
               <p className="m-0">Tailwind 기본 <strong>grid-rows-*</strong> 행 분할을 사용합니다.</p>
               <p className="m-0">카드 내부 영역, 상하 비교 레이아웃, 세로 데이터 구성을 일정한 행 구조로 나눌 때 사용합니다.</p>
