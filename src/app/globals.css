@@ -486,7 +486,6 @@
   --ds-overlay-subtle: var(--raw-black-a5);
   --ds-overlay: var(--raw-black-a10);
   --ds-overlay-strong: var(--raw-black-a20);
-  --ds-overlay-modal-backdrop: var(--ds-overlay-strong);
 
   /* 그라데이션 — 시맨틱 스케일·용도 토큰을 참조해 모드 자동 대응 */
   --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-20) 0%, var(--ds-violet-40) 48%, var(--ds-violet-50) 100%);
@@ -786,7 +785,6 @@
   --color-overlay-subtle: var(--ds-overlay-subtle);
   --color-overlay: var(--ds-overlay);
   --color-overlay-strong: var(--ds-overlay-strong);
-  --color-overlay-modal-backdrop: var(--ds-overlay-modal-backdrop);
 
   --shadow-1: var(--ds-effect-shadow-1);
   --shadow-2: var(--ds-effect-shadow-2);
@@ -934,7 +932,6 @@
 @utility overlay-subtle { background-color: var(--color-overlay-subtle); }
 @utility overlay-default { background-color: var(--color-overlay); }
 @utility overlay-strong { background-color: var(--color-overlay-strong); }
-@utility overlay-modal-backdrop { background-color: var(--color-overlay-modal-backdrop); }
 
 /* Utility(유틸리티) 배경색 — 스크롤바 thumb/track 전용 유틸. */
 @utility utility-focus-ring { outline-color: var(--color-utility-focus-ring); }

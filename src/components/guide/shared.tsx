@@ -452,27 +452,6 @@ export const semanticRoleBlurCatalog = {
   ] satisfies SemanticEffectTokenDef[],
 };
 
-export const semanticRoleOverlayCatalog = {
-  id: "semantic-role-overlay",
-  title: "Overlay",
-  description: (
-    <>
-      모달 뒤의 배경 차단면에 사용하는 <strong>시맨틱 overlay</strong> 토큰입니다. 원본 overlay scale의 <strong>overlay-strong</strong>을 참조합니다.
-    </>
-  ),
-  tokens: [
-    {
-      id: "overlay-modal-backdrop",
-      utility: "overlay-modal-backdrop",
-      cssVar: "--color-overlay-modal-backdrop",
-      rawVarLight: "--ds-overlay-modal-backdrop",
-      rawVarDark: "--ds-overlay-modal-backdrop",
-      light: "var(--ds-overlay-strong)",
-      dark: "var(--ds-overlay-strong)",
-    },
-  ],
-};
-
 export type TocSection = { id: string; label: string; level?: 1 | 2 };
 
 export const colorRawTocSections: TocSection[] = [
@@ -481,7 +460,7 @@ export const colorRawTocSections: TocSection[] = [
   { id: "raw-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
   { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
-  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
+  { id: "raw-overlay", label: semanticOverlayCatalog.title, level: 2 },
 ];
 
 export const semanticTocSections: TocSection[] = [
@@ -492,7 +471,7 @@ export const semanticTocSections: TocSection[] = [
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
   { id: semanticElevationCatalog.id, label: semanticElevationCatalog.title, level: 2 },
   { id: semanticRoleBlurCatalog.id, label: semanticRoleBlurCatalog.title, level: 2 },
-  { id: semanticRoleOverlayCatalog.id, label: semanticRoleOverlayCatalog.title, level: 2 },
+  { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
@@ -657,12 +636,15 @@ export function SemanticOverlaySwatchCard({
   cssVar,
   valueLabel,
   isDark,
+  hideUtility = false,
 }: {
   utility: string;
   rawVar: string;
   cssVar: string;
   valueLabel: string;
   isDark: boolean;
+  /** raw 섹션용 — 유틸리티 클래스 줄을 숨기고 --raw 변수·실제값만 노출, 견본도 raw 토큰으로 채움 */
+  hideUtility?: boolean;
 }) {
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
@@ -671,9 +653,18 @@ export function SemanticOverlaySwatchCard({
         className="h-24 w-full overflow-hidden border-b border-default"
         style={isDark ? checkerDark : checkerLight}
       >
-        <div className="size-full" style={{ background: `var(${cssVar})` }} />
+        <div className="size-full" style={{ background: `var(${hideUtility ? rawVar : cssVar})` }} />
       </div>
-      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={valueLabel} />
+      {hideUtility ? (
+        <div className="p-4">
+          <p className="m-0 font-mono text-label-small font-bold foreground-default">{rawVar}</p>
+          {valueLabel ? (
+            <p className="m-0 mt-1 font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</p>
+          ) : null}
+        </div>
+      ) : (
+        <SwatchCardMeta utility={utility} sourceVar={rawVar} value={valueLabel} />
+      )}
     </div>
   );
 }

@@ -33,7 +33,6 @@ import {
   semanticGradientCatalog,
   semanticOverlayCatalog,
   semanticRoleBlurCatalog,
-  semanticRoleOverlayCatalog,
   semanticShadowCatalog,
   SemanticColorCategorySection,
   SemanticColorGroupGrid,
@@ -506,7 +505,7 @@ export function GuideColorPage() {
           </SemanticColorCategorySection>
 
           <SemanticColorCategorySection
-            id={semanticOverlayCatalog.id}
+            id="raw-overlay"
             title={semanticOverlayCatalog.title}
             description={semanticOverlayCatalog.description}
           >
@@ -519,6 +518,7 @@ export function GuideColorPage() {
                   cssVar={token.cssVar}
                   valueLabel={isDark ? token.dark : token.light}
                   isDark={isDark}
+                  hideUtility
                 />
               ))}
             </div>
@@ -645,18 +645,18 @@ export function GuideColorPage() {
             </SemanticColorCategorySection>
 
             <SemanticColorCategorySection
-              id={semanticRoleOverlayCatalog.id}
-              title={semanticRoleOverlayCatalog.title}
-              description={semanticRoleOverlayCatalog.description}
+              id={semanticOverlayCatalog.id}
+              title={semanticOverlayCatalog.title}
+              description={semanticOverlayCatalog.description}
             >
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {semanticRoleOverlayCatalog.tokens.map((token) => (
+                {semanticOverlayCatalog.tokens.map((token) => (
                   <SemanticOverlaySwatchCard
                     key={token.id}
                     utility={token.utility}
                     rawVar={isDark ? token.rawVarDark : token.rawVarLight}
                     cssVar={token.cssVar}
-                    valueLabel=""
+                    valueLabel={isDark ? token.dark : token.light}
                     isDark={isDark}
                   />
                 ))}
