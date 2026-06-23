@@ -384,6 +384,7 @@ export type SemanticEffectTokenDef = {
   utility: string;
   sourceVar: string;
   value: string;
+  valuePx?: string;
 };
 
 export const semanticShadowCatalog = {
@@ -399,49 +400,31 @@ export const semanticShadowCatalog = {
       id: "shadow-1",
       utility: "shadow-1",
       sourceVar: "--ds-effect-shadow-1",
-      value: "0 1px 2px alpha-1, 0 0 2px alpha-1",
+      value: "0 0.0625rem 0.125rem 0 var(--ds-shadow-alpha-1), 0 0 0.125rem 0 var(--ds-shadow-alpha-1)",
+      valuePx: "0 1px 2px 0 var(--ds-shadow-alpha-1), 0 0 2px 0 var(--ds-shadow-alpha-1)",
     },
     {
       id: "shadow-2",
       utility: "shadow-2",
       sourceVar: "--ds-effect-shadow-2",
-      value: "0 0 2px alpha-1, 0 4px 8px alpha-2",
+      value: "0 0 0.125rem 0 var(--ds-shadow-alpha-1), 0 0.25rem 0.5rem 0 var(--ds-shadow-alpha-2)",
+      valuePx: "0 0 2px 0 var(--ds-shadow-alpha-1), 0 4px 8px 0 var(--ds-shadow-alpha-2)",
     },
     {
       id: "shadow-3",
       utility: "shadow-3",
       sourceVar: "--ds-effect-shadow-3",
-      value: "0 0 2px alpha-2, 0 8px 16px alpha-3",
+      value: "0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 0.5rem 1rem 0 var(--ds-shadow-alpha-3)",
+      valuePx: "0 0 2px 0 var(--ds-shadow-alpha-2), 0 8px 16px 0 var(--ds-shadow-alpha-3)",
     },
     {
       id: "shadow-4",
       utility: "shadow-4",
       sourceVar: "--ds-effect-shadow-4",
-      value: "0 0 2px alpha-2, 0 16px 24px alpha-3",
+      value: "0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 1rem 1.5rem 0 var(--ds-shadow-alpha-3)",
+      valuePx: "0 0 2px 0 var(--ds-shadow-alpha-2), 0 16px 24px 0 var(--ds-shadow-alpha-3)",
     },
   ] satisfies SemanticEffectTokenDef[],
-};
-
-export const semanticElevationCatalog = {
-  id: "semantic-elevation",
-  title: "Elevation",
-  description: (
-    <>
-      배경 위에 올라오는 <strong>레이어 위계(elevation)</strong> 토큰입니다. 모달은 <strong>elevation-modal</strong>, floating button은 <strong>elevation-floating</strong>을 사용합니다.
-    </>
-  ),
-  tokens: [
-    {
-      id: "elevation-floating",
-      utility: "elevation-floating",
-      sourceVar: "--ds-effect-elevation-floating",
-    },
-    {
-      id: "elevation-modal",
-      utility: "elevation-modal",
-      sourceVar: "--ds-effect-elevation-modal",
-    },
-  ] satisfies (Omit<SemanticEffectTokenDef, "value">)[],
 };
 
 export const semanticBlurCatalog = {
@@ -480,7 +463,6 @@ export const colorRawTocSections: TocSection[] = [
   { id: "section-color", label: "Color Palette" },
   { id: "section-contrast", label: "Contrast Checker" },
   { id: "raw-effect-tokens", label: "Effect Tokens", level: 1 },
-  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
   { id: "raw-blur", label: semanticBlurCatalog.title, level: 2 },
   { id: rawAlphaCatalog.id, label: rawAlphaCatalog.title, level: 2 },
 ];
@@ -490,8 +472,8 @@ export const semanticTocSections: TocSection[] = [
   ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title, level: 2 as const })),
   { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title, level: 2 },
   { id: "semantic-effect-tokens", label: "Effect Tokens", level: 1 },
+  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
-  { id: semanticElevationCatalog.id, label: semanticElevationCatalog.title, level: 2 },
   { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
   { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
 ];
@@ -719,7 +701,7 @@ export function SemanticGradientSwatchCard({
   );
 }
 
-export function SemanticShadowSwatchCard({ utility, sourceVar, value }: SemanticEffectTokenDef) {
+export function SemanticShadowSwatchCard({ utility, sourceVar, value, valuePx }: SemanticEffectTokenDef) {
   return (
     <div className="grid items-center gap-8 sm:grid-cols-[9rem_1fr]">
       <div className="flex items-center justify-center py-5">
@@ -728,24 +710,10 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value }: Semantic
       <div className="min-w-0 py-5">
         <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
         <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
-        <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{value}</p>
-      </div>
-    </div>
-  );
-}
-
-export function SemanticElevationSwatchCard({ utility, sourceVar }: Omit<SemanticEffectTokenDef, "value">) {
-  return (
-    <div className="grid items-center gap-8 sm:grid-cols-[9rem_1fr]">
-      <div className="flex items-center justify-center py-6">
-        <div
-          aria-hidden="true"
-          className={`flex h-24 w-32 items-center justify-center rounded-2xl border border-default surface-default ${utility}`}
-        />
-      </div>
-      <div className="min-w-0 py-5">
-        <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
-        <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
+        <p className="m-0 mt-0.5 break-all font-mono text-caption text-gray-60">rem / {value}</p>
+        {valuePx ? (
+          <p className="m-0 mt-0.5 break-all font-mono text-caption text-gray-60">px / {valuePx}</p>
+        ) : null}
       </div>
     </div>
   );
@@ -3015,7 +2983,7 @@ export const scrollToTopIcon = (
 );
 
 export const guideFabButtonClass =
-  "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 elevation-floating transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 active:scale-100 active:duration-150";
+  "inline-flex size-control-lg cursor-pointer items-center justify-center rounded-full border-0 shadow-2 transition-[transform,box-shadow,opacity] duration-300 ease-out hover:scale-105 active:scale-100 active:duration-150";
 
 export const guideFabAccentClass = `${guideFabButtonClass} bg-accent text-on-accent`;
 export const guideFabBrandClass = `${guideFabButtonClass} surface-brand foreground-inverse`;

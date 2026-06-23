@@ -30,7 +30,6 @@ import {
   rawAlphaCatalog,
   semanticColorCatalog,
   semanticBlurCatalog,
-  semanticElevationCatalog,
   semanticGradientCatalog,
   semanticOverlayCatalog,
   semanticShadowCatalog,
@@ -38,7 +37,6 @@ import {
   SemanticColorGroupGrid,
   SemanticColorSwatchCard,
   SemanticBlurSwatchCard,
-  SemanticElevationSwatchCard,
   SemanticGradientSwatchCard,
   SemanticOverlaySwatchCard,
   SemanticShadowSwatchCard,
@@ -464,28 +462,10 @@ export function GuideColorPage() {
           title="Effect Tokens"
           description={
             <>
-              원본 효과 scale입니다. 색상 팔레트처럼 역할을 정하기 전 단계의 값이며, <strong>shadow-1</strong>부터 <strong>shadow-4</strong>까지 깊이감의 강도를 확인합니다.
+              원본 효과 scale입니다. 색상 팔레트처럼 역할을 정하기 전 단계의 값이며, <strong>Blur</strong>와 <strong>Alpha</strong>처럼 효과를 만드는 재료를 확인합니다.
             </>
           }
         >
-          <SemanticColorCategorySection
-            id={semanticShadowCatalog.id}
-            title={semanticShadowCatalog.title}
-            description={semanticShadowCatalog.description}
-          >
-            <div className="flex flex-col gap-4">
-              {semanticShadowCatalog.tokens.map((token) => (
-                <SemanticShadowSwatchCard
-                  key={token.id}
-                  id={token.id}
-                  utility={token.utility}
-                  sourceVar={token.sourceVar}
-                  value={token.value}
-                />
-              ))}
-            </div>
-          </SemanticColorCategorySection>
-
           <SemanticColorCategorySection
             id="raw-blur"
             title={semanticBlurCatalog.title}
@@ -587,10 +567,29 @@ export function GuideColorPage() {
             title="Effect Tokens"
             description={
               <>
-                색상 위에 얹히는 역할 기반 시각 효과 토큰입니다. <strong>Gradient</strong>는 브랜드 강조, <strong>Elevation</strong>은 레이어 위계, <strong>Blur</strong>와 <strong>Overlay</strong>는 배경 차단·분리 맥락을 표현합니다.
+                색상 위에 얹히는 역할 기반 시각 효과 토큰입니다. <strong>Shadow</strong>는 면의 깊이감, <strong>Gradient</strong>는 브랜드 강조, <strong>Blur</strong>와 <strong>Overlay</strong>는 배경 차단·분리 맥락을 표현합니다.
               </>
             }
           >
+            <SemanticColorCategorySection
+              id={semanticShadowCatalog.id}
+              title={semanticShadowCatalog.title}
+              description={semanticShadowCatalog.description}
+            >
+              <div className="flex flex-col gap-4">
+                {semanticShadowCatalog.tokens.map((token) => (
+                  <SemanticShadowSwatchCard
+                    key={token.id}
+                    id={token.id}
+                    utility={token.utility}
+                    sourceVar={token.sourceVar}
+                    value={token.value}
+                    valuePx={token.valuePx}
+                  />
+                ))}
+              </div>
+            </SemanticColorCategorySection>
+
             <SemanticColorCategorySection
               id={semanticGradientCatalog.id}
               title={semanticGradientCatalog.title}
@@ -609,23 +608,6 @@ export function GuideColorPage() {
                   ))}
                 </SemanticColorGroupGrid>
               ))}
-            </SemanticColorCategorySection>
-
-            <SemanticColorCategorySection
-              id={semanticElevationCatalog.id}
-              title={semanticElevationCatalog.title}
-              description={semanticElevationCatalog.description}
-            >
-              <div className="flex flex-col gap-4">
-                {semanticElevationCatalog.tokens.map((token) => (
-                  <SemanticElevationSwatchCard
-                    key={token.id}
-                    id={token.id}
-                    utility={token.utility}
-                    sourceVar={token.sourceVar}
-                  />
-                ))}
-              </div>
             </SemanticColorCategorySection>
 
             <SemanticColorCategorySection
