@@ -1933,10 +1933,6 @@ export function GuideSiteHeader({
 export function FontStackCuration() {
   return (
     <>
-      <TabDescriptionCallout>
-        <strong>Pretendard GOV</strong>를 기본으로 하는 폴백 체인입니다. 폰트 패밀리는 <strong>--font-family-base</strong> 토큰으로 관리합니다.
-      </TabDescriptionCallout>
-
       <ol className="mx-0 mt-0 mb-8 flex list-none flex-col p-0">
         {fontStack.map(({ order, name, family, role, source, desc, emphasis }, index) => {
           const isLast = index === fontStack.length - 1;

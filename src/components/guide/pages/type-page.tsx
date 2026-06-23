@@ -62,6 +62,12 @@ export function GuideTypePage() {
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={fontFamilyTocSections}>
         <section id="section-font-stack" aria-label="Font Stack" className="mb-0">
+          <TabDescriptionCallout margin="mb-10" tone="info">
+            <div className="flex flex-col gap-2">
+              <p className="m-0"><strong>Font Stack</strong>은 프로젝트의 기본 폰트와 폴백 순서를 정의하는 토큰입니다.</p>
+              <p className="m-0"><strong>Pretendard GOV</strong>를 기본 폰트로 사용하고, <strong>--font-family-base</strong> 토큰을 통해 모든 화면에서 동일한 글꼴 체계를 공유합니다.</p>
+            </div>
+          </TabDescriptionCallout>
           <FontStackCuration />
 
           <header className="mt-20 mb-5">
@@ -264,12 +270,12 @@ export function GuideTypePage() {
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={typographyTocSections}>
         <section id="section-typography-scale" aria-label="Type Scale" className="mb-0">
-          <TabDescriptionCallout>
-            <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
-              <li>텍스트 크기는 <strong>Display·Heading·Body·Label·Caption</strong> 역할로 나누어 사용합니다.</li>
-              <li>개발에서는 개별 px 값을 쓰지 않고 <strong>text-*</strong> 또는 <strong>typo-*</strong> 토큰 유틸리티를 사용합니다.</li>
-              <li>반응형에서는 토큰 이름은 그대로 두고, 필요한 큰 제목 계층의 크기 값만 breakpoint에서 바뀝니다.</li>
-            </ul>
+          <TabDescriptionCallout margin="mb-4" tone="info">
+            <div className="flex flex-col gap-2">
+              <p className="m-0">텍스트 크기는 <strong>Display·Heading·Body·Label·Caption</strong> 역할로 나누어 사용합니다.</p>
+              <p className="m-0">개발에서는 개별 px 값을 쓰지 않고 <strong>text-*</strong> 또는 <strong>typo-*</strong> 토큰 유틸리티를 사용합니다.</p>
+              <p className="m-0">반응형에서는 토큰 이름은 그대로 두고, 필요한 큰 제목 계층의 크기 값만 breakpoint에서 바뀝니다.</p>
+            </div>
           </TabDescriptionCallout>
           <TypeScaleBaseGuide />
           <TypographyScaleTable />

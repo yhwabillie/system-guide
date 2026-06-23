@@ -123,11 +123,11 @@ export function GuideSpacingPage() {
 
           <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"} className={contentSubTabPanelClass}>
           <section id="section-spacing" aria-label="Spacing" className="mb-0">
-            <TabDescriptionCallout>
-              <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
-                <li>간격은 Tailwind 기본 spacing과 같은 <strong>4px 단위</strong>를 사용하되, 디자인 시스템의 공식 scale로 <strong>--space-*</strong>에 명시합니다.</li>
-                <li><strong>--spacing-*</strong> bridge를 통해 <strong>p-*</strong>, <strong>m-*</strong>, <strong>gap-*</strong> 유틸리티의 기준값으로 사용합니다.</li>
-              </ul>
+            <TabDescriptionCallout margin="mb-20" tone="info">
+              <div className="flex flex-col gap-2">
+                <p className="m-0">간격은 Tailwind 기본 spacing과 같은 <strong>4px 단위</strong>를 사용하되, 디자인 시스템의 공식 scale로 <strong>--space-*</strong>에 명시합니다.</p>
+                <p className="m-0"><strong>--spacing-*</strong> bridge를 통해 <strong>p-*</strong>, <strong>m-*</strong>, <strong>gap-*</strong> 유틸리티의 기준값으로 사용합니다.</p>
+              </div>
             </TabDescriptionCallout>
             <div className="overflow-x-auto rounded-xl border border-gray-20">
               <table className="w-full min-w-[56rem] border-collapse text-left">
@@ -170,11 +170,11 @@ export function GuideSpacingPage() {
 
           <div role="tabpanel" id="panel-spacing-radius" aria-labelledby="tab-spacing-radius" hidden={activeSpacingTab !== "radius"} className={contentSubTabPanelClass}>
           <section id="section-radius" aria-label="Radius" className="mb-0">
-            <TabDescriptionCallout>
-              <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
-                <li>모서리 값은 <strong>--shape-radius-*</strong> primitive token으로 정의합니다.</li>
-                <li><strong>--radius-*</strong> bridge를 통해 <strong>rounded-*</strong> 유틸리티로 사용합니다.</li>
-              </ul>
+            <TabDescriptionCallout margin="mb-20" tone="info">
+              <div className="flex flex-col gap-2">
+                <p className="m-0">모서리 값은 <strong>--shape-radius-*</strong> primitive token으로 정의합니다.</p>
+                <p className="m-0"><strong>--radius-*</strong> bridge를 통해 <strong>rounded-*</strong> 유틸리티로 사용합니다.</p>
+              </div>
             </TabDescriptionCallout>
             <div className="flex flex-col gap-8">
               <div role="list" aria-label="Radius 토큰 시각 비교" className="overflow-hidden rounded-xl border border-gray-20">
@@ -240,11 +240,11 @@ export function GuideSpacingPage() {
           <div role="tabpanel" id="panel-spacing-fixed-size" aria-labelledby="tab-spacing-fixed-size" hidden={activeSpacingTab !== "fixed-size"} className={contentSubTabPanelClass}>
           <GuideContentLayout sections={fixedSizeTocSections}>
           <section id="section-fixed-size" aria-label="Fixed Size" className="mb-0">
-            <TabDescriptionCallout margin="mb-20">
-              <ul className="m-0 flex list-disc flex-col gap-2 pl-5">
-                <li>아이콘, 스피너, 컨트롤처럼 반복되는 고정 크기는 <strong>--size-*</strong> primitive token으로 관리합니다.</li>
-                <li><strong>--spacing-icon-*</strong>, <strong>--spacing-spinner-*</strong>, <strong>--spacing-control-*</strong> bridge를 통해 <strong>size-icon-*</strong>, <strong>size-spinner-*</strong>, <strong>size-control-*</strong> 유틸리티로 사용합니다.</li>
-              </ul>
+            <TabDescriptionCallout margin="mb-20" tone="info">
+              <div className="flex flex-col gap-2">
+                <p className="m-0">아이콘, 스피너, 컨트롤처럼 반복되는 고정 크기는 <strong>--size-*</strong> primitive token으로 관리합니다.</p>
+                <p className="m-0"><strong>--spacing-icon-*</strong>, <strong>--spacing-spinner-*</strong>, <strong>--spacing-control-*</strong> bridge를 통해 <strong>size-icon-*</strong>, <strong>size-spinner-*</strong>, <strong>size-control-*</strong> 유틸리티로 사용합니다.</p>
+              </div>
             </TabDescriptionCallout>
             <div className="flex flex-col gap-20">
               <div>
