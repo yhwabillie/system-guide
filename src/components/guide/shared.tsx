@@ -491,7 +491,8 @@ export const semanticTocSections: TocSection[] = [
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
-  { id: "section-font-stack", label: "Font Stack" },
+  { id: "typography-font-stack", label: "Font Stack" },
+  { id: "typography-font-family", label: "Font Family" },
 ];
 
 export const typographyTocSections: TocSection[] = [
@@ -1356,17 +1357,15 @@ export function ContentSectionTitle({
 export function ContentTableOfContents({ sections }: { sections: TocSection[] }) {
   const headingId = useId();
   const listId = useId();
-  const [collapsed, setCollapsed] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(sections[0]?.id ?? null);
   const sectionsKey = sections.map((s) => s.id).join("|");
 
   useEffect(() => {
-    setCollapsed(false);
     setActiveId(sections[0]?.id ?? null);
   }, [sectionsKey, sections]);
 
   useEffect(() => {
-    if (sections.length < 3) return;
+    if (sections.length < 2) return;
 
     const headerOffset = 72;
     const observer = new IntersectionObserver(
@@ -1396,7 +1395,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
     setActiveId(id);
   }, []);
 
-  if (sections.length < 3) return null;
+  if (sections.length < 2) return null;
 
   const hasHierarchy = sections.some((section) => section.level === 2);
   const groupedSections = hasHierarchy
@@ -1480,69 +1479,34 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
       aria-labelledby={headingId}
       className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
-      <div className="overflow-hidden rounded-md border border-default bg-background">
-        <div className="flex items-center justify-between gap-2 border-b border-default px-4 py-3.5">
-          <h2 id={headingId} className="m-0 text-label-small font-bold foreground-default">
-            목차
-          </h2>
-          <button
-            type="button"
-            onClick={() => setCollapsed((prev) => !prev)}
-            aria-expanded={!collapsed}
-            aria-controls={listId}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-default bg-background px-2.5 py-1 text-caption font-medium text-gray-60 transition-colors hover:foreground-default"
-          >
-            {collapsed ? "펼치기" : "접기"}
-            <NavIcon
-              className={["size-icon-xs shrink-0 transition-transform duration-200", collapsed ? "rotate-180" : ""]
-                .filter(Boolean)
-                .join(" ")}
+      <h2 id={headingId} className="sr-only">목차</h2>
+      <ul id={listId} className="m-0 flex list-none flex-col gap-0 p-0">
+        {sections.map(({ id, label }) => {
+          const isActive = activeId === id;
+          return (
+            <li
+              key={id}
+              className="relative pb-5 pl-6 last:pb-0 before:absolute before:left-[0.21875rem] before:top-2 before:bottom-0 before:border-l before:border-strong"
             >
-              <polyline points="18 15 12 9 6 15" />
-            </NavIcon>
-          </button>
-        </div>
-        {!collapsed ? (
-          <ul id={listId} className="m-0 flex list-none flex-col gap-0.5 py-2">
-            {sections.map(({ id, label, level = 1 }) => {
-              const isActive = activeId === id;
-              const isChild = level === 2;
-              return (
-                <li key={id}>
-                  <a
-                    href={`#${id}`}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      scrollToSection(id);
-                    }}
-                    aria-current={isActive ? "location" : undefined}
-                    className={[
-                      "block lowercase no-underline transition-colors",
-                      isChild
-                        ? "ml-4 border-l border-default py-2 pl-4 pr-4 text-body-small"
-                        : "mt-1 px-4 py-2.5 text-label-small font-bold first:mt-0",
-                      isActive && isChild
-                        ? "border-brand surface-brand-faint font-semibold foreground-brand-strong"
-                        : "",
-                      isActive && !isChild
-                        ? "surface-brand-faint foreground-brand"
-                        : "",
-                      !isActive && isChild
-                        ? "font-normal text-gray-60 hover:border-brand hover:bg-gray-5 hover:foreground-default"
-                        : "",
-                      !isActive && !isChild
-                        ? "foreground-brand hover:bg-gray-5"
-                        : "",
-                    ].join(" ")}
-                  >
-                    {label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
-      </div>
+              <span aria-hidden="true" className="absolute left-0 top-1.5 size-2 rounded-full border border-strong bg-background" />
+              <a
+                href={`#${id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToSection(id);
+                }}
+                aria-current={isActive ? "location" : undefined}
+                className={[
+                  "block py-0.5 text-caption font-bold uppercase tracking-[0.18em] no-underline transition-colors",
+                  isActive ? "foreground-brand" : "foreground-subtle hover:foreground-brand",
+                ].join(" ")}
+              >
+                {label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 }
@@ -2107,17 +2071,17 @@ function TypographyScaleSpecTable({
 
   return (
     <section aria-labelledby={sectionId}>
-      <header className="mb-5">
+      <header className="mb-4">
         <h4
           id={sectionId}
-          className={["m-0 text-heading-large font-bold leading-base foreground-brand", guideSectionAnchorClass].join(" ")}
+          className={["m-0 text-heading-small font-bold leading-base foreground-default", guideSectionAnchorClass].join(" ")}
         >
           {title}
         </h4>
-        {description ? (
-          <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">{description}</p>
-        ) : null}
       </header>
+      {description ? (
+        <TabDescriptionCallout margin="mb-6">{description}</TabDescriptionCallout>
+      ) : null}
       {usage}
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">

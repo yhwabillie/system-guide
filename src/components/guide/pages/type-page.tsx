@@ -42,18 +42,18 @@ export function GuideTypePage() {
     <div className={layoutPageColSpanFull}>
         <ContentIntroLayout>
         <ContentTitleBlock
-          title="Font & Type"
+          title="Typography"
           titleId="content-type"
         />
 
         <ContentOutlineTabList
-          ariaLabel="Font & Type 카테고리"
+          ariaLabel="Typography 카테고리"
           activeValue={activeTypeTab}
           onSelect={(value) => selectTypeSection(value as "font-family" | "typography")}
           onKeyDown={handleTypeTabKeyDown}
           tabs={[
-            { value: "font-family", tabId: "tab-type-font-family", panelId: "panel-type-font-family", label: "Font Stack", ref: fontFamilyTabRef },
-            { value: "typography", tabId: "tab-type-typography", panelId: "panel-type-typography", label: "Type Scale", ref: typographyTabRef },
+            { value: "font-family", tabId: "tab-type-font-family", panelId: "panel-type-font-family", label: "Raw Token", ref: fontFamilyTabRef },
+            { value: "typography", tabId: "tab-type-typography", panelId: "panel-type-typography", label: "Semantic Token", ref: typographyTabRef },
           ]}
         />
 
@@ -61,17 +61,25 @@ export function GuideTypePage() {
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={fontFamilyTocSections}>
-        <section id="section-font-stack" aria-label="Font Stack" className="mb-0">
-          <TabDescriptionCallout margin="mb-10" tone="info">
+        <section id="typography-raw-token" aria-label="Typography Raw Token" className="mb-0">
+          <TabDescriptionCallout margin="mb-20" tone="info">
             <div className="flex flex-col gap-2">
-              <p className="m-0"><strong>Font Stack</strong>은 프로젝트의 기본 폰트와 폴백 순서를 정의하는 토큰입니다.</p>
-              <p className="m-0"><strong>Pretendard GOV</strong>를 기본 폰트로 사용하고, <strong>--font-family-base</strong> 토큰을 통해 모든 화면에서 동일한 글꼴 체계를 공유합니다.</p>
+              <p className="m-0"><strong>Typography Raw Token</strong>은 폰트 패밀리처럼 역할을 정하기 전의 원본 타이포 재료입니다.</p>
+              <p className="m-0">컴포넌트에 직접 값을 흩뿌리지 않고, <strong>Semantic Token</strong>이 참조할 수 있는 안정적인 기준으로 관리합니다.</p>
             </div>
           </TabDescriptionCallout>
+          <header className="mb-10">
+            <h3 id="typography-font-stack" className="m-0 scroll-mt-[calc(3.75rem+1.5rem)] text-heading-large font-bold leading-base foreground-brand">
+              Font Stack
+            </h3>
+            <p className="m-0 mt-3 text-body-medium leading-base foreground-subtle">
+              프로젝트의 기본 폰트와 폴백 순서를 정의합니다. <strong>Pretendard GOV</strong>를 기본 폰트로 사용하고, <strong>--font-family-base</strong> 토큰을 통해 모든 화면에서 동일한 글꼴 체계를 공유합니다.
+            </p>
+          </header>
           <FontStackCuration />
 
           <header className="mt-20 mb-5">
-            <h3 className="m-0 text-heading-large font-bold leading-base foreground-brand">
+            <h3 id="typography-font-family" className="m-0 scroll-mt-[calc(3.75rem+1.5rem)] text-heading-large font-bold leading-base foreground-brand">
               Font Family
             </h3>
             <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">
@@ -269,14 +277,21 @@ export function GuideTypePage() {
 
         <div role="tabpanel" id="panel-type-typography" aria-labelledby="tab-type-typography" hidden={activeTypeTab !== "typography"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={typographyTocSections}>
-        <section id="section-typography-scale" aria-label="Type Scale" className="mb-0">
-          <TabDescriptionCallout margin="mb-4" tone="info">
+        <section id="typography-semantic-token" aria-label="Typography Semantic Token" className="mb-0">
+          <TabDescriptionCallout margin="mb-20" tone="info">
             <div className="flex flex-col gap-2">
-              <p className="m-0">텍스트 크기는 <strong>Display·Heading·Body·Label·Caption</strong> 역할로 나누어 사용합니다.</p>
-              <p className="m-0">개발에서는 개별 px 값을 쓰지 않고 <strong>text-*</strong> 또는 <strong>typo-*</strong> 토큰 유틸리티를 사용합니다.</p>
-              <p className="m-0">반응형에서는 토큰 이름은 그대로 두고, 필요한 큰 제목 계층의 크기 값만 breakpoint에서 바뀝니다.</p>
+              <p className="m-0"><strong>Typography Semantic Token</strong>은 raw 값을 텍스트 역할과 사용 맥락에 맞게 매핑한 실제 사용 토큰입니다.</p>
+              <p className="m-0"><strong>Display·Heading·Body·Label·Caption</strong>처럼 역할별 이름으로 사용해 화면 전반의 텍스트 위계를 일관되게 유지합니다.</p>
             </div>
           </TabDescriptionCallout>
+          <header className="mb-5">
+            <h3 id="section-typography-scale" className="m-0 scroll-mt-[calc(3.75rem+1.5rem)] text-heading-large font-bold leading-base foreground-brand">
+              Type Scale
+            </h3>
+            <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">
+              텍스트 크기는 <strong>Display·Heading·Body·Label·Caption</strong> 역할로 나누어 사용합니다. 개발에서는 개별 px 값 대신 <strong>text-*</strong> 또는 <strong>typo-*</strong> 토큰 유틸리티를 사용합니다.
+            </p>
+          </header>
           <TypeScaleBaseGuide />
           <TypographyScaleTable />
         </section>

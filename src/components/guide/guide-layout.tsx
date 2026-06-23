@@ -252,11 +252,11 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 expanded={typeMenuExpanded}
                 onToggleExpand={() => setTypeMenuExpanded((open) => !open)}
                 icon={navIconType}
-                label="Font & Type"
-                expandLabel="Font & Type"
+                label="Typography"
+                expandLabel="Typography"
                 subItems={[
-                  { label: "Font Stack", href: guideTypeTabHref("font-family"), active: isType && tab !== "typography" },
-                  { label: "Type Scale", href: guideTypeTabHref("typography"), active: isType && tab === "typography" },
+                  { label: "Raw Token", href: guideTypeTabHref("font-family"), active: isType && tab !== "typography" },
+                  { label: "Semantic Token", href: guideTypeTabHref("typography"), active: isType && tab === "typography" },
                 ]}
               />
               <GuideNavCategory
