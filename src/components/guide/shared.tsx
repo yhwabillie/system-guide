@@ -2531,20 +2531,20 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
 }
 
 export const gridColumnTokens = [
-  { name: "grid-cols-1", cols: 1, utility: "grid-cols-1", desc: "단일 열 — 히어로·상세 본문" },
-  { name: "grid-cols-2", cols: 2, utility: "grid-cols-2", desc: "2열 — 폼 라벨/필드, 비교 레이아웃" },
-  { name: "grid-cols-3", cols: 3, utility: "grid-cols-3", desc: "3열 — 카드·통계 3분할" },
-  { name: "grid-cols-4", cols: 4, utility: "grid-cols-4", desc: "4열 — 대시보드 위젯" },
-  { name: "grid-cols-6", cols: 6, utility: "grid-cols-6", desc: "6열 — 밀도 높은 데이터 그리드" },
-  { name: "grid-cols-12", cols: 12, utility: "grid-cols-12", desc: "12열 — span 기반 페이지 레이아웃" },
+  { name: "grid-cols-1", cols: 1, utility: "grid-cols-1" },
+  { name: "grid-cols-2", cols: 2, utility: "grid-cols-2" },
+  { name: "grid-cols-3", cols: 3, utility: "grid-cols-3" },
+  { name: "grid-cols-4", cols: 4, utility: "grid-cols-4" },
+  { name: "grid-cols-6", cols: 6, utility: "grid-cols-6" },
+  { name: "grid-cols-12", cols: 12, utility: "grid-cols-12" },
 ];
 
 export const gridRowTokens = [
-  { name: "grid-rows-1", rows: 1, utility: "grid-rows-1", desc: "단일 행 — 기본 콘텐츠 블록" },
-  { name: "grid-rows-2", rows: 2, utility: "grid-rows-2", desc: "2행 — 상하 비교 레이아웃" },
-  { name: "grid-rows-3", rows: 3, utility: "grid-rows-3", desc: "3행 — 카드 내부 정보 그룹" },
-  { name: "grid-rows-4", rows: 4, utility: "grid-rows-4", desc: "4행 — 반복 상태·요약 패널" },
-  { name: "grid-rows-6", rows: 6, utility: "grid-rows-6", desc: "6행 — 밀도 높은 세로 데이터" },
+  { name: "grid-rows-1", rows: 1, utility: "grid-rows-1" },
+  { name: "grid-rows-2", rows: 2, utility: "grid-rows-2" },
+  { name: "grid-rows-3", rows: 3, utility: "grid-rows-3" },
+  { name: "grid-rows-4", rows: 4, utility: "grid-rows-4" },
+  { name: "grid-rows-6", rows: 6, utility: "grid-rows-6" },
 ];
 
 export const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
