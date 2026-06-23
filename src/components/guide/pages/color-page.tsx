@@ -495,6 +495,7 @@ export function GuideColorPage() {
                 <SemanticOverlaySwatchCard
                   key={token.id}
                   utility={token.utility}
+                  dsVar={token.dsVar}
                   rawVar={isDark ? token.rawVarDark : token.rawVarLight}
                   cssVar={token.cssVar}
                   valueLabel={isDark ? token.dark : token.light}
@@ -572,37 +573,17 @@ export function GuideColorPage() {
             }
           >
             <SemanticColorCategorySection
-              id={semanticShadowCatalog.id}
-              title={semanticShadowCatalog.title}
-              description={semanticShadowCatalog.description}
-            >
-              <div className="flex flex-col gap-4">
-                {semanticShadowCatalog.tokens.map((token) => (
-                  <SemanticShadowSwatchCard
-                    key={token.id}
-                    id={token.id}
-                    utility={token.utility}
-                    sourceVar={token.sourceVar}
-                    value={token.value}
-                    valuePx={token.valuePx}
-                  />
-                ))}
-              </div>
-            </SemanticColorCategorySection>
-
-            <SemanticColorCategorySection
               id={semanticGradientCatalog.id}
               title={semanticGradientCatalog.title}
               description={semanticGradientCatalog.description}
             >
               {semanticGradientCatalog.groups.map((group) => (
                 <SemanticColorGroupGrid key={group.id} label={group.label}>
-                  {group.gradients.map(({ utility, dsVar, rawVar, rawVarDark, value, valueDark }) => (
+                  {group.gradients.map(({ utility, dsVar, value, valueDark }) => (
                     <SemanticGradientSwatchCard
                       key={dsVar}
                       utility={utility}
                       dsVar={dsVar}
-                      rawVar={isDark && rawVarDark ? rawVarDark : rawVar}
                       value={isDark && valueDark ? valueDark : value}
                     />
                   ))}
@@ -638,10 +619,30 @@ export function GuideColorPage() {
                   <SemanticOverlaySwatchCard
                     key={token.id}
                     utility={token.utility}
+                    dsVar={token.dsVar}
                     rawVar={isDark ? token.rawVarDark : token.rawVarLight}
                     cssVar={token.cssVar}
                     valueLabel={isDark ? token.dark : token.light}
                     isDark={isDark}
+                  />
+                ))}
+              </div>
+            </SemanticColorCategorySection>
+
+            <SemanticColorCategorySection
+              id={semanticShadowCatalog.id}
+              title={semanticShadowCatalog.title}
+              description={semanticShadowCatalog.description}
+            >
+              <div className="flex flex-col gap-4">
+                {semanticShadowCatalog.tokens.map((token) => (
+                  <SemanticShadowSwatchCard
+                    key={token.id}
+                    id={token.id}
+                    utility={token.utility}
+                    sourceVar={token.sourceVar}
+                    value={token.value}
+                    valuePx={isDark && token.valuePxDark ? token.valuePxDark : token.valuePx}
                   />
                 ))}
               </div>

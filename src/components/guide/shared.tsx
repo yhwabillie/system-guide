@@ -30,6 +30,7 @@ const overlayTokens = [
   {
     label: "overlay-subtle",
     utility: "overlay-subtle",
+    dsVar: "--ds-overlay-subtle",
     cssVar: "--color-overlay-subtle",
     rawVarLight: "--raw-black-a5",
     rawVarDark: "--raw-white-a5",
@@ -40,6 +41,7 @@ const overlayTokens = [
   {
     label: "overlay-a8",
     utility: "",
+    dsVar: "",
     cssVar: "",
     rawVarLight: "--raw-black-a8",
     rawVarDark: "--raw-white-a8",
@@ -50,6 +52,7 @@ const overlayTokens = [
   {
     label: "overlay-default",
     utility: "overlay-default",
+    dsVar: "--ds-overlay",
     cssVar: "--color-overlay",
     rawVarLight: "--raw-black-a10",
     rawVarDark: "--raw-white-a10",
@@ -60,6 +63,7 @@ const overlayTokens = [
   {
     label: "overlay-a12",
     utility: "",
+    dsVar: "",
     cssVar: "",
     rawVarLight: "--raw-black-a12",
     rawVarDark: "--raw-white-a12",
@@ -70,6 +74,7 @@ const overlayTokens = [
   {
     label: "overlay-strong",
     utility: "overlay-strong",
+    dsVar: "--ds-overlay-strong",
     cssVar: "--color-overlay-strong",
     rawVarLight: "--raw-black-a20",
     rawVarDark: "--raw-white-a20",
@@ -329,10 +334,11 @@ export const semanticOverlayCatalog = {
   ),
   tokens: overlayTokens
     .filter(({ rawOnly }) => !rawOnly)
-    .map(({ label, utility, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
+    .map(({ label, utility, dsVar, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
       id: label,
       label,
       utility,
+      dsVar,
       cssVar,
       rawVarLight,
       rawVarDark,
@@ -350,10 +356,11 @@ export const rawAlphaCatalog = {
       <strong>white alpha</strong>를 사용해 shadow와 overlay의 농도를 만듭니다.
     </>
   ),
-  tokens: overlayTokens.map(({ label, utility, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
+  tokens: overlayTokens.map(({ label, utility, dsVar, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
     id: label,
     label,
     utility,
+    dsVar,
     cssVar,
     rawVarLight,
     rawVarDark,
@@ -385,6 +392,7 @@ export type SemanticEffectTokenDef = {
   sourceVar: string;
   value: string;
   valuePx?: string;
+  valuePxDark?: string;
 };
 
 export const semanticShadowCatalog = {
@@ -401,28 +409,32 @@ export const semanticShadowCatalog = {
       utility: "shadow-1",
       sourceVar: "--ds-effect-shadow-1",
       value: "0 0.0625rem 0.125rem 0 var(--ds-shadow-alpha-1), 0 0 0.125rem 0 var(--ds-shadow-alpha-1)",
-      valuePx: "0 1px 2px 0 var(--ds-shadow-alpha-1), 0 0 2px 0 var(--ds-shadow-alpha-1)",
+      valuePx: "0 1px 2px 0 var(--raw-black-a5), 0 0 2px 0 var(--raw-black-a5)",
+      valuePxDark: "0 1px 2px 0 var(--raw-white-a5), 0 0 2px 0 var(--raw-white-a5)",
     },
     {
       id: "shadow-2",
       utility: "shadow-2",
       sourceVar: "--ds-effect-shadow-2",
       value: "0 0 0.125rem 0 var(--ds-shadow-alpha-1), 0 0.25rem 0.5rem 0 var(--ds-shadow-alpha-2)",
-      valuePx: "0 0 2px 0 var(--ds-shadow-alpha-1), 0 4px 8px 0 var(--ds-shadow-alpha-2)",
+      valuePx: "0 0 2px 0 var(--raw-black-a5), 0 4px 8px 0 var(--raw-black-a8)",
+      valuePxDark: "0 0 2px 0 var(--raw-white-a5), 0 4px 8px 0 var(--raw-white-a8)",
     },
     {
       id: "shadow-3",
       utility: "shadow-3",
       sourceVar: "--ds-effect-shadow-3",
       value: "0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 0.5rem 1rem 0 var(--ds-shadow-alpha-3)",
-      valuePx: "0 0 2px 0 var(--ds-shadow-alpha-2), 0 8px 16px 0 var(--ds-shadow-alpha-3)",
+      valuePx: "0 0 2px 0 var(--raw-black-a8), 0 8px 16px 0 var(--raw-black-a12)",
+      valuePxDark: "0 0 2px 0 var(--raw-white-a8), 0 8px 16px 0 var(--raw-white-a12)",
     },
     {
       id: "shadow-4",
       utility: "shadow-4",
       sourceVar: "--ds-effect-shadow-4",
       value: "0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 1rem 1.5rem 0 var(--ds-shadow-alpha-3)",
-      valuePx: "0 0 2px 0 var(--ds-shadow-alpha-2), 0 16px 24px 0 var(--ds-shadow-alpha-3)",
+      valuePx: "0 0 2px 0 var(--raw-black-a8), 0 16px 24px 0 var(--raw-black-a12)",
+      valuePxDark: "0 0 2px 0 var(--raw-white-a8), 0 16px 24px 0 var(--raw-white-a12)",
     },
   ] satisfies SemanticEffectTokenDef[],
 };
@@ -472,10 +484,10 @@ export const semanticTocSections: TocSection[] = [
   ...semanticColorCatalog.map((category) => ({ id: category.id, label: category.title, level: 2 as const })),
   { id: semanticUtilityCatalog.id, label: semanticUtilityCatalog.title, level: 2 },
   { id: "semantic-effect-tokens", label: "Effect Tokens", level: 1 },
-  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
   { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
   { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
+  { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
 ];
 
 export const fontFamilyTocSections: TocSection[] = [
@@ -636,6 +648,7 @@ export function SemanticColorSwatchCard({
 
 export function SemanticOverlaySwatchCard({
   utility,
+  dsVar,
   rawVar,
   cssVar,
   valueLabel,
@@ -643,6 +656,7 @@ export function SemanticOverlaySwatchCard({
   hideUtility = false,
 }: {
   utility: string;
+  dsVar: string;
   rawVar: string;
   cssVar: string;
   valueLabel: string;
@@ -667,7 +681,14 @@ export function SemanticOverlaySwatchCard({
           ) : null}
         </div>
       ) : (
-        <SwatchCardMeta utility={utility} sourceVar={rawVar} value={valueLabel} />
+        <div className="p-4">
+          <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
+          <p className="m-0 mt-1 font-mono text-caption text-gray-60">{dsVar}</p>
+          <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{rawVar}</p>
+          {valueLabel ? (
+            <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</p>
+          ) : null}
+        </div>
       )}
     </div>
   );
@@ -676,12 +697,10 @@ export function SemanticOverlaySwatchCard({
 export function SemanticGradientSwatchCard({
   utility,
   dsVar,
-  rawVar,
   value,
 }: {
   utility: string;
   dsVar: string;
-  rawVar: string;
   value: string;
 }) {
   const isFade = dsVar.includes("fade");
@@ -696,7 +715,10 @@ export function SemanticGradientSwatchCard({
       ) : (
         <div aria-hidden="true" className={`h-24 w-full border-b border-default ${utility}`} />
       )}
-      <SwatchCardMeta utility={utility} sourceVar={rawVar} value={value} />
+      <div className="p-4">
+        <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
+        <p className="m-0 mt-1 break-all font-mono text-caption text-gray-60">{value}</p>
+      </div>
     </div>
   );
 }
