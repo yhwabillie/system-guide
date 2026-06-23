@@ -184,7 +184,6 @@ export function GuideSpacingPage() {
                     <div key={name} role="listitem" className="grid grid-cols-[12rem_1fr_5rem] items-center gap-4 border-b border-gray-20 px-4 py-3 last:border-b-0">
                       <div className="min-w-0">
                         <TokenChip copyValue={utility}>{utility}</TokenChip>
-                        <p className="m-0 mt-1 text-caption font-mono foreground-muted">{name}</p>
                       </div>
                       <div className="relative flex min-h-20 items-center justify-center overflow-hidden rounded-md surface-subtle">
                         <span aria-hidden="true" className="absolute inset-x-4 top-1/2 border-t border-dashed border-subtle" />
