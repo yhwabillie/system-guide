@@ -2816,7 +2816,7 @@ export function GridColumnPreview({ cols, utility, label }: { cols: number; util
       className={`grid gap-2 ${utility}`}
     >
       {Array.from({ length: cols }, (_, i) => (
-        <div key={i} className="bg-accent" style={{ height: cellHeight }} aria-hidden="true" />
+        <div key={i} className="surface-brand" style={{ height: cellHeight }} aria-hidden="true" />
       ))}
     </div>
   );
