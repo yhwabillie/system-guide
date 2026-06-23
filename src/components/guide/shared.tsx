@@ -411,43 +411,19 @@ export const semanticBlurCatalog = {
       id: "blur-subtle",
       utility: "blur-subtle",
       sourceVar: "--ds-effect-blur-subtle",
-      value: "blur(0.375rem)",
+      value: "blur(0.375rem) / 6px",
     },
     {
       id: "blur-default",
       utility: "blur-default",
       sourceVar: "--ds-effect-blur-default",
-      value: "blur(0.75rem)",
+      value: "blur(0.75rem) / 12px",
     },
     {
       id: "blur-strong",
       utility: "blur-strong",
       sourceVar: "--ds-effect-blur-strong",
-      value: "blur(1.25rem)",
-    },
-  ] satisfies SemanticEffectTokenDef[],
-};
-
-export const semanticRoleBlurCatalog = {
-  id: "semantic-role-blur",
-  title: "Blur",
-  description: (
-    <>
-      배경 흐림을 사용하는 맥락에 맞춘 <strong>시맨틱 blur</strong> 토큰입니다. 내부 값은 원본 blur scale을 참조합니다.
-    </>
-  ),
-  tokens: [
-    {
-      id: "blur-backdrop",
-      utility: "blur-backdrop",
-      sourceVar: "--ds-effect-blur-backdrop",
-      value: "var(--ds-effect-blur-default)",
-    },
-    {
-      id: "blur-modal-backdrop",
-      utility: "blur-modal-backdrop",
-      sourceVar: "--ds-effect-blur-modal-backdrop",
-      value: "var(--ds-effect-blur-strong)",
+      value: "blur(1.25rem) / 20px",
     },
   ] satisfies SemanticEffectTokenDef[],
 };
@@ -459,7 +435,7 @@ export const colorRawTocSections: TocSection[] = [
   { id: "section-contrast", label: "Contrast Checker" },
   { id: "raw-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
-  { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
+  { id: "raw-blur", label: semanticBlurCatalog.title, level: 2 },
   { id: "raw-overlay", label: semanticOverlayCatalog.title, level: 2 },
 ];
 
@@ -470,7 +446,7 @@ export const semanticTocSections: TocSection[] = [
   { id: "semantic-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: semanticGradientCatalog.id, label: semanticGradientCatalog.title, level: 2 },
   { id: semanticElevationCatalog.id, label: semanticElevationCatalog.title, level: 2 },
-  { id: semanticRoleBlurCatalog.id, label: semanticRoleBlurCatalog.title, level: 2 },
+  { id: semanticBlurCatalog.id, label: semanticBlurCatalog.title, level: 2 },
   { id: semanticOverlayCatalog.id, label: semanticOverlayCatalog.title, level: 2 },
 ];
 
@@ -733,7 +709,8 @@ export function SemanticBlurSwatchCard({
   utility,
   sourceVar,
   value,
-}: Omit<SemanticEffectTokenDef, "value"> & { value?: string }) {
+  hideUtility = false,
+}: Omit<SemanticEffectTokenDef, "value"> & { value?: string; hideUtility?: boolean }) {
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
       <div aria-hidden="true" className="relative h-32 w-full overflow-hidden border-b border-default">
@@ -744,7 +721,16 @@ export function SemanticBlurSwatchCard({
         />
         <div className={`absolute inset-0 ${utility}`} />
       </div>
-      <SwatchCardMeta utility={utility} sourceVar={sourceVar} value={value} />
+      {hideUtility ? (
+        <div className="p-4">
+          <p className="m-0 font-mono text-label-small font-bold foreground-default">{sourceVar}</p>
+          {value ? (
+            <p className="m-0 mt-1 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
+          ) : null}
+        </div>
+      ) : (
+        <SwatchCardMeta utility={utility} sourceVar={sourceVar} value={value} />
+      )}
     </div>
   );
 }

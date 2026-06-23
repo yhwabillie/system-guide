@@ -479,8 +479,6 @@
   --ds-effect-blur-subtle: blur(0.375rem);  /* 6px */
   --ds-effect-blur-default: blur(0.75rem);  /* 12px */
   --ds-effect-blur-strong: blur(1.25rem);   /* 20px */
-  --ds-effect-blur-backdrop: var(--ds-effect-blur-default);
-  --ds-effect-blur-modal-backdrop: var(--ds-effect-blur-strong);
 
   /* 오버레이(반투명) — 라이트=검정α, 다크=흰색α(.dark) */
   --ds-overlay-subtle: var(--raw-black-a5);
@@ -949,8 +947,6 @@
 @utility blur-subtle { backdrop-filter: var(--ds-effect-blur-subtle); }
 @utility blur-default { backdrop-filter: var(--ds-effect-blur-default); }
 @utility blur-strong { backdrop-filter: var(--ds-effect-blur-strong); }
-@utility blur-backdrop { backdrop-filter: var(--ds-effect-blur-backdrop); }
-@utility blur-modal-backdrop { backdrop-filter: var(--ds-effect-blur-modal-backdrop); }
 
 /* Gradient(그라데이션) 배경 — 용도 유틸. */
 @utility gradient-brand { background-image: var(--ds-gradient-brand); }

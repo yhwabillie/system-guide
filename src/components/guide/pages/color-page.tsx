@@ -32,7 +32,6 @@ import {
   semanticElevationCatalog,
   semanticGradientCatalog,
   semanticOverlayCatalog,
-  semanticRoleBlurCatalog,
   semanticShadowCatalog,
   SemanticColorCategorySection,
   SemanticColorGroupGrid,
@@ -487,7 +486,7 @@ export function GuideColorPage() {
           </SemanticColorCategorySection>
 
           <SemanticColorCategorySection
-            id={semanticBlurCatalog.id}
+            id="raw-blur"
             title={semanticBlurCatalog.title}
             description={semanticBlurCatalog.description}
           >
@@ -499,6 +498,7 @@ export function GuideColorPage() {
                   utility={token.utility}
                   sourceVar={token.sourceVar}
                   value={token.value}
+                  hideUtility
                 />
               ))}
             </div>
@@ -628,17 +628,18 @@ export function GuideColorPage() {
             </SemanticColorCategorySection>
 
             <SemanticColorCategorySection
-              id={semanticRoleBlurCatalog.id}
-              title={semanticRoleBlurCatalog.title}
-              description={semanticRoleBlurCatalog.description}
+              id={semanticBlurCatalog.id}
+              title={semanticBlurCatalog.title}
+              description={semanticBlurCatalog.description}
             >
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {semanticRoleBlurCatalog.tokens.map((token) => (
+                {semanticBlurCatalog.tokens.map((token) => (
                   <SemanticBlurSwatchCard
                     key={token.id}
                     id={token.id}
                     utility={token.utility}
                     sourceVar={token.sourceVar}
+                    value={token.value}
                   />
                 ))}
               </div>
