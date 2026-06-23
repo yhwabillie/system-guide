@@ -459,7 +459,7 @@ export default function ResponsiveGuidePage() {
     <main className="min-h-screen bg-background foreground-default">
       <div className="p-6 md:p-10">
       <header className="mb-16">
-        <h1 className="text-display-sm font-bold m-0">Responsive Layout Guide</h1>
+        <h1 className="text-display-sm font-bold m-0">반응형 Layout 가이드</h1>
         <p className="mt-2 mb-0 text-body-small foreground-muted">
           브라우저 창 크기를 조절해 tier별 칼럼 수·가터(gap)·스크린 마진 변화를 확인하세요.
         </p>

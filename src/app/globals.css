@@ -246,7 +246,7 @@
   --layout-screen-margin-sm: 1rem;    /* 16px */
   --layout-screen-margin-md: 1.5rem;  /* 24px */
 
-  /* 사이트 헤더 shell 좌우 패딩 — 스크린 마진과 동기화(small 16px, medium+ 24px) */
+  /* 사이트 헤더 layout 좌우 패딩 — 스크린 마진과 동기화(small 16px, medium+ 24px) */
   --layout-header-padding-sm: var(--layout-screen-margin-sm);
   --layout-header-padding-md: var(--layout-screen-margin-md);
 

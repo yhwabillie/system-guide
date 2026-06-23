@@ -14,7 +14,7 @@ import {
   contrastResultSurfaceClass,
   contrastPickCloseIcon,
   ContentGroupTitle,
-  ContentIntroShell,
+  ContentIntroLayout,
   ContentOutlineTabList,
   ContentSectionTitle,
   ContentTitleBlock,
@@ -127,7 +127,7 @@ export function GuideColorPage() {
 
   return (
     <div className={layoutPageColSpanFull}>
-        <ContentIntroShell>
+        <ContentIntroLayout>
         <ContentTitleBlock
           title="Color"
           titleId="content-color"
@@ -144,7 +144,7 @@ export function GuideColorPage() {
           ]}
         />
 
-        </ContentIntroShell>
+        </ContentIntroLayout>
 
         <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={colorRawTocSections}>

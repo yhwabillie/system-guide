@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   contentSubTabPanelClass,
-  ContentIntroShell,
+  ContentIntroLayout,
   ContentOutlineTabList,
   ContentTitleBlock,
   controlSizeTokens,
@@ -102,7 +102,7 @@ export function GuideSpacingPage() {
   }
   return (
     <div className={layoutPageColSpanFull}>
-        <ContentIntroShell>
+        <ContentIntroLayout>
           <ContentTitleBlock
             title="Spacing & Size"
             titleId="content-spacing"
@@ -120,7 +120,7 @@ export function GuideSpacingPage() {
             ]}
           />
 
-          </ContentIntroShell>
+          </ContentIntroLayout>
 
           <div role="tabpanel" id="panel-spacing-measure" aria-labelledby="tab-spacing-measure" hidden={activeSpacingTab !== "spacing"} className={contentSubTabPanelClass}>
           <section id="section-spacing" aria-label="Spacing" className="mb-0">

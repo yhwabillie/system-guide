@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   contentSubTabPanelClass,
-  ContentIntroShell,
+  ContentIntroLayout,
   ContentOutlineTabList,
   ContentSectionTitle,
   ContentTitleBlock,
@@ -40,7 +40,7 @@ export function GuideGridPage() {
 
   return (
     <div className={layoutPageColSpanFull}>
-      <ContentIntroShell>
+      <ContentIntroLayout>
         <ContentTitleBlock title="Layout" titleId="content-grid" />
 
         <ContentOutlineTabList
@@ -65,7 +65,7 @@ export function GuideGridPage() {
             },
           ]}
         />
-      </ContentIntroShell>
+      </ContentIntroLayout>
 
       <div
         role="tabpanel"
@@ -82,9 +82,9 @@ export function GuideGridPage() {
               <>
                 Tailwind 기본 <strong>grid-cols-*</strong> 열 분할. <strong>12열</strong> 그리드는{" "}
                 <strong>col-span-*</strong>와 조합해 페이지 레이아웃을 구성합니다.{" "}
-                <strong>shell·breakpoint</strong> 검증은 사이드메뉴{" "}
+                <strong>전체 Layout·breakpoint</strong> 검증은 사이드메뉴{" "}
                 <a href={GUIDE_ROUTES.responsive} className="font-semibold foreground-brand no-underline hover:underline">
-                  Responsive Layout Guide
+                  반응형 Layout 가이드
                 </a>
                 를 참고하세요.
               </>

@@ -116,7 +116,7 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Background",
     description: (
       <>
-        화면의 가장 바닥 면을 뜻하는 <strong>배경(background)</strong> 색상입니다. 페이지 shell·최상위 캔버스에는 <strong>bg-background</strong>를 사용합니다.
+        화면의 가장 바닥 면을 뜻하는 <strong>배경(background)</strong> 색상입니다. 페이지 전체 Layout·최상위 캔버스에는 <strong>bg-background</strong>를 사용합니다.
       </>
     ),
     groups: [
@@ -1130,7 +1130,7 @@ export function TabDescriptionCallout({
 }
 
 /** 타이틀·탭·설명 묶음 — 카드/패딩 없이 세로 간격만 유지 */
-export function ContentIntroShell({
+export function ContentIntroLayout({
   children,
   className = "",
 }: {

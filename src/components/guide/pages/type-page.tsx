@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   contentSubTabPanelClass,
-  ContentIntroShell,
+  ContentIntroLayout,
   ContentOutlineTabList,
   ContentTitleBlock,
   CodeBlock,
@@ -40,7 +40,7 @@ export function GuideTypePage() {
   }
   return (
     <div className={layoutPageColSpanFull}>
-        <ContentIntroShell>
+        <ContentIntroLayout>
         <ContentTitleBlock
           title="Font & Type"
           titleId="content-type"
@@ -57,7 +57,7 @@ export function GuideTypePage() {
           ]}
         />
 
-        </ContentIntroShell>
+        </ContentIntroLayout>
 
         <div role="tabpanel" id="panel-type-font-family" aria-labelledby="tab-type-font-family" hidden={activeTypeTab !== "font-family"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={fontFamilyTocSections}>

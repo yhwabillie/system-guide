@@ -67,7 +67,7 @@ export const screenMarginMdPx = 24;
 
 export const responsiveScreenMarginClass = "px-screen-margin-sm md:px-screen-margin-md";
 
-/** 사이트 헤더 shell 좌우 패딩(px). 스크린 마진과 동기화 — small 16px, medium+ 24px. */
+/** 사이트 헤더 layout 좌우 패딩(px). 스크린 마진과 동기화 — small 16px, medium+ 24px. */
 export const headerPaddingSmPx = screenMarginSmPx;
 export const headerPaddingMdPx = screenMarginMdPx;
 export const guideHeaderPaddingClass = "px-header-padding-sm md:px-header-padding-md";
@@ -93,7 +93,7 @@ export const layoutPageColSpanMain =
 export const layoutPageColSpanAside =
   "col-span-4 md:col-span-8 lg:col-span-4";
 
-/** 사이드메뉴 프리셋 shell — lg+ menu(16rem) + content(1fr). globals.css @utility layout-sidenav */
+/** 사이드메뉴 프리셋 layout — lg+ menu(16rem) + content(1fr). globals.css @utility layout-sidenav */
 export const layoutSidenavClass = "layout-sidenav";
 
 /** 넓은 menu(20rem) 변형 */

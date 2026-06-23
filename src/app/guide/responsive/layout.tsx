@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Responsive Layout Guide — system-guide",
+  title: "반응형 Layout 가이드 — system-guide",
   description: "breakpoint별 container·grid 변화를 확인하는 반응형 레이아웃 가이드",
 };
 

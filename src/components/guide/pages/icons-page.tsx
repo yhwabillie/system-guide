@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   contentSubTabPanelClass,
-  ContentIntroShell,
+  ContentIntroLayout,
   ContentOutlineTabList,
   ContentTitleBlock,
   GuideContentLayout,
@@ -37,7 +37,7 @@ export function GuideIconsPage() {
   }
   return (
     <div className={layoutPageColSpanFull}>
-        <ContentIntroShell>
+        <ContentIntroLayout>
           <ContentTitleBlock
             title="Icons"
             titleId="content-icons"
@@ -54,7 +54,7 @@ export function GuideIconsPage() {
             ]}
           />
 
-          </ContentIntroShell>
+          </ContentIntroLayout>
 
           <div role="tabpanel" id="panel-icons-outline" aria-labelledby="tab-icons-outline" hidden={activeIconsTab !== "outline"} className={contentSubTabPanelClass}>
             <GuideContentLayout sections={outlineIconsTocSections}>

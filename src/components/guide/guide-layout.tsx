@@ -149,7 +149,7 @@ function GuideNavCategory({
   );
 }
 
-export function GuideShell({ children }: { children: ReactNode }) {
+export function GuideLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { isDark, toggleDark } = useGuideTheme();
@@ -282,7 +282,7 @@ export function GuideShell({ children }: { children: ReactNode }) {
                 subItems={[
                   { label: "Columns", href: guideLayoutTabHref("columns"), active: isGrid && tab !== "rows" },
                   { label: "Rows", href: guideLayoutTabHref("rows"), active: isGrid && tab === "rows" },
-                  { label: "Responsive Layout Guide", href: GUIDE_ROUTES.responsive, active: isResponsive, target: "_blank" },
+                  { label: "반응형 Layout 가이드", href: GUIDE_ROUTES.responsive, active: isResponsive, target: "_blank" },
                 ]}
               />
             </div>
