@@ -35,6 +35,17 @@ const overlayTokens = [
     rawVarDark: "--raw-white-a5",
     light: "rgba(0, 0, 0, 0.05)",
     dark: "rgba(255, 255, 255, 0.05)",
+    rawOnly: false,
+  },
+  {
+    label: "overlay-a8",
+    utility: "",
+    cssVar: "",
+    rawVarLight: "--raw-black-a8",
+    rawVarDark: "--raw-white-a8",
+    light: "rgba(0, 0, 0, 0.08)",
+    dark: "rgba(255, 255, 255, 0.08)",
+    rawOnly: true,
   },
   {
     label: "overlay-default",
@@ -44,6 +55,17 @@ const overlayTokens = [
     rawVarDark: "--raw-white-a10",
     light: "rgba(0, 0, 0, 0.10)",
     dark: "rgba(255, 255, 255, 0.10)",
+    rawOnly: false,
+  },
+  {
+    label: "overlay-a12",
+    utility: "",
+    cssVar: "",
+    rawVarLight: "--raw-black-a12",
+    rawVarDark: "--raw-white-a12",
+    light: "rgba(0, 0, 0, 0.12)",
+    dark: "rgba(255, 255, 255, 0.12)",
+    rawOnly: true,
   },
   {
     label: "overlay-strong",
@@ -53,6 +75,7 @@ const overlayTokens = [
     rawVarDark: "--raw-white-a20",
     light: "rgba(0, 0, 0, 0.20)",
     dark: "rgba(255, 255, 255, 0.20)",
+    rawOnly: false,
   },
 ];
 
@@ -304,6 +327,29 @@ export const semanticOverlayCatalog = {
       오버레이에 쓰는 반투명 토큰입니다. 라이트는 <strong>검정 alpha</strong>, 다크는 <strong>흰색 alpha</strong>로 전환되어 아래 콘텐츠를 어둡히거나 밝힙니다.
     </>
   ),
+  tokens: overlayTokens
+    .filter(({ rawOnly }) => !rawOnly)
+    .map(({ label, utility, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
+      id: label,
+      label,
+      utility,
+      cssVar,
+      rawVarLight,
+      rawVarDark,
+      light,
+      dark,
+    })),
+};
+
+export const rawAlphaCatalog = {
+  id: "raw-alpha",
+  title: "Alpha",
+  description: (
+    <>
+      효과 토큰에 쓰는 투명도 원본 값입니다. 라이트 모드에서는 <strong>black alpha</strong>, 다크 모드에서는{" "}
+      <strong>white alpha</strong>를 사용해 shadow와 overlay의 농도를 만듭니다.
+    </>
+  ),
   tokens: overlayTokens.map(({ label, utility, cssVar, rawVarLight, rawVarDark, light, dark }) => ({
     id: label,
     label,
@@ -436,7 +482,7 @@ export const colorRawTocSections: TocSection[] = [
   { id: "raw-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: semanticShadowCatalog.id, label: semanticShadowCatalog.title, level: 2 },
   { id: "raw-blur", label: semanticBlurCatalog.title, level: 2 },
-  { id: "raw-overlay", label: semanticOverlayCatalog.title, level: 2 },
+  { id: rawAlphaCatalog.id, label: rawAlphaCatalog.title, level: 2 },
 ];
 
 export const semanticTocSections: TocSection[] = [

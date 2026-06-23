@@ -27,6 +27,7 @@ import {
   ProjectIconGlyph,
   rawPaletteSwatchClass,
   RawPaletteSwatchFill,
+  rawAlphaCatalog,
   semanticColorCatalog,
   semanticBlurCatalog,
   semanticElevationCatalog,
@@ -505,12 +506,12 @@ export function GuideColorPage() {
           </SemanticColorCategorySection>
 
           <SemanticColorCategorySection
-            id="raw-overlay"
-            title={semanticOverlayCatalog.title}
-            description={semanticOverlayCatalog.description}
+            id={rawAlphaCatalog.id}
+            title={rawAlphaCatalog.title}
+            description={rawAlphaCatalog.description}
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {semanticOverlayCatalog.tokens.map((token) => (
+              {rawAlphaCatalog.tokens.map((token) => (
                 <SemanticOverlaySwatchCard
                   key={token.id}
                   utility={token.utility}
