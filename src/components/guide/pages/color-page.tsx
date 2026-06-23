@@ -43,6 +43,7 @@ import {
   SemanticTokenFamilySection,
   semanticTocSections,
   semanticUtilityCatalog,
+  TabDescriptionCallout,
   backgroundAnchors,
   type SwatchInfo,
 } from "@/components/guide/shared";
@@ -126,7 +127,7 @@ export function GuideColorPage() {
     <div className={layoutPageColSpanFull}>
         <ContentIntroLayout>
         <ContentTitleBlock
-          title="Color"
+          title="Color & Effect"
           titleId="content-color"
         />
 
@@ -136,8 +137,8 @@ export function GuideColorPage() {
           onSelect={(value) => selectColorSection(value as "raw" | "semantic")}
           onKeyDown={handleColorTabKeyDown}
           tabs={[
-            { value: "raw", tabId: "tab-color-raw", panelId: "panel-color-raw", label: "Raw Color & Effect", ref: rawColorTabRef },
-            { value: "semantic", tabId: "tab-color-semantic", panelId: "panel-color-semantic", label: "Semantic Color & Effect", ref: semanticColorTabRef },
+            { value: "raw", tabId: "tab-color-raw", panelId: "panel-color-raw", label: "Raw Token", ref: rawColorTabRef },
+            { value: "semantic", tabId: "tab-color-semantic", panelId: "panel-color-semantic", label: "Semantic Token", ref: semanticColorTabRef },
           ]}
         />
 
@@ -145,16 +146,15 @@ export function GuideColorPage() {
 
         <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={colorRawTocSections}>
+        <TabDescriptionCallout margin="mb-20" tone="info">
+          <div className="flex flex-col gap-2">
+            <p className="m-0"><strong>Raw Token</strong>은 색상·alpha·blur처럼 역할을 정하기 전의 원본 값입니다.</p>
+            <p className="m-0">모드와 용도에 직접 묶지 않고, <strong>Semantic Token</strong>이 참조할 수 있는 안정적인 재료로 관리합니다.</p>
+          </div>
+        </TabDescriptionCallout>
+
         <section aria-labelledby="section-color" className="mb-24">
-          <ContentSectionTitle
-            id="section-color"
-            lead
-            description={
-              <>
-                가공 전 <strong>원본 팔레트(raw)</strong>입니다. 색상 family와 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> 스케일을 확인합니다. <strong>50</strong>은 기준색, <strong>0</strong>·<strong>100</strong>은 White/Black 앵커에 가까운 틴트입니다. background·surface·foreground 같은 역할은 Semantic Color & Effect에서 매핑합니다.
-              </>
-            }
-          >
+          <ContentSectionTitle id="section-color" lead>
             Color Palette
           </ContentSectionTitle>
 
@@ -512,6 +512,13 @@ export function GuideColorPage() {
 
         <div role="tabpanel" id="panel-color-semantic" aria-labelledby="tab-color-semantic" hidden={activeColorTab !== "semantic"} className={contentSubTabPanelClass}>
         <GuideContentLayout sections={semanticTocSections}>
+          <TabDescriptionCallout margin="mb-20" tone="info">
+            <div className="flex flex-col gap-2">
+              <p className="m-0"><strong>Semantic Token</strong>은 raw 값을 화면 역할에 맞게 매핑한 실제 사용 토큰입니다.</p>
+              <p className="m-0">라이트·다크 모드에서 필요한 값을 재매핑해 <strong>background</strong>, <strong>surface</strong>, <strong>foreground</strong>, <strong>effect</strong> 같은 UI 의미를 일관되게 사용합니다.</p>
+            </div>
+          </TabDescriptionCallout>
+
           <SemanticTokenFamilySection
             id="semantic-color-tokens"
             title="Color Tokens"

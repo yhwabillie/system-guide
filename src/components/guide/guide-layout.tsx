@@ -240,11 +240,11 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 expanded={colorMenuExpanded}
                 onToggleExpand={() => setColorMenuExpanded((open) => !open)}
                 icon={navIconColor}
-                label="Color"
-                expandLabel="Color"
+                label="Color & Effect"
+                expandLabel="Color & Effect"
                 subItems={[
-                  { label: "Raw Color & Effect", href: guideColorTabHref("raw"), active: isColor && tab !== "semantic" },
-                  { label: "Semantic Color & Effect", href: guideColorTabHref("semantic"), active: isColor && tab === "semantic" },
+                  { label: "Raw Token", href: guideColorTabHref("raw"), active: isColor && tab !== "semantic" },
+                  { label: "Semantic Token", href: guideColorTabHref("semantic"), active: isColor && tab === "semantic" },
                 ]}
               />
               <GuideNavCategory

@@ -498,6 +498,9 @@
   --ds-guide-callout-bg: var(--ds-gray-5);
   --ds-guide-callout-accent: var(--ds-gray-90);
   --ds-guide-callout-fg: var(--ds-gray-70);
+  --ds-guide-callout-info-bg: var(--ds-violet-5);
+  --ds-guide-callout-info-accent: var(--ds-violet-60);
+  --ds-guide-callout-info-fg: var(--ds-violet-90);
   --ds-guide-intro-bg: var(--ds-gray-5);
   --ds-guide-intro-eyebrow: var(--ds-gray-60);
   --ds-guide-intro-body: var(--ds-gray-70);
@@ -800,6 +803,9 @@
   --color-guide-callout-bg: var(--ds-guide-callout-bg);
   --color-guide-callout-accent: var(--ds-guide-callout-accent);
   --color-guide-callout-fg: var(--ds-guide-callout-fg);
+  --color-guide-callout-info-bg: var(--ds-guide-callout-info-bg);
+  --color-guide-callout-info-accent: var(--ds-guide-callout-info-accent);
+  --color-guide-callout-info-fg: var(--ds-guide-callout-info-fg);
   --color-guide-intro-bg: var(--ds-guide-intro-bg);
   --color-guide-intro-eyebrow: var(--ds-guide-intro-eyebrow);
   --color-guide-intro-body: var(--ds-guide-intro-body);

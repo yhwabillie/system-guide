@@ -619,6 +619,58 @@ export function SwatchCardMeta({
   );
 }
 
+export function CopyableSwatchSurface({
+  copyValue,
+  label,
+  className,
+  style,
+  allowOverflow = false,
+  children,
+}: {
+  copyValue: string;
+  label: string;
+  className: string;
+  style?: React.CSSProperties;
+  allowOverflow?: boolean;
+  children?: React.ReactNode;
+}) {
+  const toast = useToast();
+
+  async function handleCopy() {
+    try {
+      await copyTextToClipboard(copyValue);
+      toast?.showToast(`${copyValue} 복사됨`);
+    } catch {
+      toast?.showToast("복사에 실패했습니다");
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className={[
+        "group relative block cursor-pointer appearance-none border-0 bg-transparent p-0 text-left",
+        allowOverflow ? "overflow-visible" : "overflow-hidden",
+        "focus-visible:outline focus-visible:outline-[var(--outline-focus-width)] focus-visible:outline-offset-[var(--outline-focus-tab-offset)] utility-focus-ring",
+        className,
+      ].join(" ")}
+      style={style}
+      onClick={() => void handleCopy()}
+      aria-label={`${label} 복사`}
+    >
+      {children}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-3 right-3 flex translate-y-3 justify-end opacity-0 transition-[opacity,translate] duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,translate] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+      >
+        <span className="rounded-md bg-[color-mix(in_srgb,var(--raw-black)_86%,transparent)] px-2 py-1 font-mono text-caption font-bold text-[var(--raw-white)] shadow-2">
+          Copy
+        </span>
+      </span>
+    </button>
+  );
+}
+
 export function SemanticColorSwatchCard({
   utility,
   rawVar,
@@ -633,8 +685,9 @@ export function SemanticColorSwatchCard({
 
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
-      <div
-        aria-hidden="true"
+      <CopyableSwatchSurface
+        copyValue={utility}
+        label={utility}
         className={[
           "h-24 w-full",
           needsBorder ? "border-b border-default" : "",
@@ -666,13 +719,24 @@ export function SemanticOverlaySwatchCard({
 }) {
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
-      <div
-        aria-hidden="true"
-        className="h-24 w-full overflow-hidden border-b border-default"
-        style={isDark ? checkerDark : checkerLight}
-      >
-        <div className="size-full" style={{ background: `var(${hideUtility ? rawVar : cssVar})` }} />
-      </div>
+      {hideUtility ? (
+        <div
+          aria-hidden="true"
+          className="h-24 w-full overflow-hidden border-b border-default"
+          style={isDark ? checkerDark : checkerLight}
+        >
+          <div className="size-full" style={{ background: `var(${rawVar})` }} />
+        </div>
+      ) : (
+        <CopyableSwatchSurface
+          copyValue={utility}
+          label={utility}
+          className="h-24 w-full border-b border-default"
+          style={isDark ? checkerDark : checkerLight}
+        >
+          <span className="block size-full" style={{ background: `var(${cssVar})` }} />
+        </CopyableSwatchSurface>
+      )}
       {hideUtility ? (
         <div className="p-4">
           <p className="m-0 font-mono text-label-small font-bold foreground-default">{rawVar}</p>
@@ -709,11 +773,20 @@ export function SemanticGradientSwatchCard({
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
       {isFade ? (
-        <div className="h-24 w-full overflow-hidden border-b border-default" style={underlayStyle}>
-          <div aria-hidden="true" className={`size-full ${utility}`} />
-        </div>
+        <CopyableSwatchSurface
+          copyValue={utility}
+          label={utility}
+          className="h-24 w-full border-b border-default"
+          style={underlayStyle}
+        >
+          <span aria-hidden="true" className={`block size-full ${utility}`} />
+        </CopyableSwatchSurface>
       ) : (
-        <div aria-hidden="true" className={`h-24 w-full border-b border-default ${utility}`} />
+        <CopyableSwatchSurface
+          copyValue={utility}
+          label={utility}
+          className={`h-24 w-full border-b border-default ${utility}`}
+        />
       )}
       <div className="p-4">
         <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
@@ -727,7 +800,14 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value, valuePx }:
   return (
     <div className="grid items-center gap-8 sm:grid-cols-[9rem_1fr]">
       <div className="flex items-center justify-center py-5">
-        <div aria-hidden="true" className={`size-28 rounded-2xl surface-default ${utility}`} />
+        <CopyableSwatchSurface
+          copyValue={utility}
+          label={utility}
+          allowOverflow
+          className="size-28 rounded-2xl surface-default"
+        >
+          <span aria-hidden="true" className={`block size-full rounded-2xl ${utility}`} />
+        </CopyableSwatchSurface>
       </div>
       <div className="min-w-0 py-5">
         <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
@@ -749,14 +829,29 @@ export function SemanticBlurSwatchCard({
 }: Omit<SemanticEffectTokenDef, "value"> & { value?: string; hideUtility?: boolean }) {
   return (
     <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
-      <div aria-hidden="true" className="relative h-32 w-full overflow-hidden border-b border-default">
-        <img
-          src="/blur_sample.webp"
-          alt=""
-          className="absolute inset-0 size-full object-cover"
-        />
-        <div className={`absolute inset-0 ${utility}`} />
-      </div>
+      {hideUtility ? (
+        <div aria-hidden="true" className="relative h-32 w-full overflow-hidden border-b border-default">
+          <img
+            src="/blur_sample.webp"
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+          />
+          <div className={`absolute inset-0 ${utility}`} />
+        </div>
+      ) : (
+        <CopyableSwatchSurface
+          copyValue={utility}
+          label={utility}
+          className="relative h-32 w-full border-b border-default"
+        >
+          <img
+            src="/blur_sample.webp"
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+          />
+          <span aria-hidden="true" className={`absolute inset-0 block ${utility}`} />
+        </CopyableSwatchSurface>
+      )}
       {hideUtility ? (
         <div className="p-4">
           <p className="m-0 font-mono text-label-small font-bold foreground-default">{sourceVar}</p>
@@ -1122,16 +1217,48 @@ export function TabDescriptionCallout({
   children,
   className = "",
   margin = "mb-10",
+  tone = "neutral",
 }: {
   children: React.ReactNode;
   className?: string;
   margin?: string;
+  tone?: "neutral" | "info";
 }) {
+  if (tone === "info") {
+    return (
+      <div
+        className={[
+          margin,
+          "flex items-start gap-3 rounded-md bg-guide-callout-info-bg px-5 py-4 text-body-medium leading-base text-guide-callout-info-fg [&_strong]:font-bold [&_strong]:text-guide-callout-info-accent [&_a]:font-semibold [&_a]:text-guide-callout-info-accent [&_a]:underline [&_a]:underline-offset-2",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="mt-1 size-icon-xs shrink-0 text-guide-callout-info-accent"
+          fill="currentColor"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <rect x="11" y="10" width="2" height="7" rx="1" fill="var(--ds-guide-callout-info-bg)" />
+          <circle cx="12" cy="7.25" r="1.15" fill="var(--ds-guide-callout-info-bg)" />
+        </svg>
+        <div className="min-w-0">{children}</div>
+      </div>
+    );
+  }
+
+  const toneClassName =
+    "border-guide-callout-accent bg-guide-callout-bg text-guide-callout-fg hover:[&_a]:text-guide-callout-accent";
+
   return (
     <div
       className={[
         margin,
-        "border-l-4 border-guide-callout-accent bg-guide-callout-bg py-3.5 pl-4 pr-5 text-body-medium leading-base text-guide-callout-fg [&_strong]:font-bold [&_strong]:foreground-default [&_a]:font-semibold [&_a]:foreground-default [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-guide-callout-accent",
+        "border-l-4 py-3.5 pl-4 pr-5 text-body-medium leading-base [&_strong]:font-bold [&_strong]:foreground-default [&_a]:font-semibold [&_a]:foreground-default [&_a]:underline [&_a]:underline-offset-2",
+        toneClassName,
         className,
       ]
         .filter(Boolean)
