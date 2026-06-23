@@ -153,12 +153,22 @@ export function GuideColorPage() {
           </div>
         </TabDescriptionCallout>
 
-        <section aria-labelledby="section-color" className="mb-24">
-          <ContentSectionTitle id="section-color" lead>
-            Color Palette
+        {/* ── Contrast Checker ── */}
+        <section aria-labelledby="section-contrast" className="mb-24">
+          <ContentSectionTitle
+            id="section-contrast"
+            description={
+              <>
+                배경·텍스트 색 조합의 <strong>명암비</strong>를 계산하고 WCAG 등급(AA/AAA)을 검증합니다. 팔레트에서 색을 선택해 실시간으로 확인하세요.
+              </>
+            }
+            lead
+          >
+            Contrast Checker
           </ContentSectionTitle>
 
-          {/* 선택 모드 안내 — 중립 정보 스타일(빨강/초록 의미색 미사용으로 에러·성공 오인 방지) */}
+          <div id="section-color" className="mb-8 scroll-mt-[calc(3.75rem+1.5rem)]">
+          {/* 선택 모드 안내 - 중립 정보 스타일(빨강/초록 의미색 미사용으로 에러·성공 오인 방지) */}
           {selecting && (
             <div
               role="status"
@@ -286,20 +296,7 @@ export function GuideColorPage() {
               );
             })}
           </div>
-        </section>
-
-        {/* ── Contrast Checker ── */}
-        <section aria-labelledby="section-contrast" className="mb-24">
-          <ContentSectionTitle
-            id="section-contrast"
-            description={
-              <>
-                배경·텍스트 색 조합의 <strong>명암비</strong>를 계산하고 WCAG 등급(AA/AAA)을 검증합니다. 팔레트에서 색을 선택해 실시간으로 확인하세요.
-              </>
-            }
-          >
-            Contrast Checker
-          </ContentSectionTitle>
+          </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <ContrastColorPickButton

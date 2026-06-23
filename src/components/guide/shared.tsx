@@ -472,8 +472,8 @@ export const semanticBlurCatalog = {
 export type TocSection = { id: string; label: string; level?: 1 | 2 };
 
 export const colorRawTocSections: TocSection[] = [
-  { id: "section-color", label: "Color Palette" },
   { id: "section-contrast", label: "Contrast Checker" },
+  { id: "section-color", label: "Color Palette" },
   { id: "raw-effect-tokens", label: "Effect Tokens", level: 1 },
   { id: "raw-blur", label: semanticBlurCatalog.title, level: 2 },
   { id: rawAlphaCatalog.id, label: rawAlphaCatalog.title, level: 2 },
