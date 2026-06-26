@@ -537,7 +537,7 @@ export default function ResponsiveGuidePage() {
                 return (
                   <tr
                     key={t.name}
-                    className={`border-b border-default ${isActive ? "bg-violet-50/10" : ""}`}
+                    className={`border-b border-default last:border-b-0 ${isActive ? "bg-violet-50/10" : ""}`}
                   >
                     <td className="py-3 px-4 text-label-xsmall font-semibold">
                       {t.name}
