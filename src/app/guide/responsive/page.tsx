@@ -580,17 +580,12 @@ export default function ResponsiveGuidePage() {
           <div aria-label="현재 viewport" className="mb-8 p-5 rounded-xl surface-subtle">
             <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
               <div>
-                <dt className="text-caption foreground-muted font-semibold">Layout width <span className="font-normal">(스크롤바 제외 · 실측)</span></dt>
-                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">
-                  {layoutWidth || "—"}px
-                  {scrollbarPx > 0 && (
-                    <span className="ml-2 text-caption font-normal foreground-muted">스크롤바 −{scrollbarPx}px</span>
-                  )}
-                </dd>
+                <dt className="text-caption foreground-muted font-semibold">뷰포트 너비</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{layoutWidth || "—"}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">Breakpoint width <span className="font-normal">(스크롤바 포함 · tier 판정)</span></dt>
-                <dd className="m-0 mt-1 text-label-small font-semibold numeric-tabular">{breakpointWidth || "—"}px</dd>
+                <dt className="text-caption foreground-muted font-semibold">스크롤바</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{scrollbarPx}px</dd>
               </div>
               <div>
                 <dt className="text-caption foreground-muted font-semibold">Active tier</dt>
@@ -615,7 +610,7 @@ export default function ResponsiveGuidePage() {
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{framePx}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">스크린 마진 (좌우 · 통합)</dt>
+                <dt className="text-caption foreground-muted font-semibold">여백 영역 <span className="font-normal">(최소 마진 + 센터링 여백)</span></dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{screenMarginPx}px</dd>
               </div>
               <div>
