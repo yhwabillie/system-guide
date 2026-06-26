@@ -51,10 +51,12 @@ export default function RootLayout({
             __html: `(function(){try{var m=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(m==="dark")document.documentElement.classList.add("dark");else if(m==="light")document.documentElement.classList.remove("dark");}catch(e){}})();`,
           }}
         />
+      </head>
+      <body className="min-h-full flex flex-col">
         {/* 타이포 스케일·행간 단일 소스(tokens.ts)에서 생성한 --font-size-*·--font-line 주입 */}
         <style dangerouslySetInnerHTML={{ __html: fontSizeCssVars() }} />
-      </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+        {children}
+      </body>
     </html>
   );
 }

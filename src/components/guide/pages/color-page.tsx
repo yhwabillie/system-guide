@@ -102,7 +102,7 @@ function RawColorPaletteCard({
   }
 
   return (
-    <div className={cardClassName} aria-label={`${label} ${sourceVar} ${hex}`}>
+    <div className={cardClassName} role="group" aria-label={`${label} ${sourceVar} ${hex}`}>
       {content}
     </div>
   );
