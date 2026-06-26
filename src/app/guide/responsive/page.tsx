@@ -23,7 +23,7 @@ import {
   layoutPageColSpanAside,
   layoutPageColSpanFull,
   layoutPageColSpanMain,
-  responsiveScreenMarginClass,
+
 } from "@/lib/layout-tokens";
 
 function LayoutPageCell({
@@ -55,7 +55,7 @@ function OuterMarginCell({ px }: { px: number }) {
       className="flex flex-col items-center justify-center min-w-0 leading-tight px-1 text-center surface-negative foreground-negative"
     >
       <span className="text-caption numeric-tabular">
-        여백
+        센터링 여백
         <span className="block font-mono">{px}px</span>
       </span>
     </div>
@@ -367,7 +367,7 @@ function SidenavLayoutMetricsLegend({
       </span>
       <span className="inline-flex items-center gap-1.5">
         <span aria-hidden="true" className="inline-block w-2 h-2 surface-negative border border-dashed border-danger" style={{ borderRadius: pxToRem(2) }} />
-        여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
+        센터링 여백 {Math.max(0, screenMarginPx - minMarginPx)}px
       </span>
       <span className="inline-flex items-center gap-1.5">
         <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
@@ -457,7 +457,7 @@ function LayoutMetricsLegend({
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span aria-hidden="true" className="inline-block w-2 h-2 surface-negative border border-dashed border-danger" style={{ borderRadius: pxToRem(2) }} />
-            여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
+            센터링 여백 {Math.max(0, screenMarginPx - minMarginPx)}px
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
@@ -571,7 +571,7 @@ export default function ResponsiveGuidePage() {
           </p>
           <ul className="mt-2 mb-4 pl-5 list-disc text-body-small foreground-muted flex flex-col gap-1">
             <li>프레임 안쪽 = <strong>최소 스크린 마진</strong>(16/24px) + <strong>칼럼 영역</strong></li>
-            <li>프레임이 max에 닿은 뒤 남는 폭은 바깥 <strong>여백(centering)</strong>(붉은색)으로 흡수</li>
+            <li>프레임이 max에 닿은 뒤 남는 폭은 바깥 <strong>센터링 여백</strong>(붉은색)으로 흡수</li>
             <li>좌우 스크린 마진(통합) = 최소 마진 + 바깥 여백</li>
             <li>칼럼 수·가터(gap)는 기준표를 따름</li>
           </ul>
@@ -615,7 +615,7 @@ export default function ResponsiveGuidePage() {
               </div>
               <div>
                 <dt className="text-caption foreground-muted font-semibold">최소 마진</dt>
-                <dd className="m-0 mt-1 text-label-small font-semibold font-mono">{minMarginPx}px · {responsiveScreenMarginClass}</dd>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{minMarginPx}px</dd>
               </div>
               <div>
                 <dt className="text-caption foreground-muted font-semibold">칼럼 영역</dt>
