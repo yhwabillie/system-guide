@@ -51,7 +51,7 @@ function OuterMarginCell({ px }: { px: number }) {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center min-w-0 leading-tight px-1 text-center bg-red-100 text-red-700"
+      className="flex flex-col items-center justify-center min-w-0 leading-tight px-1 text-center surface-negative foreground-negative"
     >
       <span className="text-caption numeric-tabular">
         여백
@@ -339,44 +339,48 @@ function SidenavLayoutMetricsLegend({
   gridColWidthPx: number;
 }) {
   return (
-    <p className="m-0 py-1.5 px-3 text-caption foreground-muted surface-subtle border-t border-default flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
-        layout {layoutWidth}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span
-          aria-hidden="true"
-          className="inline-block w-2 h-2 border border-brand bg-violet-50/25"
-          style={{ borderRadius: pxToRem(2) }}
-        />
-        {isSidebarLayout ? `menu ${menuPx}px` : "menu · stack"}
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 border border-violet-50/50 bg-violet-50/15" style={{ borderRadius: pxToRem(2) }} />
-        content column {contentColumnPx}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
-        프레임 {framePx}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-red-100 border border-dashed border-red-300" style={{ borderRadius: pxToRem(2) }} />
-        여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
-        스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
-        칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
-        col {gridColWidthPx}px (fill)
-      </span>
-    </p>
+    <div className="surface-subtle border-t border-default">
+      <div className={layoutPageClass}>
+        <p className={`${layoutPageColSpanFull} m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1`}>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
+            layout {layoutWidth}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-block w-2 h-2 border border-brand bg-violet-50/25"
+              style={{ borderRadius: pxToRem(2) }}
+            />
+            {isSidebarLayout ? `menu ${menuPx}px` : "menu · stack"}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 border border-violet-50/50 bg-violet-50/15" style={{ borderRadius: pxToRem(2) }} />
+            content column {contentColumnPx}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
+            프레임 {framePx}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-negative border border-dashed border-danger" style={{ borderRadius: pxToRem(2) }} />
+            여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
+            스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
+            칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
+            col {gridColWidthPx}px (fill)
+          </span>
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -400,32 +404,36 @@ function LayoutMetricsLegend({
   gridColWidthPx: number;
 }) {
   return (
-    <p className="m-0 py-1.5 px-3 text-caption foreground-muted surface-subtle border-t border-default flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
-        layout {layoutWidth}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
-        프레임(전체 너비) {framePx}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-red-100 border border-dashed border-red-300" style={{ borderRadius: pxToRem(2) }} />
-        여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
-        스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
-        칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
-        col {gridColWidthPx}px (fill)
-      </span>
-    </p>
+    <div className="surface-subtle border-t border-default">
+      <div className={layoutPageClass}>
+        <p className={`${layoutPageColSpanFull} m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1`}>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
+            layout {layoutWidth}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
+            프레임(전체 너비) {framePx}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-negative border border-dashed border-danger" style={{ borderRadius: pxToRem(2) }} />
+            여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
+            스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
+            칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
+            col {gridColWidthPx}px (fill)
+          </span>
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -459,15 +467,14 @@ export default function ResponsiveGuidePage() {
     <main className="min-h-screen bg-background foreground-default">
       <div className={layoutPageClass}>
       <header className={`${layoutPageColSpanFull} pt-20`}>
-        <h1 className="m-0 text-heading-large font-bold leading-base foreground-brand">반응형 Layout 가이드</h1>
+        <h1 className="m-0 text-heading-large font-bold leading-base foreground-brand">반응형 레이아웃 가이드</h1>
         <p className="m-0 mt-3 text-body-medium leading-base foreground-subtle">
-          브라우저 창 크기를 조절해 tier별 칼럼 수·가터(gap)·스크린 마진 변화를 확인하세요.
+          브라우저 창 크기를 조절해 브레이크포인트별 칼럼 수·가터(gap)·스크린 마진 변화를 확인하세요.
         </p>
       </header>
 
       {/* Live status */}
-      <section aria-labelledby="live-status" className={`${layoutPageColSpanFull} mb-20 p-5 rounded-xl surface-subtle`}>
-        <h2 id="live-status" className="text-heading-medium font-bold m-0 mb-4">현재 viewport</h2>
+      <section aria-label="현재 viewport" className={`${layoutPageColSpanFull} mb-20 p-5 rounded-xl surface-subtle`}>
         <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <dt className="text-caption foreground-muted font-semibold">Layout width <span className="font-normal">(스크롤바 제외 · 실측)</span></dt>
@@ -549,7 +556,7 @@ export default function ResponsiveGuidePage() {
       </div>{/* /layout-page guide prose */}
 
       {/* viewport 전폭 — main padding 없이 layout-page·미리보기 검증 */}
-      <section aria-labelledby="layout-page-demo" className="mb-20">
+      <section aria-labelledby="layout-page-demo" className="mb-24 pb-20">
         <div className={layoutPageClass}>
           <div className={layoutPageColSpanFull}>
           <h2 id="layout-page-demo" className="text-heading-medium font-bold mb-4">layout-page — 반응형 페이지 레이아웃</h2>
@@ -627,7 +634,7 @@ export default function ResponsiveGuidePage() {
       </section>
 
       {/* viewport 전폭 — layout-sidenav 실제 화면 검증 */}
-      <section aria-labelledby="layout-sidenav-demo" className="mb-20">
+      <section aria-labelledby="layout-sidenav-demo" className="mb-24 pb-20">
         <div className={layoutPageClass}>
           <div className={layoutPageColSpanFull}>
           <h2 id="layout-sidenav-demo" className="text-heading-medium font-bold mb-4">layout-sidenav — 사이드메뉴 + layout-page 콘텐츠</h2>

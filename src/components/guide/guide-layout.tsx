@@ -192,7 +192,32 @@ export function GuideLayout({ children }: { children: ReactNode }) {
   }
 
   if (isResponsive) {
-    return <>{children}</>;
+    return (
+      <>
+        {children}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+          {showScrollTop ? (
+            <button
+              type="button"
+              onClick={scrollToPageTop}
+              aria-label="맨 위로 스크롤"
+              className={guideFabSurfaceClass}
+            >
+              {scrollToTopIcon}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={toggleDark}
+            aria-pressed={isDark}
+            aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+            className={guideFabBrandClass}
+          >
+            {isDark ? themeIconSun : themeIconMoon}
+          </button>
+        </div>
+      </>
+    );
   }
 
   return (
