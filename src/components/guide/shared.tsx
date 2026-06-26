@@ -471,8 +471,11 @@ export const semanticBlurCatalog = {
 
 export type TocSection = { id: string; label: string; level?: 1 | 2 };
 
-export const colorRawTocSections: TocSection[] = [
+export const colorContrastTocSections: TocSection[] = [
   { id: "section-contrast", label: "Contrast Checker" },
+];
+
+export const colorRawTocSections: TocSection[] = [
   { id: "section-color", label: "Color Palette", level: 1 },
   { id: "raw-palette-neutral", label: "Neutral", level: 2 },
   ...primitiveColors.map((color) => ({ id: `raw-palette-${color.name}`, label: color.family, level: 2 as const })),

@@ -12,8 +12,9 @@ export const GUIDE_ROUTES = {
 
 export type GuideCategoryId = "color" | "type" | "spacing" | "grid" | "responsive" | "icons";
 
-export function guideColorTabHref(tab: "raw" | "semantic") {
-  return tab === "raw" ? GUIDE_ROUTES.color : `${GUIDE_ROUTES.color}?tab=semantic`;
+export function guideColorTabHref(tab: "contrast" | "raw" | "semantic") {
+  if (tab === "contrast") return GUIDE_ROUTES.color;
+  return `${GUIDE_ROUTES.color}?tab=${tab}`;
 }
 
 export function guideTypeTabHref(tab: "font-family" | "typography") {

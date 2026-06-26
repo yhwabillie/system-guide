@@ -266,7 +266,8 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 label="Color & Effect"
                 expandLabel="Color & Effect"
                 subItems={[
-                  { label: "Raw Token", href: guideColorTabHref("raw"), active: isColor && tab !== "semantic" },
+                  { label: "Contrast Checker", href: guideColorTabHref("contrast"), active: isColor && !tab },
+                  { label: "Raw Token", href: guideColorTabHref("raw"), active: isColor && tab === "raw" },
                   { label: "Semantic Token", href: guideColorTabHref("semantic"), active: isColor && tab === "semantic" },
                 ]}
               />

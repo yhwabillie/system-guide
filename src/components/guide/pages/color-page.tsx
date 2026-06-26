@@ -5,6 +5,7 @@ import { layoutPageColSpanFull } from "@/lib/layout-tokens";
 import {
   checkerDark,
   checkerLight,
+  colorContrastTocSections,
   colorRawTocSections,
   contentSubTabPanelClass,
   ContrastCategory,
@@ -111,20 +112,22 @@ export function GuideColorPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isDark } = useGuideTheme();
-  const activeColorTab = searchParams.get("tab") === "semantic" ? "semantic" : "raw";
-  const selectColorSection = (sub: "raw" | "semantic") => router.push(guideColorTabHref(sub));
+  const tabParam = searchParams.get("tab");
+  const activeColorTab = tabParam === "semantic" ? "semantic" : tabParam === "raw" ? "raw" : "contrast";
+  const selectColorSection = (sub: "contrast" | "raw" | "semantic") => router.push(guideColorTabHref(sub));
   const [bgColor, setBgColor] = useState<SwatchInfo>({ hex: "#ffffff", label: "White" });
   const [textColor, setTextColor] = useState<SwatchInfo>({ hex: "#1E2124", label: "Gray 900" });
   const [selecting, setSelecting] = useState<"bg" | "text" | null>(null);
   const [resolved, setResolved] = useState<Record<string, string>>({});
   const [semanticResolved, setSemanticResolved] = useState<Record<string, string>>({});
+  const contrastColorTabRef = useRef<HTMLButtonElement>(null);
   const rawColorTabRef = useRef<HTMLButtonElement>(null);
   const semanticColorTabRef = useRef<HTMLButtonElement>(null);
 
   function handleColorTabKeyDown(e: React.KeyboardEvent) {
-    const order: ("raw" | "semantic")[] = ["raw", "semantic"];
-    const refs = { raw: rawColorTabRef, semantic: semanticColorTabRef };
-    let next: "raw" | "semantic" | null = null;
+    const order: ("contrast" | "raw" | "semantic")[] = ["contrast", "raw", "semantic"];
+    const refs = { contrast: contrastColorTabRef, raw: rawColorTabRef, semantic: semanticColorTabRef };
+    let next: "contrast" | "raw" | "semantic" | null = null;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") next = order[(order.indexOf(activeColorTab) + 1) % order.length];
     else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = order[(order.indexOf(activeColorTab) - 1 + order.length) % order.length];
     else if (e.key === "Home") next = order[0];
@@ -187,9 +190,10 @@ export function GuideColorPage() {
         <ContentOutlineTabList
           ariaLabel="색상 카테고리"
           activeValue={activeColorTab}
-          onSelect={(value) => selectColorSection(value as "raw" | "semantic")}
+          onSelect={(value) => selectColorSection(value as "contrast" | "raw" | "semantic")}
           onKeyDown={handleColorTabKeyDown}
           tabs={[
+            { value: "contrast", tabId: "tab-color-contrast", panelId: "panel-color-contrast", label: "Contrast Checker", ref: contrastColorTabRef },
             { value: "raw", tabId: "tab-color-raw", panelId: "panel-color-raw", label: "Raw Token", ref: rawColorTabRef },
             { value: "semantic", tabId: "tab-color-semantic", panelId: "panel-color-semantic", label: "Semantic Token", ref: semanticColorTabRef },
           ]}
@@ -197,16 +201,15 @@ export function GuideColorPage() {
 
         </ContentIntroLayout>
 
-        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"} className={contentSubTabPanelClass}>
-        <GuideContentLayout sections={colorRawTocSections}>
+        <div role="tabpanel" id="panel-color-contrast" aria-labelledby="tab-color-contrast" hidden={activeColorTab !== "contrast"} className={contentSubTabPanelClass}>
+        <GuideContentLayout sections={colorContrastTocSections}>
         <TabDescriptionCallout margin="mb-20" tone="info">
           <div className="flex flex-col gap-2">
-            <p className="m-0"><strong>Raw Token</strong>은 색상·alpha·blur처럼 역할을 정하기 전의 원본 값입니다.</p>
-            <p className="m-0">모드와 용도에 직접 묶지 않고, <strong>Semantic Token</strong>이 참조할 수 있는 안정적인 재료로 관리합니다.</p>
+            <p className="m-0">배경·텍스트 색 조합의 <strong>명암비</strong>를 계산하고 WCAG 등급(AA/AAA)을 검증합니다.</p>
+            <p className="m-0">팔레트에서 색을 선택해 실시간으로 확인하세요.</p>
           </div>
         </TabDescriptionCallout>
 
-        {/* ── Contrast Checker ── */}
         <section aria-labelledby="section-contrast" className="mb-24">
           <ContentSectionTitle
             id="section-contrast"
@@ -505,9 +508,22 @@ export function GuideColorPage() {
           </div>
         </section>
 
+        </GuideContentLayout>
+        </div>{/* /panel-color-contrast */}
+
+        <div role="tabpanel" id="panel-color-raw" aria-labelledby="tab-color-raw" hidden={activeColorTab !== "raw"} className={contentSubTabPanelClass}>
+        <GuideContentLayout sections={colorRawTocSections}>
+        <TabDescriptionCallout margin="mb-20" tone="info">
+          <div className="flex flex-col gap-2">
+            <p className="m-0"><strong>Raw Token</strong>은 색상·alpha·blur처럼 역할을 정하기 전의 원본 값입니다.</p>
+            <p className="m-0">모드와 용도에 직접 묶지 않고, <strong>Semantic Token</strong>이 참조할 수 있는 안정적인 재료로 관리합니다.</p>
+          </div>
+        </TabDescriptionCallout>
+
         <section aria-labelledby="section-color" className="mb-24">
           <ContentSectionTitle
             id="section-color"
+            lead
             description={
               <>
                 가공 전 원본 팔레트입니다. 색상 family와 <strong>0·5·10·20·30·40·50·60·70·80·90·95·100</strong> scale을 카드 단위로 확인합니다.
