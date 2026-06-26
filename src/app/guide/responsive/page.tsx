@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { pxToRem } from "@/lib/tokens";
+import { CodeBlock } from "@/components/guide/shared";
 import {
   containerTokens,
   getActiveContainerToken,
@@ -190,7 +191,7 @@ function LayoutGuidePreview({
   children: ReactNode;
 }) {
   return (
-    <div className="border-y border-default overflow-hidden">
+    <div className="overflow-hidden">
       <div
         role="img"
         aria-label={`layout ${layoutWidth}px — content frame ${framePx}px — screen margin ${screenMarginPx}px (min ${minMarginPx}px) — columns ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`}
@@ -257,7 +258,7 @@ function LayoutSidenavGuidePreview({
     : `layout-sidenav ${layoutWidth}px — stacked — content frame ${framePx}px — screen margin ${screenMarginPx}px (min ${minMarginPx}px) — columns ${contentPx}px — grid ${gridCols} columns gap ${gridGapPx}px col ${gridColWidthPx}px (${utility})`;
 
   return (
-    <div className="border-y border-default overflow-hidden">
+    <div className="overflow-hidden">
       <div role="img" aria-label={ariaLabel} className="surface-subtle">
         {isSidebarLayout ? (
           <div
@@ -338,50 +339,77 @@ function SidenavLayoutMetricsLegend({
   gridGapPx: number;
   gridColWidthPx: number;
 }) {
-  return (
-    <div className="surface-subtle border-t border-default">
-      <div className={layoutPageClass}>
-        <p className={`${layoutPageColSpanFull} m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1`}>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
-            layout {layoutWidth}px
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              aria-hidden="true"
-              className="inline-block w-2 h-2 border border-brand bg-violet-50/25"
-              style={{ borderRadius: pxToRem(2) }}
-            />
-            {isSidebarLayout ? `menu ${menuPx}px` : "menu · stack"}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 border border-violet-50/50 bg-violet-50/15" style={{ borderRadius: pxToRem(2) }} />
-            content column {contentColumnPx}px
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
-            프레임 {framePx}px
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 surface-negative border border-dashed border-danger" style={{ borderRadius: pxToRem(2) }} />
-            여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
-            스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
-            칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
-            col {gridColWidthPx}px (fill)
-          </span>
-        </p>
+  const legendContent = (
+    <p className="m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
+        layout {layoutWidth}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span
+          aria-hidden="true"
+          className="inline-block w-2 h-2 border border-brand bg-violet-50/25"
+          style={{ borderRadius: pxToRem(2) }}
+        />
+        {isSidebarLayout ? `menu ${menuPx}px` : "menu · stack"}
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 border border-violet-50/50 bg-violet-50/15" style={{ borderRadius: pxToRem(2) }} />
+        content column {contentColumnPx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background" style={{ borderRadius: pxToRem(2), outline: `${pxToRem(1)} solid var(--ds-surface-brand)`, outlineOffset: pxToRem(-1) }} />
+        프레임 {framePx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-negative border border-dashed border-danger" style={{ borderRadius: pxToRem(2) }} />
+        여백(centering) {Math.max(0, screenMarginPx - minMarginPx)}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-violet-50/10" style={{ borderRadius: pxToRem(2) }} />
+        스크린 마진 {screenMarginPx}px (min {minMarginPx}px)
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 bg-background border border-violet-50/30" style={{ borderRadius: pxToRem(2) }} />
+        칼럼 {contentPx}px · {gridCols}열 · gap {gridGapPx}px
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
+        col {gridColWidthPx}px (fill)
+      </span>
+    </p>
+  );
+
+  const outerPx = Math.max(0, screenMarginPx - minMarginPx);
+  const outerColumns =
+    outerPx > 0 ? gridTrackColumnsRem(outerPx, framePx, outerPx) : gridTrackColumnsRem(framePx);
+
+  const frameLegend = (
+    <div
+      className="grid w-full max-w-full min-w-0 items-stretch overflow-hidden"
+      style={{ gridTemplateColumns: outerColumns }}
+    >
+      {outerPx > 0 && <div />}
+      <div className="surface-subtle border-x border-b border-default" style={{ paddingInline: pxToRem(minMarginPx) }}>
+        {legendContent}
       </div>
+      {outerPx > 0 && <div />}
     </div>
   );
+
+  if (isSidebarLayout) {
+    return (
+      <div
+        className="grid w-full max-w-full items-stretch overflow-hidden"
+        style={{ gridTemplateColumns: gridTrackColumnsRem(menuPx, contentColumnPx) }}
+      >
+        <div />
+        {frameLegend}
+      </div>
+    );
+  }
+
+  return frameLegend;
 }
 
 function LayoutMetricsLegend({
@@ -403,10 +431,18 @@ function LayoutMetricsLegend({
   gridGapPx: number;
   gridColWidthPx: number;
 }) {
+  const outerPx = Math.max(0, screenMarginPx - minMarginPx);
+  const outerColumns =
+    outerPx > 0 ? gridTrackColumnsRem(outerPx, framePx, outerPx) : gridTrackColumnsRem(framePx);
+
   return (
-    <div className="surface-subtle border-t border-default">
-      <div className={layoutPageClass}>
-        <p className={`${layoutPageColSpanFull} m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1`}>
+    <div
+      className="grid w-full max-w-full min-w-0 items-stretch overflow-hidden"
+      style={{ gridTemplateColumns: outerColumns }}
+    >
+      {outerPx > 0 && <div />}
+      <div className="surface-subtle border-x border-b border-default" style={{ paddingInline: pxToRem(minMarginPx) }}>
+        <p className="m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="inline-flex items-center gap-1.5">
             <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
             layout {layoutWidth}px
@@ -433,6 +469,7 @@ function LayoutMetricsLegend({
           </span>
         </p>
       </div>
+      {outerPx > 0 && <div />}
     </div>
   );
 }
@@ -473,84 +510,48 @@ export default function ResponsiveGuidePage() {
         </p>
       </header>
 
-      {/* Live status */}
-      <section aria-label="현재 viewport" className={`${layoutPageColSpanFull} mb-20 p-5 rounded-xl surface-subtle`}>
-        <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">Layout width <span className="font-normal">(스크롤바 제외 · 실측)</span></dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">
-              {layoutWidth || "—"}px
-              {scrollbarPx > 0 && (
-                <span className="ml-2 text-caption font-normal foreground-muted">스크롤바 −{scrollbarPx}px</span>
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">Breakpoint width <span className="font-normal">(스크롤바 포함 · tier 판정)</span></dt>
-            <dd className="m-0 mt-1 text-label-small font-semibold numeric-tabular">{breakpointWidth || "—"}px</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">Active tier</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold">{tier}</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">Container utility</dt>
-            <dd className="m-0 mt-1 text-label-small font-semibold font-mono">{activeContainer.utility}</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">칼럼 수</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridCols}열</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">가터 너비 (gap)</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridGapPx}px</dd>
-          </div>
-        </dl>
-        <dl className="grid gap-4 m-0 mt-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">콘텐츠 프레임 (전체 너비)</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{framePx}px</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">스크린 마진 (좌우 · 통합)</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{screenMarginPx}px</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">최소 스크린 마진</dt>
-            <dd className="m-0 mt-1 text-label-small font-semibold font-mono">{minMarginPx}px · {responsiveScreenMarginClass}</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">칼럼 영역</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{contentPx}px</dd>
-          </div>
-          <div>
-            <dt className="text-caption foreground-muted font-semibold">Col width</dt>
-            <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridColWidthPx}px</dd>
-          </div>
-        </dl>
-
-        <div className="mt-6">
-          <p className="m-0 mb-2 text-caption foreground-muted">Grid tier scale</p>
-          <div role="list" className="flex flex-wrap gap-2">
-            {gridSystemTiers.map((t) => {
-              const isActive = t.name === tier;
-              return (
-                <div
-                  key={t.name}
-                  role="listitem"
-                  className={`py-1.5 px-3 rounded-md border text-caption font-semibold ${
-                    isActive
-                      ? "surface-brand foreground-inverse border-brand"
-                      : "bg-background foreground-muted border-default"
-                  }`}
-                >
-                  {t.name}
-                  <span className="ml-1.5 font-normal font-mono">{t.viewport}</span>
-                </div>
-              );
-            })}
-          </div>
+      {/* Reference table */}
+      <section aria-labelledby="breakpoint-table" className={`${layoutPageColSpanFull} mb-24 pb-20`}>
+        <p id="breakpoint-table" className="mb-2 text-label-xsmall font-semibold foreground-subtle">반응형 브레이크포인트 기준표</p>
+        <div className="overflow-x-auto rounded-xl border border-default">
+          <table aria-labelledby="breakpoint-table" className="w-full border-collapse text-left">
+            <thead>
+              <tr className="surface-subtle border-b border-default">
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">구간</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Viewport</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Prefix</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">칼럼 수</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">가터 너비 (gap)</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">스크린 마진 (최소)</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Sidebar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {gridSystemTiers.map((t) => {
+                const isActive = t.name === tier;
+                const sidebar = t.name === "large" || t.name === "xlarge";
+                return (
+                  <tr
+                    key={t.name}
+                    className={`border-b border-default ${isActive ? "bg-violet-50/10" : ""}`}
+                  >
+                    <td className="py-3 px-4 text-label-xsmall font-semibold">
+                      {t.name}
+                      {isActive && <span className="ml-2 text-caption foreground-brand">● active</span>}
+                    </td>
+                    <td className="py-3 px-4 text-caption font-mono numeric-tabular">{t.viewport}</td>
+                    <td className="py-3 px-4 text-caption font-mono">{t.prefix}</td>
+                    <td className="py-3 px-4 text-caption numeric-tabular">{t.cols}열</td>
+                    <td className="py-3 px-4 text-caption numeric-tabular">{t.gapPx}px</td>
+                    <td className="py-3 px-4 text-caption numeric-tabular">{t.screenMarginPx}px</td>
+                    <td className="py-3 px-4 text-caption">{sidebar ? "2열" : "1열 스택"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
+
       </section>
 
       </div>{/* /layout-page guide prose */}
@@ -561,8 +562,96 @@ export default function ResponsiveGuidePage() {
           <div className={layoutPageColSpanFull}>
           <h2 id="layout-page-demo" className="text-heading-medium font-bold mb-4">layout-page — 반응형 페이지 레이아웃</h2>
           <p className="text-body-small foreground-muted mb-4">
-            가이드 미리보기(아래) 가운데 테두리 박스가 실제 <strong>콘텐츠 프레임</strong>(<code className="font-mono text-caption">{layoutPageClass}</code> 박스, large+에서 1280px 고정)입니다. 프레임 안쪽 = <strong>최소 스크린 마진</strong>(16/24px) + <strong>칼럼 영역</strong>. 프레임이 max에 닿은 뒤 남는 폭은 바깥 <strong>여백(centering)</strong>(붉은색)으로 흡수됩니다. 좌우 스크린 마진(통합) = 최소 마진 + 바깥 여백. 칼럼 수·가터(gap)는 tier 표를 따릅니다.
+            가이드 미리보기(아래) 가운데 테두리 박스가 실제 <strong>콘텐츠 프레임</strong>(<code className="font-mono text-caption">{layoutPageClass}</code> 박스, large+에서 1280px 고정)입니다.
+
           </p>
+          <ul className="mt-2 mb-4 pl-5 list-disc text-body-small foreground-muted flex flex-col gap-1">
+            <li>프레임 안쪽 = <strong>최소 스크린 마진</strong>(16/24px) + <strong>칼럼 영역</strong></li>
+            <li>프레임이 max에 닿은 뒤 남는 폭은 바깥 <strong>여백(centering)</strong>(붉은색)으로 흡수</li>
+            <li>좌우 스크린 마진(통합) = 최소 마진 + 바깥 여백</li>
+            <li>칼럼 수·가터(gap)는 기준표를 따름</li>
+          </ul>
+
+          {/* Live status */}
+          <div aria-label="현재 viewport" className="mb-8 p-5 rounded-xl surface-subtle">
+            <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">Layout width <span className="font-normal">(스크롤바 제외 · 실측)</span></dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">
+                  {layoutWidth || "—"}px
+                  {scrollbarPx > 0 && (
+                    <span className="ml-2 text-caption font-normal foreground-muted">스크롤바 −{scrollbarPx}px</span>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">Breakpoint width <span className="font-normal">(스크롤바 포함 · tier 판정)</span></dt>
+                <dd className="m-0 mt-1 text-label-small font-semibold numeric-tabular">{breakpointWidth || "—"}px</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">Active tier</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold">{tier}</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">Container utility</dt>
+                <dd className="m-0 mt-1 text-label-small font-semibold font-mono">{activeContainer.utility}</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">칼럼 수</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridCols}열</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">가터 너비 (gap)</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridGapPx}px</dd>
+              </div>
+            </dl>
+            <dl className="grid gap-4 m-0 mt-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">콘텐츠 프레임 (전체 너비)</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{framePx}px</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">스크린 마진 (좌우 · 통합)</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{screenMarginPx}px</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">최소 마진</dt>
+                <dd className="m-0 mt-1 text-label-small font-semibold font-mono">{minMarginPx}px · {responsiveScreenMarginClass}</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">칼럼 영역</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{contentPx}px</dd>
+              </div>
+              <div>
+                <dt className="text-caption foreground-muted font-semibold">Col width</dt>
+                <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridColWidthPx}px</dd>
+              </div>
+            </dl>
+
+            <div className="mt-6">
+              <p className="m-0 mb-2 text-caption foreground-muted">Grid tier scale</p>
+              <div role="list" className="flex flex-wrap gap-2">
+                {gridSystemTiers.map((t) => {
+                  const isActive = t.name === tier;
+                  return (
+                    <div
+                      key={t.name}
+                      role="listitem"
+                      className={`py-1.5 px-3 rounded-md border text-caption font-semibold ${
+                        isActive
+                          ? "surface-brand foreground-inverse border-brand"
+                          : "bg-background foreground-muted border-default"
+                      }`}
+                    >
+                      {t.name}
+                      <span className="ml-1.5 font-normal font-mono">{t.viewport}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
           <p className="m-0 mb-3 inline-flex items-center gap-2 text-caption font-semibold foreground-brand">
             <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
             레이아웃 프리뷰
@@ -594,42 +683,47 @@ export default function ResponsiveGuidePage() {
 
         <div className={layoutPageClass}>
           <div className={`${layoutPageColSpanFull} mt-8`}>
-            <h3 className="text-label-large font-semibold mb-2">프로젝트 적용 예시</h3>
+            <h3 className="text-label-large font-semibold mb-2">기본 마크업</h3>
             <p className="text-body-small foreground-muted mb-3">
-              <code className="font-mono text-caption">{layoutPageClass}</code>만 부모에 적용합니다. 아래 셀 스타일은 가이드 표시용이며, 실제 콘텐츠 마크업·스타일은 프로젝트에서 자유롭게 구성합니다.
+              <code className="font-mono text-caption">{layoutPageClass}</code>만 부모에 적용하면 자식 요소가 반응형 그리드 칼럼에 자동 배치됩니다.
             </p>
+            <CodeBlock language="html" code={`<div class="${layoutPageClass}">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+  ...
+  <div>12</div>
+</div>`} />
           </div>
-        </div>
-
-        <div className={layoutPageClass}>
-          {Array.from({ length: gridCols }, (_, i) => (
-            <LayoutPageCell
-              key={i}
-              label={gridCols > 6 ? String(i + 1) : `col ${i + 1}`}
-              compact={gridCols > 6}
-            />
-          ))}
         </div>
 
         <div className={`${layoutPageClass} mt-10`}>
           <div className={layoutPageColSpanFull}>
-          <h3 id="col-span-demo" className="text-label-large font-semibold mb-2">col-span 영역 구성</h3>
+          <h3 id="col-span-demo" className="text-label-large font-semibold mb-2">칼럼 병합 (col-span)</h3>
           <p className="text-body-small foreground-muted mb-3">
-            <code className="font-mono text-caption">layout-page</code> 열 수는 tier마다 4→8→12→12로 변합니다.
-            <code className="font-mono text-caption"> col-span-*</code>도 같은 비율로 맞춰야 합니다. 전체 폭·8+4 분할은 아래 권장 조합을 사용하세요.
+            <code className="font-mono text-caption">col-span-*</code>을 사용해 여러 칼럼을 병합하면 원하는 너비의 영역을 자유롭게 구성할 수 있습니다.
+            <br />브레이크포인트마다 칼럼 수가 4→8→12(large 이상)로 바뀌므로, 각 구간에 맞는 값을 함께 지정합니다.
           </p>
-          <ul className="m-0 mb-4 pl-5 flex flex-col gap-1 text-caption foreground-muted font-mono">
-            <li>전체 폭: {layoutPageColSpanFull}</li>
-            <li>본문 8/12: {layoutPageColSpanMain}</li>
-            <li>보조 4/12: {layoutPageColSpanAside}</li>
-          </ul>
           </div>
         </div>
 
         <div className={layoutPageClass}>
-          <LayoutPageCell label="header · full" className={layoutPageColSpanFull} />
-          <LayoutPageCell label="main · 8/12" className={layoutPageColSpanMain} />
-          <LayoutPageCell label="aside · 4/12" className={layoutPageColSpanAside} />
+          <LayoutPageCell label={`col-span ${gridCols}/${gridCols}`} className={layoutPageColSpanFull} />
+          <LayoutPageCell label={`col-span ${Math.min(8, gridCols)}/${gridCols}`} className={layoutPageColSpanMain} />
+          <LayoutPageCell label={`col-span ${Math.min(4, gridCols)}/${gridCols}`} className={layoutPageColSpanAside} />
+        </div>
+
+        <div className={`${layoutPageClass} mt-4`}>
+          <div className={layoutPageColSpanFull}>
+          <CodeBlock language="html" code={`<div class="${layoutPageClass}">
+  <!-- 12칼럼 전체 병합 -->
+  <div class="${layoutPageColSpanFull}">전체 폭</div>
+
+  <!-- 8칼럼 + 4칼럼 분할 -->
+  <div class="${layoutPageColSpanMain}">8/12</div>
+  <div class="${layoutPageColSpanAside}">4/12</div>
+</div>`} />
+          </div>
         </div>
       </section>
 
@@ -671,43 +765,38 @@ export default function ResponsiveGuidePage() {
 
         <div className={layoutPageClass}>
           <div className={`${layoutPageColSpanFull} mt-8`}>
-            <h3 className="text-label-large font-semibold mb-2">프로젝트 적용 예시</h3>
+            <h3 className="text-label-large font-semibold mb-2">기본 마크업</h3>
             <p className="text-body-small foreground-muted mb-3">
-              <code className="font-mono text-caption">{layoutSidenavClass}</code> + <code className="font-mono text-caption">{layoutSidenavMenuClass}</code> + <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 조합입니다. 아래 셀 스타일은 가이드 표시용이며, 실제 콘텐츠 마크업·스타일은 프로젝트에서 자유롭게 구성합니다.
+              <code className="font-mono text-caption">{layoutSidenavClass}</code> + <code className="font-mono text-caption">{layoutSidenavMenuClass}</code> + <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 조합으로 사이드메뉴 + 콘텐츠 레이아웃을 구성합니다.
             </p>
-          </div>
-        </div>
+            <CodeBlock language="html" code={`<div class="${layoutSidenavClass}">
+  <aside class="${layoutSidenavMenuClass}">
+    <!-- 사이드 메뉴 -->
+  </aside>
 
-        <div className={layoutSidenavClass}>
-          <aside
-            className={`${layoutSidenavMenuClass} bg-violet-50/25 border-b lg:border-b-0 lg:border-r border-brand flex items-center justify-center`}
-            style={{ minHeight: pxToRem(48) }}
-          >
-            <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
-          </aside>
-          <main className={layoutSidenavContentClass}>
-            {Array.from({ length: sidenavMetrics.gridCols }, (_, i) => (
-              <LayoutPageCell
-                key={i}
-                label={sidenavMetrics.gridCols > 6 ? String(i + 1) : `col ${i + 1}`}
-                compact={sidenavMetrics.gridCols > 6}
-              />
-            ))}
-          </main>
+  <main class="${layoutSidenavContentClass}">
+    <header class="${layoutPageColSpanFull}">
+      <!-- 전체 폭 헤더 -->
+    </header>
+
+    <section class="${layoutPageColSpanMain}">
+      <!-- 본문 8/12 -->
+    </section>
+
+    <aside class="${layoutPageColSpanAside}">
+      <!-- 보조 4/12 -->
+    </aside>
+  </main>
+</div>`} />
+          </div>
         </div>
 
         <div className={`${layoutPageClass} mt-10`}>
           <div className={layoutPageColSpanFull}>
-          <h3 id="sidenav-col-span-demo" className="text-label-large font-semibold mb-2">col-span 영역 구성</h3>
+          <h3 id="sidenav-col-span-demo" className="text-label-large font-semibold mb-2">칼럼 병합 (col-span)</h3>
           <p className="text-body-small foreground-muted mb-3">
-            <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 열 수는 tier마다 4→8→12→12로 변합니다.
-            <code className="font-mono text-caption"> col-span-*</code>도 같은 비율로 맞춰야 합니다.
+            <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 내부에서도 동일하게 <code className="font-mono text-caption">col-span-*</code>으로 칼럼을 병합할 수 있습니다.
           </p>
-          <ul className="m-0 mb-4 pl-5 flex flex-col gap-1 text-caption foreground-muted font-mono">
-            <li>전체 폭: {layoutPageColSpanFull}</li>
-            <li>본문 8/12: {layoutPageColSpanMain}</li>
-            <li>보조 4/12: {layoutPageColSpanAside}</li>
-          </ul>
           </div>
         </div>
 
@@ -719,68 +808,30 @@ export default function ResponsiveGuidePage() {
             <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
           </aside>
           <main className={layoutSidenavContentClass}>
-            <LayoutPageCell label="content · full" className={layoutPageColSpanFull} />
-            <LayoutPageCell label="main · 8/12" className={layoutPageColSpanMain} />
-            <LayoutPageCell label="aside · 4/12" className={layoutPageColSpanAside} />
+            <LayoutPageCell label={`col-span ${sidenavMetrics.gridCols}/${sidenavMetrics.gridCols}`} className={layoutPageColSpanFull} />
+            <LayoutPageCell label={`col-span ${Math.min(8, sidenavMetrics.gridCols)}/${sidenavMetrics.gridCols}`} className={layoutPageColSpanMain} />
+            <LayoutPageCell label={`col-span ${Math.min(4, sidenavMetrics.gridCols)}/${sidenavMetrics.gridCols}`} className={layoutPageColSpanAside} />
           </main>
         </div>
-      </section>
 
-      <div className={layoutPageClass}>
-      {/* Reference table */}
-      <section aria-labelledby="breakpoint-table" className={layoutPageColSpanFull}>
-        <h2 id="breakpoint-table" className="text-heading-medium font-bold mb-4">Grid tier reference</h2>
-        <div className="overflow-x-auto rounded-xl border border-default">
-          <table className="w-full border-collapse text-left">
-            <thead>
-              <tr className="surface-subtle border-b border-default">
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">name</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Viewport</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Prefix</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">칼럼 수</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">가터 너비 (gap)</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">최소 스크린 마진</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Sidebar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gridSystemTiers.map((t) => {
-                const isActive = t.name === tier;
-                const sidebar = t.name === "large" || t.name === "xlarge";
-                return (
-                  <tr
-                    key={t.name}
-                    className={`border-b border-default ${isActive ? "bg-violet-50/10" : ""}`}
-                  >
-                    <td className="py-3 px-4 text-label-xsmall font-semibold">
-                      {t.name}
-                      {isActive && <span className="ml-2 text-caption foreground-brand">● active</span>}
-                    </td>
-                    <td className="py-3 px-4 text-caption font-mono numeric-tabular">{t.viewport}</td>
-                    <td className="py-3 px-4 text-caption font-mono">{t.prefix}</td>
-                    <td className="py-3 px-4 text-caption numeric-tabular">{t.cols}열</td>
-                    <td className="py-3 px-4 text-caption numeric-tabular">{t.gapPx}px</td>
-                    <td className="py-3 px-4 text-caption numeric-tabular">{t.screenMarginPx}px</td>
-                    <td className="py-3 px-4 text-caption">{sidebar ? "2열" : "1열 스택"}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <div className={`${layoutPageClass} mt-4`}>
+          <div className={layoutPageColSpanFull}>
+          <CodeBlock language="html" code={`<div class="${layoutSidenavClass}">
+  <div class="${layoutSidenavMenuClass}">메뉴</div>
 
-        <div className="mt-6">
-          <h3 className="text-label-large font-semibold mb-2">Container tokens</h3>
-          <ul className="m-0 pl-5 flex flex-col gap-1">
-            {containerTokens.map(({ name, px, rem, utility }) => (
-              <li key={name} className="text-caption foreground-muted font-mono">
-                {name} · {px} · {rem} · {utility}
-              </li>
-            ))}
-          </ul>
+  <div class="${layoutSidenavContentClass}">
+    <!-- 12칼럼 전체 병합 -->
+    <div class="${layoutPageColSpanFull}">전체 폭</div>
+
+    <!-- 8칼럼 + 4칼럼 분할 -->
+    <div class="${layoutPageColSpanMain}">8/12</div>
+    <div class="${layoutPageColSpanAside}">4/12</div>
+  </div>
+</div>`} />
+          </div>
         </div>
       </section>
-      </div>{/* /layout-page guide prose */}
+
     </main>
   );
 }
