@@ -246,6 +246,9 @@
   --layout-screen-margin-sm: 1rem;    /* 16px */
   --layout-screen-margin-md: 1.5rem;  /* 24px */
 
+  /* 사이트 헤더 높이 — sidenav menu top offset·max-height 계산에 사용 */
+  --layout-header-height: 3.75rem;  /* 60px */
+
   /* 사이트 헤더 layout 좌우 패딩 — 스크린 마진과 동기화(small 16px, medium+ 24px) */
   --layout-header-padding-sm: var(--layout-screen-margin-sm);
   --layout-header-padding-md: var(--layout-screen-margin-md);
@@ -1088,6 +1091,28 @@
   font-variant-numeric: var(--font-numeric-tabular);
 }
 
+/* 페이지 최상위 래퍼 — 전체 높이·배경·전경 세팅 */
+@utility layout-page-wrapper {
+  min-height: 100vh;
+  background-color: var(--ds-background);
+  color: var(--ds-foreground);
+}
+
+/* 사이트 헤더 — sticky·높이·border·배경·좌우 패딩(스크린 마진 동기화) */
+@utility layout-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--layout-header-height);
+  border-bottom: 1px solid var(--ds-border);
+  background-color: var(--ds-background);
+  padding-inline: var(--layout-screen-margin-sm);
+
+  @variant md {
+    padding-inline: var(--layout-screen-margin-md);
+  }
+}
+
 /* Layout shorthand — 반응형 container(screen-margin·max-width) + content grid(4→8→12열).
    자식 요소가 grid item이 됩니다. col-span-* 로 열 병합.
    최소 스크린 마진은 padding-inline(토큰)으로 적용 — p-0·px-* 등과 함께 쓰면 덮어씌워집니다. */
@@ -1113,16 +1138,14 @@
   }
 }
 
-/* 사이드메뉴 프리셋 — lg부터 16rem(256px) fixed menu + 콘텐츠 열(pl-64 래퍼).
+/* 사이드메뉴 래퍼 — lg부터 menu(16rem, fixed)의 너비를 padding-left로 보상.
+   lg 미만에서는 menu가 흐름에 있으므로 padding 불필요.
    콘텐츠 좌우 스크린 마진은 layout-sidenav-content padding-inline만 사용 */
 @utility layout-sidenav {
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 0;
+  padding-left: 0;
 
   @variant lg {
-    grid-template-columns: var(--layout-grid-sidebar);
+    padding-left: 16rem;
   }
 }
 
@@ -1139,6 +1162,29 @@
 
 @utility layout-sidenav-menu {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--ds-border);
+  background-color: var(--ds-background);
+  padding: var(--space-6) var(--space-4);
+
+  @variant md {
+    padding-inline: var(--space-6);
+  }
+
+  @variant lg {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    width: 16rem;
+    overflow-y: auto;
+    border-bottom: 0;
+    border-right: 1px solid var(--ds-border);
+    padding-block: var(--space-10);
+    top: var(--layout-header-height);
+    max-height: calc(100vh - var(--layout-header-height));
+  }
 }
 
 /* layout-page와 동일 container·grid·screen-margin — pl-64 래퍼(콘텐츠 열) 안에서 상한·중앙 정렬 */

@@ -1844,9 +1844,9 @@ export function GuideSiteHeader({
 }) {
   return (
     <header
-      className={`sticky z-40 border-b border-default bg-background ${guideHeaderPaddingClass} ${guideHeaderHeightClass} top-0`}
+      className="layout-site-header"
     >
-      <div className={`grid w-full ${guideHeaderHeightClass} grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6`}>
+      <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6" style={{ height: "var(--layout-header-height)" }}>
         <div className="flex items-center gap-1 justify-self-start">
           <Link
             href={GUIDE_ROUTES.home}

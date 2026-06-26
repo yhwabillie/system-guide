@@ -34,5 +34,5 @@ export function guideIconsTabHref(tab: "outline" | "filled") {
 }
 
 export function isGuideCategoryPath(pathname: string, category: GuideCategoryId): boolean {
-  return pathname === GUIDE_ROUTES[category] || pathname.startsWith(`${GUIDE_ROUTES[category]}?`);
+  return pathname === GUIDE_ROUTES[category] || pathname.startsWith(`${GUIDE_ROUTES[category]}?`) || pathname.startsWith(`${GUIDE_ROUTES[category]}/`);
 }

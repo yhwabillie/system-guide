@@ -4,7 +4,7 @@ import { pxToRem } from "./tokens";
 export type BreakpointName = "base" | "sm" | "md" | "lg" | "xl";
 
 /** 반응형 그리드 시스템 tier(디자인 표 기준) */
-export type GridTier = "small" | "medium" | "large" | "xlarge";
+export type GridTier = "small" | "medium" | "large";
 
 /** 가이드 미리보기 grid 트랙 — px 계산값을 rem으로 출력(프로젝트 REM_BASE 기준). */
 export function gridTrackColumnsRem(...tracksPx: number[]): string {
@@ -37,11 +37,9 @@ export const gridSystemTiers = [
   { name: "small" as const, minPx: 360, viewport: "360px–", prefix: "(base)", cols: 4, gapPx: 16, screenMarginPx: 16, desc: "모바일" },
   { name: "medium" as const, minPx: 768, viewport: "768px–", prefix: "md:", cols: 8, gapPx: 16, screenMarginPx: 24, desc: "태블릿" },
   { name: "large" as const, minPx: 1024, viewport: "1024px–", prefix: "lg:", cols: 12, gapPx: 24, screenMarginPx: 24, desc: "데스크톱" },
-  { name: "xlarge" as const, minPx: 1280, viewport: "1280px–", prefix: "xl:", cols: 12, gapPx: 24, screenMarginPx: 24, desc: "와이드 데스크톱" },
 ];
 
 export function getGridTier(width: number): GridTier {
-  if (width >= 1280) return "xlarge";
   if (width >= 1024) return "large";
   if (width >= 768) return "medium";
   return "small";
@@ -125,11 +123,11 @@ export function getGridColWidthPx(contentPx: number, cols: number, gapPx: number
 
 /** tier에서 적용되는 container max-width(px). large 이상은 1280px 상한, 미만은 viewport 전폭. */
 export function getContainerMaxPx(tier: GridTier): number | null {
-  return tier === "large" || tier === "xlarge" ? containerMaxPx : null;
+  return tier === "large" ? containerMaxPx : null;
 }
 
 export function getActiveContainerToken(tier: GridTier) {
-  return tier === "large" || tier === "xlarge"
+  return tier === "large"
     ? containerTokens[3]
     : { name: "full", cssVar: null, px: "100%", rem: "100%", utility: "max-w-full" };
 }
@@ -166,7 +164,7 @@ export function getContainerLayoutMetrics(viewportWidth: number, tier: GridTier)
 export const sidenavMenuPx = 16 * 16;
 
 export function isSidenavSidebarLayout(tier: GridTier): boolean {
-  return tier === "large" || tier === "xlarge";
+  return tier === "large";
 }
 
 /** layout-sidenav 콘텐츠 열 기준 container·margin·screen-margin·grid 메트릭 */

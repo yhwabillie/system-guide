@@ -80,10 +80,11 @@ function MenuCell({ px, stacked }: { px: number; stacked?: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className={`min-w-0 bg-violet-50/25 flex items-center justify-center border-brand ${
-        stacked ? "border-b" : "border-r"
-      }`}
-      style={{ minHeight: pxToRem(48) }}
+      className="min-w-0 bg-violet-50/25 flex items-center justify-center"
+      style={{
+        minHeight: pxToRem(48),
+        [stacked ? "borderBottom" : "borderRight"]: `${pxToRem(2)} solid var(--ds-surface-brand)`,
+      }}
     >
       <span className="text-caption foreground-default numeric-tabular px-2 text-center">
         {stacked ? (
@@ -259,6 +260,9 @@ function LayoutSidenavGuidePreview({
 
   return (
     <div className="overflow-hidden">
+      <div className="flex items-center justify-center bg-violet-50/10" style={{ height: "var(--layout-header-height)" }}>
+        <span className="text-label-small font-bold foreground-brand">Header</span>
+      </div>
       <div role="img" aria-label={ariaLabel} className="surface-subtle">
         {isSidebarLayout ? (
           <div
@@ -501,7 +505,7 @@ export default function ResponsiveGuidePage() {
   const sidenavMetrics = getSidenavLayoutMetrics(layoutWidth || 375, tier);
 
   return (
-    <main className="min-h-screen bg-background foreground-default">
+    <main className="layout-page-wrapper">
       <div className={layoutPageClass}>
       <header className={`${layoutPageColSpanFull} pt-20`}>
         <h1 className="m-0 text-heading-large font-bold leading-base foreground-brand">반응형 레이아웃 가이드</h1>
@@ -529,7 +533,7 @@ export default function ResponsiveGuidePage() {
             <tbody>
               {gridSystemTiers.map((t) => {
                 const isActive = t.name === tier;
-                const sidebar = t.name === "large" || t.name === "xlarge";
+                const sidebar = t.name === "large";
                 return (
                   <tr
                     key={t.name}
@@ -654,7 +658,7 @@ export default function ResponsiveGuidePage() {
 
           <p className="m-0 mb-3 inline-flex items-center gap-2 text-caption font-semibold foreground-brand">
             <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
-            레이아웃 프리뷰
+            레이아웃 구조
           </p>
           </div>
         </div>
@@ -687,13 +691,13 @@ export default function ResponsiveGuidePage() {
             <p className="text-body-small foreground-muted mb-3">
               <code className="font-mono text-caption">{layoutPageClass}</code>만 부모에 적용하면 자식 요소가 반응형 그리드 칼럼에 자동 배치됩니다.
             </p>
-            <CodeBlock language="html" code={`<div class="${layoutPageClass}">
-  <div>1</div>
-  <div>2</div>
-  <div>3</div>
+            <CodeBlock language="html" code={`<main class="${layoutPageClass}">
+  <section>1</section>
+  <section>2</section>
+  <section>3</section>
   ...
-  <div>12</div>
-</div>`} />
+  <section>12</section>
+</main>`} />
           </div>
         </div>
 
@@ -715,13 +719,26 @@ export default function ResponsiveGuidePage() {
 
         <div className={`${layoutPageClass} mt-4`}>
           <div className={layoutPageColSpanFull}>
-          <CodeBlock language="html" code={`<div class="${layoutPageClass}">
-  <!-- 12칼럼 전체 병합 -->
-  <div class="${layoutPageColSpanFull}">전체 폭</div>
+          <CodeBlock language="html" code={`<div class="layout-page-wrapper">
+  <main class="${layoutPageClass}">
+    <header class="${layoutPageColSpanFull}">
+      <h1>페이지 제목</h1>
+      <p>페이지 설명</p>
+    </header>
 
-  <!-- 8칼럼 + 4칼럼 분할 -->
-  <div class="${layoutPageColSpanMain}">8/12</div>
-  <div class="${layoutPageColSpanAside}">4/12</div>
+    <!-- 전체 폭 병합 -->
+    <div class="${layoutPageColSpanFull}">
+      전체 폭 콘텐츠
+    </div>
+
+    <!-- 8:4 분할 -->
+    <div class="${layoutPageColSpanMain}">
+      본문 8/12
+    </div>
+    <div class="${layoutPageColSpanAside}">
+      보조 4/12
+    </div>
+  </main>
 </div>`} />
           </div>
         </div>
@@ -731,10 +748,34 @@ export default function ResponsiveGuidePage() {
       <section aria-labelledby="layout-sidenav-demo" className="mb-24 pb-20">
         <div className={layoutPageClass}>
           <div className={layoutPageColSpanFull}>
-          <h2 id="layout-sidenav-demo" className="text-heading-medium font-bold mb-4">layout-sidenav — 사이드메뉴 + layout-page 콘텐츠</h2>
-          <p className="text-body-small foreground-muted mb-4">
-            가이드 미리보기(아래)는 <code className="font-mono text-caption">{layoutSidenavClass}</code>·<code className="font-mono text-caption">{layoutSidenavContentClass}</code>에 menu + [스크린 마진 · 칼럼 영역 · 스크린 마진]을 겹쳐 표시합니다. large(1024px) tier 이상은 16rem menu + 콘텐츠 열, 미만은 1열 스택입니다.
+          <h2 id="layout-sidenav-demo" className="text-heading-medium font-bold mb-4">layout-sidenav — 사이드메뉴 반응형 레이아웃</h2>
+          <p className="text-body-small foreground-muted mb-2">
+            왼쪽 고정 메뉴 + 오른쪽 콘텐츠 영역으로 구성된 사이드메뉴 레이아웃입니다.
           </p>
+          <ul className="mt-0 mb-4 pl-5 list-disc text-body-small foreground-muted flex flex-col gap-1">
+            <li><strong>1024px 이상</strong> — 메뉴(256px)가 왼쪽에 고정되고, 나머지 영역에 콘텐츠가 배치됩니다.</li>
+            <li><strong>1024px 미만</strong> — 메뉴와 콘텐츠가 위아래로 쌓여 1단 레이아웃이 됩니다.</li>
+            <li>메뉴가 <code className="font-mono text-caption">fixed</code>로 고정될 때는 <code className="font-mono text-caption">layout-sidenav</code>를 래퍼에 적용해 메뉴 너비만큼 콘텐츠를 밀어냅니다.</li>
+          </ul>
+          <div className="m-0 mb-3 flex items-center gap-4">
+            <p className="m-0 inline-flex items-center gap-2 text-caption font-semibold foreground-brand">
+              <span aria-hidden="true" className="inline-block w-2 h-2 surface-brand" style={{ borderRadius: pxToRem(2) }} />
+              레이아웃 구조
+            </p>
+            <a
+              href="/guide/responsive/sidenav-demo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-brand px-3 py-1.5 text-caption font-semibold foreground-brand no-underline transition-colors hover:surface-brand-subtle"
+            >
+              실제 동작 확인하기
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="size-icon-xs shrink-0">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <path d="M15 3h6v6" />
+                <path d="M10 14 21 3" />
+              </svg>
+            </a>
+          </div>
           </div>
         </div>
 
@@ -767,26 +808,29 @@ export default function ResponsiveGuidePage() {
           <div className={`${layoutPageColSpanFull} mt-8`}>
             <h3 className="text-label-large font-semibold mb-2">기본 마크업</h3>
             <p className="text-body-small foreground-muted mb-3">
-              <code className="font-mono text-caption">{layoutSidenavClass}</code> + <code className="font-mono text-caption">{layoutSidenavMenuClass}</code> + <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 조합으로 사이드메뉴 + 콘텐츠 레이아웃을 구성합니다.
+              메뉴가 fixed일 때는 <code className="font-mono text-caption">layout-sidenav</code>를 래퍼에 적용합니다.
             </p>
-            <CodeBlock language="html" code={`<div class="${layoutSidenavClass}">
-  <aside class="${layoutSidenavMenuClass}">
-    <!-- 사이드 메뉴 -->
-  </aside>
+            <CodeBlock language="html" code={`<div class="layout-page-wrapper">
+  <header class="layout-site-header">
+    사이트 헤더
+  </header>
 
-  <main class="${layoutSidenavContentClass}">
-    <header class="${layoutPageColSpanFull}">
-      <!-- 전체 폭 헤더 -->
-    </header>
+  <div class="layout-sidenav">
+    <nav class="${layoutSidenavMenuClass}">
+      <p>사이드 메뉴</p>
+      <ul>
+        <li>메뉴 항목 1</li>
+        <li>메뉴 항목 2</li>
+        <li>메뉴 항목 3</li>
+      </ul>
+    </nav>
 
-    <section class="${layoutPageColSpanMain}">
-      <!-- 본문 8/12 -->
-    </section>
-
-    <aside class="${layoutPageColSpanAside}">
-      <!-- 보조 4/12 -->
-    </aside>
-  </main>
+    <main class="${layoutSidenavContentClass}">
+      <section>콘텐츠 1</section>
+      <section>콘텐츠 2</section>
+      <section>콘텐츠 3</section>
+    </main>
+  </div>
 </div>`} />
           </div>
         </div>
@@ -794,38 +838,44 @@ export default function ResponsiveGuidePage() {
         <div className={`${layoutPageClass} mt-10`}>
           <div className={layoutPageColSpanFull}>
           <h3 id="sidenav-col-span-demo" className="text-label-large font-semibold mb-2">칼럼 병합 (col-span)</h3>
-          <p className="text-body-small foreground-muted mb-3">
+          <p className="text-body-small foreground-muted">
             <code className="font-mono text-caption">{layoutSidenavContentClass}</code> 내부에서도 동일하게 <code className="font-mono text-caption">col-span-*</code>으로 칼럼을 병합할 수 있습니다.
           </p>
           </div>
         </div>
 
-        <div className={layoutSidenavClass}>
-          <aside
-            className={`${layoutSidenavMenuClass} bg-violet-50/25 border-b lg:border-b-0 lg:border-r border-brand flex items-center justify-center`}
-            style={{ minHeight: pxToRem(48) }}
-          >
-            <span className="text-caption font-semibold foreground-default numeric-tabular">menu</span>
-          </aside>
-          <main className={layoutSidenavContentClass}>
-            <LayoutPageCell label={`col-span ${sidenavMetrics.gridCols}/${sidenavMetrics.gridCols}`} className={layoutPageColSpanFull} />
-            <LayoutPageCell label={`col-span ${Math.min(8, sidenavMetrics.gridCols)}/${sidenavMetrics.gridCols}`} className={layoutPageColSpanMain} />
-            <LayoutPageCell label={`col-span ${Math.min(4, sidenavMetrics.gridCols)}/${sidenavMetrics.gridCols}`} className={layoutPageColSpanAside} />
-          </main>
-        </div>
 
         <div className={`${layoutPageClass} mt-4`}>
           <div className={layoutPageColSpanFull}>
-          <CodeBlock language="html" code={`<div class="${layoutSidenavClass}">
-  <div class="${layoutSidenavMenuClass}">메뉴</div>
+          <CodeBlock language="html" code={`<div class="layout-page-wrapper">
+  <header class="layout-site-header">
+    사이트 헤더
+  </header>
 
-  <div class="${layoutSidenavContentClass}">
-    <!-- 12칼럼 전체 병합 -->
-    <div class="${layoutPageColSpanFull}">전체 폭</div>
+  <div class="layout-sidenav">
+    <nav class="${layoutSidenavMenuClass}">
+      <p>사이드 메뉴</p>
+      <ul>
+        <li>메뉴 항목 1</li>
+        <li>메뉴 항목 2</li>
+        <li>메뉴 항목 3</li>
+      </ul>
+    </nav>
 
-    <!-- 8칼럼 + 4칼럼 분할 -->
-    <div class="${layoutPageColSpanMain}">8/12</div>
-    <div class="${layoutPageColSpanAside}">4/12</div>
+    <main class="${layoutSidenavContentClass}">
+      <!-- 전체 폭 병합 -->
+      <div class="${layoutPageColSpanFull}">
+        전체 폭 콘텐츠
+      </div>
+
+      <!-- 8:4 분할 -->
+      <div class="${layoutPageColSpanMain}">
+        본문 8/12
+      </div>
+      <div class="${layoutPageColSpanAside}">
+        보조 4/12
+      </div>
+    </main>
   </div>
 </div>`} />
           </div>

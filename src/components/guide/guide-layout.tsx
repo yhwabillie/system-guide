@@ -20,8 +20,6 @@ import {
   GUIDE_SCROLL_TOP_THRESHOLD,
   guideFabBrandClass,
   guideFabSurfaceClass,
-  guideHeaderMaxHeightClass,
-  guideHeaderOffsetClass,
   NavIcon,
   navIconAssets,
   navIconColor,
@@ -229,18 +227,18 @@ export function GuideLayout({ children }: { children: ReactNode }) {
         본문 바로가기
       </a>
 
-      <div className="min-h-screen font-sans bg-background foreground-default transition-colors duration-300">
+      <div className="layout-page-wrapper font-sans transition-colors duration-300">
         <GuideSiteHeader
           isSidenavOpen={isSidenavOpen}
           onToggleSidenav={() => setIsSidenavOpen((open) => !open)}
         />
 
-        <div className={isSidenavOpen ? "lg:pl-64" : undefined}>
+        <div className={isSidenavOpen ? "layout-sidenav" : undefined}>
           <nav
             id="guide-sidenav"
             hidden={!isSidenavOpen}
             aria-label="디자인 토큰 가이드"
-            className={`${layoutSidenavMenuClass} flex flex-col border-b border-default bg-background py-6 px-4 md:px-6 lg:fixed lg:bottom-0 lg:left-0 lg:z-30 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-10 ${guideHeaderOffsetClass} ${guideHeaderMaxHeightClass}`}
+            className={layoutSidenavMenuClass}
           >
             <label className="relative mb-6 flex items-center">
               <span className="sr-only">가이드 검색</span>
