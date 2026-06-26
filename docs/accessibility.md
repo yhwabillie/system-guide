@@ -564,6 +564,40 @@ const FONT_LINE = 1.25;
 
 ---
 
+## 연속 `<p>` 금지 (Possible list 방지)
+
+카드·메타 영역에서 토큰명·변수명·값 등 짧은 텍스트를 여러 줄 나열할 때 `<p>` 태그를 연속 사용하면 WAVE에서 **"Possible list — Text is structured like a list but lacks proper list semantics"** 경고가 발생한다.
+
+### 원인
+
+`<p>`는 단락(paragraph) 의미를 가진다. 연속된 `<p>`가 나열되면 스크린리더가 리스트로 해석할 수 있는데 `<ul>/<li>` 구조가 없어서 경고가 뜬다.
+
+### 해결
+
+- 단락이 아닌 메타데이터(토큰명, 변수명, hex 값 등)는 **`<span className="block">`** 사용
+- 실제 의미 있는 목록이면 `<ul>/<li>` 또는 `<dl>/<dt>/<dd>` 사용
+- `<p>`는 본문 단락에만 사용
+
+### 예시
+
+```tsx
+// ❌ 금지 — 연속 <p>
+<div className="p-4">
+  <p>surface-brand</p>
+  <p>--raw-violet-50</p>
+  <p>#5b4cf0</p>
+</div>
+
+// ✅ 올바름 — <span className="block">
+<div className="p-4">
+  <span className="block">surface-brand</span>
+  <span className="block">--raw-violet-50</span>
+  <span className="block">#5b4cf0</span>
+</div>
+```
+
+---
+
 ## 릴리즈 전 최종 체크리스트
 
 - [ ] OpenWAX / axe DevTools — 오류 0건

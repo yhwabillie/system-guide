@@ -615,9 +615,9 @@ export function SwatchCardMeta({
 }) {
   return (
     <div className="p-4">
-      <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
-      <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
-      {value ? <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{value}</p> : null}
+      <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
+      <span className="mt-1 block font-mono text-caption text-gray-60">{sourceVar}</span>
+      {value ? <span className="mt-0.5 block font-mono text-caption text-gray-60 numeric-tabular">{value}</span> : null}
     </div>
   );
 }
@@ -742,18 +742,18 @@ export function SemanticOverlaySwatchCard({
       )}
       {hideUtility ? (
         <div className="p-4">
-          <p className="m-0 font-mono text-label-small font-bold foreground-default">{rawVar}</p>
+          <span className="block font-mono text-label-small font-bold foreground-default">{rawVar}</span>
           {valueLabel ? (
-            <p className="m-0 mt-1 font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</p>
+            <span className="mt-1 block font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</span>
           ) : null}
         </div>
       ) : (
         <div className="p-4">
-          <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
-          <p className="m-0 mt-1 font-mono text-caption text-gray-60">{dsVar}</p>
-          <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{rawVar}</p>
+          <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
+          <span className="mt-1 block font-mono text-caption text-gray-60">{dsVar}</span>
+          <span className="mt-0.5 block font-mono text-caption text-gray-60">{rawVar}</span>
           {valueLabel ? (
-            <p className="m-0 mt-0.5 font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</p>
+            <span className="mt-0.5 block font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</span>
           ) : null}
         </div>
       )}
@@ -792,8 +792,8 @@ export function SemanticGradientSwatchCard({
         />
       )}
       <div className="p-4">
-        <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
-        <p className="m-0 mt-1 break-all font-mono text-caption text-gray-60">{value}</p>
+        <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
+        <span className="mt-1 block break-all font-mono text-caption text-gray-60">{value}</span>
       </div>
     </div>
   );
@@ -813,11 +813,11 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value, valuePx }:
         </CopyableSwatchSurface>
       </div>
       <div className="min-w-0 py-5">
-        <p className="m-0 font-mono text-label-small font-bold foreground-default">{utility}</p>
-        <p className="m-0 mt-1 font-mono text-caption text-gray-60">{sourceVar}</p>
-        <p className="m-0 mt-0.5 break-all font-mono text-caption text-gray-60">rem / {value}</p>
+        <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
+        <span className="mt-1 block font-mono text-caption text-gray-60">{sourceVar}</span>
+        <span className="mt-0.5 block break-all font-mono text-caption text-gray-60">rem / {value}</span>
         {valuePx ? (
-          <p className="m-0 mt-0.5 break-all font-mono text-caption text-gray-60">px / {valuePx}</p>
+          <span className="mt-0.5 block break-all font-mono text-caption text-gray-60">px / {valuePx}</span>
         ) : null}
       </div>
     </div>
@@ -857,9 +857,9 @@ export function SemanticBlurSwatchCard({
       )}
       {hideUtility ? (
         <div className="p-4">
-          <p className="m-0 font-mono text-label-small font-bold foreground-default">{sourceVar}</p>
+          <span className="block font-mono text-label-small font-bold foreground-default">{sourceVar}</span>
           {value ? (
-            <p className="m-0 mt-1 font-mono text-caption text-gray-60 numeric-tabular">{value}</p>
+            <span className="mt-1 block font-mono text-caption text-gray-60 numeric-tabular">{value}</span>
           ) : null}
         </div>
       ) : (
@@ -1927,8 +1927,8 @@ export function FontStackCuration() {
                   </span>
                   <FontStackRoleTag emphasis={emphasis}>{role}</FontStackRoleTag>
                 </div>
-                <p className="m-0 mt-1.5 text-caption text-gray-60">{desc}</p>
-                <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">{source}</p>
+                <span className="mt-1.5 block text-caption text-gray-60">{desc}</span>
+                <span className="mt-0.5 block font-mono text-caption text-gray-60">{source}</span>
               </div>
             </li>
           );

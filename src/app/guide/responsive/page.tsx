@@ -52,7 +52,7 @@ function OuterMarginCell({ px }: { px: number }) {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center min-w-0 leading-tight px-1 text-center surface-negative foreground-negative"
+      className="flex flex-col items-center justify-center min-w-0 leading-tight px-1 text-center surface-negative text-red-70"
     >
       <span className="text-caption numeric-tabular">
         센터링 여백
@@ -67,7 +67,7 @@ function MinMarginCell({ px }: { px: number }) {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center min-w-0 leading-tight bg-violet-50/10 foreground-muted text-center"
+      className="flex flex-col items-center justify-center min-w-0 leading-tight bg-violet-50/10 text-gray-60 text-center"
     >
       <span className="text-caption numeric-tabular font-mono leading-none">
         {px}
@@ -344,7 +344,7 @@ function SidenavLayoutMetricsLegend({
   gridColWidthPx: number;
 }) {
   const legendContent = (
-    <p className="m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+    <p className="m-0 py-1.5 text-caption text-gray-60 flex flex-wrap items-center gap-x-3 gap-y-1">
       <span className="inline-flex items-center gap-1.5">
         <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
         layout {layoutWidth}px
@@ -446,7 +446,7 @@ function LayoutMetricsLegend({
     >
       {outerPx > 0 && <div />}
       <div className="surface-subtle border-x border-b border-default" style={{ paddingInline: pxToRem(minMarginPx) }}>
-        <p className="m-0 py-1.5 text-caption foreground-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+        <p className="m-0 py-1.5 text-caption text-gray-60 flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="inline-flex items-center gap-1.5">
             <span aria-hidden="true" className="inline-block w-2 h-2 surface-subtle border border-default" style={{ borderRadius: pxToRem(2) }} />
             layout {layoutWidth}px
@@ -521,13 +521,13 @@ export default function ResponsiveGuidePage() {
           <table aria-labelledby="breakpoint-table" className="w-full border-collapse text-left">
             <thead>
               <tr className="surface-subtle border-b border-default">
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">구간</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Viewport</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Prefix</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">칼럼 수</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">가터 너비 (gap)</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">스크린 마진 (최소)</th>
-                <th scope="col" className="py-3 px-4 text-caption font-semibold foreground-muted">Sidebar</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">구간</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">Viewport</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">Prefix</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">칼럼 수</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">가터 너비 (gap)</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">스크린 마진 (최소)</th>
+                <th scope="col" className="py-3 px-4 text-caption font-semibold text-gray-60">Sidebar</th>
               </tr>
             </thead>
             <tbody>
@@ -580,55 +580,55 @@ export default function ResponsiveGuidePage() {
           <div aria-label="현재 viewport" className="mb-8 p-5 rounded-xl surface-subtle">
             <dl className="grid gap-4 m-0 sm:grid-cols-2 lg:grid-cols-4">
               <div>
-                <dt className="text-caption foreground-muted font-semibold">뷰포트 너비</dt>
+                <dt className="text-caption text-gray-60 font-semibold">뷰포트 너비</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{layoutWidth || "—"}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">스크롤바</dt>
+                <dt className="text-caption text-gray-60 font-semibold">스크롤바</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{scrollbarPx}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">Active tier</dt>
+                <dt className="text-caption text-gray-60 font-semibold">Active tier</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold">{tier}</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">Container utility</dt>
+                <dt className="text-caption text-gray-60 font-semibold">Container utility</dt>
                 <dd className="m-0 mt-1 text-label-small font-semibold font-mono">{activeContainer.utility}</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">칼럼 수</dt>
+                <dt className="text-caption text-gray-60 font-semibold">칼럼 수</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridCols}열</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">가터 너비 (gap)</dt>
+                <dt className="text-caption text-gray-60 font-semibold">가터 너비 (gap)</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridGapPx}px</dd>
               </div>
             </dl>
             <dl className="grid gap-4 m-0 mt-4 sm:grid-cols-2 lg:grid-cols-4">
               <div>
-                <dt className="text-caption foreground-muted font-semibold">콘텐츠 프레임 (전체 너비)</dt>
+                <dt className="text-caption text-gray-60 font-semibold">콘텐츠 프레임 (전체 너비)</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{framePx}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">여백 영역 <span className="font-normal">(최소 마진 + 센터링 여백)</span></dt>
+                <dt className="text-caption text-gray-60 font-semibold">여백 영역 <span className="font-normal">(최소 마진 + 센터링 여백)</span></dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{screenMarginPx}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">최소 마진</dt>
+                <dt className="text-caption text-gray-60 font-semibold">최소 마진</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{minMarginPx}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">칼럼 영역</dt>
+                <dt className="text-caption text-gray-60 font-semibold">칼럼 영역</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{contentPx}px</dd>
               </div>
               <div>
-                <dt className="text-caption foreground-muted font-semibold">Col width</dt>
+                <dt className="text-caption text-gray-60 font-semibold">Col width</dt>
                 <dd className="m-0 mt-1 text-label-medium font-bold numeric-tabular">{gridColWidthPx}px</dd>
               </div>
             </dl>
 
             <div className="mt-6">
-              <p className="m-0 mb-2 text-caption foreground-muted">Grid tier scale</p>
+              <p className="m-0 mb-2 text-caption text-gray-60">Grid tier scale</p>
               <div role="list" className="flex flex-wrap gap-2">
                 {gridSystemTiers.map((t) => {
                   const isActive = t.name === tier;
