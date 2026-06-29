@@ -136,14 +136,14 @@ export function GuideColorPage() {
   }
 
   useEffect(() => {
-    if (isDark) {
-      setBgColor({ hex: "#0a0a0a", label: "Black" });
-      setTextColor({ hex: "#e6e8ea", label: "Gray 10" });
-    } else {
-      setBgColor({ hex: "#ffffff", label: "White" });
-      setTextColor({ hex: "#1e2124", label: "Gray 90" });
-    }
     const frameId = requestAnimationFrame(() => {
+      if (isDark) {
+        setBgColor({ hex: "#0a0a0a", label: "Black" });
+        setTextColor({ hex: "#e6e8ea", label: "Gray 10" });
+      } else {
+        setBgColor({ hex: "#ffffff", label: "White" });
+        setTextColor({ hex: "#1e2124", label: "Gray 90" });
+      }
       const cs = getComputedStyle(document.documentElement);
       const map: Record<string, string> = {};
       for (const fam of primitiveColors) {

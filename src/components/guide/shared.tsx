@@ -1364,10 +1364,12 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
   const listId = useId();
   const [activeId, setActiveId] = useState<string | null>(sections[0]?.id ?? null);
   const sectionsKey = sections.map((s) => s.id).join("|");
+  const [prevSectionsKey, setPrevSectionsKey] = useState(sectionsKey);
 
-  useEffect(() => {
+  if (prevSectionsKey !== sectionsKey) {
+    setPrevSectionsKey(sectionsKey);
     setActiveId(sections[0]?.id ?? null);
-  }, [sectionsKey, sections]);
+  }
 
   useEffect(() => {
     if (sections.length < 2) return;
@@ -1609,7 +1611,9 @@ export function ContentOutlineTabList({
 }) {
   const tabListRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef(tabs);
-  tabsRef.current = tabs;
+  useEffect(() => {
+    tabsRef.current = tabs;
+  }, [tabs]);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 

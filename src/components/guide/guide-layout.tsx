@@ -169,13 +169,15 @@ export function GuideLayout({ children }: { children: ReactNode }) {
   const isLayout = isGrid || isResponsive;
   const isIcons = isGuideCategoryPath(pathname, "icons");
 
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     if (isColor) setColorMenuExpanded(true);
     if (isType) setTypeMenuExpanded(true);
     if (isSpacing) setSpacingMenuExpanded(true);
     if (isLayout) setLayoutMenuExpanded(true);
     if (isIcons) setIconsMenuExpanded(true);
-  }, [isColor, isType, isSpacing, isLayout, isIcons]);
+  }
 
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > GUIDE_SCROLL_TOP_THRESHOLD);
