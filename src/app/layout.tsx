@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { cookies } from "next/headers";
 import { fontSizeCssVars } from "@/lib/tokens";
 import { THEME_STORAGE_KEY } from "@/lib/theme-preference";
 import "./globals.css";
@@ -33,25 +34,22 @@ export const metadata: Metadata = {
   description: "컬러·타이포·레이아웃 토큰 큐레이션과 Tailwind 유틸리티, KWCAG 웹접근성 대비 검증을 제공하는 디자인 시스템 가이드",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 서버가 요청 쿠키에서 테마를 읽어 <html class="dark">를 직접 렌더한다.
+  // → 서버·클라이언트 첫 렌더가 동일해 FOUC·hydration mismatch가 없다(인라인 스크립트 불필요).
+  const cookieStore = await cookies();
+  const isDark = cookieStore.get(THEME_STORAGE_KEY)?.value === "dark";
+
   return (
     <html
       lang="ko"
       suppressHydrationWarning
-      className={`${pretendardGov.variable} ${notoSansKR.variable} h-full antialiased`}
+      className={`${pretendardGov.variable} ${notoSansKR.variable} h-full antialiased${isDark ? " dark" : ""}`}
     >
-      <head>
-        {/* 저장된 라이트/다크 모드 — React 하이드레이션 전 적용(새로고침 FOUC 방지) */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var m=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(m==="dark")document.documentElement.classList.add("dark");else if(m==="light")document.documentElement.classList.remove("dark");}catch(e){}})();`,
-          }}
-        />
-      </head>
       <body className="min-h-full flex flex-col">
         {/* 타이포 스케일·행간 단일 소스(tokens.ts)에서 생성한 --font-size-*·--font-line 주입 */}
         <style dangerouslySetInnerHTML={{ __html: fontSizeCssVars() }} />

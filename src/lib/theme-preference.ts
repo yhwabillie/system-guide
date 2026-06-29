@@ -42,8 +42,20 @@ export function notifyColorModeChange(): void {
   window.dispatchEvent(new Event(THEME_CHANGE_EVENT));
 }
 
+/**
+ * 쿠키에 색상 모드를 기록한다. 서버(RootLayout·GuideRootLayout)가 요청 시 이 쿠키를
+ * 읽어 `<html class="dark">`와 초기 모드를 직접 렌더하므로, 서버·클라이언트 첫 렌더가
+ * 동일해져 FOUC·hydration mismatch가 사라진다. (SSR source of truth)
+ */
+export function writeColorModeCookie(mode: ColorMode): void {
+  if (typeof document === "undefined") return;
+  // 1년 유지, 전체 경로, 외부 전송 최소화(SameSite=Lax)
+  document.cookie = `${THEME_STORAGE_KEY}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
+}
+
 export function setColorMode(mode: ColorMode): void {
   applyColorModeClass(mode);
   writeStoredColorMode(mode);
+  writeColorModeCookie(mode);
   notifyColorModeChange();
 }

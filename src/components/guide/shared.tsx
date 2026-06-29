@@ -1761,16 +1761,22 @@ export function GuideLogoMark() {
 }
 
 export function GuideZoomControl() {
-  const [zoomPercent, setZoomPercent] = useState(() => {
-    if (typeof window === "undefined") return GUIDE_ZOOM_DEFAULT;
+  // 서버·클라이언트 첫 렌더를 동일(기본값)하게 맞춘다. 렌더 중 localStorage를 읽으면
+  // (typeof window 분기) 서버 100% ↔ 클라 저장값으로 갈려 hydration mismatch가 난다.
+  // 저장된 zoom은 마운트 이후(useEffect)에 읽어 적용한다.
+  const [zoomPercent, setZoomPercent] = useState(GUIDE_ZOOM_DEFAULT);
 
+  useEffect(() => {
     try {
       const storedZoom = window.localStorage.getItem(GUIDE_ZOOM_STORAGE_KEY);
-      return storedZoom === null ? GUIDE_ZOOM_DEFAULT : normalizeGuideZoom(Number(storedZoom));
+      if (storedZoom !== null) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setZoomPercent(normalizeGuideZoom(Number(storedZoom)));
+      }
     } catch {
-      return GUIDE_ZOOM_DEFAULT;
+      // 저장소 접근 불가 — 기본값 유지
     }
-  });
+  }, []);
 
   const zoomOut = useCallback(() => {
     setZoomPercent((current) => normalizeGuideZoom(current - GUIDE_ZOOM_STEP));
