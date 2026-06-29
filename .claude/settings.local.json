@@ -81,7 +81,24 @@
       "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/type?tab=font-family\")",
       "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/responsive\")",
       "Bash(curl -s -m 30 -o /dev/null -w \"server %{http_code}\\\\n\" \"http://localhost:3000/guide/color\")",
-      "Bash(curl -s -m 30 \"http://localhost:3000/guide/type?tab=typography\")"
+      "Bash(curl -s -m 30 \"http://localhost:3000/guide/type?tab=typography\")",
+      "Bash(xargs sed -i '' 's/ContentIntroShell/ContentIntroLayout/g')",
+      "Bash(xargs sed -i '' 's/GuideShell/GuideLayout/g')",
+      "Bash(git mv *)",
+      "Bash(xargs sed -i '' 's#guide/guide-shell#guide/guide-layout#g')",
+      "Bash(echo \"=== exit: $? ===\")",
+      "Bash(lsof -ti:3000)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(kill -9 51320)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(cat)",
+      "Bash(git apply *)",
+      "Bash(npm install *)",
+      "Bash(npx prettier *)",
+      "Bash(node -e \"const { fontSizeCssVars } = require\\('./src/lib/tokens.ts'\\); console.log\\(fontSizeCssVars\\(\\).length\\)\")",
+      "Bash(npx tsx *)",
+      "Bash(grep -rn 'aria-label={\\\\`' /Users/yhwa/Documents/vibe_code/system-guide/src/components/guide/shared.tsx)"
     ]
   }
 }
