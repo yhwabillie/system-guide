@@ -1,0 +1,1331 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKEN FLOW
+   --raw-*   : 원본 팔레트·알파 램프. 불변·모드 무관.
+   --ds-*    : Design System 토큰. 모드 인지 스케일/용도 값을 표현.
+   --color-* : Tailwind @theme 노출용 토큰. 유틸리티 클래스 이름이 된다.
+   --typography-* : font shorthand 묶음 토큰. family/size/weight/line-height 포함.
+   --space-* / --shape-radius-* / --size-* / --layout-container-* / --layout-grid-* / --layout-screen-margin-* / --layout-header-padding-* : 레이아웃·크기 기반 토큰.
+   --ds-gradient-* : 그라데이션 토큰. @theme --background-image-gradient-* 로 노출.
+   guide-*   : 큐레이션 가이드 화면 전용 토큰 접두. 실제 제품 UI 토큰과 구분.
+
+   예: --raw-green-50 → --ds-green-50 → --color-green-50 → bg-green-50
+   ============================================================ */
+
+/* ============================================================
+   TIER 1 — RAW (원본 팔레트)
+   불변·모드 무관. raw 값은 여기서만 단 한 번 정의한다.
+   family 행 순서: hue 스펙트럼 Red → Rose → Orange → Green → Teal → Cyan → Blue → Violet → Navy → Gray
+   (스케일 명명은 라이트 기준 = 캐논값)
+   ============================================================ */
+:root {
+  /* KRDS 표준형 hue 팔레트 + 프로젝트 Teal/Violet — src/lib/raw-color-palettes.ts 와 동기화 */
+  /* Red */
+  --raw-red-0: #fffdfd;
+  --raw-red-5: #fdefec;
+  --raw-red-10: #fcdfd9;
+  --raw-red-20: #f7afa1;
+  --raw-red-30: #f48771;
+  --raw-red-40: #f05f42;
+  --raw-red-50: #de3412;
+  --raw-red-60: #bd2c0f;
+  --raw-red-70: #8a240f;
+  --raw-red-80: #5c180a;
+  --raw-red-90: #390d05;
+  --raw-red-95: #1c0602;
+  --raw-red-100: #030100;
+
+  /* Rose */
+  --raw-rose-0: #fffdfe;
+  --raw-rose-5: #fbeff0;
+  --raw-rose-10: #f5d6d9;
+  --raw-rose-20: #ebadb2;
+  --raw-rose-30: #e0858c;
+  --raw-rose-40: #d65c66;
+  --raw-rose-50: #d63d4a;
+  --raw-rose-60: #ab2b36;
+  --raw-rose-70: #7a1f26;
+  --raw-rose-80: #521419;
+  --raw-rose-90: #310c0f;
+  --raw-rose-95: #180608;
+  --raw-rose-100: #030101;
+
+  /* Orange */
+  --raw-orange-0: #fffefb;
+  --raw-orange-5: #fff3db;
+  --raw-orange-10: #ffe0a3;
+  --raw-orange-20: #ffc95c;
+  --raw-orange-30: #ffb114;
+  --raw-orange-40: #c78500;
+  --raw-orange-50: #9e6a00;
+  --raw-orange-60: #8a5c00;
+  --raw-orange-70: #614100;
+  --raw-orange-80: #422c00;
+  --raw-orange-90: #2e1f00;
+  --raw-orange-95: #171000;
+  --raw-orange-100: #020200;
+
+  /* Green */
+  --raw-green-0: #fdfefd;
+  --raw-green-5: #eaf6ec;
+  --raw-green-10: #d8eedd;
+  --raw-green-20: #a9dab4;
+  --raw-green-30: #7ec88e;
+  --raw-green-40: #3fa654;
+  --raw-green-50: #228738;
+  --raw-green-60: #267337;
+  --raw-green-70: #285d33;
+  --raw-green-80: #1f4727;
+  --raw-green-90: #122b18;
+  --raw-green-95: #09160c;
+  --raw-green-100: #010201;
+
+  /* Teal */
+  --raw-teal-0: #fcffff;
+  --raw-teal-5: #e5fbfd;
+  --raw-teal-10: #ccf7fb;
+  --raw-teal-20: #99eff7;
+  --raw-teal-30: #66e7f2;
+  --raw-teal-40: #33dfeb;
+  --raw-teal-50: #00cbde;
+  --raw-teal-60: #00aabd;
+  --raw-teal-70: #008396;
+  --raw-teal-80: #005763;
+  --raw-teal-90: #00333a;
+  --raw-teal-95: #001a1d;
+  --raw-teal-100: #000303;
+
+  /* Cyan */
+  --raw-cyan-0: #fdfeff;
+  --raw-cyan-5: #e7f4fe;
+  --raw-cyan-10: #d3ebfd;
+  --raw-cyan-20: #9ed2fa;
+  --raw-cyan-30: #5fb5f7;
+  --raw-cyan-40: #2098f3;
+  --raw-cyan-50: #0b78cb;
+  --raw-cyan-60: #096ab3;
+  --raw-cyan-70: #085691;
+  --raw-cyan-80: #053961;
+  --raw-cyan-90: #03253f;
+  --raw-cyan-95: #021220;
+  --raw-cyan-100: #000203;
+
+  /* Blue */
+  --raw-blue-0: #fdfeff;
+  --raw-blue-5: #ecf2fe;
+  --raw-blue-10: #d8e5fd;
+  --raw-blue-20: #b1cefb;
+  --raw-blue-30: #86aff9;
+  --raw-blue-40: #4c87f6;
+  --raw-blue-50: #256ef4;
+  --raw-blue-60: #0b50d0;
+  --raw-blue-70: #083891;
+  --raw-blue-80: #052561;
+  --raw-blue-90: #03163a;
+  --raw-blue-95: #020b1d;
+  --raw-blue-100: #000103;
+
+  /* Violet — 보라 hue(#5B4CF0=50). 스케일 0·5·10·…·100 */
+  --raw-violet-0: #fdfdff;
+  --raw-violet-5: #efedfe;
+  --raw-violet-10: #dedbfc;
+  --raw-violet-20: #bdb7f9;
+  --raw-violet-30: #9d94f6;
+  --raw-violet-40: #7c70f3;
+  --raw-violet-50: #5b4cf0;
+  --raw-violet-60: #493dc0;
+  --raw-violet-70: #372e90;
+  --raw-violet-80: #241e60;
+  --raw-violet-90: #120f30;
+  --raw-violet-95: #090818;
+  --raw-violet-100: #010102;
+
+  /* Navy */
+  --raw-navy-0: #fdfefe;
+  --raw-navy-5: #eef2f7;
+  --raw-navy-10: #d6e0eb;
+  --raw-navy-20: #bacbde;
+  --raw-navy-30: #90b0d5;
+  --raw-navy-40: #6b96c7;
+  --raw-navy-50: #346fb2;
+  --raw-navy-60: #1c589c;
+  --raw-navy-70: #063a74;
+  --raw-navy-80: #052b57;
+  --raw-navy-90: #031f3f;
+  --raw-navy-95: #021020;
+  --raw-navy-100: #000203;
+
+  /* Gray */
+  --raw-gray-0: #fefefe;
+  --raw-gray-5: #f4f5f6;
+  --raw-gray-10: #e6e8ea;
+  --raw-gray-20: #cdd1d5;
+  --raw-gray-30: #b1b8be;
+  --raw-gray-40: #8a949e;
+  --raw-gray-50: #6d7882;
+  --raw-gray-60: #58616a;
+  --raw-gray-70: #464c53;
+  --raw-gray-80: #33363d;
+  --raw-gray-90: #1e2124;
+  --raw-gray-95: #0f1012;
+  --raw-gray-100: #020202;
+
+  /* Background anchors — 중립 램프 밖 순백/심흑(최하위 배경용) */
+  --raw-white: #ffffff;
+  --raw-black: #0a0a0a;
+
+  /* Alpha ramps — 투명도 원본(solid 스케일과 분리).
+     오버레이/스크림/그림자처럼 배경 위에 얹는 반투명 값의 단일 소스. */
+  --raw-black-a5:  rgba(0, 0, 0, 0.05);
+  --raw-black-a8:  rgba(0, 0, 0, 0.08);
+  --raw-black-a12: rgba(0, 0, 0, 0.12);
+  --raw-black-a10: rgba(0, 0, 0, 0.10);
+  --raw-black-a20: rgba(0, 0, 0, 0.20);
+  --raw-white-a5:  rgba(255, 255, 255, 0.05);
+  --raw-white-a8:  rgba(255, 255, 255, 0.08);
+  --raw-white-a12: rgba(255, 255, 255, 0.12);
+  --raw-white-a10: rgba(255, 255, 255, 0.10);
+  --raw-white-a20: rgba(255, 255, 255, 0.20);
+
+  /* ============================================================
+     SIZE FOUNDATIONS — 모드 무관 레이아웃 스케일
+     spacing은 margin/padding/gap의 기준, radius/size/container는 목적별로 분리.
+     ============================================================ */
+  --space-0: 0;        /* 0px */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-10: 2.5rem;  /* 40px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  --space-20: 5rem;    /* 80px */
+
+  --shape-radius-none: 0;        /* 0px */
+  --shape-radius-sm: 0.375rem;   /* 6px */
+  --shape-radius-md: 0.5rem;     /* 8px */
+  --shape-radius-lg: 0.625rem;   /* 10px */
+  --shape-radius-xl: 0.75rem;    /* 12px */
+  --shape-radius-2xl: 1rem;      /* 16px */
+  --shape-radius-full: 9999rem;  /* 159984px — pill */
+
+  --size-icon-xs: 1rem;       /* 16px */
+  --size-icon-sm: 1.25rem;    /* 20px */
+  --size-icon-md: 1.5rem;     /* 24px */
+  --size-icon-lg: 2rem;       /* 32px */
+  --size-icon-xl: 2.5rem;     /* 40px */
+  --size-spinner-sm: 1.25rem;  /* 20px */
+  --size-spinner-md: 2rem;     /* 32px */
+  --size-spinner-lg: 3rem;     /* 48px */
+  --size-control-sm: 2.5rem;  /* 40px */
+  --size-control-md: 3rem;    /* 48px */
+  --size-control-lg: 3.5rem;  /* 56px */
+  --size-control-xl: 4rem;    /* 64px */
+
+  /* 스크롤바 두께 — 6px */
+  --size-scrollbar: 0.375rem;  /* 6px */
+
+  --layout-container-sm: 40rem;  /* 640px */
+  --layout-container-md: 48rem;  /* 768px */
+  --layout-container-lg: 64rem;  /* 1024px */
+  --layout-container-xl: 80rem;  /* 1280px */
+
+  --layout-breakpoint-sm: 40rem;  /* 640px */
+  --layout-breakpoint-md: 48rem;  /* 768px */
+  --layout-breakpoint-lg: 64rem;  /* 1024px */
+  --layout-breakpoint-xl: 80rem;  /* 1280px */
+
+  --layout-grid-sidebar: 16rem minmax(0, 1fr);       /* 256px + content */
+  --layout-grid-sidebar-wide: 20rem minmax(0, 1fr);  /* 320px + content */
+
+  /* 최소 스크린 마진 — content 좌우 여백 하한. small(<768px) 16px, medium 이상 24px */
+  --layout-screen-margin-sm: 1rem;    /* 16px */
+  --layout-screen-margin-md: 1.5rem;  /* 24px */
+
+  /* 사이트 헤더 높이 — sidenav menu top offset·max-height 계산에 사용 */
+  --layout-header-height: 3.75rem;  /* 60px */
+
+  /* 사이트 헤더 layout 좌우 패딩 — 스크린 마진과 동기화(small 16px, medium+ 24px) */
+  --layout-header-padding-sm: var(--layout-screen-margin-sm);
+  --layout-header-padding-md: var(--layout-screen-margin-md);
+
+  /* 가이드 콘텐츠 서브탭 패널 인셋 — 80px(상하·좌우) */
+  --layout-guide-tabpanel-py: 5rem;  /* 80px */
+  --layout-guide-tabpanel-px: 5rem;  /* 80px */
+
+  /* ============================================================
+     TIER 2-a — SEMANTIC SCALE (모드 인지 팔레트)
+     라이트는 raw 그대로(identity), 다크는 .dark 에서 반사 매핑.
+     컴포넌트/팔레트 뷰어는 이 --ds-{family}-{scale} 을 소비한다.
+     ============================================================ */
+  --ds-red-0: var(--raw-red-0);    --ds-red-5: var(--raw-red-5);
+  --ds-red-10: var(--raw-red-10);    --ds-red-20: var(--raw-red-20);
+  --ds-red-30: var(--raw-red-30);    --ds-red-40: var(--raw-red-40);
+  --ds-red-50: var(--raw-red-50);    --ds-red-60: var(--raw-red-60);
+  --ds-red-70: var(--raw-red-70);    --ds-red-80: var(--raw-red-80);
+  --ds-red-90: var(--raw-red-90);    --ds-red-95: var(--raw-red-95);
+  --ds-red-100: var(--raw-red-100);
+
+  --ds-rose-0: var(--raw-rose-0);    --ds-rose-5: var(--raw-rose-5);
+  --ds-rose-10: var(--raw-rose-10);    --ds-rose-20: var(--raw-rose-20);
+  --ds-rose-30: var(--raw-rose-30);    --ds-rose-40: var(--raw-rose-40);
+  --ds-rose-50: var(--raw-rose-50);    --ds-rose-60: var(--raw-rose-60);
+  --ds-rose-70: var(--raw-rose-70);    --ds-rose-80: var(--raw-rose-80);
+  --ds-rose-90: var(--raw-rose-90);    --ds-rose-95: var(--raw-rose-95);
+  --ds-rose-100: var(--raw-rose-100);
+
+  --ds-orange-0: var(--raw-orange-0);    --ds-orange-5: var(--raw-orange-5);
+  --ds-orange-10: var(--raw-orange-10);    --ds-orange-20: var(--raw-orange-20);
+  --ds-orange-30: var(--raw-orange-30);    --ds-orange-40: var(--raw-orange-40);
+  --ds-orange-50: var(--raw-orange-50);    --ds-orange-60: var(--raw-orange-60);
+  --ds-orange-70: var(--raw-orange-70);    --ds-orange-80: var(--raw-orange-80);
+  --ds-orange-90: var(--raw-orange-90);    --ds-orange-95: var(--raw-orange-95);
+  --ds-orange-100: var(--raw-orange-100);
+
+  --ds-green-0: var(--raw-green-0);    --ds-green-5: var(--raw-green-5);
+  --ds-green-10: var(--raw-green-10);    --ds-green-20: var(--raw-green-20);
+  --ds-green-30: var(--raw-green-30);    --ds-green-40: var(--raw-green-40);
+  --ds-green-50: var(--raw-green-50);    --ds-green-60: var(--raw-green-60);
+  --ds-green-70: var(--raw-green-70);    --ds-green-80: var(--raw-green-80);
+  --ds-green-90: var(--raw-green-90);    --ds-green-95: var(--raw-green-95);
+  --ds-green-100: var(--raw-green-100);
+
+  --ds-teal-0: var(--raw-teal-0);    --ds-teal-5: var(--raw-teal-5);
+  --ds-teal-10: var(--raw-teal-10);    --ds-teal-20: var(--raw-teal-20);
+  --ds-teal-30: var(--raw-teal-30);    --ds-teal-40: var(--raw-teal-40);
+  --ds-teal-50: var(--raw-teal-50);    --ds-teal-60: var(--raw-teal-60);
+  --ds-teal-70: var(--raw-teal-70);    --ds-teal-80: var(--raw-teal-80);
+  --ds-teal-90: var(--raw-teal-90);    --ds-teal-95: var(--raw-teal-95);
+  --ds-teal-100: var(--raw-teal-100);
+
+  --ds-cyan-0: var(--raw-cyan-0);    --ds-cyan-5: var(--raw-cyan-5);
+  --ds-cyan-10: var(--raw-cyan-10);    --ds-cyan-20: var(--raw-cyan-20);
+  --ds-cyan-30: var(--raw-cyan-30);    --ds-cyan-40: var(--raw-cyan-40);
+  --ds-cyan-50: var(--raw-cyan-50);    --ds-cyan-60: var(--raw-cyan-60);
+  --ds-cyan-70: var(--raw-cyan-70);    --ds-cyan-80: var(--raw-cyan-80);
+  --ds-cyan-90: var(--raw-cyan-90);    --ds-cyan-95: var(--raw-cyan-95);
+  --ds-cyan-100: var(--raw-cyan-100);
+
+  --ds-blue-0: var(--raw-blue-0);    --ds-blue-5: var(--raw-blue-5);
+  --ds-blue-10: var(--raw-blue-10);    --ds-blue-20: var(--raw-blue-20);
+  --ds-blue-30: var(--raw-blue-30);    --ds-blue-40: var(--raw-blue-40);
+  --ds-blue-50: var(--raw-blue-50);    --ds-blue-60: var(--raw-blue-60);
+  --ds-blue-70: var(--raw-blue-70);    --ds-blue-80: var(--raw-blue-80);
+  --ds-blue-90: var(--raw-blue-90);    --ds-blue-95: var(--raw-blue-95);
+  --ds-blue-100: var(--raw-blue-100);
+
+  --ds-violet-0: var(--raw-violet-0);    --ds-violet-5: var(--raw-violet-5);
+  --ds-violet-10: var(--raw-violet-10);    --ds-violet-20: var(--raw-violet-20);
+  --ds-violet-30: var(--raw-violet-30);    --ds-violet-40: var(--raw-violet-40);
+  --ds-violet-50: var(--raw-violet-50);    --ds-violet-60: var(--raw-violet-60);
+  --ds-violet-70: var(--raw-violet-70);    --ds-violet-80: var(--raw-violet-80);
+  --ds-violet-90: var(--raw-violet-90);    --ds-violet-95: var(--raw-violet-95);
+  --ds-violet-100: var(--raw-violet-100);
+
+  --ds-navy-0: var(--raw-navy-0);    --ds-navy-5: var(--raw-navy-5);
+  --ds-navy-10: var(--raw-navy-10);    --ds-navy-20: var(--raw-navy-20);
+  --ds-navy-30: var(--raw-navy-30);    --ds-navy-40: var(--raw-navy-40);
+  --ds-navy-50: var(--raw-navy-50);    --ds-navy-60: var(--raw-navy-60);
+  --ds-navy-70: var(--raw-navy-70);    --ds-navy-80: var(--raw-navy-80);
+  --ds-navy-90: var(--raw-navy-90);    --ds-navy-95: var(--raw-navy-95);
+  --ds-navy-100: var(--raw-navy-100);
+
+  --ds-gray-0: var(--raw-gray-0);    --ds-gray-5: var(--raw-gray-5);
+  --ds-gray-10: var(--raw-gray-10);    --ds-gray-20: var(--raw-gray-20);
+  --ds-gray-30: var(--raw-gray-30);    --ds-gray-40: var(--raw-gray-40);
+  --ds-gray-50: var(--raw-gray-50);    --ds-gray-60: var(--raw-gray-60);
+  --ds-gray-70: var(--raw-gray-70);    --ds-gray-80: var(--raw-gray-80);
+  --ds-gray-90: var(--raw-gray-90);    --ds-gray-95: var(--raw-gray-95);
+  --ds-gray-100: var(--raw-gray-100);
+
+
+  /* Typography(--font-size-*) 는 src/lib/tokens.ts 단일 소스에서 생성되어
+     layout.tsx <style> 로 :root 에 주입됩니다(px→rem 환산). 여기엔 두지 않음. */
+
+  /* Typography weight source 토큰.
+     Tailwind 유틸리티 노출용 --font-weight-* 는 @theme 에서만 정의한다. */
+  --typography-weight-regular: 400;
+  --typography-weight-medium: 500;
+  --typography-weight-semibold: 600;
+  --typography-weight-bold: 700;
+
+  /* Line height — 단일 토큰. 값은 src/lib/tokens.ts FONT_LINE → layout <style> 로 :root 주입 */
+
+  /* Letter spacing — 프로젝트 기본값 하나만 사용 */
+  --font-tracking: 0;
+
+  /* 숫자 정렬용 토큰 — 대비율/통계/표에서 자리 폭을 맞출 때 사용 */
+  --font-numeric-tabular: tabular-nums;
+
+  /* 폰트 폴백 체인 (next/font 자체 호스팅): Pretendard GOV → Noto Sans KR → 시스템 sans-serif
+     --font-pretendard-gov / --font-noto 는 layout.tsx의 next/font/local 이 주입 */
+  --font-family-base: var(--font-pretendard-gov), var(--font-noto), sans-serif;
+
+  /* Typography shorthand 토큰 — font-family / size / weight / line-height 를 한 번에 적용.
+     개별 제어가 필요하면 text-* / font-* / leading-* 유틸리티를 조합한다. */
+  --typography-heading-xlarge: var(--typography-weight-bold) var(--font-size-heading-xlarge) / var(--font-line) var(--font-family-base);
+  --typography-heading-large: var(--typography-weight-bold) var(--font-size-heading-large) / var(--font-line) var(--font-family-base);
+  --typography-heading-medium: var(--typography-weight-bold) var(--font-size-heading-medium) / var(--font-line) var(--font-family-base);
+  --typography-heading-small: var(--typography-weight-bold) var(--font-size-heading-small) / var(--font-line) var(--font-family-base);
+  --typography-heading-xsmall: var(--typography-weight-bold) var(--font-size-heading-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-heading-xxsmall: var(--typography-weight-bold) var(--font-size-heading-xxsmall) / var(--font-line) var(--font-family-base);
+  --typography-body-large-bold: var(--typography-weight-bold) var(--font-size-body-large) / var(--font-line) var(--font-family-base);
+  --typography-body-medium-bold: var(--typography-weight-bold) var(--font-size-body-medium) / var(--font-line) var(--font-family-base);
+  --typography-body-small-bold: var(--typography-weight-bold) var(--font-size-body-small) / var(--font-line) var(--font-family-base);
+  --typography-body-xsmall-bold: var(--typography-weight-bold) var(--font-size-body-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-body-large: var(--typography-weight-regular) var(--font-size-body-large) / var(--font-line) var(--font-family-base);
+  --typography-body-medium: var(--typography-weight-regular) var(--font-size-body-medium) / var(--font-line) var(--font-family-base);
+  --typography-body-small: var(--typography-weight-regular) var(--font-size-body-small) / var(--font-line) var(--font-family-base);
+  --typography-body-xsmall: var(--typography-weight-regular) var(--font-size-body-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-label-large: var(--typography-weight-regular) var(--font-size-label-large) / var(--font-line) var(--font-family-base);
+  --typography-label-medium: var(--typography-weight-regular) var(--font-size-label-medium) / var(--font-line) var(--font-family-base);
+  --typography-label-small: var(--typography-weight-regular) var(--font-size-label-small) / var(--font-line) var(--font-family-base);
+  --typography-label-xsmall: var(--typography-weight-regular) var(--font-size-label-xsmall) / var(--font-line) var(--font-family-base);
+  --typography-display-lg: var(--typography-weight-bold) var(--font-size-display-lg) / var(--font-line) var(--font-family-base);
+  --typography-display-md: var(--typography-weight-bold) var(--font-size-display-md) / var(--font-line) var(--font-family-base);
+  --typography-display-sm: var(--typography-weight-bold) var(--font-size-display-sm) / var(--font-line) var(--font-family-base);
+  --typography-caption: var(--typography-weight-regular) var(--font-size-caption) / var(--font-line) var(--font-family-base);
+  --typography-guide-selected-lg: var(--typography-weight-semibold) var(--font-size-guide-selected-lg) / var(--font-line) var(--font-family-base);
+  --typography-guide-selected-md: var(--typography-weight-semibold) var(--font-size-guide-selected-md) / var(--font-line) var(--font-family-base);
+  --typography-guide-selected-sm: var(--typography-weight-semibold) var(--font-size-guide-selected-sm) / var(--font-line) var(--font-family-base);
+  --typography-guide-content-title: var(--typography-weight-bold) var(--font-size-guide-content-title) / var(--font-line) var(--font-family-base);
+
+  /* ============================================================
+     TIER 2-b — SEMANTIC PURPOSE (용도 기반)
+     모드 인지 스케일(--ds-*)을 참조하면 라이트/다크 자동 대응.
+     모드 무관이어야 하는 값은 raw(--raw-*)를 직접 참조.
+     ============================================================ */
+
+  /* 표면(페이지)
+     - background: 램프 밖 앵커라 모드별 명시(:root/.dark)
+     - foreground: 모드 인지 스케일 참조 → 라이트 gray-90(#1E2124), 다크 gray-10(#E6E8EA) 자동 */
+  --ds-background: var(--raw-white);
+  --ds-foreground: var(--ds-gray-90);
+
+  /* 선·표면·보조 텍스트 — 모드 인지 스케일 참조(자동 대응) */
+  --ds-border: var(--ds-gray-20);
+  --ds-border-strong: var(--ds-gray-30);
+  /* 어느 배경에도 보이는 반투명 선 — 라이트=검정α, 다크=흰색α(.dark) */
+  --ds-border-subtle: var(--raw-black-a10);
+  /* Brand purpose — 라이트 기준 violet 스케일 큐레이션(.dark 용도 재매핑·대비 검증: docs/accessibility.md) */
+  --ds-border-brand: var(--ds-violet-40);
+  /* 상태(status) 경계 — required 제외 foreground status 와 색을 맞춘다. 라이트 50, 다크는 .dark 에서 70(→raw 30)으로 재매핑. UI 3:1 충족.
+     disabled 은 비활성 경계라 의도적 저대비(gray-10, .dark gray-90 자동 반사 — WCAG 1.4.3 비활성 예외). */
+  --ds-border-negative: var(--ds-red-50);
+  --ds-border-attention: var(--ds-orange-50);
+  --ds-border-positive: var(--ds-green-50);
+  --ds-border-info: var(--ds-blue-50);
+  --ds-border-danger: var(--ds-border-negative);
+  --ds-border-success: var(--ds-border-positive);
+  --ds-border-disabled: var(--ds-gray-10);
+  /* 컴포넌트 표면(surface) — background 위에 올라오는 면. dark 는 아래 .dark 에서 elevation 방향으로 명시 재매핑. */
+  --ds-surface-default: var(--ds-gray-0);
+  --ds-surface-subtle: var(--ds-gray-5);
+  --ds-surface-strong: var(--ds-gray-10);
+  --ds-surface-brand-faint: var(--ds-violet-5);
+  --ds-surface-brand-subtle: var(--ds-violet-10);
+  --ds-surface-brand: var(--ds-violet-50);
+  --ds-surface-brand-strong: var(--ds-violet-60);
+  --ds-surface-negative: var(--ds-red-5);
+  --ds-surface-attention: var(--ds-orange-5);
+  --ds-surface-positive: var(--ds-green-5);
+  --ds-surface-info: var(--ds-blue-5);
+  --ds-surface-disabled: var(--ds-gray-5);
+  /* 중립(neutral) 텍스트 위계 — default(=--ds-foreground, gray-90) 메인 타이틀/본문 · subtle(gray-70) 서브타이틀 · muted(gray-60) 보조.
+     subtle 은 gray 스케일 참조라 .dark 자동 반사(gray-70↔gray-30) — 흰 배경 8.8:1·#0a0a0a 10:1.
+     muted 는 라이트 white·gray-5·gray-10 배경에서 4.5:1 이상, .dark 에서도 gray-60 으로 용도 재매핑(아래 .dark 블록)해 4.5:1 이상 유지. */
+  --ds-foreground-subtle: var(--ds-gray-70);
+  --ds-foreground-muted: var(--ds-gray-60);
+  --ds-foreground-inverse: var(--raw-white);
+  --ds-foreground-brand: var(--ds-violet-50);
+  /* brand-subtle — brand(violet-50)보다 옅은 보조 브랜드 전경. 라이트 violet-40(white ~3.8:1) · 본문 4.5:1 미달 가능 → 캡션·eyebrow·surface-brand 위 보조 라벨. */
+  --ds-foreground-brand-subtle: var(--ds-violet-40);
+  /* brand-strong — brand보다 진한(라이트 밝기↓) 강조 브랜드 전경. 라이트 violet-60(white 7.7:1) · 제목·로고 등. */
+  --ds-foreground-brand-strong: var(--ds-violet-60);
+  /* 상태(status) 전경 — negative·attention·positive·info·required 는 흰 배경 4.5:1 이상(orange-50 4.65:1·blue-50 4.55:1 등).
+     required(필수 *)는 negative 와 동일 red 스케일이나 검증 오류(negative)와 의미 분리.
+     채움(fill) 토큰과 분리해 .dark에서 본문 대비로 재매핑(70→raw 30).
+     disabled 는 비활성 의미라 의도적 저대비(WCAG 1.4.3 비활성 예외) — gray 스케일 참조라 .dark 자동 반사(gray-30↔gray-70). */
+  --ds-foreground-required: var(--ds-red-50);
+  --ds-foreground-negative: var(--ds-red-50);
+  --ds-foreground-attention: var(--ds-orange-50);
+  --ds-foreground-positive: var(--ds-green-50);
+  --ds-foreground-info: var(--ds-blue-50);
+  --ds-foreground-disabled: var(--ds-gray-30);
+
+  /* Utility — 포커스 링(outline) 색. 라이트=teal-50 · 다크=orange-30(.dark) */
+  --ds-utility-focus-ring: var(--raw-teal-50);
+  --outline-focus-width: 0.15625rem; /* 2.5px */
+  --outline-focus-offset: 0.125rem; /* 2px — tab 제외 기본 offset */
+  --outline-focus-tab-offset: -0.125rem; /* -2px — tab·TOC 등 인셋 outline */
+
+  /* Utility — 스크롤바(WebKit pseudo). 모드 인지 gray 스케일 참조 */
+  --ds-utility-scroll-thumb: var(--ds-gray-30);
+  --ds-utility-scroll-track: var(--ds-gray-10);
+
+  /* 그림자 — 라이트는 검정α, 다크는 .dark 에서 흰색α로 재매핑 */
+  --ds-shadow-alpha-1: var(--raw-black-a5);
+  --ds-shadow-alpha-2: var(--raw-black-a8);
+  --ds-shadow-alpha-3: var(--raw-black-a12);
+  --ds-shadow: var(--ds-shadow-alpha-3);
+  --ds-effect-shadow-1: 0 0.0625rem 0.125rem 0 var(--ds-shadow-alpha-1), 0 0 0.125rem 0 var(--ds-shadow-alpha-1); /* y 1px · blur 2px, 0 0 2px */
+  --ds-effect-shadow-2: 0 0 0.125rem 0 var(--ds-shadow-alpha-1), 0 0.25rem 0.5rem 0 var(--ds-shadow-alpha-2); /* 0 0 2px, y 4px · blur 8px */
+  --ds-effect-shadow-3: 0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 0.5rem 1rem 0 var(--ds-shadow-alpha-3); /* 0 0 2px, y 8px · blur 16px */
+  --ds-effect-shadow-4: 0 0 0.125rem 0 var(--ds-shadow-alpha-2), 0 1rem 1.5rem 0 var(--ds-shadow-alpha-3); /* 0 0 2px, y 16px · blur 24px */
+  --ds-effect-shadow-default: var(--ds-effect-shadow-2);
+  --ds-effect-blur-subtle: blur(0.375rem);  /* 6px */
+  --ds-effect-blur-default: blur(0.75rem);  /* 12px */
+  --ds-effect-blur-strong: blur(1.25rem);   /* 20px */
+
+  /* 오버레이(반투명) — 라이트=검정α, 다크=흰색α(.dark) */
+  --ds-overlay-subtle: var(--raw-black-a5);
+  --ds-overlay: var(--raw-black-a10);
+  --ds-overlay-strong: var(--raw-black-a20);
+
+  /* 그라데이션 — 시맨틱 스케일·용도 토큰을 참조해 모드 자동 대응 */
+  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-20) 0%, var(--ds-violet-40) 48%, var(--ds-violet-50) 100%);
+
+  /* Guide-only: 대비 체커 등급 — AA는 green-30+90, AA Large는 orange-20+90, AAA는 60+white, Fail은 70+white */
+  --ds-guide-level-aaa-bg: var(--raw-green-60);
+  --ds-guide-level-aaa-fg: var(--raw-white);
+  --ds-guide-level-aa-bg: var(--raw-green-30);
+  --ds-guide-level-aa-fg: var(--raw-green-90);
+  --ds-guide-level-warn-bg: var(--raw-orange-20);
+  --ds-guide-level-warn-fg: var(--raw-orange-90);
+  --ds-guide-level-fail-bg: var(--raw-red-70);
+  --ds-guide-level-fail-fg: var(--raw-white);
+  --ds-guide-callout-bg: var(--ds-gray-5);
+  --ds-guide-callout-accent: var(--ds-gray-90);
+  --ds-guide-callout-fg: var(--ds-gray-70);
+  --ds-guide-callout-info-bg: var(--ds-violet-5);
+  --ds-guide-callout-info-accent: var(--ds-violet-60);
+  --ds-guide-callout-info-fg: var(--ds-violet-90);
+  --ds-guide-intro-bg: var(--ds-gray-5);
+  --ds-guide-intro-eyebrow: var(--ds-gray-60);
+  --ds-guide-intro-body: var(--ds-gray-70);
+}
+
+/* ============================================================
+   DARK MODE — 시맨틱 스케일만 재매핑
+   다크 팔레트 = raw 의 반사(u ↔ 100−u). 모든 hue family가 0·5·10·…·100 전 구간을 갖는다.
+   raw 는 건드리지 않고, --ds-{family}-{scale} 만 반사로 가리킨다.
+   → 다크용 hex 중복이 전혀 없고, 인버전 규칙이 한눈에 보인다.
+   용도 토큰(--ds-border 등)은 이 스케일을 참조하므로 자동 대응.
+   ============================================================ */
+.dark {
+  --ds-background: var(--raw-black);
+  /* --ds-foreground 는 --ds-gray-90 이 반사되어 #fafafa 자동 적용 */
+
+  /* 다크 배경엔 흰색 반투명 선이 더 자연스러움 */
+  --ds-border-subtle: var(--raw-white-a10);
+  --ds-overlay-subtle: var(--raw-white-a5);
+  --ds-overlay: var(--raw-white-a10);
+  --ds-overlay-strong: var(--raw-white-a20);
+  --ds-shadow-alpha-1: var(--raw-white-a5);
+  --ds-shadow-alpha-2: var(--raw-white-a8);
+  --ds-shadow-alpha-3: var(--raw-white-a12);
+  --ds-shadow: var(--ds-shadow-alpha-3);
+
+  /* Utility focus-ring — 다크 배경 대비 */
+  --ds-utility-focus-ring: var(--raw-orange-30);
+
+  --ds-red-0: var(--raw-red-100);   --ds-red-5: var(--raw-red-95);
+  --ds-red-10: var(--raw-red-90);   --ds-red-20: var(--raw-red-80);
+  --ds-red-30: var(--raw-red-70);   --ds-red-40: var(--raw-red-60);
+  --ds-red-50: var(--raw-red-50);   --ds-red-60: var(--raw-red-40);
+  --ds-red-70: var(--raw-red-30);   --ds-red-80: var(--raw-red-20);
+  --ds-red-90: var(--raw-red-10);   --ds-red-95: var(--raw-red-5);
+  --ds-red-100: var(--raw-red-0);
+
+  --ds-rose-0: var(--raw-rose-100);   --ds-rose-5: var(--raw-rose-95);
+  --ds-rose-10: var(--raw-rose-90);   --ds-rose-20: var(--raw-rose-80);
+  --ds-rose-30: var(--raw-rose-70);   --ds-rose-40: var(--raw-rose-60);
+  --ds-rose-50: var(--raw-rose-50);   --ds-rose-60: var(--raw-rose-40);
+  --ds-rose-70: var(--raw-rose-30);   --ds-rose-80: var(--raw-rose-20);
+  --ds-rose-90: var(--raw-rose-10);   --ds-rose-95: var(--raw-rose-5);
+  --ds-rose-100: var(--raw-rose-0);
+
+  --ds-orange-0: var(--raw-orange-100);   --ds-orange-5: var(--raw-orange-95);
+  --ds-orange-10: var(--raw-orange-90);   --ds-orange-20: var(--raw-orange-80);
+  --ds-orange-30: var(--raw-orange-70);   --ds-orange-40: var(--raw-orange-60);
+  --ds-orange-50: var(--raw-orange-50);   --ds-orange-60: var(--raw-orange-40);
+  --ds-orange-70: var(--raw-orange-30);   --ds-orange-80: var(--raw-orange-20);
+  --ds-orange-90: var(--raw-orange-10);   --ds-orange-95: var(--raw-orange-5);
+  --ds-orange-100: var(--raw-orange-0);
+
+  --ds-green-0: var(--raw-green-100);   --ds-green-5: var(--raw-green-95);
+  --ds-green-10: var(--raw-green-90);   --ds-green-20: var(--raw-green-80);
+  --ds-green-30: var(--raw-green-70);   --ds-green-40: var(--raw-green-60);
+  --ds-green-50: var(--raw-green-50);   --ds-green-60: var(--raw-green-40);
+  --ds-green-70: var(--raw-green-30);   --ds-green-80: var(--raw-green-20);
+  --ds-green-90: var(--raw-green-10);   --ds-green-95: var(--raw-green-5);
+  --ds-green-100: var(--raw-green-0);
+
+  --ds-teal-0: var(--raw-teal-100);   --ds-teal-5: var(--raw-teal-95);
+  --ds-teal-10: var(--raw-teal-90);   --ds-teal-20: var(--raw-teal-80);
+  --ds-teal-30: var(--raw-teal-70);   --ds-teal-40: var(--raw-teal-60);
+  --ds-teal-50: var(--raw-teal-50);   --ds-teal-60: var(--raw-teal-40);
+  --ds-teal-70: var(--raw-teal-30);   --ds-teal-80: var(--raw-teal-20);
+  --ds-teal-90: var(--raw-teal-10);   --ds-teal-95: var(--raw-teal-5);
+  --ds-teal-100: var(--raw-teal-0);
+
+  --ds-cyan-0: var(--raw-cyan-100);   --ds-cyan-5: var(--raw-cyan-95);
+  --ds-cyan-10: var(--raw-cyan-90);   --ds-cyan-20: var(--raw-cyan-80);
+  --ds-cyan-30: var(--raw-cyan-70);   --ds-cyan-40: var(--raw-cyan-60);
+  --ds-cyan-50: var(--raw-cyan-50);   --ds-cyan-60: var(--raw-cyan-40);
+  --ds-cyan-70: var(--raw-cyan-30);   --ds-cyan-80: var(--raw-cyan-20);
+  --ds-cyan-90: var(--raw-cyan-10);   --ds-cyan-95: var(--raw-cyan-5);
+  --ds-cyan-100: var(--raw-cyan-0);
+
+  --ds-blue-0: var(--raw-blue-100);   --ds-blue-5: var(--raw-blue-95);
+  --ds-blue-10: var(--raw-blue-90);   --ds-blue-20: var(--raw-blue-80);
+  --ds-blue-30: var(--raw-blue-70);   --ds-blue-40: var(--raw-blue-60);
+  --ds-blue-50: var(--raw-blue-50);   --ds-blue-60: var(--raw-blue-40);
+  --ds-blue-70: var(--raw-blue-30);   --ds-blue-80: var(--raw-blue-20);
+  --ds-blue-90: var(--raw-blue-10);   --ds-blue-95: var(--raw-blue-5);
+  --ds-blue-100: var(--raw-blue-0);
+
+  --ds-violet-0: var(--raw-violet-100);   --ds-violet-5: var(--raw-violet-95);
+  --ds-violet-10: var(--raw-violet-90);   --ds-violet-20: var(--raw-violet-80);
+  --ds-violet-30: var(--raw-violet-70);   --ds-violet-40: var(--raw-violet-60);
+  --ds-violet-50: var(--raw-violet-50);   --ds-violet-60: var(--raw-violet-40);
+  --ds-violet-70: var(--raw-violet-30);   --ds-violet-80: var(--raw-violet-20);
+  --ds-violet-90: var(--raw-violet-10);   --ds-violet-95: var(--raw-violet-5);
+  --ds-violet-100: var(--raw-violet-0);
+
+  --ds-navy-0: var(--raw-navy-100);   --ds-navy-5: var(--raw-navy-95);
+  --ds-navy-10: var(--raw-navy-90);   --ds-navy-20: var(--raw-navy-80);
+  --ds-navy-30: var(--raw-navy-70);   --ds-navy-40: var(--raw-navy-60);
+  --ds-navy-50: var(--raw-navy-50);   --ds-navy-60: var(--raw-navy-40);
+  --ds-navy-70: var(--raw-navy-30);   --ds-navy-80: var(--raw-navy-20);
+  --ds-navy-90: var(--raw-navy-10);   --ds-navy-95: var(--raw-navy-5);
+  --ds-navy-100: var(--raw-navy-0);
+
+  --ds-gray-0: var(--raw-gray-100);   --ds-gray-5: var(--raw-gray-95);
+  --ds-gray-10: var(--raw-gray-90);   --ds-gray-20: var(--raw-gray-80);
+  --ds-gray-30: var(--raw-gray-70);   --ds-gray-40: var(--raw-gray-60);
+  --ds-gray-50: var(--raw-gray-50);   --ds-gray-60: var(--raw-gray-40);
+  --ds-gray-70: var(--raw-gray-30);   --ds-gray-80: var(--raw-gray-20);
+  --ds-gray-90: var(--raw-gray-10);   --ds-gray-95: var(--raw-gray-5);
+  --ds-gray-100: var(--raw-gray-0);
+
+  /* Brand purpose — 다크 배경(#0a0a0a) 대비 WCAG AA(본문 4.5:1·UI 3:1) 검증 후 매핑. docs/accessibility.md 참고 */
+  --ds-foreground-muted: var(--ds-gray-60);
+  --ds-foreground-brand: var(--ds-violet-70);
+  /* brand-subtle — 다크에서 brand(violet-70→raw30)보다 옅게 violet-50(#5B4CF0, ~3.5:1 UI). 본문 단독 4.5:1 미달 — 보조 브랜드 텍스트만. */
+  --ds-foreground-brand-subtle: var(--ds-violet-50);
+  /* brand-strong — 다크에서 brand보다 선명(violet-80→raw20, black ~10.7:1) · 헤더·강조 제목. */
+  --ds-foreground-brand-strong: var(--ds-violet-80);
+  /* 상태 전경 — 채움 50 고정은 #0a0a0a에서 ~4.3:1로 미달. 70(→raw 30)으로 올려 본문 4.5:1 충족 */
+  --ds-foreground-required: var(--ds-red-70);
+  --ds-foreground-negative: var(--ds-red-70);
+  --ds-foreground-attention: var(--ds-orange-70);
+  --ds-foreground-positive: var(--ds-green-70);
+  --ds-foreground-info: var(--ds-blue-70);
+  --ds-foreground-inverse: var(--raw-black);
+  --ds-surface-default: var(--ds-gray-5);
+  --ds-surface-subtle: var(--ds-gray-10);
+  --ds-surface-strong: var(--ds-gray-20);
+  --ds-surface-brand-faint: var(--ds-violet-20);
+  --ds-surface-brand-subtle: var(--ds-violet-30);
+  --ds-surface-brand: var(--ds-violet-70);
+  --ds-surface-brand-strong: var(--ds-violet-80);
+  --ds-surface-negative: var(--ds-red-20);
+  --ds-surface-attention: var(--ds-orange-20);
+  --ds-surface-positive: var(--ds-green-20);
+  --ds-surface-info: var(--ds-blue-20);
+  --ds-surface-disabled: var(--ds-gray-10);
+  --ds-border-brand: var(--ds-violet-70);
+  /* 상태 경계 — 전경 status(negative·attention·positive·info)와 동일하게 다크 재매핑(50→70=raw 30). UI 3:1 충족, 텍스트·경계 색 일치.
+     disabled 은 neutral gray 라 :root 의 gray-10 스케일 반사(→raw 90)로 양 모드 처리되므로 별도 .dark 불필요. */
+  --ds-border-negative: var(--ds-red-70);
+  --ds-border-attention: var(--ds-orange-70);
+  --ds-border-positive: var(--ds-green-70);
+  --ds-border-info: var(--ds-blue-70);
+  --ds-border-danger: var(--ds-border-negative);
+  --ds-border-success: var(--ds-border-positive);
+  --ds-gradient-brand: linear-gradient(135deg, var(--ds-violet-20) 0%, var(--ds-violet-40) 48%, var(--ds-violet-50) 100%);
+
+}
+
+/* ============================================================
+   @theme — 디자인 토큰을 Tailwind 유틸리티로 노출(브리지)
+   --color-* 는 Tailwind 색상 토큰 이름이며, 클래스에서는 --color- 를 뺀
+   이름으로 사용한다: --color-green-50 → bg/text/border-green-50.
+   슬러그에 text·bg·border 접두를 넣지 않는다 (text-text-muted·border-border 방지).
+   예: --color-background → bg-background · --color-surface-subtle → surface-subtle · --color-default → border-default.
+   (전경·컴포넌트 표면 색은 예외: 아이콘·surface 의미 통일을 위해 @utility foreground-* · surface-* 로 노출 — 아래 참고)
+   런타임 --ds-* 를 참조(inline)하므로 .dark 오버라이드 시 유틸리티도 자동 전환.
+   생성 유틸 예: bg-gray-20 / text-green-50 / text-body-medium / leading-base ...
+   ============================================================ */
+@theme inline {
+  --color-background: var(--ds-background);
+  --color-foreground-default: var(--ds-foreground);
+
+  --color-red-0: var(--ds-red-0);   --color-red-5: var(--ds-red-5);
+  --color-red-10: var(--ds-red-10);   --color-red-20: var(--ds-red-20);
+  --color-red-30: var(--ds-red-30);   --color-red-40: var(--ds-red-40);
+  --color-red-50: var(--ds-red-50);   --color-red-60: var(--ds-red-60);
+  --color-red-70: var(--ds-red-70);   --color-red-80: var(--ds-red-80);
+  --color-red-90: var(--ds-red-90);   --color-red-95: var(--ds-red-95);
+  --color-red-100: var(--ds-red-100);
+
+  --color-rose-0: var(--ds-rose-0);   --color-rose-5: var(--ds-rose-5);
+  --color-rose-10: var(--ds-rose-10);   --color-rose-20: var(--ds-rose-20);
+  --color-rose-30: var(--ds-rose-30);   --color-rose-40: var(--ds-rose-40);
+  --color-rose-50: var(--ds-rose-50);   --color-rose-60: var(--ds-rose-60);
+  --color-rose-70: var(--ds-rose-70);   --color-rose-80: var(--ds-rose-80);
+  --color-rose-90: var(--ds-rose-90);   --color-rose-95: var(--ds-rose-95);
+  --color-rose-100: var(--ds-rose-100);
+
+  --color-orange-0: var(--ds-orange-0);   --color-orange-5: var(--ds-orange-5);
+  --color-orange-10: var(--ds-orange-10);   --color-orange-20: var(--ds-orange-20);
+  --color-orange-30: var(--ds-orange-30);   --color-orange-40: var(--ds-orange-40);
+  --color-orange-50: var(--ds-orange-50);   --color-orange-60: var(--ds-orange-60);
+  --color-orange-70: var(--ds-orange-70);   --color-orange-80: var(--ds-orange-80);
+  --color-orange-90: var(--ds-orange-90);   --color-orange-95: var(--ds-orange-95);
+  --color-orange-100: var(--ds-orange-100);
+
+  --color-green-0: var(--ds-green-0);   --color-green-5: var(--ds-green-5);
+  --color-green-10: var(--ds-green-10);   --color-green-20: var(--ds-green-20);
+  --color-green-30: var(--ds-green-30);   --color-green-40: var(--ds-green-40);
+  --color-green-50: var(--ds-green-50);   --color-green-60: var(--ds-green-60);
+  --color-green-70: var(--ds-green-70);   --color-green-80: var(--ds-green-80);
+  --color-green-90: var(--ds-green-90);   --color-green-95: var(--ds-green-95);
+  --color-green-100: var(--ds-green-100);
+
+  --color-teal-0: var(--ds-teal-0);   --color-teal-5: var(--ds-teal-5);
+  --color-teal-10: var(--ds-teal-10);   --color-teal-20: var(--ds-teal-20);
+  --color-teal-30: var(--ds-teal-30);   --color-teal-40: var(--ds-teal-40);
+  --color-teal-50: var(--ds-teal-50);   --color-teal-60: var(--ds-teal-60);
+  --color-teal-70: var(--ds-teal-70);   --color-teal-80: var(--ds-teal-80);
+  --color-teal-90: var(--ds-teal-90);   --color-teal-95: var(--ds-teal-95);
+  --color-teal-100: var(--ds-teal-100);
+
+  --color-cyan-0: var(--ds-cyan-0);   --color-cyan-5: var(--ds-cyan-5);
+  --color-cyan-10: var(--ds-cyan-10);   --color-cyan-20: var(--ds-cyan-20);
+  --color-cyan-30: var(--ds-cyan-30);   --color-cyan-40: var(--ds-cyan-40);
+  --color-cyan-50: var(--ds-cyan-50);   --color-cyan-60: var(--ds-cyan-60);
+  --color-cyan-70: var(--ds-cyan-70);   --color-cyan-80: var(--ds-cyan-80);
+  --color-cyan-90: var(--ds-cyan-90);   --color-cyan-95: var(--ds-cyan-95);
+  --color-cyan-100: var(--ds-cyan-100);
+
+  --color-blue-0: var(--ds-blue-0);   --color-blue-5: var(--ds-blue-5);
+  --color-blue-10: var(--ds-blue-10);   --color-blue-20: var(--ds-blue-20);
+  --color-blue-30: var(--ds-blue-30);   --color-blue-40: var(--ds-blue-40);
+  --color-blue-50: var(--ds-blue-50);   --color-blue-60: var(--ds-blue-60);
+  --color-blue-70: var(--ds-blue-70);   --color-blue-80: var(--ds-blue-80);
+  --color-blue-90: var(--ds-blue-90);   --color-blue-95: var(--ds-blue-95);
+  --color-blue-100: var(--ds-blue-100);
+
+  --color-violet-0: var(--ds-violet-0);   --color-violet-5: var(--ds-violet-5);
+  --color-violet-10: var(--ds-violet-10);   --color-violet-20: var(--ds-violet-20);
+  --color-violet-30: var(--ds-violet-30);   --color-violet-40: var(--ds-violet-40);
+  --color-violet-50: var(--ds-violet-50);   --color-violet-60: var(--ds-violet-60);
+  --color-violet-70: var(--ds-violet-70);   --color-violet-80: var(--ds-violet-80);
+  --color-violet-90: var(--ds-violet-90);   --color-violet-95: var(--ds-violet-95);
+  --color-violet-100: var(--ds-violet-100);
+
+  --color-navy-0: var(--ds-navy-0);   --color-navy-5: var(--ds-navy-5);
+  --color-navy-10: var(--ds-navy-10);   --color-navy-20: var(--ds-navy-20);
+  --color-navy-30: var(--ds-navy-30);   --color-navy-40: var(--ds-navy-40);
+  --color-navy-50: var(--ds-navy-50);   --color-navy-60: var(--ds-navy-60);
+  --color-navy-70: var(--ds-navy-70);   --color-navy-80: var(--ds-navy-80);
+  --color-navy-90: var(--ds-navy-90);   --color-navy-95: var(--ds-navy-95);
+  --color-navy-100: var(--ds-navy-100);
+
+  --color-gray-0: var(--ds-gray-0);   --color-gray-5: var(--ds-gray-5);
+  --color-gray-10: var(--ds-gray-10);   --color-gray-20: var(--ds-gray-20);
+  --color-gray-30: var(--ds-gray-30);   --color-gray-40: var(--ds-gray-40);
+  --color-gray-50: var(--ds-gray-50);   --color-gray-60: var(--ds-gray-60);
+  --color-gray-70: var(--ds-gray-70);   --color-gray-80: var(--ds-gray-80);
+  --color-gray-90: var(--ds-gray-90);   --color-gray-95: var(--ds-gray-95);
+  --color-gray-100: var(--ds-gray-100);
+
+  --color-default: var(--ds-border);
+  --color-strong: var(--ds-border-strong);
+  --color-brand: var(--ds-border-brand);
+  --color-subtle: var(--ds-border-subtle);
+  --color-negative: var(--ds-border-negative);
+  --color-danger: var(--ds-border-danger);
+  --color-attention: var(--ds-border-attention);
+  --color-positive: var(--ds-border-positive);
+  --color-success: var(--ds-border-success);
+  --color-info: var(--ds-border-info);
+  --color-disabled: var(--ds-border-disabled);
+  --color-utility-focus-ring: var(--ds-utility-focus-ring);
+  --color-utility-scroll-thumb: var(--ds-utility-scroll-thumb);
+  --color-utility-scroll-track: var(--ds-utility-scroll-track);
+  --color-surface-default: var(--ds-surface-default);
+  --color-surface-subtle: var(--ds-surface-subtle);
+  --color-surface-strong: var(--ds-surface-strong);
+  --color-surface-brand-faint: var(--ds-surface-brand-faint);
+  --color-surface-brand-subtle: var(--ds-surface-brand-subtle);
+  --color-surface-brand: var(--ds-surface-brand);
+  --color-surface-brand-strong: var(--ds-surface-brand-strong);
+  --color-surface-negative: var(--ds-surface-negative);
+  --color-surface-attention: var(--ds-surface-attention);
+  --color-surface-positive: var(--ds-surface-positive);
+  --color-surface-info: var(--ds-surface-info);
+  --color-surface-disabled: var(--ds-surface-disabled);
+  --color-foreground-subtle: var(--ds-foreground-subtle);
+  --color-foreground-muted: var(--ds-foreground-muted);
+  --color-foreground-inverse: var(--ds-foreground-inverse);
+  --color-foreground-brand: var(--ds-foreground-brand);
+  --color-foreground-brand-subtle: var(--ds-foreground-brand-subtle);
+  --color-foreground-brand-strong: var(--ds-foreground-brand-strong);
+  --color-foreground-required: var(--ds-foreground-required);
+  --color-foreground-negative: var(--ds-foreground-negative);
+  --color-foreground-attention: var(--ds-foreground-attention);
+  --color-foreground-positive: var(--ds-foreground-positive);
+  --color-foreground-info: var(--ds-foreground-info);
+  --color-foreground-disabled: var(--ds-foreground-disabled);
+  --color-overlay-subtle: var(--ds-overlay-subtle);
+  --color-overlay: var(--ds-overlay);
+  --color-overlay-strong: var(--ds-overlay-strong);
+
+  --shadow-1: var(--ds-effect-shadow-1);
+  --shadow-2: var(--ds-effect-shadow-2);
+  --shadow-3: var(--ds-effect-shadow-3);
+  --shadow-4: var(--ds-effect-shadow-4);
+  --shadow-default: var(--ds-effect-shadow-default);
+
+  /* Guide-only tokens — 큐레이션 가이드 화면에서만 쓰는 표시/검증용 유틸리티 */
+  --color-guide-level-aaa-bg: var(--ds-guide-level-aaa-bg);
+  --color-guide-level-aaa-fg: var(--ds-guide-level-aaa-fg);
+  --color-guide-level-aa-bg: var(--ds-guide-level-aa-bg);
+  --color-guide-level-aa-fg: var(--ds-guide-level-aa-fg);
+  --color-guide-level-warn-bg: var(--ds-guide-level-warn-bg);
+  --color-guide-level-warn-fg: var(--ds-guide-level-warn-fg);
+  --color-guide-level-fail-bg: var(--ds-guide-level-fail-bg);
+  --color-guide-level-fail-fg: var(--ds-guide-level-fail-fg);
+  --color-guide-callout-bg: var(--ds-guide-callout-bg);
+  --color-guide-callout-accent: var(--ds-guide-callout-accent);
+  --color-guide-callout-fg: var(--ds-guide-callout-fg);
+  --color-guide-callout-info-bg: var(--ds-guide-callout-info-bg);
+  --color-guide-callout-info-accent: var(--ds-guide-callout-info-accent);
+  --color-guide-callout-info-fg: var(--ds-guide-callout-info-fg);
+  --color-guide-intro-bg: var(--ds-guide-intro-bg);
+  --color-guide-intro-eyebrow: var(--ds-guide-intro-eyebrow);
+  --color-guide-intro-body: var(--ds-guide-intro-body);
+
+  --spacing-0: var(--space-0);
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-10: var(--space-10);
+  --spacing-12: var(--space-12);
+  --spacing-16: var(--space-16);
+  --spacing-20: var(--space-20);
+  --spacing-icon-xs: var(--size-icon-xs);
+  --spacing-icon-sm: var(--size-icon-sm);
+  --spacing-icon-md: var(--size-icon-md);
+  --spacing-icon-lg: var(--size-icon-lg);
+  --spacing-icon-xl: var(--size-icon-xl);
+  --spacing-spinner-sm: var(--size-spinner-sm);
+  --spacing-spinner-md: var(--size-spinner-md);
+  --spacing-spinner-lg: var(--size-spinner-lg);
+  --spacing-control-sm: var(--size-control-sm);
+  --spacing-control-md: var(--size-control-md);
+  --spacing-control-lg: var(--size-control-lg);
+  --spacing-control-xl: var(--size-control-xl);
+  --spacing-screen-margin-sm: var(--layout-screen-margin-sm);
+  --spacing-screen-margin-md: var(--layout-screen-margin-md);
+  --spacing-header-padding-sm: var(--layout-header-padding-sm);
+  --spacing-header-padding-md: var(--layout-header-padding-md);
+
+  --radius-none: var(--shape-radius-none);
+  --radius-sm: var(--shape-radius-sm);
+  --radius-md: var(--shape-radius-md);
+  --radius-lg: var(--shape-radius-lg);
+  --radius-xl: var(--shape-radius-xl);
+  --radius-2xl: var(--shape-radius-2xl);
+  --radius-full: var(--shape-radius-full);
+
+  --container-sm: var(--layout-container-sm);
+  --container-md: var(--layout-container-md);
+  --container-lg: var(--layout-container-lg);
+  --container-xl: var(--layout-container-xl);
+
+  /* breakpoint는 @media 조건에 var() 참조가 불가하므로 @theme 에 리터럴 rem 으로 노출.
+     :root 의 --layout-breakpoint-* 와 값을 동기화한다. */
+  --breakpoint-sm: 40rem;  /* 640px */
+  --breakpoint-md: 48rem;  /* 768px */
+  --breakpoint-lg: 64rem;  /* 1024px */
+  --breakpoint-xl: 80rem;  /* 1280px */
+
+  --text-heading-xlarge: var(--font-size-heading-xlarge);
+  --text-heading-large: var(--font-size-heading-large);
+  --text-heading-medium: var(--font-size-heading-medium);
+  --text-heading-small: var(--font-size-heading-small);
+  --text-heading-xsmall: var(--font-size-heading-xsmall);
+  --text-heading-xxsmall: var(--font-size-heading-xxsmall);
+  --text-body-large: var(--font-size-body-large);
+  --text-body-medium: var(--font-size-body-medium);
+  --text-body-small: var(--font-size-body-small);
+  --text-body-xsmall: var(--font-size-body-xsmall);
+  --text-label-large: var(--font-size-label-large);
+  --text-label-medium: var(--font-size-label-medium);
+  --text-label-small: var(--font-size-label-small);
+  --text-label-xsmall: var(--font-size-label-xsmall);
+  --text-display-lg: var(--font-size-display-lg);
+  --text-display-md: var(--font-size-display-md);
+  --text-display-sm: var(--font-size-display-sm);
+  --text-caption: var(--font-size-caption);
+  --text-guide-selected-lg: var(--font-size-guide-selected-lg);
+  --text-guide-selected-md: var(--font-size-guide-selected-md);
+  --text-guide-selected-sm: var(--font-size-guide-selected-sm);
+  --text-guide-content-title: var(--font-size-guide-content-title);
+  --text-guide-tab-title: var(--font-size-guide-tab-title);
+
+  --leading-none: var(--font-line);
+  --leading-tight: var(--font-line);
+  --leading-snug: var(--font-line);
+  --leading-normal: var(--font-line);
+  --leading-relaxed: var(--font-line);
+  --leading-loose: var(--font-line);
+  --leading-base: var(--font-line);
+  --tracking-normal: var(--font-tracking);
+  --font-weight-regular: var(--typography-weight-regular);
+  --font-weight-medium: var(--typography-weight-medium);
+  --font-weight-semibold: var(--typography-weight-semibold);
+  --font-weight-bold: var(--typography-weight-bold);
+
+  --font-sans: var(--font-family-base);
+}
+
+/* Foreground(전경) 색 — 텍스트·아이콘 공통. `text-` 접두는 아이콘을 포함하지 못하므로
+   prefix 없는 `foreground-*` 로 통일하고 `color`(아이콘은 currentColor 상속)로 적용한다.
+   border/ring 등 다른 속성은 TIER 3 `--color-foreground-default`(@theme)에서 그대로 노출. */
+@utility foreground-default { color: var(--color-foreground-default); }
+@utility foreground-subtle { color: var(--color-foreground-subtle); }
+@utility foreground-muted { color: var(--color-foreground-muted); }
+@utility foreground-inverse { color: var(--color-foreground-inverse); }
+@utility foreground-brand { color: var(--color-foreground-brand); }
+@utility foreground-brand-subtle { color: var(--color-foreground-brand-subtle); }
+@utility foreground-brand-strong { color: var(--color-foreground-brand-strong); }
+@utility foreground-required { color: var(--color-foreground-required); }
+@utility foreground-negative { color: var(--color-foreground-negative); }
+@utility foreground-attention { color: var(--color-foreground-attention); }
+@utility foreground-positive { color: var(--color-foreground-positive); }
+@utility foreground-info { color: var(--color-foreground-info); }
+@utility foreground-disabled { color: var(--color-foreground-disabled); }
+
+/* Surface(표면) 배경색 — 최하위 캔버스는 Tailwind 색상 유틸 `bg-background`, 컴포넌트 면은 surface-* 로 구분한다. */
+@utility surface-default { background-color: var(--color-surface-default); }
+@utility surface-subtle { background-color: var(--color-surface-subtle); }
+@utility surface-strong { background-color: var(--color-surface-strong); }
+@utility surface-brand-faint { background-color: var(--color-surface-brand-faint); }
+@utility surface-brand-subtle { background-color: var(--color-surface-brand-subtle); }
+@utility surface-brand { background-color: var(--color-surface-brand); }
+@utility surface-brand-strong { background-color: var(--color-surface-brand-strong); }
+@utility surface-negative { background-color: var(--color-surface-negative); }
+@utility surface-attention { background-color: var(--color-surface-attention); }
+@utility surface-positive { background-color: var(--color-surface-positive); }
+@utility surface-info { background-color: var(--color-surface-info); }
+@utility surface-disabled { background-color: var(--color-surface-disabled); }
+
+/* Overlay(오버레이) 배경색 — 반투명 레이어 용도 유틸. */
+@utility overlay-subtle { background-color: var(--color-overlay-subtle); }
+@utility overlay-default { background-color: var(--color-overlay); }
+@utility overlay-strong { background-color: var(--color-overlay-strong); }
+
+/* Utility(유틸리티) 배경색 — 스크롤바 thumb/track 전용 유틸. */
+@utility utility-focus-ring { outline-color: var(--color-utility-focus-ring); }
+@utility utility-scroll-thumb { background-color: var(--color-utility-scroll-thumb); }
+@utility utility-scroll-track { background-color: var(--color-utility-scroll-track); }
+
+/* Effect(효과) 유틸리티 — 그림자·블러 등 비색상 시각 효과. */
+@utility shadow-1 { box-shadow: var(--ds-effect-shadow-1); }
+@utility shadow-2 { box-shadow: var(--ds-effect-shadow-2); }
+@utility shadow-3 { box-shadow: var(--ds-effect-shadow-3); }
+@utility shadow-4 { box-shadow: var(--ds-effect-shadow-4); }
+@utility shadow-default { box-shadow: var(--ds-effect-shadow-default); }
+@utility blur-subtle { backdrop-filter: var(--ds-effect-blur-subtle); }
+@utility blur-default { backdrop-filter: var(--ds-effect-blur-default); }
+@utility blur-strong { backdrop-filter: var(--ds-effect-blur-strong); }
+
+/* Gradient(그라데이션) 배경 — 용도 유틸. */
+@utility gradient-brand { background-image: var(--ds-gradient-brand); }
+
+/* Typography shorthand utilities — font-family/size/weight/line-height 묶음 적용 */
+@utility typo-heading-xlarge {
+  font: var(--typography-heading-xlarge);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-large {
+  font: var(--typography-heading-large);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-medium {
+  font: var(--typography-heading-medium);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-small {
+  font: var(--typography-heading-small);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-xsmall {
+  font: var(--typography-heading-xsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-heading-xxsmall {
+  font: var(--typography-heading-xxsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-large-bold {
+  font: var(--typography-body-large-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-medium-bold {
+  font: var(--typography-body-medium-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-small-bold {
+  font: var(--typography-body-small-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-xsmall-bold {
+  font: var(--typography-body-xsmall-bold);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-large {
+  font: var(--typography-body-large);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-medium {
+  font: var(--typography-body-medium);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-small {
+  font: var(--typography-body-small);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-body-xsmall {
+  font: var(--typography-body-xsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-large {
+  font: var(--typography-label-large);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-medium {
+  font: var(--typography-label-medium);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-small {
+  font: var(--typography-label-small);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-label-xsmall {
+  font: var(--typography-label-xsmall);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-display-lg {
+  font: var(--typography-display-lg);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-display-md {
+  font: var(--typography-display-md);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-display-sm {
+  font: var(--typography-display-sm);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-caption {
+  font: var(--typography-caption);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-guide-selected-lg {
+  font: var(--typography-guide-selected-lg);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-guide-selected-md {
+  font: var(--typography-guide-selected-md);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-guide-selected-sm {
+  font: var(--typography-guide-selected-sm);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility typo-guide-content-title {
+  font: var(--typography-guide-content-title);
+  letter-spacing: var(--font-tracking);
+}
+
+@utility numeric-tabular {
+  font-variant-numeric: var(--font-numeric-tabular);
+}
+
+/* 페이지 최상위 래퍼 — 전체 높이·배경·전경 세팅 */
+@utility layout-page-wrapper {
+  min-height: 100vh;
+  background-color: var(--ds-background);
+  color: var(--ds-foreground);
+}
+
+/* 사이트 헤더 — sticky·높이·border·배경·좌우 패딩(스크린 마진 동기화) */
+@utility layout-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--layout-header-height);
+  border-bottom: 1px solid var(--ds-border);
+  background-color: var(--ds-background);
+  padding-inline: var(--layout-screen-margin-sm);
+
+  @variant md {
+    padding-inline: var(--layout-screen-margin-md);
+  }
+}
+
+/* Layout shorthand — 반응형 container(screen-margin·max-width) + content grid(4→8→12열).
+   자식 요소가 grid item이 됩니다. col-span-* 로 열 병합.
+   최소 스크린 마진은 padding-inline(토큰)으로 적용 — p-0·px-* 등과 함께 쓰면 덮어씌워집니다. */
+@utility layout-page {
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
+  max-width: 100%;
+  padding-inline: var(--layout-screen-margin-sm);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  @variant md {
+    padding-inline: var(--layout-screen-margin-md);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @variant lg {
+    max-width: var(--container-xl);
+    gap: var(--space-6);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* 사이드메뉴 래퍼 — lg부터 menu(16rem, fixed)의 너비를 padding-left로 보상.
+   lg 미만에서는 menu가 흐름에 있으므로 padding 불필요.
+   콘텐츠 좌우 스크린 마진은 layout-sidenav-content padding-inline만 사용 */
+@utility layout-sidenav {
+  padding-left: 0;
+
+  @variant lg {
+    padding-left: 16rem;
+  }
+}
+
+@utility layout-sidenav-wide {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0;
+
+  @variant lg {
+    grid-template-columns: var(--layout-grid-sidebar-wide);
+  }
+}
+
+@utility layout-sidenav-menu {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--ds-border);
+  background-color: var(--ds-background);
+  padding: var(--space-6) var(--space-4);
+
+  @variant md {
+    padding-inline: var(--space-6);
+  }
+
+  @variant lg {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    width: 16rem;
+    overflow-y: auto;
+    border-bottom: 0;
+    border-right: 1px solid var(--ds-border);
+    padding-block: var(--space-10);
+    top: var(--layout-header-height);
+    max-height: calc(100vh - var(--layout-header-height));
+  }
+}
+
+/* layout-page와 동일 container·grid·screen-margin — pl-64 래퍼(콘텐츠 열) 안에서 상한·중앙 정렬 */
+@utility layout-sidenav-content {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+  max-width: 100%;
+  padding-inline: var(--layout-screen-margin-sm);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  @variant md {
+    padding-inline: var(--layout-screen-margin-md);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @variant lg {
+    max-width: var(--container-xl);
+    gap: var(--space-6);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* 가이드 메인 콘텐츠 서브탭 패널 — 탭 바로 아래 콘텐츠 영역 패딩 */
+@utility layout-guide-tabpanel {
+  padding-block: var(--layout-guide-tabpanel-py);
+  padding-inline: var(--layout-guide-tabpanel-px);
+}
+
+/* 가이드 outline 서브탭 — 가로 스크롤·그라데이션 마스크 (Tabs outline variant 참고) */
+@utility guide-tabs-list-area {
+  width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--size-control-md),
+    black calc(100% - var(--size-control-md)),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--size-control-md),
+    black calc(100% - var(--size-control-md)),
+    transparent
+  );
+}
+
+@utility guide-tabs-scroll-btn {
+  flex: 0 0 auto;
+}
+
+@utility guide-tabs-scroll-btn-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* 부모 p-6 md:p-10 padding 상쇄 — layout-page 등을 viewport 폭과 맞출 때 사용 */
+@utility layout-bleed {
+  margin-inline: calc(var(--space-6) * -1);
+  width: calc(100% + var(--space-6) * 2);
+  overflow: hidden;
+
+  @variant md {
+    margin-inline: calc(var(--space-10) * -1);
+    width: calc(100% + var(--space-10) * 2);
+  }
+}
+
+/* 스크롤바 자리를 항상 예약 — 오버플로 유무와 무관하게 콘텐츠 폭을 일정하게 유지(layout shift 방지).
+   클래식 스크롤바 환경에서도 페이지 간 가로폭이 흔들리지 않는다. 오버레이 스크롤바면 영향 없음.
+   ⚠️ 표준 scrollbar-width/scrollbar-color 는 의도적으로 두지 않는다 —
+   Chrome 121+ 에서 표준 속성이 있으면 ::-webkit-scrollbar 커스텀(6px)을 무시하고
+   'thin'(플랫폼 기본 ~11px)을 적용해, 예약 gutter 가 6px 가 아니게 된다. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* WebKit/Blink 공통 스크롤바 — 모든 스크롤 영역에 적용. 크기는 rem 토큰, 색은 --ds-*.
+   Firefox 는 이 pseudo-element 를 지원하지 않아 기본 스크롤바를 사용한다(레퍼런스도 webkit 전용). */
+::-webkit-scrollbar {
+  width: var(--size-scrollbar);
+  height: var(--size-scrollbar);
+  background-color: var(--ds-utility-scroll-track);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: var(--shape-radius-sm);
+  background-color: var(--ds-utility-scroll-thumb);
+}
+::-webkit-scrollbar-track {
+  border-radius: var(--shape-radius-sm);
+  background-color: var(--ds-utility-scroll-track);
+}
+
+body {
+  background: var(--ds-background);
+  color: var(--ds-foreground);
+  font-family: var(--font-family-base);
+  font-synthesis-weight: none;
+  line-height: var(--font-line);
+}
+
+img {
+  width: auto;
+}
+
+/* 키보드 포커스 인디케이터 — 항상 표시(저시력/키보드 사용자) */
+:focus-visible {
+  outline: var(--outline-focus-width) dashed var(--ds-utility-focus-ring);
+  outline-offset: var(--outline-focus-offset);
+}
+
+[role="tab"]:focus-visible,
+.guide-toc :is(a, button):focus-visible {
+  outline-offset: var(--outline-focus-tab-offset);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

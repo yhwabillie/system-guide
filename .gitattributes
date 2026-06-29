@@ -1,0 +1,9 @@
+# 폰트는 바이너리로 처리(줄바꿈 변환·diff 방지)
+*.woff2 binary
+*.woff  binary
+*.ttf   binary
+*.otf   binary
+
+# 서브셋팅으로 폰트 총량 ~2.9MB(최대 1.85MB)라 일반 git으로 충분.
+# 향후 풀-커버리지 폰트 등으로 커지면 아래로 Git LFS 전환:
+#   git lfs track "*.woff2"
