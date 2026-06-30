@@ -98,7 +98,28 @@
       "Bash(npx prettier *)",
       "Bash(node -e \"const { fontSizeCssVars } = require\\('./src/lib/tokens.ts'\\); console.log\\(fontSizeCssVars\\(\\).length\\)\")",
       "Bash(npx tsx *)",
-      "Bash(grep -rn 'aria-label={\\\\`' /Users/yhwa/Documents/vibe_code/system-guide/src/components/guide/shared.tsx)"
+      "Bash(grep -rn 'aria-label={\\\\`' /Users/yhwa/Documents/vibe_code/system-guide/src/components/guide/shared.tsx)",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts,null,2\\)\\)\")",
+      "Bash(kill 17134)",
+      "Bash(ps -p 13628 -o pid,ppid,command)",
+      "Bash(ps -p 17838 -o pid,ppid,command)",
+      "Bash(lsof -nP -iTCP:3000 -sTCP:LISTEN)",
+      "Bash(curl -s http://localhost:3100/guide/color)",
+      "Bash(echo \"exit $?\")",
+      "Bash(curl -s \"http://localhost:3100/guide/color\" -o /tmp/gc.html)",
+      "Read(//tmp/**)",
+      "Bash(git stash *)",
+      "Bash(curl -s \"http://localhost:3000/guide/color\" -o /tmp/dev_gc.html)",
+      "Bash(git checkout *)",
+      "Bash(ps -p 25211 -o pid,etime,command)",
+      "Bash(kill 25211)",
+      "Bash(curl -s \"http://localhost:3000/guide/color\" -o /tmp/dev2.html)",
+      "Bash(grep -o '[0-9]\\\\{2,3\\\\}%' /tmp/dev2.html)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/guide/color)",
+      "Bash(curl -s \"http://localhost:3100/guide/color\")",
+      "Bash(curl -s \"http://localhost:3100/guide/color\" -H \"Cookie: system-guide-color-mode=dark\")",
+      "Bash(curl -s \"http://localhost:3100/guide/color\" -H \"Cookie: system-guide:zoom=130\")",
+      "Bash(grep -o '>[0-9]\\\\{2,3\\\\}%<')"
     ]
   }
 }
