@@ -1,7 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef, createContext, useContext, useCallback, useId } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  useContext,
+  useCallback,
+  useId,
+  useSyncExternalStore,
+} from "react";
 import { contrastRatio, getContrastLevel, type ContrastLevel } from "@/lib/contrast";
 import { GUIDE_ROUTES } from "@/lib/guide-routes";
 import {
@@ -13,11 +22,14 @@ import {
 import { REM_BASE, pxToRem } from "@/lib/tokens";
 import { RAW_COLOR_SCALE_UNITS, primitiveColors } from "@/lib/raw-color-palettes";
 import {
-  applyColorModeClass,
-  readStoredColorMode,
-  writeStoredColorMode,
-} from "@/lib/theme-preference";
-
+  ZOOM_DEFAULT,
+  ZOOM_MIN,
+  ZOOM_MAX,
+  ZOOM_STEP,
+  readActiveZoom,
+  setZoom,
+  subscribeToZoom,
+} from "@/lib/zoom-preference";
 
 // 배경 앵커 — 중립 램프 밖 순백/심흑(모드 무관 고정)
 export const backgroundAnchors = [
@@ -144,7 +156,8 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Background",
     description: (
       <>
-        화면의 가장 바닥 면을 뜻하는 <strong>배경(background)</strong> 색상입니다. 페이지 전체 Layout·최상위 캔버스에는 <strong>bg-background</strong>를 사용합니다.
+        화면의 가장 바닥 면을 뜻하는 <strong>배경(background)</strong> 색상입니다. 페이지 전체 Layout·최상위 캔버스에는{" "}
+        <strong>bg-background</strong>를 사용합니다.
       </>
     ),
     groups: [
@@ -152,7 +165,14 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "neutral",
         label: "neutral",
         tokens: [
-          { token: "background", utility: "bg-background", cssVar: "--color-background", readAs: "bg", rawVar: "--raw-white", rawVarDark: "--raw-black" },
+          {
+            token: "background",
+            utility: "bg-background",
+            cssVar: "--color-background",
+            readAs: "bg",
+            rawVar: "--raw-white",
+            rawVarDark: "--raw-black",
+          },
         ],
       },
     ],
@@ -162,7 +182,8 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Surface",
     description: (
       <>
-        카드·패널·선택 상태처럼 컴포넌트에 올라오는 <strong>표면(surface)</strong> 색상입니다. 컴포넌트 면에는 <strong>surface-*</strong>를 사용합니다.
+        카드·패널·선택 상태처럼 컴포넌트에 올라오는 <strong>표면(surface)</strong> 색상입니다. 컴포넌트 면에는{" "}
+        <strong>surface-*</strong>를 사용합니다.
       </>
     ),
     groups: [
@@ -170,30 +191,114 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "surface-brand-faint", utility: "surface-brand-faint", cssVar: "--color-surface-brand-faint", readAs: "bg", rawVar: "--raw-violet-5", rawVarDark: "--raw-violet-80" },
-          { token: "surface-brand-subtle", utility: "surface-brand-subtle", cssVar: "--color-surface-brand-subtle", readAs: "bg", rawVar: "--raw-violet-10", rawVarDark: "--raw-violet-70" },
-          { token: "surface-brand", utility: "surface-brand", cssVar: "--color-surface-brand", readAs: "bg", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
-          { token: "surface-brand-strong", utility: "surface-brand-strong", cssVar: "--color-surface-brand-strong", readAs: "bg", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
+          {
+            token: "surface-brand-faint",
+            utility: "surface-brand-faint",
+            cssVar: "--color-surface-brand-faint",
+            readAs: "bg",
+            rawVar: "--raw-violet-5",
+            rawVarDark: "--raw-violet-80",
+          },
+          {
+            token: "surface-brand-subtle",
+            utility: "surface-brand-subtle",
+            cssVar: "--color-surface-brand-subtle",
+            readAs: "bg",
+            rawVar: "--raw-violet-10",
+            rawVarDark: "--raw-violet-70",
+          },
+          {
+            token: "surface-brand",
+            utility: "surface-brand",
+            cssVar: "--color-surface-brand",
+            readAs: "bg",
+            rawVar: "--raw-violet-50",
+            rawVarDark: "--raw-violet-30",
+          },
+          {
+            token: "surface-brand-strong",
+            utility: "surface-brand-strong",
+            cssVar: "--color-surface-brand-strong",
+            readAs: "bg",
+            rawVar: "--raw-violet-60",
+            rawVarDark: "--raw-violet-20",
+          },
         ],
       },
       {
         id: "neutral",
         label: "neutral",
         tokens: [
-          { token: "surface-default", utility: "surface-default", cssVar: "--color-surface-default", readAs: "bg", rawVar: "--raw-gray-0", rawVarDark: "--raw-gray-95" },
-          { token: "surface-subtle", utility: "surface-subtle", cssVar: "--color-surface-subtle", readAs: "bg", rawVar: "--raw-gray-5", rawVarDark: "--raw-gray-90" },
-          { token: "surface-strong", utility: "surface-strong", cssVar: "--color-surface-strong", readAs: "bg", rawVar: "--raw-gray-10", rawVarDark: "--raw-gray-80" },
+          {
+            token: "surface-default",
+            utility: "surface-default",
+            cssVar: "--color-surface-default",
+            readAs: "bg",
+            rawVar: "--raw-gray-0",
+            rawVarDark: "--raw-gray-95",
+          },
+          {
+            token: "surface-subtle",
+            utility: "surface-subtle",
+            cssVar: "--color-surface-subtle",
+            readAs: "bg",
+            rawVar: "--raw-gray-5",
+            rawVarDark: "--raw-gray-90",
+          },
+          {
+            token: "surface-strong",
+            utility: "surface-strong",
+            cssVar: "--color-surface-strong",
+            readAs: "bg",
+            rawVar: "--raw-gray-10",
+            rawVarDark: "--raw-gray-80",
+          },
         ],
       },
       {
         id: "status",
         label: "status",
         tokens: [
-          { token: "surface-negative", utility: "surface-negative", cssVar: "--color-surface-negative", readAs: "bg", rawVar: "--raw-red-5", rawVarDark: "--raw-red-80" },
-          { token: "surface-attention", utility: "surface-attention", cssVar: "--color-surface-attention", readAs: "bg", rawVar: "--raw-orange-5", rawVarDark: "--raw-orange-80" },
-          { token: "surface-positive", utility: "surface-positive", cssVar: "--color-surface-positive", readAs: "bg", rawVar: "--raw-green-5", rawVarDark: "--raw-green-80" },
-          { token: "surface-info", utility: "surface-info", cssVar: "--color-surface-info", readAs: "bg", rawVar: "--raw-blue-5", rawVarDark: "--raw-blue-80" },
-          { token: "surface-disabled", utility: "surface-disabled", cssVar: "--color-surface-disabled", readAs: "bg", rawVar: "--raw-gray-5", rawVarDark: "--raw-gray-90" },
+          {
+            token: "surface-negative",
+            utility: "surface-negative",
+            cssVar: "--color-surface-negative",
+            readAs: "bg",
+            rawVar: "--raw-red-5",
+            rawVarDark: "--raw-red-80",
+          },
+          {
+            token: "surface-attention",
+            utility: "surface-attention",
+            cssVar: "--color-surface-attention",
+            readAs: "bg",
+            rawVar: "--raw-orange-5",
+            rawVarDark: "--raw-orange-80",
+          },
+          {
+            token: "surface-positive",
+            utility: "surface-positive",
+            cssVar: "--color-surface-positive",
+            readAs: "bg",
+            rawVar: "--raw-green-5",
+            rawVarDark: "--raw-green-80",
+          },
+          {
+            token: "surface-info",
+            utility: "surface-info",
+            cssVar: "--color-surface-info",
+            readAs: "bg",
+            rawVar: "--raw-blue-5",
+            rawVarDark: "--raw-blue-80",
+          },
+          {
+            token: "surface-disabled",
+            utility: "surface-disabled",
+            cssVar: "--color-surface-disabled",
+            readAs: "bg",
+            rawVar: "--raw-gray-5",
+            rawVarDark: "--raw-gray-90",
+          },
         ],
       },
     ],
@@ -201,37 +306,133 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
   {
     id: "semantic-foreground",
     title: "Foreground",
-    description: <>텍스트와 아이콘에 쓰는 <strong>전경(foreground)</strong> 색상입니다. 아이콘은 currentColor를 상속하므로 <strong>foreground-*</strong> 유틸리티로 함께 적용합니다.</>,
+    description: (
+      <>
+        텍스트와 아이콘에 쓰는 <strong>전경(foreground)</strong> 색상입니다. 아이콘은 currentColor를 상속하므로{" "}
+        <strong>foreground-*</strong> 유틸리티로 함께 적용합니다.
+      </>
+    ),
     groups: [
       {
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "foreground-brand", utility: "foreground-brand", cssVar: "--color-foreground-brand", readAs: "text", rawVar: "--raw-violet-50", rawVarDark: "--raw-violet-30" },
-          { token: "foreground-brand-subtle", utility: "foreground-brand-subtle", cssVar: "--color-foreground-brand-subtle", readAs: "text", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-50" },
-          { token: "foreground-brand-strong", utility: "foreground-brand-strong", cssVar: "--color-foreground-brand-strong", readAs: "text", rawVar: "--raw-violet-60", rawVarDark: "--raw-violet-20" },
+          {
+            token: "foreground-brand",
+            utility: "foreground-brand",
+            cssVar: "--color-foreground-brand",
+            readAs: "text",
+            rawVar: "--raw-violet-50",
+            rawVarDark: "--raw-violet-30",
+          },
+          {
+            token: "foreground-brand-subtle",
+            utility: "foreground-brand-subtle",
+            cssVar: "--color-foreground-brand-subtle",
+            readAs: "text",
+            rawVar: "--raw-violet-40",
+            rawVarDark: "--raw-violet-50",
+          },
+          {
+            token: "foreground-brand-strong",
+            utility: "foreground-brand-strong",
+            cssVar: "--color-foreground-brand-strong",
+            readAs: "text",
+            rawVar: "--raw-violet-60",
+            rawVarDark: "--raw-violet-20",
+          },
         ],
       },
       {
         id: "neutral",
         label: "neutral",
         tokens: [
-          { token: "foreground-default", utility: "foreground-default", cssVar: "--color-foreground-default", readAs: "text", rawVar: "--raw-gray-90", rawVarDark: "--raw-gray-10" },
-          { token: "foreground-subtle", utility: "foreground-subtle", cssVar: "--color-foreground-subtle", readAs: "text", rawVar: "--raw-gray-70", rawVarDark: "--raw-gray-30" },
-          { token: "foreground-muted", utility: "foreground-muted", cssVar: "--color-foreground-muted", readAs: "text", rawVar: "--raw-gray-40", rawVarDark: "--raw-gray-60" },
-          { token: "foreground-inverse", utility: "foreground-inverse", cssVar: "--color-foreground-inverse", readAs: "text", rawVar: "--raw-white", rawVarDark: "--raw-black" },
+          {
+            token: "foreground-default",
+            utility: "foreground-default",
+            cssVar: "--color-foreground-default",
+            readAs: "text",
+            rawVar: "--raw-gray-90",
+            rawVarDark: "--raw-gray-10",
+          },
+          {
+            token: "foreground-subtle",
+            utility: "foreground-subtle",
+            cssVar: "--color-foreground-subtle",
+            readAs: "text",
+            rawVar: "--raw-gray-70",
+            rawVarDark: "--raw-gray-30",
+          },
+          {
+            token: "foreground-muted",
+            utility: "foreground-muted",
+            cssVar: "--color-foreground-muted",
+            readAs: "text",
+            rawVar: "--raw-gray-40",
+            rawVarDark: "--raw-gray-60",
+          },
+          {
+            token: "foreground-inverse",
+            utility: "foreground-inverse",
+            cssVar: "--color-foreground-inverse",
+            readAs: "text",
+            rawVar: "--raw-white",
+            rawVarDark: "--raw-black",
+          },
         ],
       },
       {
         id: "status",
         label: "status",
         tokens: [
-          { token: "foreground-required", utility: "foreground-required", cssVar: "--color-foreground-required", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
-          { token: "foreground-negative", utility: "foreground-negative", cssVar: "--color-foreground-negative", readAs: "text", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
-          { token: "foreground-attention", utility: "foreground-attention", cssVar: "--color-foreground-attention", readAs: "text", rawVar: "--raw-orange-50", rawVarDark: "--raw-orange-30" },
-          { token: "foreground-positive", utility: "foreground-positive", cssVar: "--color-foreground-positive", readAs: "text", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
-          { token: "foreground-info", utility: "foreground-info", cssVar: "--color-foreground-info", readAs: "text", rawVar: "--raw-blue-50", rawVarDark: "--raw-blue-30" },
-          { token: "foreground-disabled", utility: "foreground-disabled", cssVar: "--color-foreground-disabled", readAs: "text", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
+          {
+            token: "foreground-required",
+            utility: "foreground-required",
+            cssVar: "--color-foreground-required",
+            readAs: "text",
+            rawVar: "--raw-red-50",
+            rawVarDark: "--raw-red-30",
+          },
+          {
+            token: "foreground-negative",
+            utility: "foreground-negative",
+            cssVar: "--color-foreground-negative",
+            readAs: "text",
+            rawVar: "--raw-red-50",
+            rawVarDark: "--raw-red-30",
+          },
+          {
+            token: "foreground-attention",
+            utility: "foreground-attention",
+            cssVar: "--color-foreground-attention",
+            readAs: "text",
+            rawVar: "--raw-orange-50",
+            rawVarDark: "--raw-orange-30",
+          },
+          {
+            token: "foreground-positive",
+            utility: "foreground-positive",
+            cssVar: "--color-foreground-positive",
+            readAs: "text",
+            rawVar: "--raw-green-50",
+            rawVarDark: "--raw-green-30",
+          },
+          {
+            token: "foreground-info",
+            utility: "foreground-info",
+            cssVar: "--color-foreground-info",
+            readAs: "text",
+            rawVar: "--raw-blue-50",
+            rawVarDark: "--raw-blue-30",
+          },
+          {
+            token: "foreground-disabled",
+            utility: "foreground-disabled",
+            cssVar: "--color-foreground-disabled",
+            readAs: "text",
+            rawVar: "--raw-gray-30",
+            rawVarDark: "--raw-gray-70",
+          },
         ],
       },
     ],
@@ -241,7 +442,8 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
     title: "Border",
     description: (
       <>
-        구분선·컨트롤·칩의 <strong>경계선(border)</strong> 색상입니다. 구조 경계와 상태 경계를 <strong>border-*</strong> 유틸리티로 구분합니다.
+        구분선·컨트롤·칩의 <strong>경계선(border)</strong> 색상입니다. 구조 경계와 상태 경계를 <strong>border-*</strong>{" "}
+        유틸리티로 구분합니다.
       </>
     ),
     groups: [
@@ -249,27 +451,90 @@ export const semanticColorCatalog: SemanticColorCategoryDef[] = [
         id: "brand",
         label: "brand",
         tokens: [
-          { token: "brand", utility: "border-brand", cssVar: "--color-brand", readAs: "border", rawVar: "--raw-violet-40", rawVarDark: "--raw-violet-30" },
+          {
+            token: "brand",
+            utility: "border-brand",
+            cssVar: "--color-brand",
+            readAs: "border",
+            rawVar: "--raw-violet-40",
+            rawVarDark: "--raw-violet-30",
+          },
         ],
       },
       {
         id: "neutral",
         label: "neutral",
         tokens: [
-          { token: "default", utility: "border-default", cssVar: "--color-default", readAs: "border", rawVar: "--raw-gray-20", rawVarDark: "--raw-gray-80" },
-          { token: "subtle", utility: "border-subtle", cssVar: "--color-subtle", readAs: "border", rawVar: "--raw-black-a10", rawVarDark: "--raw-white-a10" },
-          { token: "strong", utility: "border-strong", cssVar: "--color-strong", readAs: "border", rawVar: "--raw-gray-30", rawVarDark: "--raw-gray-70" },
+          {
+            token: "default",
+            utility: "border-default",
+            cssVar: "--color-default",
+            readAs: "border",
+            rawVar: "--raw-gray-20",
+            rawVarDark: "--raw-gray-80",
+          },
+          {
+            token: "subtle",
+            utility: "border-subtle",
+            cssVar: "--color-subtle",
+            readAs: "border",
+            rawVar: "--raw-black-a10",
+            rawVarDark: "--raw-white-a10",
+          },
+          {
+            token: "strong",
+            utility: "border-strong",
+            cssVar: "--color-strong",
+            readAs: "border",
+            rawVar: "--raw-gray-30",
+            rawVarDark: "--raw-gray-70",
+          },
         ],
       },
       {
         id: "status",
         label: "status",
         tokens: [
-          { token: "negative", utility: "border-negative", cssVar: "--color-negative", readAs: "border", rawVar: "--raw-red-50", rawVarDark: "--raw-red-30" },
-          { token: "attention", utility: "border-attention", cssVar: "--color-attention", readAs: "border", rawVar: "--raw-orange-50", rawVarDark: "--raw-orange-30" },
-          { token: "positive", utility: "border-positive", cssVar: "--color-positive", readAs: "border", rawVar: "--raw-green-50", rawVarDark: "--raw-green-30" },
-          { token: "info", utility: "border-info", cssVar: "--color-info", readAs: "border", rawVar: "--raw-blue-50", rawVarDark: "--raw-blue-30" },
-          { token: "disabled", utility: "border-disabled", cssVar: "--color-disabled", readAs: "border", rawVar: "--raw-gray-10", rawVarDark: "--raw-gray-90" },
+          {
+            token: "negative",
+            utility: "border-negative",
+            cssVar: "--color-negative",
+            readAs: "border",
+            rawVar: "--raw-red-50",
+            rawVarDark: "--raw-red-30",
+          },
+          {
+            token: "attention",
+            utility: "border-attention",
+            cssVar: "--color-attention",
+            readAs: "border",
+            rawVar: "--raw-orange-50",
+            rawVarDark: "--raw-orange-30",
+          },
+          {
+            token: "positive",
+            utility: "border-positive",
+            cssVar: "--color-positive",
+            readAs: "border",
+            rawVar: "--raw-green-50",
+            rawVarDark: "--raw-green-30",
+          },
+          {
+            token: "info",
+            utility: "border-info",
+            cssVar: "--color-info",
+            readAs: "border",
+            rawVar: "--raw-blue-50",
+            rawVarDark: "--raw-blue-30",
+          },
+          {
+            token: "disabled",
+            utility: "border-disabled",
+            cssVar: "--color-disabled",
+            readAs: "border",
+            rawVar: "--raw-gray-10",
+            rawVarDark: "--raw-gray-90",
+          },
         ],
       },
     ],
@@ -281,7 +546,8 @@ export const semanticUtilityCatalog: SemanticColorCategoryDef = {
   title: "Utility",
   description: (
     <>
-      컴포넌트 의미색과 분리된 <strong>유틸리티 전용</strong> 색상입니다. focus-ring·scroll처럼 단일 목적 토큰을 <strong>utility-*</strong> 슬러그로 관리합니다.
+      컴포넌트 의미색과 분리된 <strong>유틸리티 전용</strong> 색상입니다. focus-ring·scroll처럼 단일 목적 토큰을{" "}
+      <strong>utility-*</strong> 슬러그로 관리합니다.
     </>
   ),
   groups: [
@@ -329,7 +595,8 @@ export const semanticOverlayCatalog = {
   title: "Overlay",
   description: (
     <>
-      오버레이에 쓰는 반투명 토큰입니다. 라이트는 <strong>검정 alpha</strong>, 다크는 <strong>흰색 alpha</strong>로 전환되어 아래 콘텐츠를 어둡히거나 밝힙니다.
+      오버레이에 쓰는 반투명 토큰입니다. 라이트는 <strong>검정 alpha</strong>, 다크는 <strong>흰색 alpha</strong>로
+      전환되어 아래 콘텐츠를 어둡히거나 밝힙니다.
     </>
   ),
   tokens: overlayTokens
@@ -374,7 +641,8 @@ export const semanticGradientCatalog = {
   title: "Gradient",
   description: (
     <>
-      브랜드 강조에 쓰는 용도 기반 그라데이션입니다. <strong>gradient-*</strong> 유틸리티로 적용하며, 시맨틱 색 스케일을 참조해 라이트/다크에 대응합니다.
+      브랜드 강조에 쓰는 용도 기반 그라데이션입니다. <strong>gradient-*</strong> 유틸리티로 적용하며, 시맨틱 색 스케일을
+      참조해 라이트/다크에 대응합니다.
     </>
   ),
   groups: [
@@ -400,7 +668,8 @@ export const semanticShadowCatalog = {
   title: "Shadow",
   description: (
     <>
-      면의 깊이감을 만드는 실제 <strong>그림자(shadow)</strong> 효과 토큰입니다. 높이감이 낮은 표면부터 강한 부유 레이어까지 <strong>shadow-1</strong>부터 <strong>shadow-4</strong> 순서로 사용합니다.
+      면의 깊이감을 만드는 실제 <strong>그림자(shadow)</strong> 효과 토큰입니다. 높이감이 낮은 표면부터 강한 부유
+      레이어까지 <strong>shadow-1</strong>부터 <strong>shadow-4</strong> 순서로 사용합니다.
     </>
   ),
   tokens: [
@@ -444,7 +713,8 @@ export const semanticBlurCatalog = {
   title: "Blur",
   description: (
     <>
-      배경 콘텐츠를 흐리게 처리하는 <strong>블러(blur)</strong> 효과 토큰입니다. 필요한 흐림 정도에 따라 <strong>blur-*</strong> 유틸리티를 사용합니다.
+      배경 콘텐츠를 흐리게 처리하는 <strong>블러(blur)</strong> 효과 토큰입니다. 필요한 흐림 정도에 따라{" "}
+      <strong>blur-*</strong> 유틸리티를 사용합니다.
     </>
   ),
   tokens: [
@@ -471,9 +741,7 @@ export const semanticBlurCatalog = {
 
 export type TocSection = { id: string; label: string; level?: 1 | 2 };
 
-export const colorContrastTocSections: TocSection[] = [
-  { id: "section-contrast", label: "Contrast Checker" },
-];
+export const colorContrastTocSections: TocSection[] = [{ id: "section-contrast", label: "Contrast Checker" }];
 
 export const colorRawTocSections: TocSection[] = [
   { id: "section-color", label: "Color Palette", level: 1 },
@@ -607,20 +875,12 @@ export function semanticSwatchNeedsBorder(color: string): boolean {
   return false;
 }
 
-export function SwatchCardMeta({
-  utility,
-  sourceVar,
-  value,
-}: {
-  utility: string;
-  sourceVar: string;
-  value?: string;
-}) {
+export function SwatchCardMeta({ utility, sourceVar, value }: { utility: string; sourceVar: string; value?: string }) {
   return (
     <div className="p-4">
-      <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
-      <span className="mt-1 block font-mono text-caption text-gray-60">{sourceVar}</span>
-      {value ? <span className="mt-0.5 block font-mono text-caption text-gray-60 numeric-tabular">{value}</span> : null}
+      <span className="text-label-small foreground-default block font-mono font-bold">{utility}</span>
+      <span className="text-caption text-gray-60 mt-1 block font-mono">{sourceVar}</span>
+      {value ? <span className="text-caption text-gray-60 numeric-tabular mt-0.5 block font-mono">{value}</span> : null}
     </div>
   );
 }
@@ -657,7 +917,7 @@ export function CopyableSwatchSurface({
       className={[
         "group relative block cursor-pointer appearance-none border-0 bg-transparent p-0 text-left",
         allowOverflow ? "overflow-visible" : "overflow-hidden",
-        "focus-visible:outline focus-visible:outline-[var(--outline-focus-width)] focus-visible:outline-offset-[var(--outline-focus-tab-offset)] utility-focus-ring",
+        "utility-focus-ring focus-visible:outline focus-visible:outline-offset-[var(--outline-focus-tab-offset)] focus-visible:outline-[var(--outline-focus-width)]",
         className,
       ].join(" ")}
       style={style}
@@ -667,9 +927,9 @@ export function CopyableSwatchSurface({
       {children}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-3 right-3 flex translate-y-3 justify-end opacity-0 transition-[opacity,translate] duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,translate] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+        className="pointer-events-none absolute right-3 bottom-3 flex translate-y-3 justify-end opacity-0 transition-[opacity,translate] duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,translate] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
       >
-        <span className="rounded-md bg-[color-mix(in_srgb,var(--raw-black)_86%,transparent)] px-2 py-1 font-mono text-caption font-bold text-[var(--raw-white)] shadow-2">
+        <span className="text-caption shadow-2 rounded-md bg-[color-mix(in_srgb,var(--raw-black)_86%,transparent)] px-2 py-1 font-mono font-bold text-[var(--raw-white)]">
           Copy
         </span>
       </span>
@@ -690,14 +950,11 @@ export function SemanticColorSwatchCard({
   const hexLabel = cssColorToHex(color);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="border-default bg-background overflow-hidden rounded-xl border shadow-[0_4px_16px_var(--ds-shadow)]">
       <CopyableSwatchSurface
         copyValue={utility}
         label={utility}
-        className={[
-          "h-24 w-full",
-          needsBorder ? "border-b border-default" : "",
-        ].join(" ")}
+        className={["h-24 w-full", needsBorder ? "border-default border-b" : ""].join(" ")}
         style={{ backgroundColor: color }}
       />
       <SwatchCardMeta utility={utility} sourceVar={rawVar} value={hexLabel} />
@@ -724,11 +981,11 @@ export function SemanticOverlaySwatchCard({
   hideUtility?: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="border-default bg-background overflow-hidden rounded-xl border shadow-[0_4px_16px_var(--ds-shadow)]">
       {hideUtility ? (
         <div
           aria-hidden="true"
-          className="h-24 w-full overflow-hidden border-b border-default"
+          className="border-default h-24 w-full overflow-hidden border-b"
           style={isDark ? checkerDark : checkerLight}
         >
           <div className="size-full" style={{ background: `var(${rawVar})` }} />
@@ -737,7 +994,7 @@ export function SemanticOverlaySwatchCard({
         <CopyableSwatchSurface
           copyValue={utility}
           label={utility}
-          className="h-24 w-full border-b border-default"
+          className="border-default h-24 w-full border-b"
           style={isDark ? checkerDark : checkerLight}
         >
           <span className="block size-full" style={{ background: `var(${cssVar})` }} />
@@ -745,18 +1002,18 @@ export function SemanticOverlaySwatchCard({
       )}
       {hideUtility ? (
         <div className="p-4">
-          <span className="block font-mono text-label-small font-bold foreground-default">{rawVar}</span>
+          <span className="text-label-small foreground-default block font-mono font-bold">{rawVar}</span>
           {valueLabel ? (
-            <span className="mt-1 block font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</span>
+            <span className="text-caption text-gray-60 numeric-tabular mt-1 block font-mono">{valueLabel}</span>
           ) : null}
         </div>
       ) : (
         <div className="p-4">
-          <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
-          <span className="mt-1 block font-mono text-caption text-gray-60">{dsVar}</span>
-          <span className="mt-0.5 block font-mono text-caption text-gray-60">{rawVar}</span>
+          <span className="text-label-small foreground-default block font-mono font-bold">{utility}</span>
+          <span className="text-caption text-gray-60 mt-1 block font-mono">{dsVar}</span>
+          <span className="text-caption text-gray-60 mt-0.5 block font-mono">{rawVar}</span>
           {valueLabel ? (
-            <span className="mt-0.5 block font-mono text-caption text-gray-60 numeric-tabular">{valueLabel}</span>
+            <span className="text-caption text-gray-60 numeric-tabular mt-0.5 block font-mono">{valueLabel}</span>
           ) : null}
         </div>
       )}
@@ -777,12 +1034,12 @@ export function SemanticGradientSwatchCard({
   const underlayStyle = dsVar.includes("overlay") ? checkerLight : { background: "var(--ds-violet-10)" };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="border-default bg-background overflow-hidden rounded-xl border shadow-[0_4px_16px_var(--ds-shadow)]">
       {isFade ? (
         <CopyableSwatchSurface
           copyValue={utility}
           label={utility}
-          className="h-24 w-full border-b border-default"
+          className="border-default h-24 w-full border-b"
           style={underlayStyle}
         >
           <span aria-hidden="true" className={`block size-full ${utility}`} />
@@ -791,12 +1048,12 @@ export function SemanticGradientSwatchCard({
         <CopyableSwatchSurface
           copyValue={utility}
           label={utility}
-          className={`h-24 w-full border-b border-default ${utility}`}
+          className={`border-default h-24 w-full border-b ${utility}`}
         />
       )}
       <div className="p-4">
-        <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
-        <span className="mt-1 block break-all font-mono text-caption text-gray-60">{value}</span>
+        <span className="text-label-small foreground-default block font-mono font-bold">{utility}</span>
+        <span className="text-caption text-gray-60 mt-1 block font-mono break-all">{value}</span>
       </div>
     </div>
   );
@@ -810,17 +1067,17 @@ export function SemanticShadowSwatchCard({ utility, sourceVar, value, valuePx }:
           copyValue={utility}
           label={utility}
           allowOverflow
-          className="size-28 rounded-2xl surface-default"
+          className="surface-default size-28 rounded-2xl"
         >
           <span aria-hidden="true" className={`block size-full rounded-2xl ${utility}`} />
         </CopyableSwatchSurface>
       </div>
       <div className="min-w-0 py-5">
-        <span className="block font-mono text-label-small font-bold foreground-default">{utility}</span>
-        <span className="mt-1 block font-mono text-caption text-gray-60">{sourceVar}</span>
-        <span className="mt-0.5 block break-all font-mono text-caption text-gray-60">rem / {value}</span>
+        <span className="text-label-small foreground-default block font-mono font-bold">{utility}</span>
+        <span className="text-caption text-gray-60 mt-1 block font-mono">{sourceVar}</span>
+        <span className="text-caption text-gray-60 mt-0.5 block font-mono break-all">rem / {value}</span>
         {valuePx ? (
-          <span className="mt-0.5 block break-all font-mono text-caption text-gray-60">px / {valuePx}</span>
+          <span className="text-caption text-gray-60 mt-0.5 block font-mono break-all">px / {valuePx}</span>
         ) : null}
       </div>
     </div>
@@ -834,35 +1091,27 @@ export function SemanticBlurSwatchCard({
   hideUtility = false,
 }: Omit<SemanticEffectTokenDef, "value"> & { value?: string; hideUtility?: boolean }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-default bg-background shadow-[0_4px_16px_var(--ds-shadow)]">
+    <div className="border-default bg-background overflow-hidden rounded-xl border shadow-[0_4px_16px_var(--ds-shadow)]">
       {hideUtility ? (
-        <div aria-hidden="true" className="relative h-32 w-full overflow-hidden border-b border-default">
-          <img
-            src="/blur_sample.webp"
-            alt=""
-            className="absolute inset-0 size-full object-cover"
-          />
+        <div aria-hidden="true" className="border-default relative h-32 w-full overflow-hidden border-b">
+          <img src="/blur_sample.webp" alt="" className="absolute inset-0 size-full object-cover" />
           <div className={`absolute inset-0 ${utility}`} />
         </div>
       ) : (
         <CopyableSwatchSurface
           copyValue={utility}
           label={utility}
-          className="relative h-32 w-full border-b border-default"
+          className="border-default relative h-32 w-full border-b"
         >
-          <img
-            src="/blur_sample.webp"
-            alt=""
-            className="absolute inset-0 size-full object-cover"
-          />
+          <img src="/blur_sample.webp" alt="" className="absolute inset-0 size-full object-cover" />
           <span aria-hidden="true" className={`absolute inset-0 block ${utility}`} />
         </CopyableSwatchSurface>
       )}
       {hideUtility ? (
         <div className="p-4">
-          <span className="block font-mono text-label-small font-bold foreground-default">{sourceVar}</span>
+          <span className="text-label-small foreground-default block font-mono font-bold">{sourceVar}</span>
           {value ? (
-            <span className="mt-1 block font-mono text-caption text-gray-60 numeric-tabular">{value}</span>
+            <span className="text-caption text-gray-60 numeric-tabular mt-1 block font-mono">{value}</span>
           ) : null}
         </div>
       ) : (
@@ -872,16 +1121,10 @@ export function SemanticBlurSwatchCard({
   );
 }
 
-export function SemanticColorGroupGrid({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+export function SemanticColorGroupGrid({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mb-8 last:mb-0">
-      <h4 className="m-0 mb-3 text-label-small font-semibold lowercase text-gray-60">{label}</h4>
+      <h4 className="text-label-small text-gray-60 m-0 mb-3 font-semibold lowercase">{label}</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>
     </div>
   );
@@ -903,7 +1146,7 @@ export function SemanticColorCategorySection({
       <h4
         id={id}
         className={[
-          "m-0 mb-4 text-heading-small font-bold leading-base foreground-default",
+          "text-heading-small leading-base foreground-default m-0 mb-4 font-bold",
           guideSectionAnchorClass,
         ].join(" ")}
       >
@@ -933,16 +1176,13 @@ export function SemanticTokenFamilySection({
       <header className={lead ? "mb-12" : "mt-40 mb-12"}>
         <h3
           id={id}
-          className={[
-            "m-0 text-heading-large font-bold leading-base foreground-brand",
-            guideSectionAnchorClass,
-          ].join(" ")}
+          className={["text-heading-large leading-base foreground-brand m-0 font-bold", guideSectionAnchorClass].join(
+            " ",
+          )}
         >
           {title}
         </h3>
-        <p className="m-0 mt-3 max-w-3xl text-body-medium leading-base foreground-subtle">
-          {description}
-        </p>
+        <p className="text-body-medium leading-base foreground-subtle m-0 mt-3 max-w-3xl">{description}</p>
       </header>
       {children}
     </section>
@@ -966,9 +1206,33 @@ export const checkerDark = makeChecker("var(--raw-black)", "var(--raw-gray-70)")
 
 // 폰트 폴백 체인 — 각 단계는 해당 폰트로 렌더되어 시각 비교 가능
 export const fontStack = [
-  { order: 1, name: "Pretendard GOV", family: "var(--font-pretendard-gov), sans-serif", role: "기본", source: "자체 호스팅 (next/font/local)", desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용.", emphasis: "primary" as const },
-  { order: 2, name: "Noto Sans KR", family: "var(--font-noto), sans-serif", role: "폴백", source: "자체 호스팅 (next/font/local)", desc: "Pretendard 미로드 시 사용. preload:false 로 평상시엔 다운로드 안 함.", emphasis: "fallback" as const },
-  { order: 3, name: "sans-serif", family: "sans-serif", role: "최종", source: "시스템 기본", desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체.", emphasis: "system" as const },
+  {
+    order: 1,
+    name: "Pretendard GOV",
+    family: "var(--font-pretendard-gov), sans-serif",
+    role: "기본",
+    source: "자체 호스팅 (next/font/local)",
+    desc: "공공·접근성(KWCAG) 최적화 한글 폰트. 1순위로 사용.",
+    emphasis: "primary" as const,
+  },
+  {
+    order: 2,
+    name: "Noto Sans KR",
+    family: "var(--font-noto), sans-serif",
+    role: "폴백",
+    source: "자체 호스팅 (next/font/local)",
+    desc: "Pretendard 미로드 시 사용. preload:false 로 평상시엔 다운로드 안 함.",
+    emphasis: "fallback" as const,
+  },
+  {
+    order: 3,
+    name: "sans-serif",
+    family: "sans-serif",
+    role: "최종",
+    source: "시스템 기본",
+    desc: "위 둘 다 불가 시 OS 기본 산세리프로 대체.",
+    emphasis: "system" as const,
+  },
 ];
 
 export const fontStackBadgeClass: Record<(typeof fontStack)[number]["emphasis"], string> = {
@@ -998,7 +1262,7 @@ export function FontStackRoleTag({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-caption font-semibold ${fontStackTagClass[emphasis]}`}
+      className={`text-caption inline-flex items-center rounded-full px-2 py-0.5 font-semibold ${fontStackTagClass[emphasis]}`}
     >
       {children}
     </span>
@@ -1042,7 +1306,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-default bg-background px-4 py-3 text-label-xsmall font-medium foreground-default shadow-[0_6px_24px_var(--ds-shadow)]"
+          className="border-default bg-background text-label-xsmall foreground-default pointer-events-none fixed bottom-24 left-1/2 z-[100] max-w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border px-4 py-3 font-medium shadow-[0_6px_24px_var(--ds-shadow)]"
         >
           {toast.message}
         </div>
@@ -1104,12 +1368,7 @@ export function TokenChip({
   }
 
   return (
-    <button
-      type="button"
-      className={chipClassName}
-      onClick={() => void handleCopy()}
-      aria-label={`${copyValue} 복사`}
-    >
+    <button type="button" className={chipClassName} onClick={() => void handleCopy()} aria-label={`${copyValue} 복사`}>
       {children}
     </button>
   );
@@ -1137,7 +1396,8 @@ const codeKeywordSet = new Set([
 
 function highlightCodeLine(line: string): CodeToken[] {
   const tokens: CodeToken[] = [];
-  const pattern = /(\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b\d+\b|\b[A-Za-z_$][\w$]*(?=\s*:)|\b[A-Za-z_$][\w$]*\b|[{}()[\],.:;+*/=-])/g;
+  const pattern =
+    /(\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b\d+\b|\b[A-Za-z_$][\w$]*(?=\s*:)|\b[A-Za-z_$][\w$]*\b|[{}()[\],.:;+*/=-])/g;
   let cursor = 0;
 
   for (const match of line.matchAll(pattern)) {
@@ -1150,13 +1410,19 @@ function highlightCodeLine(line: string): CodeToken[] {
 
     if (value.startsWith("//")) {
       tokens.push({ value, className: "text-gray-40" });
-    } else if (value.startsWith("\"") || value.startsWith("'") || value.startsWith("`")) {
+    } else if (value.startsWith('"') || value.startsWith("'") || value.startsWith("`")) {
       tokens.push({ value, className: "text-green-30" });
     } else if (/^\d+$/.test(value)) {
       tokens.push({ value, className: "text-cyan-30" });
     } else if (codeKeywordSet.has(value)) {
       tokens.push({ value, className: "text-orange-30" });
-    } else if (/^[A-Za-z_$][\w$]*$/.test(value) && line.slice(index + value.length).trimStart().startsWith(":")) {
+    } else if (
+      /^[A-Za-z_$][\w$]*$/.test(value) &&
+      line
+        .slice(index + value.length)
+        .trimStart()
+        .startsWith(":")
+    ) {
       tokens.push({ value, className: "text-orange-20" });
     } else if (/^[{}()[\],.:;+*/=-]$/.test(value)) {
       tokens.push({ value, className: "text-gray-20" });
@@ -1192,11 +1458,11 @@ export function CodeBlock({
   }
 
   return (
-    <div className="overflow-hidden rounded-md bg-gray-90">
-      <pre className="m-0 whitespace-pre-wrap break-words px-4 py-3 text-caption font-mono leading-base text-gray-10">
+    <div className="bg-gray-90 overflow-hidden rounded-md">
+      <pre className="text-caption leading-base text-gray-10 m-0 px-4 py-3 font-mono break-words whitespace-pre-wrap">
         <code className={`language-${language}`}>
           {code.split("\n").map((line, lineIndex) => (
-            <span key={`${lineIndex}-${line}`} className="block min-h-[1.5em] whitespace-pre-wrap break-words">
+            <span key={`${lineIndex}-${line}`} className="block min-h-[1.5em] break-words whitespace-pre-wrap">
               {highlightCodeLine(line).map((token, tokenIndex) => (
                 <span key={`${lineIndex}-${tokenIndex}`} className={token.className}>
                   {token.value}
@@ -1206,11 +1472,11 @@ export function CodeBlock({
           ))}
         </code>
       </pre>
-      <div className="flex justify-end border-t border-gray-80 px-2 py-1.5">
+      <div className="border-gray-80 flex justify-end border-t px-2 py-1.5">
         <button
           type="button"
           onClick={() => void handleCopy()}
-          className="cursor-pointer rounded-sm border-0 bg-gray-70 px-2 py-1 text-caption font-bold text-gray-5 transition-colors duration-150 hover:bg-gray-60"
+          className="bg-gray-70 text-caption text-gray-5 hover:bg-gray-60 cursor-pointer rounded-sm border-0 px-2 py-1 font-bold transition-colors duration-150"
         >
           {copied ? "Copied" : copyLabel}
         </button>
@@ -1235,7 +1501,7 @@ export function TabDescriptionCallout({
       <div
         className={[
           margin,
-          "flex items-start gap-3 rounded-md bg-guide-callout-info-bg px-5 py-4 text-body-medium leading-base text-guide-callout-info-fg [&_strong]:font-bold [&_strong]:text-guide-callout-info-accent [&_a]:font-semibold [&_a]:text-guide-callout-info-accent [&_a]:underline [&_a]:underline-offset-2",
+          "bg-guide-callout-info-bg text-body-medium leading-base text-guide-callout-info-fg [&_strong]:text-guide-callout-info-accent [&_a]:text-guide-callout-info-accent flex items-start gap-3 rounded-md px-5 py-4 [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-2 [&_strong]:font-bold",
           className,
         ]
           .filter(Boolean)
@@ -1244,7 +1510,7 @@ export function TabDescriptionCallout({
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
-          className="mt-1 size-icon-xs shrink-0 text-guide-callout-info-accent"
+          className="size-icon-xs text-guide-callout-info-accent mt-1 shrink-0"
           fill="currentColor"
         >
           <circle cx="12" cy="12" r="10" />
@@ -1263,7 +1529,7 @@ export function TabDescriptionCallout({
     <div
       className={[
         margin,
-        "border-l-4 py-3.5 pl-4 pr-5 text-body-medium leading-base [&_strong]:font-bold [&_strong]:foreground-default [&_a]:font-semibold [&_a]:foreground-default [&_a]:underline [&_a]:underline-offset-2",
+        "text-body-medium leading-base [&_strong]:foreground-default [&_a]:foreground-default border-l-4 py-3.5 pr-5 pl-4 [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-2 [&_strong]:font-bold",
         toneClassName,
         className,
       ]
@@ -1276,18 +1542,8 @@ export function TabDescriptionCallout({
 }
 
 /** 타이틀·탭·설명 묶음 — 카드/패딩 없이 세로 간격만 유지 */
-export function ContentIntroLayout({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
+export function ContentIntroLayout({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={className}>{children}</div>;
 }
 
 export function ContentTitleBlock({
@@ -1305,15 +1561,14 @@ export function ContentTitleBlock({
 }) {
   return (
     <header className={["mb-20", className].filter(Boolean).join(" ")}>
-      <p className="m-0 text-label-small font-semibold text-guide-intro-eyebrow">{eyebrow}</p>
-      <h2
-        id={titleId}
-        className="m-0 mt-2 font-bold tracking-normal foreground-default typo-guide-content-title"
-      >
+      <p className="text-label-small text-guide-intro-eyebrow m-0 font-semibold">{eyebrow}</p>
+      <h2 id={titleId} className="foreground-default typo-guide-content-title m-0 mt-2 font-bold tracking-normal">
         {title}
       </h2>
       {description ? (
-        <TabDescriptionCallout className="mt-4" margin="mb-0">{description}</TabDescriptionCallout>
+        <TabDescriptionCallout className="mt-4" margin="mb-0">
+          {description}
+        </TabDescriptionCallout>
       ) : null}
     </header>
   );
@@ -1343,7 +1598,7 @@ export function ContentSectionTitle({
       <h3
         id={id}
         className={[
-          "m-0 text-heading-large font-bold leading-base foreground-brand",
+          "text-heading-large leading-base foreground-brand m-0 font-bold",
           guideSectionAnchorClass,
           className,
         ]
@@ -1353,7 +1608,7 @@ export function ContentSectionTitle({
         {children}
       </h3>
       {description ? (
-        <p className="m-0 mt-3 w-full text-body-medium leading-base foreground-subtle">{description}</p>
+        <p className="text-body-medium leading-base foreground-subtle m-0 mt-3 w-full">{description}</p>
       ) : null}
     </header>
   );
@@ -1422,16 +1677,21 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
         aria-labelledby={headingId}
         className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
       >
-        <h2 id={headingId} className="sr-only">목차</h2>
+        <h2 id={headingId} className="sr-only">
+          목차
+        </h2>
         <ul id={listId} className="m-0 flex list-none flex-col gap-0 p-0">
           {groupedSections.map((group) => {
             const groupActive = activeId === group.id || group.children.some((child) => child.id === activeId);
             return (
               <li
                 key={group.id}
-                className="relative pb-5 pl-6 last:pb-0 before:absolute before:left-[0.21875rem] before:top-2 before:bottom-0 before:border-l before:border-strong"
+                className="before:border-strong relative pb-5 pl-6 before:absolute before:top-2 before:bottom-0 before:left-[0.21875rem] before:border-l last:pb-0"
               >
-                <span aria-hidden="true" className="absolute left-0 top-1.5 size-2 rounded-full border border-strong bg-background" />
+                <span
+                  aria-hidden="true"
+                  className="border-strong bg-background absolute top-1.5 left-0 size-2 rounded-full border"
+                />
                 <a
                   href={`#${group.id}`}
                   onClick={(event) => {
@@ -1440,7 +1700,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                   }}
                   aria-current={activeId === group.id ? "location" : undefined}
                   className={[
-                    "block py-0.5 text-caption font-bold uppercase tracking-[0.18em] no-underline transition-colors",
+                    "text-caption block py-0.5 font-bold tracking-[0.18em] uppercase no-underline transition-colors",
                     groupActive ? "foreground-brand" : "foreground-subtle hover:foreground-brand",
                   ].join(" ")}
                 >
@@ -1460,10 +1720,10 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                             }}
                             aria-current={isActive ? "location" : undefined}
                             className={[
-                              "block py-0.5 text-body-small no-underline transition-colors",
+                              "text-body-small block py-0.5 no-underline transition-colors",
                               isActive
-                                ? "font-semibold foreground-brand"
-                                : "font-normal foreground-default hover:foreground-brand",
+                                ? "foreground-brand font-semibold"
+                                : "foreground-default hover:foreground-brand font-normal",
                             ].join(" ")}
                           >
                             {child.label}
@@ -1486,16 +1746,21 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
       aria-labelledby={headingId}
       className="guide-toc sticky top-[calc(3.75rem+1.5rem)] hidden h-fit w-[12.5rem] shrink-0 xl:block"
     >
-      <h2 id={headingId} className="sr-only">목차</h2>
+      <h2 id={headingId} className="sr-only">
+        목차
+      </h2>
       <ul id={listId} className="m-0 flex list-none flex-col gap-0 p-0">
         {sections.map(({ id, label }) => {
           const isActive = activeId === id;
           return (
             <li
               key={id}
-              className="relative pb-5 pl-6 last:pb-0 before:absolute before:left-[0.21875rem] before:top-2 before:bottom-0 before:border-l before:border-strong"
+              className="before:border-strong relative pb-5 pl-6 before:absolute before:top-2 before:bottom-0 before:left-[0.21875rem] before:border-l last:pb-0"
             >
-              <span aria-hidden="true" className="absolute left-0 top-1.5 size-2 rounded-full border border-strong bg-background" />
+              <span
+                aria-hidden="true"
+                className="border-strong bg-background absolute top-1.5 left-0 size-2 rounded-full border"
+              />
               <a
                 href={`#${id}`}
                 onClick={(event) => {
@@ -1504,7 +1769,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
                 }}
                 aria-current={isActive ? "location" : undefined}
                 className={[
-                  "block py-0.5 text-caption font-bold uppercase tracking-[0.18em] no-underline transition-colors",
+                  "text-caption block py-0.5 font-bold tracking-[0.18em] uppercase no-underline transition-colors",
                   isActive ? "foreground-brand" : "foreground-subtle hover:foreground-brand",
                 ].join(" ")}
               >
@@ -1518,13 +1783,7 @@ export function ContentTableOfContents({ sections }: { sections: TocSection[] })
   );
 }
 
-export function GuideContentLayout({
-  sections,
-  children,
-}: {
-  sections: TocSection[];
-  children: React.ReactNode;
-}) {
+export function GuideContentLayout({ sections, children }: { sections: TocSection[]; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-8 xl:gap-10">
       <div className="min-w-0 flex-1">{children}</div>
@@ -1550,7 +1809,7 @@ export function ContentSubsectionTitle({
     <h4
       id={id}
       className={[
-        "m-0 mb-6 text-heading-medium font-bold foreground-brand",
+        "text-heading-medium foreground-brand m-0 mb-6 font-bold",
         guideSectionAnchorClass,
         spaced ? "mt-20" : "",
         className,
@@ -1566,7 +1825,7 @@ export function ContentSubsectionTitle({
 /** 탭 패널 3단 — 표·그룹 라벨 (h3 섹션 직속) */
 export function ContentGroupTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <h4 className={["m-0 mb-4 text-heading-small font-bold foreground-default", className].filter(Boolean).join(" ")}>
+    <h4 className={["text-heading-small foreground-default m-0 mb-4 font-bold", className].filter(Boolean).join(" ")}>
       {children}
     </h4>
   );
@@ -1632,8 +1891,7 @@ export function ContentOutlineTabList({
 
     const containerRect = container.getBoundingClientRect();
     const tabRect = targetTab.getBoundingClientRect();
-    const tabCenterInContainer =
-      tabRect.left - containerRect.left + container.scrollLeft + tabRect.width / 2;
+    const tabCenterInContainer = tabRect.left - containerRect.left + container.scrollLeft + tabRect.width / 2;
     const scrollLeft = tabCenterInContainer - container.clientWidth / 2;
 
     container.scrollTo({
@@ -1669,7 +1927,9 @@ export function ContentOutlineTabList({
           aria-label="이전 탭 보기"
           aria-disabled={!showLeftArrow}
           onClick={() => showLeftArrow && handleScroll("left")}
-          className={[guideTabScrollBtnClass, !showLeftArrow ? "guide-tabs-scroll-btn-hidden" : ""].filter(Boolean).join(" ")}
+          className={[guideTabScrollBtnClass, !showLeftArrow ? "guide-tabs-scroll-btn-hidden" : ""]
+            .filter(Boolean)
+            .join(" ")}
         >
           <NavIcon className="size-icon-xs shrink-0">
             <polyline points="15 18 9 12 15 6" />
@@ -1679,13 +1939,13 @@ export function ContentOutlineTabList({
         <div
           ref={tabListRef}
           onScroll={checkScroll}
-          className="guide-tabs-list-area min-w-0 flex-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="guide-tabs-list-area min-w-0 flex-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           <div
             role="tablist"
             aria-label={ariaLabel}
             onKeyDown={onKeyDown}
-            className="flex w-max min-w-full border-b-2 border-foreground-default px-control-md"
+            className="border-foreground-default px-control-md flex w-max min-w-full border-b-2"
           >
             {tabs.map((tab) => {
               const active = activeValue === tab.value;
@@ -1718,7 +1978,9 @@ export function ContentOutlineTabList({
           aria-label="다음 탭 보기"
           aria-disabled={!showRightArrow}
           onClick={() => showRightArrow && handleScroll("right")}
-          className={[guideTabScrollBtnClass, !showRightArrow ? "guide-tabs-scroll-btn-hidden" : ""].filter(Boolean).join(" ")}
+          className={[guideTabScrollBtnClass, !showRightArrow ? "guide-tabs-scroll-btn-hidden" : ""]
+            .filter(Boolean)
+            .join(" ")}
         >
           <NavIcon className="size-icon-xs shrink-0">
             <polyline points="9 18 15 12 9 6" />
@@ -1735,23 +1997,12 @@ export const guideHeaderMaxHeightClass = "max-h-[calc(100vh-3.75rem)]";
 export const guideHeaderIconButtonClass =
   "inline-flex size-control-sm items-center justify-center rounded-full surface-subtle foreground-default transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
 
-const GUIDE_ZOOM_STORAGE_KEY = "system-guide:zoom";
-const GUIDE_ZOOM_MIN = 50;
-const GUIDE_ZOOM_MAX = 200;
-const GUIDE_ZOOM_STEP = 10;
-const GUIDE_ZOOM_DEFAULT = 100;
-
-function normalizeGuideZoom(value: number): number {
-  if (!Number.isFinite(value)) return GUIDE_ZOOM_DEFAULT;
-  return Math.min(GUIDE_ZOOM_MAX, Math.max(GUIDE_ZOOM_MIN, Math.round(value / GUIDE_ZOOM_STEP) * GUIDE_ZOOM_STEP));
-}
-
 export function GuideLogoMark() {
   return (
     <svg
       aria-hidden="true"
       viewBox="0 0 32 20"
-      className="size-icon-sm shrink-0 foreground-default"
+      className="size-icon-sm foreground-default shrink-0"
       fill="currentColor"
     >
       <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.35" />
@@ -1760,44 +2011,26 @@ export function GuideLogoMark() {
   );
 }
 
-export function GuideZoomControl() {
-  // 서버·클라이언트 첫 렌더를 동일(기본값)하게 맞춘다. 렌더 중 localStorage를 읽으면
-  // (typeof window 분기) 서버 100% ↔ 클라 저장값으로 갈려 hydration mismatch가 난다.
-  // 저장된 zoom은 마운트 이후(useEffect)에 읽어 적용한다.
-  const [zoomPercent, setZoomPercent] = useState(GUIDE_ZOOM_DEFAULT);
-
-  useEffect(() => {
-    try {
-      const storedZoom = window.localStorage.getItem(GUIDE_ZOOM_STORAGE_KEY);
-      if (storedZoom !== null) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setZoomPercent(normalizeGuideZoom(Number(storedZoom)));
-      }
-    } catch {
-      // 저장소 접근 불가 — 기본값 유지
-    }
-  }, []);
+export function GuideZoomControl({ initialZoom }: { initialZoom: number }) {
+  const zoomPercent = useSyncExternalStore(
+    subscribeToZoom,
+    readActiveZoom,
+    // 서버 스냅샷 = 쿠키 값. RootLayout이 같은 쿠키로 <html style>을 렌더하므로
+    // 서버·클라 첫 렌더가 동일해 FOUC·hydration mismatch 없이 시작한다.
+    () => initialZoom,
+  );
 
   const zoomOut = useCallback(() => {
-    setZoomPercent((current) => normalizeGuideZoom(current - GUIDE_ZOOM_STEP));
-  }, []);
+    setZoom(zoomPercent - ZOOM_STEP);
+  }, [zoomPercent]);
 
   const zoomIn = useCallback(() => {
-    setZoomPercent((current) => normalizeGuideZoom(current + GUIDE_ZOOM_STEP));
-  }, []);
+    setZoom(zoomPercent + ZOOM_STEP);
+  }, [zoomPercent]);
 
   const resetZoom = useCallback(() => {
-    setZoomPercent(GUIDE_ZOOM_DEFAULT);
+    setZoom(ZOOM_DEFAULT);
   }, []);
-
-  useEffect(() => {
-    document.documentElement.style.fontSize = `${zoomPercent}%`;
-    try {
-      window.localStorage.setItem(GUIDE_ZOOM_STORAGE_KEY, String(zoomPercent));
-    } catch {
-      // 저장소 접근이 막힌 환경에서도 현재 세션의 확대/축소는 유지한다.
-    }
-  }, [zoomPercent]);
 
   const zoomButtonClass =
     "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 foreground-default transition-colors duration-150 hover:surface-strong disabled:cursor-not-allowed disabled:foreground-disabled disabled:hover:bg-transparent";
@@ -1806,13 +2039,13 @@ export function GuideZoomControl() {
     <div
       role="group"
       aria-label="화면 확대 축소"
-      className="inline-flex h-control-md items-center gap-1.5 rounded-lg border border-default surface-default px-1.5"
+      className="h-control-md border-default surface-default inline-flex items-center gap-1.5 rounded-lg border px-1.5"
     >
       <button
         type="button"
         aria-label="축소"
         onClick={zoomOut}
-        disabled={zoomPercent <= GUIDE_ZOOM_MIN}
+        disabled={zoomPercent <= ZOOM_MIN}
         className={zoomButtonClass}
       >
         <NavIcon aria-hidden="true" className="size-icon-xs shrink-0">
@@ -1823,12 +2056,10 @@ export function GuideZoomControl() {
         type="button"
         onClick={resetZoom}
         aria-label={
-          zoomPercent === GUIDE_ZOOM_DEFAULT
-            ? "현재 확대 비율 100%, 기본값"
-            : `현재 확대 비율 ${zoomPercent}%, 100%로 초기화`
+          zoomPercent === ZOOM_DEFAULT ? "현재 확대 비율 100%, 기본값" : `현재 확대 비율 ${zoomPercent}%, 100%로 초기화`
         }
-        title={zoomPercent === GUIDE_ZOOM_DEFAULT ? "현재 100%" : "100%로 초기화"}
-        className="inline-flex h-7 w-12 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 text-label-small font-bold foreground-default numeric-tabular transition-colors duration-150 hover:surface-subtle"
+        title={zoomPercent === ZOOM_DEFAULT ? "현재 100%" : "100%로 초기화"}
+        className="text-label-small foreground-default numeric-tabular hover:surface-subtle inline-flex h-7 w-12 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 font-bold transition-colors duration-150"
       >
         {zoomPercent}%
       </button>
@@ -1836,7 +2067,7 @@ export function GuideZoomControl() {
         type="button"
         aria-label="확대"
         onClick={zoomIn}
-        disabled={zoomPercent >= GUIDE_ZOOM_MAX}
+        disabled={zoomPercent >= ZOOM_MAX}
         className={zoomButtonClass}
       >
         <NavIcon aria-hidden="true" className="size-icon-xs shrink-0">
@@ -1851,15 +2082,18 @@ export function GuideZoomControl() {
 export function GuideSiteHeader({
   isSidenavOpen,
   onToggleSidenav,
+  initialZoom,
 }: {
   isSidenavOpen: boolean;
   onToggleSidenav: () => void;
+  initialZoom: number;
 }) {
   return (
-    <header
-      className="layout-site-header"
-    >
-      <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6" style={{ height: "var(--layout-header-height)" }}>
+    <header className="layout-site-header">
+      <div
+        className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 lg:grid-cols-[1fr_auto_1fr] lg:gap-6"
+        style={{ height: "var(--layout-header-height)" }}
+      >
         <div className="flex items-center gap-1 justify-self-start">
           <Link
             href={GUIDE_ROUTES.home}
@@ -1898,11 +2132,11 @@ export function GuideSiteHeader({
 
         <div className="flex min-w-0 items-center justify-center gap-2 justify-self-center">
           <GuideLogoMark />
-          <h1 className="truncate text-label-medium font-bold foreground-default">디자인 시스템 가이드</h1>
+          <h1 className="text-label-medium foreground-default truncate font-bold">디자인 시스템 가이드</h1>
         </div>
 
         <div className="justify-self-end">
-          <GuideZoomControl />
+          <GuideZoomControl initialZoom={initialZoom} />
         </div>
       </div>
     </header>
@@ -1920,12 +2154,12 @@ export function FontStackCuration() {
               <div className="flex w-8 shrink-0 flex-col items-center">
                 <span
                   aria-hidden="true"
-                  className={`flex size-8 shrink-0 items-center justify-center rounded-full text-caption font-bold ${fontStackBadgeClass[emphasis]}`}
+                  className={`text-caption flex size-8 shrink-0 items-center justify-center rounded-full font-bold ${fontStackBadgeClass[emphasis]}`}
                 >
                   {order}
                 </span>
                 {!isLast && (
-                  <span aria-hidden="true" className={`my-1 w-px flex-1 min-h-6 ${fontStackLineClass[emphasis]}`} />
+                  <span aria-hidden="true" className={`my-1 min-h-6 w-px flex-1 ${fontStackLineClass[emphasis]}`} />
                 )}
               </div>
               <div className={`min-w-0 flex-1 ${isLast ? "" : "pb-8"}`}>
@@ -1940,8 +2174,8 @@ export function FontStackCuration() {
                   </span>
                   <FontStackRoleTag emphasis={emphasis}>{role}</FontStackRoleTag>
                 </div>
-                <span className="mt-1.5 block text-caption text-gray-60">{desc}</span>
-                <span className="mt-0.5 block font-mono text-caption text-gray-60">{source}</span>
+                <span className="text-caption text-gray-60 mt-1.5 block">{desc}</span>
+                <span className="text-caption text-gray-60 mt-0.5 block font-mono">{source}</span>
               </div>
             </li>
           );
@@ -1998,10 +2232,18 @@ const captionScaleSpecs: TypographyScaleSpec[] = [
 ];
 
 const headingUsageRows = [
-  { structure: "h1", range: "xlarge-large", usage: "페이지나 섹션의 가장 중요한 제목으로, 주요 주제를 강조하는 데 사용한다." },
+  {
+    structure: "h1",
+    range: "xlarge-large",
+    usage: "페이지나 섹션의 가장 중요한 제목으로, 주요 주제를 강조하는 데 사용한다.",
+  },
   { structure: "h2", range: "large-medium", usage: "콘텐츠의 주요 섹션을 구분하여 H1보다 작은 부제목 역할을 한다." },
   { structure: "h3", range: "medium-small", usage: "세부 섹션을 나타내는 제목으로, H1과 H2보다 작은 크기로 사용한다." },
-  { structure: "h4", range: "small-xsmall", usage: "본문과 비슷한 크기의 제목으로, 세부적인 콘텐츠에 대한 설명에 사용한다." },
+  {
+    structure: "h4",
+    range: "small-xsmall",
+    usage: "본문과 비슷한 크기의 제목으로, 세부적인 콘텐츠에 대한 설명에 사용한다.",
+  },
   { structure: "h5", range: "xsmall-xxsmall", usage: "가장 작은 제목으로, 부차적인 정보나 보조 설명을 위해 사용한다." },
 ];
 
@@ -2009,7 +2251,11 @@ const bodyUsageRows = [
   { range: "large", usage: "전체 글에 대한 써머리 또는 중요한 정보를 전달할 때 사용된다." },
   { range: "medium", usage: "본문 텍스트에 사용되는 표준 크기로 전체적인 UI 요소에서 사용된다." },
   { range: "small", usage: "덜 중요한 정보나 부가적인 설명 문구에 사용되며, 작은 크기로 가독성에 주의해야 한다." },
-  { range: "xsmall", usage: "가장 작은 크기로, 주석, 보조 설명 또는 부가적인 정보에 사용되며, 가독성이 떨어질 수 있으므로 신중하게 사용해야 한다." },
+  {
+    range: "xsmall",
+    usage:
+      "가장 작은 크기로, 주석, 보조 설명 또는 부가적인 정보에 사용되며, 가독성이 떨어질 수 있으므로 신중하게 사용해야 한다.",
+  },
 ];
 
 const typeScaleBaseRows = [
@@ -2030,10 +2276,18 @@ export function TypeScaleBaseGuide() {
         <caption className="sr-only">타이포 스케일 기준 rem, 퍼센트, 픽셀 환산표</caption>
         <thead>
           <tr className={typographyTableHeaderRowClass}>
-            <th scope="col" className={typographyTableHeaderCellClass}>시스템 기본 폰트 크기</th>
-            <th scope="col" className={typographyTableHeaderCellClass}>rem</th>
-            <th scope="col" className={typographyTableHeaderCellClass}>%</th>
-            <th scope="col" className={typographyTableHeaderCellClass}>px</th>
+            <th scope="col" className={typographyTableHeaderCellClass}>
+              시스템 기본 폰트 크기
+            </th>
+            <th scope="col" className={typographyTableHeaderCellClass}>
+              rem
+            </th>
+            <th scope="col" className={typographyTableHeaderCellClass}>
+              %
+            </th>
+            <th scope="col" className={typographyTableHeaderCellClass}>
+              px
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -2045,22 +2299,29 @@ export function TypeScaleBaseGuide() {
             return (
               <tr key={percentLabel} className={typographyTableBodyRowClass}>
                 {index === 0 ? (
-                  <th scope="rowgroup" rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-small font-bold foreground-default">
+                  <th
+                    scope="rowgroup"
+                    rowSpan={typeScaleBaseRows.length}
+                    className="text-label-small foreground-default px-4 py-4 align-middle font-bold"
+                  >
                     {REM_BASE}px 기준
                   </th>
                 ) : null}
                 {index === 0 ? (
-                  <td rowSpan={typeScaleBaseRows.length} className="px-4 py-4 align-middle text-label-small font-bold foreground-default numeric-tabular">
+                  <td
+                    rowSpan={typeScaleBaseRows.length}
+                    className="text-label-small foreground-default numeric-tabular px-4 py-4 align-middle font-bold"
+                  >
                     1rem
                   </td>
                 ) : null}
-                <td className="px-4 py-4 align-middle text-label-xsmall foreground-default numeric-tabular">
+                <td className="text-label-xsmall foreground-default numeric-tabular px-4 py-4 align-middle">
                   <span className="block font-semibold">{percentLabel}</span>
-                  <span className="block text-caption text-gray-60">{label}</span>
+                  <span className="text-caption text-gray-60 block">{label}</span>
                 </td>
-                <td className="px-4 py-4 align-middle text-label-xsmall foreground-default numeric-tabular">
+                <td className="text-label-xsmall foreground-default numeric-tabular px-4 py-4 align-middle">
                   <span className="block font-semibold">{pxLabel}</span>
-                  <span className="block text-caption text-gray-60">{note}</span>
+                  <span className="text-caption text-gray-60 block">{note}</span>
                 </td>
               </tr>
             );
@@ -2089,46 +2350,40 @@ function TypographyScaleSpecTable({
       <header className="mb-4">
         <h4
           id={sectionId}
-          className={["m-0 text-heading-small font-bold leading-base foreground-default", guideSectionAnchorClass].join(" ")}
+          className={["text-heading-small leading-base foreground-default m-0 font-bold", guideSectionAnchorClass].join(
+            " ",
+          )}
         >
           {title}
         </h4>
       </header>
-      {description ? (
-        <TabDescriptionCallout margin="mb-6">{description}</TabDescriptionCallout>
-      ) : null}
+      {description ? <TabDescriptionCallout margin="mb-6">{description}</TabDescriptionCallout> : null}
       {usage}
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">{title} 타이포그래피 스케일</caption>
           <thead>
             <tr className={typographyTableHeaderRowClass}>
-              {["Utility Class", "Size(pc)", "Size(mobile)", "Font weight", "Line height", "Letter spacing"].map((header) => (
-                <th key={header} scope="col" className={typographyTableHeaderCellClass}>
-                  {header}
-                </th>
-              ))}
+              {["Utility Class", "Size(pc)", "Size(mobile)", "Font weight", "Line height", "Letter spacing"].map(
+                (header) => (
+                  <th key={header} scope="col" className={typographyTableHeaderCellClass}>
+                    {header}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
             {rows.map(({ style, pc, mobile, weight, letterSpacing, typoClass }) => (
               <tr key={style} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-4 align-middle text-body-medium foreground-default">
+                <td className="text-body-medium foreground-default px-4 py-4 align-middle">
                   <TokenChip copyValue={typoClass}>{typoClass}</TokenChip>
                 </td>
-                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
-                  {pc}
-                </td>
-                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
-                  {mobile}
-                </td>
-                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
-                  {weight}
-                </td>
-                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
-                  150%
-                </td>
-                <td className="px-4 py-4 align-middle text-body-medium foreground-default numeric-tabular">
+                <td className="text-body-medium foreground-default numeric-tabular px-4 py-4 align-middle">{pc}</td>
+                <td className="text-body-medium foreground-default numeric-tabular px-4 py-4 align-middle">{mobile}</td>
+                <td className="text-body-medium foreground-default numeric-tabular px-4 py-4 align-middle">{weight}</td>
+                <td className="text-body-medium foreground-default numeric-tabular px-4 py-4 align-middle">150%</td>
+                <td className="text-body-medium foreground-default numeric-tabular px-4 py-4 align-middle">
                   {letterSpacing}
                 </td>
               </tr>
@@ -2143,20 +2398,14 @@ function TypographyScaleSpecTable({
 
 const typographyPreviewSampleText = "다람쥐 헌 쳇바퀴에 타고파 ABC xyz 123 !?@#";
 
-function TypographyScalePreviewTable({
-  title,
-  rows,
-}: {
-  title: string;
-  rows: TypographyScaleSpec[];
-}) {
+function TypographyScalePreviewTable({ title, rows }: { title: string; rows: TypographyScaleSpec[] }) {
   const previewId = `typography-${title.toLowerCase().replace(/\s+/g, "-")}-preview`;
   // style 값에 그룹명이 접두로 붙은 경우(예: display-lg) 사이즈 이름만 노출
   const groupPrefix = `${title.toLowerCase()}-`;
 
   return (
     <section aria-labelledby={previewId} className="mt-8">
-      <h5 id={previewId} className="m-0 mb-4 text-label-small font-bold foreground-subtle">
+      <h5 id={previewId} className="text-label-small foreground-subtle m-0 mb-4 font-bold">
         Preview
       </h5>
       <div className={typographyTableFrameClass}>
@@ -2164,14 +2413,18 @@ function TypographyScalePreviewTable({
           <caption className="sr-only">{title} 타이포그래피 사이즈별 미리보기</caption>
           <thead>
             <tr className={typographyTableHeaderRowClass}>
-              <th scope="col" className={typographyTableHeaderCellClass}>Sample</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>
+                Sample
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map(({ style, weight, typoClass }) => (
               <tr key={`${title}-${style}-preview`} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-5 align-middle foreground-default">
-                  <span className="mb-2 block text-caption text-gray-60 numeric-tabular">{style.startsWith(groupPrefix) ? style.slice(groupPrefix.length) : style} / {weight}</span>
+                <td className="foreground-default px-4 py-5 align-middle">
+                  <span className="text-caption text-gray-60 numeric-tabular mb-2 block">
+                    {style.startsWith(groupPrefix) ? style.slice(groupPrefix.length) : style} / {weight}
+                  </span>
                   <span className={typoClass}>{typographyPreviewSampleText}</span>
                 </td>
               </tr>
@@ -2186,23 +2439,31 @@ function TypographyScalePreviewTable({
 function TypographyHeadingUsageTable() {
   return (
     <div aria-labelledby="typography-heading-usage" className="mb-8">
-      <h5 id="typography-heading-usage" className="m-0 mb-4 text-label-small font-bold foreground-subtle">계층별 사용</h5>
+      <h5 id="typography-heading-usage" className="text-label-small foreground-subtle m-0 mb-4 font-bold">
+        계층별 사용
+      </h5>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">Heading 계층별 사용 기준</caption>
           <thead>
             <tr className={typographyTableHeaderRowClass}>
-              <th scope="col" className={typographyTableHeaderCellClass}>구조</th>
-              <th scope="col" className={typographyTableHeaderCellClass}>범위</th>
-              <th scope="col" className={typographyTableHeaderCellClass}>사용</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>
+                구조
+              </th>
+              <th scope="col" className={typographyTableHeaderCellClass}>
+                범위
+              </th>
+              <th scope="col" className={typographyTableHeaderCellClass}>
+                사용
+              </th>
             </tr>
           </thead>
           <tbody>
             {headingUsageRows.map(({ structure, range, usage }) => (
               <tr key={structure} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-4 text-body-medium foreground-default">{structure}</td>
-                <td className="px-4 py-4 text-body-medium foreground-default">{range}</td>
-                <td className="px-4 py-4 text-body-medium foreground-default">{usage}</td>
+                <td className="text-body-medium foreground-default px-4 py-4">{structure}</td>
+                <td className="text-body-medium foreground-default px-4 py-4">{range}</td>
+                <td className="text-body-medium foreground-default px-4 py-4">{usage}</td>
               </tr>
             ))}
           </tbody>
@@ -2215,21 +2476,27 @@ function TypographyHeadingUsageTable() {
 function TypographyBodyUsageTable() {
   return (
     <div aria-labelledby="typography-body-usage" className="mb-8">
-      <h5 id="typography-body-usage" className="m-0 mb-4 text-label-small font-bold foreground-subtle">계층별 사용</h5>
+      <h5 id="typography-body-usage" className="text-label-small foreground-subtle m-0 mb-4 font-bold">
+        계층별 사용
+      </h5>
       <div className={typographyTableFrameClass}>
         <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">Body 계층별 사용 기준</caption>
           <thead>
             <tr className={typographyTableHeaderRowClass}>
-              <th scope="col" className={typographyTableHeaderCellClass}>범위</th>
-              <th scope="col" className={typographyTableHeaderCellClass}>사용</th>
+              <th scope="col" className={typographyTableHeaderCellClass}>
+                범위
+              </th>
+              <th scope="col" className={typographyTableHeaderCellClass}>
+                사용
+              </th>
             </tr>
           </thead>
           <tbody>
             {bodyUsageRows.map(({ range, usage }) => (
               <tr key={range} className={typographyTableBodyRowClass}>
-                <td className="px-4 py-4 text-body-medium foreground-default">{range}</td>
-                <td className="px-4 py-4 text-body-medium foreground-default">{usage}</td>
+                <td className="text-body-medium foreground-default px-4 py-4">{range}</td>
+                <td className="text-body-medium foreground-default px-4 py-4">{usage}</td>
               </tr>
             ))}
           </tbody>
@@ -2329,8 +2596,7 @@ export const outlineIconCatalog: readonly IconCatalogEntry[] = [
   {
     id: "home",
     label: "홈",
-    innerMarkup:
-      '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />',
+    innerMarkup: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />',
   },
   {
     id: "search",
@@ -2340,14 +2606,12 @@ export const outlineIconCatalog: readonly IconCatalogEntry[] = [
   {
     id: "bell",
     label: "알림",
-    innerMarkup:
-      '<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" />',
+    innerMarkup: '<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" />',
   },
   {
     id: "user",
     label: "사용자",
-    innerMarkup:
-      '<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />',
+    innerMarkup: '<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />',
   },
   {
     id: "settings",
@@ -2392,9 +2656,10 @@ export const outlineIconCatalog: readonly IconCatalogEntry[] = [
 export const filledIconCatalog: readonly IconCatalogEntry[] = [];
 
 /** id로 outline 아이콘을 조회 — 큐레이션 카탈로그를 컴포넌트 소비의 SSOT로 사용. */
-export const outlineIconById = Object.fromEntries(
-  outlineIconCatalog.map((icon) => [icon.id, icon]),
-) as Record<string, IconCatalogEntry>;
+export const outlineIconById = Object.fromEntries(outlineIconCatalog.map((icon) => [icon.id, icon])) as Record<
+  string,
+  IconCatalogEntry
+>;
 
 const iconSourceByStyle = {
   outline: {
@@ -2480,12 +2745,16 @@ export function IconCopyCell({
   return (
     <td className="px-3 py-2 text-center align-middle">
       <div className="group relative flex min-h-[4.5rem] items-center justify-center">
-        <ProjectIconGlyph innerMarkup={innerMarkup} className={`${utility} shrink-0 foreground-default`} style={style} />
+        <ProjectIconGlyph
+          innerMarkup={innerMarkup}
+          className={`${utility} foreground-default shrink-0`}
+          style={style}
+        />
         <button
           type="button"
           onClick={() => void handleCopy()}
           aria-label={`${label} ${iconId} ${utility} SVG 마크업 복사`}
-          className="absolute bottom-1 right-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border border-default bg-background px-1.5 text-caption font-semibold uppercase leading-none text-gray-60 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:foreground-default focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+          className="border-default bg-background text-caption text-gray-60 hover:foreground-default absolute right-1 bottom-1 inline-flex h-5 cursor-pointer items-center justify-center rounded border px-1.5 leading-none font-semibold uppercase opacity-0 shadow-sm transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
         >
           copy
         </button>
@@ -2499,26 +2768,27 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
 
   if (catalog.length === 0) {
     return (
-      <div className="rounded-xl border border-default bg-gray-10 p-6">
-        <p className="m-0 text-body-small text-gray-70">
-          <strong>{styleLabel}</strong> 아이콘 세트가 아직 등록되지 않았습니다. 글리프를 추가하면 이 표에 크기별 배리에이션이 표시됩니다.
+      <div className="border-default bg-gray-10 rounded-xl border p-6">
+        <p className="text-body-small text-gray-70 m-0">
+          <strong>{styleLabel}</strong> 아이콘 세트가 아직 등록되지 않았습니다. 글리프를 추가하면 이 표에 크기별
+          배리에이션이 표시됩니다.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-default">
+    <div className="border-default overflow-x-auto rounded-xl border">
       <table className="w-full min-w-[44rem] border-collapse text-left">
         <caption className="sr-only">{styleLabel} Icon — Tailwind utility class 크기별 배리에이션</caption>
         <thead>
-          <tr className="border-b border-default bg-gray-5">
+          <tr className="border-default bg-gray-5 border-b">
             <th scope="col" className="px-4 py-3">
               <span className="sr-only">Icon</span>
             </th>
             {iconSizeTokens.map((token) => (
               <th key={token.name} scope="col" className="px-3 py-3 text-center align-middle">
-                <span className="font-mono text-label-xsmall font-semibold foreground-default">
+                <span className="text-label-xsmall foreground-default font-mono font-semibold">
                   {token.utility} ({token.px})
                 </span>
               </th>
@@ -2527,9 +2797,9 @@ export function IconSizeMatrix({ catalog, style }: { catalog: readonly IconCatal
         </thead>
         <tbody>
           {catalog.map(({ id, label, innerMarkup }) => (
-            <tr key={id} className="border-b border-default last:border-b-0">
+            <tr key={id} className="border-default border-b last:border-b-0">
               <th scope="row" className="px-4 py-4 align-middle">
-                <span className="font-mono text-caption text-gray-60">{id}</span>
+                <span className="text-caption text-gray-60 font-mono">{id}</span>
                 <span className="sr-only">{label}</span>
               </th>
               {iconSizeTokens.map((token) => (
@@ -2567,12 +2837,14 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
         description={
           isOutline ? (
             <>
-              <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘과 <strong>size-icon-*</strong> 크기 토큰입니다. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
+              <strong>stroke</strong> 기반 <strong>24×24</strong> 라인 아이콘과 <strong>size-icon-*</strong> 크기
+              토큰입니다. 글리프 path는 프로젝트에 <strong>인라인 SVG</strong>로 포함하며,{" "}
               <strong>외부 CDN·아이콘 폰트·스프라이트</strong>는 사용하지 않습니다.
             </>
           ) : (
             <>
-              <strong>fill</strong> 기반 <strong>24×24</strong> 솔리드 아이콘과 <strong>size-icon-*</strong> 크기 토큰입니다. 세트가 준비되면 outline과 동일한 방식으로 <strong>인라인 SVG</strong>로 포함합니다.
+              <strong>fill</strong> 기반 <strong>24×24</strong> 솔리드 아이콘과 <strong>size-icon-*</strong> 크기
+              토큰입니다. 세트가 준비되면 outline과 동일한 방식으로 <strong>인라인 SVG</strong>로 포함합니다.
             </>
           )
         }
@@ -2585,16 +2857,16 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
         <div className="flex gap-4">
           <span
             aria-hidden="true"
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent text-caption font-bold text-on-accent"
+            className="bg-accent text-caption text-on-accent flex size-8 shrink-0 items-center justify-center rounded-full font-bold"
           >
             1
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-label-medium font-bold foreground-default">{source.name}</span>
-              <span className="text-caption font-semibold foreground-brand">{source.style}</span>
+              <span className="text-label-medium foreground-default font-bold">{source.name}</span>
+              <span className="text-caption foreground-brand font-semibold">{source.style}</span>
             </div>
-            <p className="m-0 mt-0.5 font-mono text-caption text-gray-60">
+            <p className="text-caption text-gray-60 m-0 mt-0.5 font-mono">
               {source.sourceUrl ? (
                 <>
                   <a
@@ -2614,8 +2886,8 @@ export function IconStyleCuration({ style }: { style: IconStyle }) {
             <dl className="m-0 mt-3 grid gap-2 sm:grid-cols-2">
               {source.specs.map(({ label, value }) => (
                 <div key={label} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                  <dt className="m-0 font-mono text-caption text-gray-60">{label}</dt>
-                  <dd className="m-0 font-mono text-caption foreground-default">{value}</dd>
+                  <dt className="text-caption text-gray-60 m-0 font-mono">{label}</dt>
+                  <dd className="text-caption foreground-default m-0 font-mono">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -2651,10 +2923,10 @@ export const gridRowTokens = [
 ];
 
 export const levelStyle: Record<ContrastLevel, { bg: string; color: string; label: string }> = {
-  AAA:        { bg: "var(--ds-guide-level-aaa-bg)",  color: "var(--ds-guide-level-aaa-fg)",  label: "AAA" },
-  AA:         { bg: "var(--ds-guide-level-aa-bg)",   color: "var(--ds-guide-level-aa-fg)",   label: "AA" },
+  AAA: { bg: "var(--ds-guide-level-aaa-bg)", color: "var(--ds-guide-level-aaa-fg)", label: "AAA" },
+  AA: { bg: "var(--ds-guide-level-aa-bg)", color: "var(--ds-guide-level-aa-fg)", label: "AA" },
   "AA Large": { bg: "var(--ds-guide-level-warn-bg)", color: "var(--ds-guide-level-warn-fg)", label: "AA Large" },
-  Fail:       { bg: "var(--ds-guide-level-fail-bg)", color: "var(--ds-guide-level-fail-fg)", label: "Fail" },
+  Fail: { bg: "var(--ds-guide-level-fail-bg)", color: "var(--ds-guide-level-fail-fg)", label: "Fail" },
 };
 
 /** 명암비 결과 카드 — 숫자 배경 */
@@ -2664,7 +2936,7 @@ export function LevelBadge({ level }: { level: ContrastLevel }) {
   const s = levelStyle[level];
   return (
     <span
-      className="text-caption font-bold leading-none"
+      className="text-caption leading-none font-bold"
       style={{
         background: s.bg,
         color: s.color,
@@ -2684,7 +2956,7 @@ export function ContrastCircle({ passed }: { passed: boolean }) {
     <span
       aria-hidden="true"
       className={[
-        "inline-flex items-center justify-center shrink-0 size-icon-md rounded-full",
+        "size-icon-md inline-flex shrink-0 items-center justify-center rounded-full",
         passed ? "bg-positive foreground-inverse" : "bg-negative foreground-inverse",
       ].join(" ")}
     >
@@ -2742,7 +3014,7 @@ export function ContrastSwatchRoleMarker({ role }: { role: "BG" | "TXT" }) {
     <span
       aria-hidden="true"
       className={[
-        "absolute top-1 left-1 z-[1] rounded border-2 bg-background px-1.5 py-0.5 text-caption font-bold leading-none shadow-sm",
+        "bg-background text-caption absolute top-1 left-1 z-[1] rounded border-2 px-1.5 py-0.5 leading-none font-bold shadow-sm",
         "border-foreground-default foreground-default",
       ].join(" ")}
     >
@@ -2776,7 +3048,7 @@ export function ContrastColorPickButton({
 }) {
   return (
     <div>
-      <p id={labelId} className="mb-1.5 text-label-xsmall font-semibold foreground-default">
+      <p id={labelId} className="text-label-xsmall foreground-default mb-1.5 font-semibold">
         {labelText}
       </p>
       <button
@@ -2785,29 +3057,33 @@ export function ContrastColorPickButton({
         aria-labelledby={`${labelId} ${valueId} ${actionId}`}
         aria-expanded={isSelecting}
         className={[
-          "group w-full flex items-center gap-3 rounded-xl border-0 py-3 px-4 text-left cursor-pointer transition-[background-color,box-shadow] duration-150",
+          "group flex w-full cursor-pointer items-center gap-3 rounded-xl border-0 px-4 py-3 text-left transition-[background-color,box-shadow] duration-150",
           isSelecting
-            ? "bg-gray-10 shadow-sm ring-2 ring-foreground-default"
-            : "surface-subtle hover:bg-gray-10 hover:shadow-sm hover:ring-1 hover:ring-default",
+            ? "bg-gray-10 ring-foreground-default shadow-sm ring-2"
+            : "surface-subtle hover:bg-gray-10 hover:ring-default hover:shadow-sm hover:ring-1",
         ].join(" ")}
       >
         <span
           aria-hidden="true"
           className={[
-            "relative block size-8 shrink-0 overflow-hidden isolate rounded-md border border-default transition-transform duration-150",
-            isSelecting ? "scale-105 ring-2 ring-foreground-default ring-offset-1 ring-offset-background" : "group-hover:scale-105",
+            "border-default relative isolate block size-8 shrink-0 overflow-hidden rounded-md border transition-transform duration-150",
+            isSelecting
+              ? "ring-foreground-default ring-offset-background scale-105 ring-2 ring-offset-1"
+              : "group-hover:scale-105",
           ].join(" ")}
         >
           <ContrastSwatchFill hex={swatchHex} checker={checker} />
         </span>
         <span className="flex min-w-0 flex-col text-left">
-          <span className="text-label-small font-semibold foreground-default">{colorLabel}</span>
-          <span id={valueId} className="text-caption text-gray-70 font-mono numeric-tabular">{colorHex}</span>
+          <span className="text-label-small foreground-default font-semibold">{colorLabel}</span>
+          <span id={valueId} className="text-caption text-gray-70 numeric-tabular font-mono">
+            {colorHex}
+          </span>
         </span>
         <span
           id={actionId}
           className={[
-            "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-label-xsmall font-semibold transition-colors duration-150",
+            "text-label-xsmall ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 font-semibold transition-colors duration-150",
             isSelecting
               ? "border-foreground-default bg-gray-10 foreground-default"
               : "border-strong bg-background foreground-default group-hover:border-foreground-default",
@@ -2832,12 +3108,20 @@ export function ContrastColorPickButton({
 }
 
 /** 명암비 결과 카드의 단일 기준 박스 — 원형 배지 + 등급 + 임계 대비율. */
-export function ContrastCriterionBox({ grade, threshold, passed }: { grade: string; threshold: string; passed: boolean }) {
+export function ContrastCriterionBox({
+  grade,
+  threshold,
+  passed,
+}: {
+  grade: string;
+  threshold: string;
+  passed: boolean;
+}) {
   return (
-    <div className={`flex items-center gap-2 py-2.5 px-3 ${contrastResultSurfaceClass}`}>
+    <div className={`flex items-center gap-2 px-3 py-2.5 ${contrastResultSurfaceClass}`}>
       <ContrastCircle passed={passed} />
-      <span className="text-label-small font-bold foreground-default">{grade}</span>
-      <span className="ml-auto text-caption text-gray-70 numeric-tabular">{threshold}</span>
+      <span className="text-label-small foreground-default font-bold">{grade}</span>
+      <span className="text-caption text-gray-70 numeric-tabular ml-auto">{threshold}</span>
     </div>
   );
 }
@@ -2854,7 +3138,7 @@ export function ContrastCategory({
 }) {
   return (
     <div>
-      <p className="text-label-xsmall font-semibold text-gray-60 mb-2">{title}</p>
+      <p className="text-label-xsmall text-gray-60 mb-2 font-semibold">{title}</p>
       <div className="grid grid-cols-2 gap-2">
         <ContrastCriterionBox grade="AA" threshold={aa.threshold} passed={aa.passed} />
         <ContrastCriterionBox grade="AAA" threshold={aaa.threshold} passed={aaa.passed} />
@@ -2865,8 +3149,8 @@ export function ContrastCategory({
 
 export function TokenValue({ px, rem }: { px: string; rem: string }) {
   return (
-    <span className="flex flex-col leading-base font-mono">
-      <span className="text-label-xsmall font-semibold numeric-tabular foreground-default">{px}</span>
+    <span className="leading-base flex flex-col font-mono">
+      <span className="text-label-xsmall numeric-tabular foreground-default font-semibold">{px}</span>
       <span className="text-caption foreground-muted numeric-tabular">{rem}</span>
     </span>
   );
@@ -2885,10 +3169,10 @@ export function MeasureBar({
 }) {
   if (variant === "gap") {
     return (
-      <div role="img" aria-label={label} className="flex h-control-md items-center">
+      <div role="img" aria-label={label} className="h-control-md flex items-center">
         <span
           aria-hidden="true"
-          className="block h-6 rounded-sm bg-foreground-brand"
+          className="bg-foreground-brand block h-6 rounded-sm"
           style={{ width: `var(${cssVar})` }}
         />
       </div>
@@ -2896,15 +3180,15 @@ export function MeasureBar({
   }
 
   return (
-    <div className="h-9 surface-subtle border border-default flex items-center px-3">
+    <div className="surface-subtle border-default flex h-9 items-center border px-3">
       <span
         role="img"
         aria-label={label}
-        className="relative block bg-accent"
+        className="bg-accent relative block"
         style={{ width: `var(${cssVar})`, height, borderRadius: pxToRem(2) }}
       >
-        <span aria-hidden="true" className="absolute left-0 top-1/2 h-5 -translate-y-1/2 border-l border-accent" />
-        <span aria-hidden="true" className="absolute right-0 top-1/2 h-5 -translate-y-1/2 border-r border-accent" />
+        <span aria-hidden="true" className="border-accent absolute top-1/2 left-0 h-5 -translate-y-1/2 border-l" />
+        <span aria-hidden="true" className="border-accent absolute top-1/2 right-0 h-5 -translate-y-1/2 border-r" />
       </span>
     </div>
   );
@@ -2913,11 +3197,7 @@ export function MeasureBar({
 export function GridColumnPreview({ cols, utility, label }: { cols: number; utility: string; label: string }) {
   const cellHeight = cols >= 6 ? pxToRem(24) : pxToRem(32);
   return (
-    <div
-      role="img"
-      aria-label={label}
-      className={`grid gap-2 ${utility}`}
-    >
+    <div role="img" aria-label={label} className={`grid gap-2 ${utility}`}>
       {Array.from({ length: cols }, (_, i) => (
         <div key={i} className="surface-brand" style={{ height: cellHeight }} aria-hidden="true" />
       ))}
@@ -2928,11 +3208,7 @@ export function GridColumnPreview({ cols, utility, label }: { cols: number; util
 export function GridRowPreview({ rows, utility, label }: { rows: number; utility: string; label: string }) {
   const cellHeight = rows >= 6 ? pxToRem(14) : pxToRem(24);
   return (
-    <div
-      role="img"
-      aria-label={label}
-      className={`grid gap-2 ${utility}`}
-    >
+    <div role="img" aria-label={label} className={`grid gap-2 ${utility}`}>
       {Array.from({ length: rows }, (_, i) => (
         <div key={i} className="surface-brand" style={{ height: cellHeight }} aria-hidden="true" />
       ))}
@@ -3071,7 +3347,7 @@ export function ExternalTextLink({
       rel="noopener noreferrer"
       className={`group inline-flex items-start gap-1.5 ${className}`}
     >
-      <LinkIcon className="mt-0.5 size-icon-xs shrink-0" />
+      <LinkIcon className="size-icon-xs mt-0.5 shrink-0" />
       <span className="break-all underline-offset-2 group-hover:underline group-focus-visible:underline">
         {children}
       </span>
@@ -3134,13 +3410,13 @@ export function NavSubTree({
     <ul
       role="group"
       aria-label={ariaLabel}
-      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-default py-1 pl-4 pr-1"
+      className="border-default m-0 ml-5 flex list-none flex-col gap-0.5 border-l py-1 pr-1 pl-4"
     >
       {items.map((item) => (
         <li key={item.label} className="relative">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -left-4 top-1/2 h-px w-4 -translate-y-1/2 bg-line"
+            className="bg-line pointer-events-none absolute top-1/2 -left-4 h-px w-4 -translate-y-1/2"
           />
           <button
             type="button"
@@ -3150,7 +3426,7 @@ export function NavSubTree({
           >
             <span>{item.label}</span>
             {item.active && (
-              <NavIcon className="size-icon-xs shrink-0 foreground-brand">
+              <NavIcon className="size-icon-xs foreground-brand shrink-0">
                 <path d="M9 6l6 6-6 6" />
               </NavIcon>
             )}

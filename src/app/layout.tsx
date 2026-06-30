@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { fontSizeCssVars } from "@/lib/tokens";
 import { THEME_STORAGE_KEY } from "@/lib/theme-preference";
+import { parseZoomCookie, ZOOM_COOKIE_KEY } from "@/lib/zoom-preference";
 import "./globals.css";
 
 // 기본 폰트 — Pretendard GOV (자체 호스팅, variable woff2)
@@ -31,7 +32,8 @@ const notoSansKR = localFont({
 
 export const metadata: Metadata = {
   title: "디자인 시스템 가이드 — system-guide",
-  description: "컬러·타이포·레이아웃 토큰 큐레이션과 Tailwind 유틸리티, KWCAG 웹접근성 대비 검증을 제공하는 디자인 시스템 가이드",
+  description:
+    "컬러·타이포·레이아웃 토큰 큐레이션과 Tailwind 유틸리티, KWCAG 웹접근성 대비 검증을 제공하는 디자인 시스템 가이드",
 };
 
 export default async function RootLayout({
@@ -43,14 +45,16 @@ export default async function RootLayout({
   // → 서버·클라이언트 첫 렌더가 동일해 FOUC·hydration mismatch가 없다(인라인 스크립트 불필요).
   const cookieStore = await cookies();
   const isDark = cookieStore.get(THEME_STORAGE_KEY)?.value === "dark";
+  const initialZoom = parseZoomCookie(cookieStore.get(ZOOM_COOKIE_KEY)?.value);
 
   return (
     <html
       lang="ko"
       suppressHydrationWarning
       className={`${pretendardGov.variable} ${notoSansKR.variable} h-full antialiased${isDark ? " dark" : ""}`}
+      style={{ fontSize: `${initialZoom}%` }}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         {/* 타이포 스케일·행간 단일 소스(tokens.ts)에서 생성한 --font-size-*·--font-line 주입 */}
         <style dangerouslySetInnerHTML={{ __html: fontSizeCssVars() }} />
         {children}

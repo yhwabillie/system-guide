@@ -31,8 +31,7 @@ import {
   themeIconSun,
 } from "@/components/guide/shared";
 
-const navSectionEyebrowClass =
-  "mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-gray-60";
+const navSectionEyebrowClass = "mb-2 px-3.5 text-caption font-semibold uppercase tracking-normal text-gray-60";
 
 const navExpandToggleClass =
   "mr-1.5 flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-1.5 text-gray-60 transition-colors duration-150 hover:bg-gray-10 hover:foreground-default";
@@ -69,13 +68,13 @@ function GuideNavSubLinks({
     <ul
       id={listId}
       aria-labelledby={labelledBy}
-      className="m-0 ml-5 flex list-none flex-col gap-0.5 border-l border-default py-1 pl-4 pr-1"
+      className="border-default m-0 ml-5 flex list-none flex-col gap-0.5 border-l py-1 pr-1 pl-4"
     >
       {items.map((item) => (
         <li key={item.href} className="relative">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -left-4 top-1/2 h-px w-4 -translate-y-1/2 bg-line"
+            className="bg-line pointer-events-none absolute top-1/2 -left-4 h-px w-4 -translate-y-1/2"
           />
           <Link
             href={item.href}
@@ -86,10 +85,10 @@ function GuideNavSubLinks({
           >
             <span>{item.label}</span>
             {item.target === "_blank" ? (
-              <ExternalLinkIcon className="ml-auto size-icon-xs shrink-0 foreground-muted" />
+              <ExternalLinkIcon className="size-icon-xs foreground-muted ml-auto shrink-0" />
             ) : null}
             {item.active ? (
-              <NavIcon className="size-icon-xs shrink-0 foreground-brand-strong">
+              <NavIcon className="size-icon-xs foreground-brand-strong shrink-0">
                 <path d="M9 6l6 6-6 6" />
               </NavIcon>
             ) : null}
@@ -147,7 +146,7 @@ function GuideNavCategory({
   );
 }
 
-export function GuideLayout({ children }: { children: ReactNode }) {
+export function GuideLayout({ initialZoom, children }: { initialZoom: number; children: ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { isDark, toggleDark } = useGuideTheme();
@@ -195,7 +194,7 @@ export function GuideLayout({ children }: { children: ReactNode }) {
     return (
       <>
         {children}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+        <div className="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3">
           {showScrollTop ? (
             <button
               type="button"
@@ -224,7 +223,7 @@ export function GuideLayout({ children }: { children: ReactNode }) {
     <>
       <a
         href="#main-content"
-        className="fixed left-0 top-0 z-[100] -translate-y-full px-4 py-2 font-semibold no-underline transition-transform duration-100 surface-brand foreground-inverse focus-visible:translate-y-0"
+        className="surface-brand foreground-inverse fixed top-0 left-0 z-[100] -translate-y-full px-4 py-2 font-semibold no-underline transition-transform duration-100 focus-visible:translate-y-0"
       >
         본문 바로가기
       </a>
@@ -233,6 +232,7 @@ export function GuideLayout({ children }: { children: ReactNode }) {
         <GuideSiteHeader
           isSidenavOpen={isSidenavOpen}
           onToggleSidenav={() => setIsSidenavOpen((open) => !open)}
+          initialZoom={initialZoom}
         />
 
         <div className={isSidenavOpen ? "layout-sidenav" : undefined}>
@@ -246,7 +246,7 @@ export function GuideLayout({ children }: { children: ReactNode }) {
               <span className="sr-only">가이드 검색</span>
               <NavIcon
                 aria-hidden="true"
-                className="pointer-events-none absolute left-3 size-icon-xs shrink-0 foreground-muted"
+                className="size-icon-xs foreground-muted pointer-events-none absolute left-3 shrink-0"
               >
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -255,7 +255,7 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 type="search"
                 name="guide-search"
                 placeholder="가이드 검색..."
-                className="h-control-md w-full rounded-lg surface-subtle pl-9 pr-3 text-label-xsmall foreground-default placeholder:foreground-muted"
+                className="h-control-md surface-subtle text-label-xsmall foreground-default placeholder:foreground-muted w-full rounded-lg pr-3 pl-9"
               />
             </label>
             <p className={navSectionEyebrowClass}>Tokens</p>
@@ -270,7 +270,11 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 subItems={[
                   { label: "Contrast Checker", href: guideColorTabHref("contrast"), active: isColor && !tab },
                   { label: "Raw Token", href: guideColorTabHref("raw"), active: isColor && tab === "raw" },
-                  { label: "Semantic Token", href: guideColorTabHref("semantic"), active: isColor && tab === "semantic" },
+                  {
+                    label: "Semantic Token",
+                    href: guideColorTabHref("semantic"),
+                    active: isColor && tab === "semantic",
+                  },
                 ]}
               />
               <GuideNavCategory
@@ -282,7 +286,11 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 expandLabel="Typography"
                 subItems={[
                   { label: "Raw Token", href: guideTypeTabHref("font-family"), active: isType && tab !== "typography" },
-                  { label: "Semantic Token", href: guideTypeTabHref("typography"), active: isType && tab === "typography" },
+                  {
+                    label: "Semantic Token",
+                    href: guideTypeTabHref("typography"),
+                    active: isType && tab === "typography",
+                  },
                 ]}
               />
               <GuideNavCategory
@@ -293,9 +301,17 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 label="Spacing & Size"
                 expandLabel="Spacing & Size"
                 subItems={[
-                  { label: "Spacing", href: guideSpacingTabHref("spacing"), active: isSpacing && (!tab || tab === "spacing") },
+                  {
+                    label: "Spacing",
+                    href: guideSpacingTabHref("spacing"),
+                    active: isSpacing && (!tab || tab === "spacing"),
+                  },
                   { label: "Radius", href: guideSpacingTabHref("radius"), active: isSpacing && tab === "radius" },
-                  { label: "Fixed Size", href: guideSpacingTabHref("fixed-size"), active: isSpacing && tab === "fixed-size" },
+                  {
+                    label: "Fixed Size",
+                    href: guideSpacingTabHref("fixed-size"),
+                    active: isSpacing && tab === "fixed-size",
+                  },
                 ]}
               />
               <GuideNavCategory
@@ -308,12 +324,17 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 subItems={[
                   { label: "Columns", href: guideLayoutTabHref("columns"), active: isGrid && tab !== "rows" },
                   { label: "Rows", href: guideLayoutTabHref("rows"), active: isGrid && tab === "rows" },
-                  { label: "반응형 Layout 가이드", href: GUIDE_ROUTES.responsive, active: isResponsive, target: "_blank" },
+                  {
+                    label: "반응형 Layout 가이드",
+                    href: GUIDE_ROUTES.responsive,
+                    active: isResponsive,
+                    target: "_blank",
+                  },
                 ]}
               />
             </div>
 
-            <div className="mt-5 border-t border-default pt-5">
+            <div className="border-default mt-5 border-t pt-5">
               <p className={navSectionEyebrowClass}>Assets</p>
               <GuideNavCategory
                 active={isIcons}
@@ -328,7 +349,6 @@ export function GuideLayout({ children }: { children: ReactNode }) {
                 ]}
               />
             </div>
-
           </nav>
 
           <main
@@ -339,7 +359,7 @@ export function GuideLayout({ children }: { children: ReactNode }) {
           </main>
         </div>
 
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+        <div className="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3">
           {showScrollTop ? (
             <button
               type="button"
