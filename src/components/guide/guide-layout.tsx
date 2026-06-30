@@ -17,6 +17,7 @@ import { useGuideTheme } from "@/components/guide/guide-theme-provider";
 import {
   ExternalLinkIcon,
   GuideSiteHeader,
+  GuideSiteFooter,
   GUIDE_SCROLL_TOP_THRESHOLD,
   guideFabBrandClass,
   guideFabSurfaceClass,
@@ -178,11 +179,36 @@ export function GuideLayout({ initialZoom, children }: { initialZoom: number; ch
     if (isIcons) setIconsMenuExpanded(true);
   }
 
+  // FAB 기본 바닥 여백(=bottom-6, 1.5rem)과 푸터 위 간격(px)
+  const [fabBottom, setFabBottom] = useState("1.5rem");
+
   useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > GUIDE_SCROLL_TOP_THRESHOLD);
-    onScroll();
+    const BASE = 24; // 1.5rem
+    const GAP = 24; // 푸터 위 최소 간격
+    let raf = 0;
+    const compute = () => {
+      raf = 0;
+      setShowScrollTop(window.scrollY > GUIDE_SCROLL_TOP_THRESHOLD);
+      const footer = document.querySelector("footer");
+      let next = `${BASE}px`;
+      if (footer) {
+        // 푸터가 뷰포트 하단에 들어오면 그만큼 FAB를 위로 올려 겹침 방지
+        const overlap = window.innerHeight - footer.getBoundingClientRect().top;
+        if (overlap > 0) next = `${overlap + GAP}px`;
+      }
+      setFabBottom((prev) => (prev === next ? prev : next));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(compute);
+    };
+    compute();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   function scrollToPageTop() {
@@ -194,7 +220,8 @@ export function GuideLayout({ initialZoom, children }: { initialZoom: number; ch
     return (
       <>
         {children}
-        <div className="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3">
+        <GuideSiteFooter />
+        <div className="fixed right-6 z-50 flex flex-col items-center gap-3" style={{ bottom: fabBottom }}>
           {showScrollTop ? (
             <button
               type="button"
@@ -357,9 +384,11 @@ export function GuideLayout({ initialZoom, children }: { initialZoom: number; ch
           >
             {children}
           </main>
+
+          <GuideSiteFooter />
         </div>
 
-        <div className="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3">
+        <div className="fixed right-6 z-50 flex flex-col items-center gap-3" style={{ bottom: fabBottom }}>
           {showScrollTop ? (
             <button
               type="button"

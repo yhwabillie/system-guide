@@ -2143,6 +2143,47 @@ export function GuideSiteHeader({
   );
 }
 
+export function GuideSiteFooter() {
+  // 연도는 SSR·하이드레이션 시점에 동일하므로 mismatch 없음(요청 내에서 불변).
+  const year = new Date().getFullYear();
+
+  return (
+    <footer className="surface-subtle border-default mt-16 border-t">
+      <div className="layout-sidenav-content py-10 md:py-12">
+        <div className="col-span-full flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          <div className="flex max-w-md flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <GuideLogoMark />
+              <span className="text-label-medium foreground-default font-bold">디자인 시스템 가이드</span>
+            </div>
+            <p className="text-body-small foreground-subtle m-0">
+              컬러·타이포그래피·레이아웃 토큰과 KWCAG 2.2 웹접근성 대비 검증을 제공하는 디자인 시스템 가이드입니다.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <p className="text-label-xsmall foreground-subtle m-0 font-bold tracking-[0.14em] uppercase">Accessibility</p>
+            <Link
+              href={GUIDE_ROUTES.keyboard}
+              className="text-body-small foreground-subtle hover:foreground-brand inline-flex items-center gap-1.5 no-underline transition-colors"
+            >
+              키보드 접근성 가이드
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+
+        <div className="border-default col-span-full mt-8 flex flex-col gap-2 border-t pt-6 md:flex-row md:items-center md:justify-between">
+          <p className="text-caption foreground-subtle m-0">
+            한국형 웹 콘텐츠 접근성 지침(KWCAG) 2.2 1등급을 목표로 제작되었습니다.
+          </p>
+          <p className="text-caption foreground-subtle numeric-tabular m-0">© {year} system-guide</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export function FontStackCuration() {
   return (
     <>
