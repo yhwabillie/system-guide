@@ -9,6 +9,7 @@ export const GUIDE_ROUTES = {
   icons: "/guide/icons",
   responsive: "/guide/responsive",
   keyboard: "/guide/keyboard",
+  kwcag: "/guide/kwcag",
 } as const;
 
 export type GuideCategoryId = "color" | "type" | "spacing" | "grid" | "responsive" | "icons";

@@ -2170,6 +2170,13 @@ export function GuideSiteFooter() {
               키보드 접근성 가이드
               <span aria-hidden="true">→</span>
             </Link>
+            <Link
+              href={GUIDE_ROUTES.kwcag}
+              className="text-body-small foreground-subtle hover:foreground-brand inline-flex items-center gap-1.5 no-underline transition-colors"
+            >
+              KWCAG 2.2 지침 전체
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
 
